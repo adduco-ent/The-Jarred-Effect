@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — The Jarred Effect</title>
+<meta name="description" content="I didn’t learn polarity and balance in a workshop. I learned it by getting it wrong, repeatedly, in public. Here’s the story behind The Jarred Effect.">
+<meta name="theme-color" content="#fdfdfc">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Jarred Effect">
+<meta property="og:title" content="About — The Jarred Effect">
+<meta property="og:description" content="I didn’t learn this in a workshop. I learned it by getting it wrong, repeatedly, in public.">
+<meta property="og:image" content="/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&amp;family=Instrument+Sans:wght@400;500;600&amp;family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;1,400&amp;display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="assets/css/about.css">
+<script src="script.js" defer></script>
+<script src="assets/js/about.js" defer></script>
+</head>
+<body data-page="about">
+<div class="tje tab is-motion" id="top" style="--shadow: #0e1a2c; color: #1c1812; font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif">
+  <a class="tje-skip" href="#start" data-on-click="goStart">Skip to the free guide</a>
+
+  <!-- floating bar: appears once the hero is behind you -->
+  <div class="tje-bar" data-class="barClass">
+    <div class="tje-bar-in">
+      <a class="tje-bar-logo" href="#top" aria-label="Back to top"><img class="tje-bar-logo-l" src="assets/img/logo-lockup.png" alt="" width="360" height="225"><img class="tje-bar-logo-d" src="assets/img/logo-lockup-light.png" alt="" width="360" height="225" loading="lazy"></a>
+      <p class="tje-bar-ch"><span data-text="chapterLabel">About</span></p>
+      <a class="tje-btn-sm" href="#start" data-on-click="goStart">Get the free guide</a>
+      <span class="tje-bar-prog" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <!-- phone-only chapter chip: where you are in the story, since the rail doesn't fit -->
+  <div class="tab-chip" aria-hidden="true" data-class="chipClass"><b><span data-text="chRoman">I</span></b><span class="tab-chip-t"><span data-text="chTitle">Where I started</span></span><span class="tab-chip-n"><span data-text="chPos">1 of 5</span></span></div>
+
+  <header class="tje-nav">
+    <a class="tje-logo" href="index.html" aria-label="The Jarred Effect — home">
+      <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" fetchpriority="high">
+    </a>
+    <nav class="tje-links" aria-label="Primary">
+      <a class="tje-link" href="index.html">Home</a>
+      <a class="tje-link" href="index.html#mechanism">How it works</a>
+      <a class="tje-link" href="about.html" aria-current="page">About</a>
+      <a class="tje-btn-sm" href="#start" data-on-click="goStart">Get the free guide</a>
+    </nav>
+    <button class="tje-menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="tje-menu-panel" data-on-click="toggleMenu" data-attr="aria-label:menuLabel; aria-expanded:menuExpanded">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </button>
+    <x-if data-if="menu" hidden>
+      <button class="tje-scrim" type="button" aria-label="Close menu" data-on-click="closeMenu"></button>
+      <nav class="tje-menu-panel" id="tje-menu-panel" aria-label="Menu">
+        <a href="index.html" data-on-click="closeMenu">Home</a>
+        <a href="index.html#mechanism" data-on-click="closeMenu">How it works</a>
+        <a href="about.html" aria-current="page" data-on-click="closeMenu">About</a>
+        <a href="#start" data-on-click="goStart">Get the free guide</a>
+      </nav>
+    </x-if>
+  </header>
+
+  <main id="main">
+  <!-- ===================== HERO ===================== -->
+  <section class="tab-hero" aria-labelledby="about-title">
+    <div class="tab-hero-a">
+      <div class="tje-aura" aria-hidden="true"></div>
+      <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>Why I built this</p>
+      <h1 class="tab-h1" id="about-title">I didn’t learn this in a workshop. <span class="tab-h1-deck">I learned it by getting it wrong, repeatedly, in public.</span></h1>
+      <p class="tje-lead">No guru origin story. No “I found a crystal and everything changed.” Just the actual sequence of events.</p>
+      <div class="tab-hero-actions">
+        <a class="tje-ghost" href="#story">Read the story<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v11M5 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        <a class="tje-story" href="#start" data-on-click="goStart">Skip to the free guide<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+    </div>
+    <div class="tab-hero-b">
+      <div class="tje-grain" aria-hidden="true"></div>
+      <div class="tab-hero-glow" aria-hidden="true"></div>
+      <figure class="tab-portrait">
+        <img src="assets/img/jarred-sunrise.jpg" alt="Jarred in a grey hoodie at sunrise above the clouds, mid-gesture" width="750" height="900" fetchpriority="high">
+        <div class="tje-orb" aria-hidden="true"></div>
+        <figcaption><b>Jarred</b>Founder, The Jarred Effect</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== 01 · THE STORY ===================== -->
+  <section class="tab-story" id="story" data-chapter="story" aria-labelledby="story-title">
+    <div class="tab-story-head tje-reveal">
+      <p class="tje-kick"><span class="tje-kick-n">01</span><span class="tje-kick-rule" aria-hidden="true"></span>The story</p>
+      <h2 class="tje-h2" id="story-title">The story, <span class="tje-it tab-keep">in five chapters.</span></h2>
+    </div>
+    <div class="tab-story-grid">
+      <nav class="tab-rail" aria-label="Chapters">
+        <p class="tab-rail-lab">Chapters</p>
+        <div class="tab-rail-track">
+        <span class="tab-rail-prog" aria-hidden="true"></span>
+        <ol>
+          <li class="tab-rail-part" aria-hidden="true">Before</li>
+          <li class="is-on" data-class="rc1"><a href="#ch-1" aria-current="true" data-attr="aria-current:ra1"><b>I</b>Where I started</a></li>
+          <li class="" data-class="rc2"><a href="#ch-2" aria-current="false" data-attr="aria-current:ra2"><b>II</b>What broke</a></li>
+          <li class="" data-class="rc3"><a href="#ch-3" aria-current="false" data-attr="aria-current:ra3"><b>III</b>Where “manifestation” let me down</a></li>
+          <li class="tab-rail-part" aria-hidden="true">After</li>
+          <li class="" data-class="rc4"><a href="#ch-4" aria-current="false" data-attr="aria-current:ra4"><b>IV</b>What I found</a></li>
+          <li class="" data-class="rc5"><a href="#ch-5" aria-current="false" data-attr="aria-current:ra5"><b>V</b>Why this exists now</a></li>
+        </ol>
+        </div>
+        <a class="tje-story" href="#start" data-on-click="goStart">Skip to the free guide<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </nav>
+      <div class="tab-chapters">
+        <article class="tab-ch tje-reveal" id="ch-1" data-ch="1" aria-labelledby="ch-1-t">
+          <p class="tab-part">Part one<i aria-hidden="true"></i><b>Before</b></p>
+          <p class="tab-ch-n">Chapter <b>I</b></p>
+          <h3 id="ch-1-t">Where I started</h3>
+          <div class="tab-fill">
+            <p class="tab-fill-tag"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3l9.5-9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>Your words go here</p>
+            <p>What you were chasing before any of this — the career, the relationship, the version of success you were sold. Be specific: what did a normal Tuesday look like?</p>
+          </div>
+        </article>
+        <article class="tab-ch tje-reveal" id="ch-2" data-ch="2" aria-labelledby="ch-2-t">
+          <p class="tab-ch-n">Chapter <b>II</b></p>
+          <h3 id="ch-2-t">What broke</h3>
+          <div class="tab-fill">
+            <p class="tab-fill-tag"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3l9.5-9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>Your words go here</p>
+            <p>The specific moment or stretch of time things stopped working — the burnout, the loss, the plan that collapsed. Name it plainly. This is the part most people skip; it’s the part that makes the rest of the page believable.</p>
+          </div>
+        </article>
+        <figure class="tab-photo-slot tje-reveal">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.5"></rect><circle cx="8" cy="9" r="1.8" stroke="currentColor" stroke-width="1.5"></circle><path d="M2 16l5.5-5.5a2 2 0 0 1 2.8 0L15 15l2-2a2 2 0 0 1 2.8 0L22 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <figcaption>Your photo from that chapter — the turning point, in your own words made visual.</figcaption>
+        </figure>
+        <article class="tab-ch tje-reveal" id="ch-3" data-ch="3" aria-labelledby="ch-3-t">
+          <p class="tab-ch-n">Chapter <b>III</b></p>
+          <h3 id="ch-3-t">Where “manifestation” <span class="tje-it">let me down</span></h3>
+          <div class="tab-fill">
+            <p class="tab-fill-tag"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3l9.5-9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>Your words go here</p>
+            <p>What the standard advice told you to do — vision board, affirmations, “raise your vibration” — and exactly how it fell short. What did you do everything “right” and still not get?</p>
+          </div>
+        </article>
+        <article class="tab-ch tje-reveal" id="ch-4" data-ch="4" aria-labelledby="ch-4-t">
+          <div class="tab-turn" aria-hidden="true"><span class="tje-orb"></span></div>
+          <p class="tab-part">Part two<i aria-hidden="true"></i><b>After</b></p>
+          <p class="tab-ch-n">Chapter <b>IV</b></p>
+          <h3 id="ch-4-t">What I found: <span class="tje-it tab-keep">the polarity principle</span></h3>
+          <div class="tab-fill">
+            <p class="tab-fill-tag"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3l9.5-9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>Your words go here</p>
+            <p>The realization that changed the pattern — the specific insight about polarity, the two sides of manifestation, the moment balance stopped being a buzzword and became a mechanic you could actually use.</p>
+          </div>
+        </article>
+        <article class="tab-ch tje-reveal" id="ch-5" data-ch="5" aria-labelledby="ch-5-t">
+          <p class="tab-ch-n">Chapter <b>V</b></p>
+          <h3 id="ch-5-t">Why <span class="tab-keep">The Jarred Effect</span> <span class="tje-it">exists now</span></h3>
+          <div class="tab-fill">
+            <p class="tab-fill-tag"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3l9.5-9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>Your words go here</p>
+            <p>Why you’re teaching this now, to whom, and what you want different for them than what happened to you.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 02 · WHAT I BELIEVE ===================== -->
+  <section class="tab-beliefs tje-dark" id="beliefs" data-chapter="beliefs" data-tone="dark" aria-labelledby="beliefs-title">
+    <div class="tje-grain" aria-hidden="true"></div>
+    <div class="tab-bel-glow" aria-hidden="true"></div>
+    <div class="tab-bel-head tje-reveal">
+      <p class="tje-kick"><span class="tje-kick-n">02</span><span class="tje-kick-rule" aria-hidden="true"></span>What I believe</p>
+      <h2 class="tje-h2" id="beliefs-title">No hedging. <span class="tje-it">This is the actual position.</span></h2>
+    </div>
+    <div class="tab-bel-grid">
+      <figure class="tab-bel-fig tje-reveal">
+        <img src="assets/img/polarity-sphere.jpg" alt="A marble sphere, one half lit warm and the other in shadow" width="1047" height="720" loading="lazy" decoding="async">
+      </figure>
+      <ol class="tab-bel-list">
+        <li class="tje-reveal"><span class="tab-bel-n" aria-hidden="true">01</span><p class="tab-bel-t">Balance is a skill, not a mood. <span class="tje-it">You build it in reps, not retreats.</span></p></li>
+        <li class="tje-reveal"><span class="tab-bel-n" aria-hidden="true">02</span><p class="tab-bel-t">If your “manifestation” can’t survive a bad Tuesday, it isn’t manifestation&nbsp;— <span class="tje-it tab-keep">it’s a mood board.</span></p></li>
+        <li class="tje-reveal"><span class="tab-bel-n" aria-hidden="true">03</span><p class="tab-bel-t">Any teacher who only sells you the light half is <span class="tje-it">selling you half a tool.</span></p></li>
+        <li class="tje-reveal"><span class="tab-bel-n" aria-hidden="true">04</span><p class="tab-bel-t">Discipline isn’t the opposite of flow. <span class="tje-it">It’s the pole that makes flow possible.</span></p></li>
+        <li class="tje-reveal"><span class="tab-bel-n" aria-hidden="true">05</span><p class="tab-bel-t">You don’t rise above your shadow. <span class="tje-it">You work with it, or it works on you without asking.</span></p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== 03 · START HERE ===================== -->
+  <section class="tab-start" id="start" data-chapter="start" aria-labelledby="start-title">
+    <div class="tab-start-panel">
+      <div class="tab-start-a">
+        <p class="tje-kick"><span class="tje-kick-n">03</span><span class="tje-kick-rule" aria-hidden="true"></span>Start here</p>
+        <h2 class="tje-h2" id="start-title">If any of this landed, <span class="tje-it">start with the guide.</span></h2>
+        <p class="tje-lead">“What All Gurus Are Failing To Disclose About Manifestation” — free, no catch.</p>
+        <ul class="tab-inside">
+          <li><span class="tje-dot" aria-hidden="true"></span>Why “like attracts like” breaks down in real life.</li>
+          <li><span class="tje-dot" aria-hidden="true"></span>The three shadow questions gurus skip.</li>
+          <li><span class="tje-dot" aria-hidden="true"></span>A simple check: in balance, or just numb?</li>
+        </ul>
+        <div class="tje-fcard" data-capture="">
+          <x-if data-if="notSent">
+            <form data-on-submit="submitStart" novalidate="" aria-busy="false" data-attr="aria-busy:startBusy"><input class="tje-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <div class="ffin-top">
+                <label class="tje-label" for="start-email">Where should I send it?</label>
+                <p class="ffin-meta" id="start-email-note"><span class="tje-dot" aria-hidden="true"></span><span>10-min read&ensp;·&ensp;No spam&ensp;·&ensp;<a href="privacy.html">Privacy</a></span></p>
+              </div>
+              <div class="tje-row">
+                <input class="tje-input" id="start-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="send" placeholder="you@email.com" aria-invalid="false" aria-describedby="start-email-note" data-on-input="onEmail" data-on-focusout="blurStart" data-class="startInputClass" data-attr="aria-invalid:startInvalid">
+                <button class="tje-cta" type="submit" data-attr="disabled:startSending">
+                  <x-if data-if="startIdle">Send me the free guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></x-if>
+                  <x-if data-if="startSending" hidden><span class="tje-spin" aria-hidden="true"></span>Sending…</x-if>
+                </button>
+              </div>
+              <x-if data-if="startError" hidden>
+                <p class="tje-error" role="alert"><span data-text="errMsg"></span></p>
+              </x-if>
+              <x-if data-if="startSuggest" hidden>
+                <p class="tje-suggest" aria-live="polite">Did you mean <button type="button" data-on-click="fixStart"><span data-text="suggestion"></span></button>?</p>
+              </x-if>
+            </form>
+          </x-if>
+          <x-if data-if="sent" hidden>
+            <div class="ffin-done" role="status">
+              <span class="tje-check" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+              <div>
+                <h3 class="tje-success-title">It’s on its way.</h3>
+                <p class="ffin-done-copy"><span data-tpl="Sent to {{ email }}. Tell me when it lands.">Sent to . Tell me when it lands.</span></p>
+                <div class="tje-success-actions">
+                  <a class="tje-story" href="index.html#mechanism">While it lands, see how it works<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                  <button class="tje-textbtn" type="button" data-on-click="resetStart">Wrong email? Fix it</button>
+                </div>
+              </div>
+            </div>
+          </x-if>
+        </div>
+      </div>
+      <div class="tab-start-b">
+        <div class="tje-grain" aria-hidden="true"></div>
+        <figure class="tje-cover-stage" aria-label="Cover of the free guide">
+          <div class="tje-cover-glow" aria-hidden="true"></div>
+          <div class="tje-cover-float">
+            <div class="tje-cover tje-cover--lg">
+              <div class="tje-cover-pages" aria-hidden="true"></div>
+              <div class="tje-cover-face">
+                <p class="tje-cover-kicker">A free guide</p>
+                <div class="tje-emblem tje-orb" aria-hidden="true"></div>
+                <p class="tje-cover-title">What All Gurus<br>Are Failing To<br>Disclose About<br><i>Manifestation</i></p>
+                <div class="tje-cover-foot"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy"></div>
+                <div class="tje-cover-spine" aria-hidden="true"></div>
+              </div>
+              <div class="tje-sticker" aria-hidden="true"><b>Free</b><span>10-min<br>read</span></div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="tje-foot">
+    <div class="tje-foot-top">
+      <div class="tje-foot-brand">
+        <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy">
+        <p class="tje-foot-tag">Manifestation has two sides.</p>
+      </div>
+      <nav class="tje-foot-links" aria-label="Footer">
+        <a class="tje-link" href="index.html">Home</a>
+        <a class="tje-link" href="index.html#mechanism">How it works</a>
+        <a class="tje-link" href="index.html#faq">FAQ</a>
+        <a class="tje-link" href="opt-in.html">Free guide</a>
+      </nav>
+    </div>
+    <div class="tje-foot-bottom">
+      <span><span data-tpl="© {{ year }} The Jarred Effect. All rights reserved.">© 2026 The Jarred Effect. All rights reserved.</span></span>
+      <span class="tje-foot-legal"><a href="privacy.html">Privacy</a><a href="#top">Back to top ↑</a></span>
+    </div>
+  </footer>
+
+  <!-- phone-only thumb dock: appears once the hero is behind you, hides near the form -->
+  <div class="tje-dock" data-class="dockClass">
+    <a class="tje-cta" href="#start" data-on-click="goStart">Send me the free guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  </div>
+</div>
+</body>
+</html>

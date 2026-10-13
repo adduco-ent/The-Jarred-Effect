@@ -1,0 +1,7 @@
+.vercel
+.env
+.env.*
+node_modules
+.DS_Store
+# local Claude Code settings (preview server config, etc.)
+.claude/

@@ -1,0 +1,8 @@
+{
+  "name": "the-jarred-effect",
+  "private": true,
+  "description": "The Jarred Effect website: static pages plus two Vercel functions (api/) for sign-ups.",
+  "engines": {
+    "node": "22.x"
+  }
+}

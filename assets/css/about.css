@@ -1,0 +1,205 @@
+/* about.html — page styles (shared ones are in /styles.css). */
+/* shared: the two poles */
+.tje-aura{position:absolute;width:45rem;height:45rem;left:-20rem;top:-22.5rem;border-radius:50%;background:radial-gradient(closest-side,rgba(243,163,120,.24),rgba(243,163,120,0));pointer-events:none}
+.tje-grain{position:absolute;inset:0;background:url(../img/grain.png) repeat;background-size:11.25rem 11.25rem;opacity:.32;mix-blend-mode:soft-light;pointer-events:none}
+.tje-kick-n{font-family:"Libre Caslon Display",Georgia,serif;font-size:.9375rem;letter-spacing:0;color:var(--orange-deep)}
+.tje-kick-rule{width:1.75rem;height:1px;background:currentColor;opacity:.5}
+.tje-dark .tje-kick{color:var(--orange-hi)}
+.tje-dark .tje-kick-n{color:var(--cream)}
+.tje-dark .tje-it{color:var(--orange)}
+.tje-row{display:flex;gap:.625rem}
+@media (max-width:560px){.tje-row{flex-direction:column}}
+.tje a:focus-visible,.tje button:focus-visible{outline:2px solid var(--blue);outline-offset:.1875rem}
+.tje-dark a:focus-visible,.tje-dark button:focus-visible,.tab-hero-b a:focus-visible,.tje-nav .tje-links a:focus-visible{outline-color:var(--orange-hi)}
+.tje-error{margin:.625rem 0 0 1.375rem;font-size:.875rem;color:#a3241b}
+.tje-suggest{margin:.625rem 0 0 1.375rem;font-size:.875rem;color:var(--dim)}
+.tje-ghost{display:inline-flex;align-items:center;gap:.625rem;min-height:3.25rem;padding:0 1.5rem;border-radius:62.4375rem;border:1.5px solid rgba(28,24,18,.2);background:#ffffff;color:var(--ink);font-size:.96875rem;font-weight:600;text-decoration:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1),border-color .2s ease,color .2s ease}
+.tje-ghost svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tje-ghost:hover{border-color:var(--orange);color:var(--orange-deep);transform:translateY(-2px)}
+.tje-ghost:hover svg{transform:translateY(.1875rem)}
+.tje-scrim{position:fixed;inset:0;z-index:7;padding:0;border:0;background:rgba(14,26,44,.34);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);cursor:pointer;animation:tje-fade .2s ease both}
+@media (max-width:767px){
+  .tje-dock{position:fixed;z-index:30;left:0;right:0;bottom:0;display:block;padding:.75rem 1rem max(.75rem,env(safe-area-inset-bottom));background:rgba(253,253,252,.97);border-top:1px solid rgba(28,24,18,.08);-webkit-backdrop-filter:blur(1rem);backdrop-filter:blur(1rem);transform:translateY(110%);visibility:hidden;transition:transform .45s cubic-bezier(.22,1,.36,1),visibility 0s linear .45s}
+  .tje-dock.is-on{transform:none;visibility:visible;transition:transform .45s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .tje-dock .tje-cta{width:100%;height:3.25rem}
+}
+.tje-link[aria-current="page"]::after{right:0}
+.tje-menu{display:none;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;padding:0;border-radius:62.4375rem;border:1px solid rgba(28,24,18,.2);background:transparent;color:var(--ink);cursor:pointer}
+.tje-menu-panel{position:absolute;z-index:8;top:4.75rem;right:var(--pad);width:min(16.25rem,calc(100vw - 2.5rem));display:flex;flex-direction:column;gap:2px;padding:.5rem;background:#ffffff;border-radius:1.25rem;box-shadow:0 1.875rem 3.75rem -1.25rem rgba(6,12,24,.55);animation:tje-drop .25s cubic-bezier(.22,1,.36,1) both}
+.tje-menu-panel a{display:flex;align-items:center;min-height:3rem;padding:0 1rem;border-radius:.75rem;color:var(--ink);font-weight:500;text-decoration:none}
+.tje-menu-panel a:hover,.tje-menu-panel a[aria-current="page"]{background:#f3ece1;color:var(--ink)}
+@media (max-width:899px){.tje-nav .tje-link{color:var(--ink)}.tje-nav .tje-link:hover{color:var(--orange-deep)}.tje-nav .tje-link::after{background:var(--orange)}}
+@media (max-width:767px){.tje-links{display:none}.tje-menu{display:inline-flex}.tje-logo img{height:2.5rem}.tje-nav{padding-top:1rem;padding-bottom:1rem}}
+/* ================= 00 · about hero: the words on the light pole, the person on the dark one ================= */
+.tab-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:51.25rem;background:var(--pearl)}
+.tab-hero-a{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:10rem 5.5rem 6.5rem var(--pad)}
+.tab-hero-b{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:9.375rem var(--pad) 6rem 5.5rem;background:var(--shadow);border-bottom-left-radius:3.5rem}
+.tab-hero-b .tje-grain{z-index:-1}
+/* light on navy is always cool: low-alpha orange over navy mixes to a muddy brown haze */
+.tab-hero-glow{position:absolute;z-index:-1;left:50%;top:52%;width:53.75rem;height:53.75rem;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(62,108,171,.26),rgba(62,108,171,.08) 60%,rgba(62,108,171,0));pointer-events:none}
+.tab-hero .tje-kick{margin-bottom:1.625rem}
+.tab-h1{margin:0;font-family:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;font-weight:400;font-size:clamp(2.625rem,4.5vw,4.125rem);line-height:1.03;letter-spacing:-.014em;color:var(--ink);text-wrap:balance}
+/* the second sentence is the deck: same h1, italic accent scale, so neither line strands a word */
+.tab-h1-deck{display:block;max-width:32.5rem;margin-top:1.25rem;font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:.5em;line-height:1.32;letter-spacing:-.005em;color:var(--orange-deep);text-wrap:balance}
+.tab-hero .tje-lead{max-width:32.5rem;margin-top:1.75rem}
+.tab-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.75rem;margin-top:2.5rem}
+.tab-portrait{position:relative;width:min(100%,26.875rem);margin:0}
+.tab-portrait img{display:block;width:100%;height:auto;aspect-ratio:5/6;object-fit:cover;object-position:center 30%;border-radius:2.875rem 2.875rem .5rem 2.875rem;box-shadow:0 2.5rem 5rem -2.25rem rgba(0,0,0,.65)}
+.tab-portrait .tje-orb{position:absolute;left:-1.875rem;top:2.75rem;width:4.75rem;height:4.75rem;box-shadow:0 0 0 .4375rem var(--shadow),0 1.125rem 1.875rem -.75rem rgba(0,0,0,.5)}
+.tab-portrait figcaption{display:flex;align-items:center;gap:.625rem;margin-top:1.25rem;font-size:.90625rem;color:var(--cream-dim)}
+.tab-portrait figcaption b{font-weight:600;color:var(--cream)}
+/* desktop: the hero fills the window the way the homepage's does. 63.125rem is the homepage hero's height (1010px at full size), the
+   height the site zoom fits to the window; 100svh stops it overshooting on windows shorter than the zoom floor. */
+@media (min-width:1180px){
+  .tab-hero{min-height:max(51.25rem,min(100svh,63.125rem))}
+  /* the taller canvas gets a bigger portrait and headline, so the extra height reads as presence, not empty space */
+  .tab-portrait{width:min(100%,31.25rem)}
+  .tab-h1{font-size:clamp(2.625rem,4.5vw,4.5rem)}
+}
+@media (max-width:899px){
+  .tab-hero{grid-template-columns:minmax(0,1fr);min-height:0}
+  .tab-hero-a{padding:8.25rem var(--pad) 3.5rem}
+  .tab-hero-b{padding:3.5rem var(--pad) 4rem;border-bottom-left-radius:2.5rem}
+  .tab-portrait .tje-orb{left:-1.125rem;top:1.75rem;width:3.75rem;height:3.75rem}
+}
+@media (max-width:767px){.tab-hero-a{padding-top:7rem}.tab-h1-deck{margin-top:.875rem;font-size:.58em}.tab-hero-actions{gap:.5rem 1.25rem;margin-top:2rem}.tab-portrait .tje-orb{left:auto;right:-.75rem;top:-1.375rem;width:3.5rem;height:3.5rem}}
+/* ================= 01 · the story: a chapter rail that tracks where you are ================= */
+.tab-story{position:relative;padding:7rem var(--pad) 6.5rem}
+.tab-story-head{max-width:47.5rem;margin:0 0 4rem}
+.tab-story-grid{display:grid;grid-template-columns:15rem minmax(0,1fr);gap:6rem;align-items:start;timeline-scope:--story}
+.tab-rail{position:sticky;top:7rem}
+.tab-rail-lab{margin:0 0 .875rem;font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8a8073}
+.tab-rail ol{position:relative;display:grid;gap:2px;margin:0;padding:0 0 0 1.5rem;list-style:none}
+.tab-rail ol::before{content:"";position:absolute;left:.25rem;top:1.125rem;bottom:1.125rem;width:1px;background:var(--line)}
+.tab-rail-track{position:relative}
+.tab-rail-prog{position:absolute;z-index:1;left:.25rem;top:1.125rem;bottom:1.125rem;width:1px;background:linear-gradient(180deg,var(--orange),var(--orange-hi));transform-origin:top center;transform:scaleY(0);opacity:0}
+.tab-rail li{position:relative}
+.tab-rail li::before{content:"";position:absolute;z-index:1;left:-1.5rem;top:.875rem;width:.5625rem;height:.5625rem;border-radius:50%;background:var(--pearl);box-shadow:inset 0 0 0 1.5px rgba(28,24,18,.25);transition:background .3s ease,box-shadow .3s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.tab-rail li.is-on::before{background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%);box-shadow:none;transform:scale(1.3)}
+.tab-rail ol a{display:grid;grid-template-columns:1.75rem minmax(0,1fr);gap:.375rem;align-items:baseline;margin-left:-.625rem;padding:.5625rem .625rem;border-radius:.75rem;font-size:.9375rem;line-height:1.35;color:var(--dim);text-decoration:none;transition:background .25s ease,color .25s ease}
+.tab-rail ol a b{font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:.9375rem;color:#a39a8c;transition:color .25s ease}
+.tab-rail ol a:hover{background:#f6f1e8;color:var(--ink)}
+.tab-rail ol a[aria-current="true"]{background:#f3ece1;color:var(--ink);font-weight:500}
+.tab-rail ol a[aria-current="true"] b{color:var(--orange-deep)}
+.tab-rail .tje-story{margin-top:1.5rem;font-size:.90625rem}
+/* the story has two halves too: the rail groups chapters into Before (I–III) and After (IV–V) */
+.tab-rail li.tab-rail-part{margin:.875rem 0 2px -1.5rem;padding:0;font-size:.6875rem;line-height:1.4;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#a39a8c}
+.tab-rail li.tab-rail-part:first-child{margin-top:0}
+.tab-rail li.tab-rail-part::before{display:none}
+.tab-part{display:flex;align-items:center;gap:.75rem;margin:0 0 1.875rem;font-size:.75rem;line-height:1.4;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8a8073}
+.tab-part i{width:1.375rem;height:1px;background:currentColor;opacity:.5}
+.tab-part b{font-weight:600;color:var(--ink)}
+.tab-turn{display:flex;align-items:center;gap:1.125rem;margin:0 0 2.125rem}
+.tab-turn::before,.tab-turn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(28,24,18,0),rgba(28,24,18,.2))}
+.tab-turn::after{background:linear-gradient(90deg,rgba(28,24,18,.2),rgba(28,24,18,0))}
+.tab-turn .tje-orb{flex:none;width:1.875rem;height:1.875rem;box-shadow:0 0 0 .375rem var(--pearl),0 0 0 .4375rem rgba(28,24,18,.14)}
+/* text holds a ~70ch measure; the turning-point photo breaks out to the column's full width */
+.tab-chapters{display:grid;gap:5rem;view-timeline-name:--story}
+.tab-ch{max-width:45rem}
+.tab-ch{scroll-margin-top:7rem}
+/* chapters count in roman numerals so they never read as section numbers (01–03) */
+.tab-ch-n{display:flex;align-items:baseline;gap:.5rem;margin:0 0 .75rem;font-size:.78125rem;line-height:1.4;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+.tab-ch-n b{font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:1.125rem;letter-spacing:.02em;color:var(--orange-deep)}
+.tab-ch h3{margin:0 0 1.375rem;font-family:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;font-weight:400;font-size:clamp(1.875rem,3vw,2.625rem);line-height:1.08;letter-spacing:-.008em;color:var(--ink);text-wrap:balance}
+.tab-ch h3 .tje-it{font-size:.9em}
+/* fill-in slots: unmistakably "yours to write" until the real story replaces them */
+.tab-fill{position:relative;margin:0;padding:1.25rem 1.5rem 1.5rem;border:1.5px dashed rgba(28,24,18,.22);border-radius:1.25rem;background:#faf6ef}
+.tab-fill-tag{display:inline-flex;align-items:center;gap:.5rem;margin:0 0 .625rem;font-size:.71875rem;line-height:1.4;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#8a8073}
+.tab-fill-tag svg{flex:none}
+.tab-fill p:not(.tab-fill-tag){margin:0;font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:1.125rem;line-height:1.6;color:#6b6254;text-wrap:pretty}
+.tab-photo-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;margin:0;aspect-ratio:21/9;padding:1.5rem;border:1.5px dashed rgba(28,24,18,.22);border-radius:1.75rem;background:#f6f1e8;color:#8a8073;text-align:center}
+.tab-photo-slot figcaption{max-width:22.5rem;font-size:.875rem;line-height:1.5}
+@media (max-width:899px){
+  .tab-story-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  .tab-rail{display:none}
+  .tab-chapters{gap:4rem;max-width:none}
+}
+@media (max-width:767px){.tab-story{padding:5rem var(--pad) 4.5rem}.tab-story-head{margin-bottom:3rem}.tab-ch h3{font-size:1.875rem}.tab-fill{padding:1.125rem 1.125rem 1.25rem}.tab-fill p{font-size:1.0625rem}.tab-photo-slot{aspect-ratio:4/3;border-radius:1.375rem}.tab-part{margin-bottom:1.5rem}}
+/* phones: the rail is gone, so a slim chip says which chapter you're in while you read */
+.tab-chip{display:none}
+@media (max-width:767px){
+  .tab-chip{position:fixed;z-index:29;top:.625rem;left:50%;display:flex;align-items:center;gap:.625rem;max-width:calc(100% - 2rem);height:2.5rem;padding:0 .875rem 0 .75rem;border-radius:62.4375rem;background:rgba(253,253,252,.95);border:1px solid rgba(28,24,18,.08);box-shadow:0 .75rem 1.75rem -1.125rem rgba(6,12,24,.45);-webkit-backdrop-filter:blur(.875rem);backdrop-filter:blur(.875rem);font-size:.8125rem;font-weight:600;line-height:1;color:var(--ink);white-space:nowrap;transform:translate(-50%,-160%);opacity:0;visibility:hidden;pointer-events:none;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s linear .45s}
+  .tab-chip.is-on{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s}
+  .tab-chip b{font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:1rem;color:var(--orange-deep)}
+  .tab-chip-t{overflow:hidden;text-overflow:ellipsis}
+  .tab-chip-n{flex:none;padding-left:.625rem;border-left:1px solid var(--line);font-weight:500;color:#8a8073}
+}
+/* ================= 02 · what I believe (the dark climax) ================= */
+.tab-beliefs{position:relative;isolation:isolate;overflow:clip;padding:7rem var(--pad)}
+.tab-beliefs .tje-grain{z-index:-1}
+.tab-bel-glow{position:absolute;z-index:-1;left:26%;top:0;width:87.5rem;height:68.75rem;border-radius:50%;transform:translate(-50%,-38%);background:radial-gradient(closest-side,rgba(62,108,171,.22),rgba(62,108,171,.07) 55%,rgba(62,108,171,0));pointer-events:none}
+.tab-bel-head{max-width:68.75rem;margin:0 0 4rem}
+.tab-bel-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:5.5rem;align-items:start}
+.tab-bel-fig{position:sticky;top:7rem;margin:0}
+.tab-bel-fig img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 50%;border-radius:2.25rem;box-shadow:0 2.5rem 5rem -2.5rem rgba(0,0,0,.7),0 0 0 1px rgba(239,231,218,.06)}
+.tab-bel-list{margin:0;padding:0;list-style:none}
+.tab-bel-list li{display:grid;grid-template-columns:3.25rem minmax(0,1fr);gap:.75rem;align-items:baseline;padding:1.875rem 0;border-top:1px solid var(--line-d);view-timeline-name:--bel}
+.tab-bel-list li:last-child{border-bottom:1px solid var(--line-d)}
+/* sans, tracked and quiet: list numbers, not section numbers; the line itself carries the colour */
+.tab-bel-n{font-size:.78125rem;line-height:1;font-weight:600;letter-spacing:.16em;font-variant-numeric:tabular-nums;color:rgba(239,231,218,.46)}
+.tab-bel-t{margin:0;font-family:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;font-weight:400;font-size:clamp(1.5rem,2.2vw,1.9375rem);line-height:1.28;letter-spacing:-.004em;color:var(--cream);text-wrap:pretty}
+.tab-bel-t .tje-it{font-size:.92em}
+@media (max-width:899px){.tab-bel-grid{grid-template-columns:minmax(0,1fr);gap:3rem}.tab-bel-fig{position:relative;top:0;max-width:32.5rem}.tab-bel-fig img{aspect-ratio:16/11}}
+@media (max-width:767px){.tab-beliefs{padding:5rem var(--pad)}.tab-bel-head{margin-bottom:2.75rem}.tab-bel-list li{grid-template-columns:2.5rem minmax(0,1fr);padding:1.5rem 0}.tab-bel-t{font-size:1.4375rem}.tab-bel-fig img{border-radius:1.625rem}}
+/* ================= 03 · start here: the payoff panel (words + form on light, the guide on dark) ================= */
+.tab-start{position:relative;padding:6.5rem var(--pad) 1.5rem;background:var(--pearl)}
+.tab-start-panel{position:relative;isolation:isolate;overflow:clip;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);border-radius:2.75rem;background:#f5efe5;box-shadow:inset 0 0 0 1px rgba(28,24,18,.06)}
+.tab-start-a{display:flex;flex-direction:column;justify-content:center;padding:4.5rem 4rem 4.5rem clamp(2.5rem,5vw,4.5rem)}
+.tab-start-a .tje-h2{font-size:clamp(2.125rem,3.4vw,3.125rem)}
+.tab-start-a .tje-lead{max-width:35rem;margin-top:1.125rem;font-size:1.125rem;text-wrap:balance}
+.tab-keep{white-space:nowrap}
+.tab-inside{display:grid;gap:.625rem;max-width:35rem;margin:1.375rem 0 0;padding:0;list-style:none}
+.tab-inside li{display:grid;grid-template-columns:1rem minmax(0,1fr);gap:.75rem;font-size:1rem;line-height:1.5;color:var(--dim);text-wrap:pretty}
+.tab-inside .tje-dot{width:.875rem;height:.875rem;margin-top:.25rem}
+.tab-start-a .tje-fcard{margin-top:1.75rem}
+.tab-start-b{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:3.5rem 2rem;background:var(--shadow)}
+.tab-start-b .tje-grain{z-index:-1}
+.tab-start-b .tje-cover-glow{width:35rem;height:auto;aspect-ratio:1}
+/* the same compact two-row card as the homepage finale */
+.tje-fcard{position:relative;z-index:1;width:100%;max-width:36.25rem;margin-top:2rem;padding:1.125rem 1.25rem 1.25rem;background:#ffffff;border:1px solid rgba(28,24,18,.08);border-radius:2.125rem;box-shadow:0 0 0 1px rgba(28,24,18,.02),0 1.375rem 2.75rem -1.875rem rgba(6,12,24,.42)}
+.ffin-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.25rem 1rem;margin:0 .375rem .75rem}
+.ffin-top .tje-label{margin:0;font-size:.875rem}
+.ffin-meta{display:inline-flex;align-items:center;gap:.5rem;margin:0;font-size:.8125rem;line-height:1.4;color:#6b6254;white-space:nowrap}
+.ffin-meta .tje-dot{width:.625rem;height:.625rem}
+.ffin-meta a{color:inherit;text-underline-offset:.1875rem}
+.ffin-done{display:grid;grid-template-columns:2.5rem minmax(0,1fr);gap:.875rem;align-items:start;padding:.25rem .375rem 0}
+.ffin-done .tje-check{width:2.5rem;height:2.5rem}
+.ffin-done .tje-success-title{margin:.3125rem 0 .25rem;font-size:1.625rem}
+.ffin-done-copy{margin:0;font-size:.9375rem;line-height:1.5;color:var(--dim);text-wrap:pretty}
+@media (max-width:899px){
+  .tab-start-panel{grid-template-columns:minmax(0,1fr);border-radius:1.75rem}
+  .tab-start-b{order:-1;padding:3rem 1.5rem 2.5rem}
+  .tab-start-a{padding:2.75rem 1.5rem 1.5rem}
+}
+@media (max-width:767px){.tab-start{padding:4.5rem .75rem .75rem}.tab-start-a{padding:2.25rem .5rem .5rem}.tab-start-a .tje-kick,.tab-start-a .tje-h2,.tab-start-a .tje-lead,.tab-start-a .tab-inside{margin-left:.75rem;margin-right:.75rem}.tab-start-a .tje-h2{font-size:2.125rem}.tje-fcard{padding:1rem .875rem .875rem;border-radius:1.625rem}.tje-fcard form{display:flex;flex-direction:column}.ffin-top{display:contents}.ffin-top .tje-label{margin:0 .5rem .625rem}.ffin-meta{order:1;align-self:center;margin:.75rem 0 2px}}
+@media (max-width:767px){.tje-cover-glow{width:21.25rem;height:21.25rem;opacity:.7}.tje-cover{width:12.5rem}.tje-cover-title{font-size:1.3125rem}.tje-emblem{width:3.75rem;height:3.75rem;margin:.875rem 0}.tje-sticker{width:4.75rem;height:4.75rem;right:-1.25rem}.tje-sticker b{font-size:1.25rem}}
+@keyframes tje-fade{from{opacity:0}to{opacity:1}}
+@keyframes tje-drop{from{opacity:0;transform:translateY(-.375rem)}to{opacity:1;transform:none}}
+@keyframes tab-grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes tab-slide{from{opacity:0;transform:translateX(1.5rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  .is-motion .tab-hero-a > *{animation:tje-rise .85s cubic-bezier(.22,1,.36,1) both}
+  .is-motion .tab-hero-a > :nth-child(2){animation-delay:.08s}
+  .is-motion .tab-hero-a > :nth-child(3){animation-delay:.16s}
+  .is-motion .tab-hero-a > :nth-child(4){animation-delay:.24s}
+  .is-motion .tab-portrait{animation:tab-slide 1s cubic-bezier(.22,1,.36,1) .2s both}
+  .is-motion .tje-cover-float{animation:tje-float 7s ease-in-out 1s infinite}
+}
+@media (prefers-reduced-motion:reduce){
+  .tje-bar,.tje-bar.is-on,.tje-dock,.tje-dock.is-on{transition:none}
+  .tje-spin{animation-duration:2.4s}
+  .tje-check,.tje-menu-panel{animation:none}
+}
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion:no-preference){
+    .is-motion .tje-reveal{animation:tje-rise linear both;animation-timeline:view();animation-range:entry 10% entry 90%}
+    /* the rail's line fills as you read through the chapters */
+    .tab-rail-prog{opacity:1;animation:tab-grow linear both;animation-timeline:--story;animation-range:cover 18% cover 82%}
+    /* beliefs: light moves down the list. Each line comes to full strength as it crosses the middle of the
+       screen and settles back after, so the eye always has one sentence to land on */
+    .is-motion .tab-bel-t{animation:tab-lit linear both;animation-timeline:--bel;animation-range:cover 4% cover 96%}
+    .is-motion .tab-bel-n{animation:tab-lit-n linear both;animation-timeline:--bel;animation-range:cover 4% cover 96%}
+  }
+}
+@keyframes tab-lit{0%{opacity:.34}40%,60%{opacity:1}100%{opacity:.5}}
+@keyframes tab-lit-n{0%{color:rgba(239,231,218,.3)}40%,60%{color:var(--orange-hi)}100%{color:rgba(239,231,218,.36)}}

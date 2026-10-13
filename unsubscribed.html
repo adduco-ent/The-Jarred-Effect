@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unsubscribed — The Jarred Effect</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fdfdfc">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&amp;family=Instrument+Sans:wght@400;500;600&amp;family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;1,400&amp;display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="assets/css/simple.css">
+<script src="script.js" defer></script>
+<script src="assets/js/simple.js" defer></script>
+</head>
+<body data-page="unsubscribed">
+<div class="tje is-motion" id="top" style="--shadow: #0e1a2c; color: #1c1812; font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif">
+  <header class="tje-nav tsp-nav">
+    <a class="tje-logo" href="index.html" aria-label="The Jarred Effect — home"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225"></a>
+    <nav class="tje-links" aria-label="Primary">
+      <a class="tje-link" href="index.html">Home</a>
+      <a class="tje-link" href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="tsp tsp--center" id="main">
+    <div class="tje-aura" aria-hidden="true"></div>
+    <!-- /api/unsubscribe sends people here; ?link=invalid or ?link=retry swap the message -->
+    <x-if data-if="linkOk">
+      <section class="tsp-hero" aria-labelledby="un-title">
+        <div class="tje-orb tsp-orb" aria-hidden="true"></div>
+        <p class="tje-kick">Unsubscribed</p>
+        <h1 class="tsp-h1" id="un-title">You’re off the list. <span class="tje-it">No hard feelings.</span></h1>
+        <p class="tje-lead">You won’t get any more emails from me. Changed your mind? The guide is still here whenever you want it.</p>
+        <div class="tsp-actions">
+          <a class="tje-ghost" href="index.html">Back to home</a>
+          <a class="tje-cta" href="opt-in.html">Get the free guide</a>
+        </div>
+      </section>
+    </x-if>
+    <x-if data-if="linkInvalid" hidden>
+      <section class="tsp-hero" aria-labelledby="un-bad-title">
+        <p class="tje-kick">Unsubscribe</p>
+        <h1 class="tsp-h1" id="un-bad-title">That link didn’t work.</h1>
+        <p class="tje-lead">It may have been cut off when it was copied. Use the link in the email itself, or just reply to any email and I’ll take you off the list by hand.</p>
+        <div class="tsp-actions"><a class="tje-ghost" href="index.html">Back to home</a></div>
+      </section>
+    </x-if>
+    <x-if data-if="linkRetry" hidden>
+      <section class="tsp-hero" aria-labelledby="un-retry-title">
+        <p class="tje-kick">Unsubscribe</p>
+        <h1 class="tsp-h1" id="un-retry-title">Something went wrong on my end.</h1>
+        <p class="tje-lead">Try the link again in a minute. If it still doesn’t work, reply to any email and I’ll take you off the list by hand.</p>
+        <div class="tsp-actions"><a class="tje-ghost" href="index.html">Back to home</a></div>
+      </section>
+    </x-if>
+  </main>
+
+  <footer class="tje-foot">
+    <div class="tje-foot-top">
+      <div class="tje-foot-brand">
+        <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy">
+        <p class="tje-foot-tag">Manifestation has two sides.</p>
+      </div>
+      <nav class="tje-foot-links" aria-label="Footer">
+        <a class="tje-link" href="index.html">Home</a>
+        <a class="tje-link" href="about.html">About</a>
+        <a class="tje-link" href="index.html#faq">FAQ</a>
+      </nav>
+    </div>
+    <div class="tje-foot-bottom">
+      <span>© <span data-text="year">2026</span> The Jarred Effect. All rights reserved.</span>
+      <span class="tje-foot-legal"><a href="privacy.html">Privacy</a><a href="#top">Back to top ↑</a></span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

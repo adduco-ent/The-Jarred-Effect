@@ -1,0 +1,168 @@
+/* The Jarred Effect — shared styles (tokens, controls, wayfinding, cover, footer, motion).
+   Page-specific rules live in assets/css/<page>.css, loaded after this file. */
+/* ===== site zoom =====
+   All sizes are in rem, and 1rem = the browser's base size (16px by default) × --z. On desktop windows shorter than the homepage hero
+   (1010px at full size), --z steps down so the hero fits the window, the same way browser zoom-out
+   would, but automatic. Phones and tablets (under 1180px wide) always render at 100%.
+   To tune it, edit the steps below: each line sets --z for windows up to that height. */
+:root{--z:1}
+html{font-size:calc(100% * var(--z))}
+@media (min-width:1180px) and (max-height:1009px){:root{--z:0.99}}
+@media (min-width:1180px) and (max-height:999px){:root{--z:0.98}}
+@media (min-width:1180px) and (max-height:989px){:root{--z:0.97}}
+@media (min-width:1180px) and (max-height:979px){:root{--z:0.96}}
+@media (min-width:1180px) and (max-height:969px){:root{--z:0.95}}
+@media (min-width:1180px) and (max-height:959px){:root{--z:0.94}}
+@media (min-width:1180px) and (max-height:949px){:root{--z:0.93}}
+@media (min-width:1180px) and (max-height:939px){:root{--z:0.92}}
+@media (min-width:1180px) and (max-height:929px){:root{--z:0.91}}
+@media (min-width:1180px) and (max-height:919px){:root{--z:0.9}}
+@media (min-width:1180px) and (max-height:908px){:root{--z:0.89}}
+@media (min-width:1180px) and (max-height:898px){:root{--z:0.88}}
+@media (min-width:1180px) and (max-height:888px){:root{--z:0.87}}
+@media (min-width:1180px) and (max-height:878px){:root{--z:0.86}}
+@media (min-width:1180px) and (max-height:868px){:root{--z:0.85}}
+@media (min-width:1180px) and (max-height:858px){:root{--z:0.84}}
+@media (min-width:1180px) and (max-height:848px){:root{--z:0.83}}
+@media (min-width:1180px) and (max-height:838px){:root{--z:0.82}}
+@media (min-width:1180px) and (max-height:828px){:root{--z:0.81}}
+@media (min-width:1180px) and (max-height:818px){:root{--z:0.8}}
+@media (min-width:1180px) and (max-height:807px){:root{--z:0.79}}
+@media (min-width:1180px) and (max-height:797px){:root{--z:0.78}}
+@media (min-width:1180px) and (max-height:787px){:root{--z:0.77}}
+@media (min-width:1180px) and (max-height:777px){:root{--z:0.76}}
+@media (min-width:1180px) and (max-height:767px){:root{--z:0.75}}
+/* icons sized by their width/height attributes scale with the text (zero specificity: any CSS rule wins) */
+:where(svg[width="14"][height="14"]){width:0.875rem;height:0.875rem}
+:where(svg[width="15"][height="15"]){width:0.9375rem;height:0.9375rem}
+:where(svg[width="16"][height="16"]){width:1rem;height:1rem}
+:where(svg[width="18"][height="18"]){width:1.125rem;height:1.125rem}
+:where(svg[width="20"][height="20"]){width:1.25rem;height:1.25rem}
+:where(svg[width="28"][height="28"]){width:1.75rem;height:1.75rem}
+
+x-if{display:contents}
+x-if[hidden]{display:none!important}
+/* honeypot: off-screen for people, still filled in by form bots */
+.tje-hp{position:absolute!important;left:-625rem!important;width:1px;height:1px;opacity:0;pointer-events:none}
+
+body{margin:0;background:#fdfdfc}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#a8471c}
+a:hover{color:#7e3412}
+/* ================= tokens + page ================= */
+.tje{--pad:max(1.25rem,calc((100vw - 80rem) / 2));--ink:#1c1812;--dim:#574f43;--pearl:#fdfdfc;--cream:#efe7da;--cream-dim:#c4bcaf;--orange:#e8743a;--orange-hi:#f3a378;--orange-deep:#a8471c;--blue:#3e6cab;--line:rgba(28,24,18,.12);--line-d:rgba(239,231,218,.16);position:relative;background:var(--pearl);overflow-x:clip;interpolate-size:allow-keywords;-webkit-font-smoothing:antialiased}
+.tje *,.tje *::before,.tje *::after{box-sizing:border-box}
+.tje ::selection{background:#f3a378;color:#1c1812}
+.tje [id]{scroll-margin-top:6rem}
+@media (min-width:768px){.tje{--pad:max(2.5rem,calc((100vw - 80rem) / 2))}}
+@media (min-width:1180px){.tje{--pad:max(4rem,calc((100vw - 80rem) / 2))}}
+.tje-skip{position:absolute;z-index:40;left:1rem;top:-5rem;padding:.75rem 1.125rem;border-radius:62.4375rem;background:var(--ink);color:#ffffff;font-size:.875rem;font-weight:600;text-decoration:none;transition:top .2s ease}
+.tje-skip:focus{top:1rem;color:#ffffff}
+@media (max-width:767px){.tje-aura{width:26.25rem;height:26.25rem;left:-13.75rem;top:-13.75rem}}
+.tje-orb{border-radius:50%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.5),rgba(255,255,255,0) 42%),radial-gradient(circle at 72% 78%,rgba(0,0,0,.28),rgba(0,0,0,0) 55%),linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+.tje-dot{flex:none;width:.875rem;height:.875rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+/* shared: type */
+.tje-kick{display:flex;align-items:center;gap:.75rem;margin:0 0 1.375rem;font-size:.78125rem;line-height:1.4;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+.tje-h2{margin:0;font-family:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;font-weight:400;font-size:clamp(2.25rem,4.2vw,3.75rem);line-height:1.04;letter-spacing:-.012em;color:var(--ink);text-wrap:balance}
+.tje-dark .tje-h2{color:var(--cream)}
+.tje-it{font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:.86em;letter-spacing:-.01em;color:var(--orange-deep)}
+.tje-lead{margin:0;font-size:1.25rem;line-height:1.6;color:var(--dim);text-wrap:pretty}
+.tje-dark .tje-lead{color:var(--cream-dim)}
+@media (max-width:767px){.tje-lead{font-size:1.125rem}}
+.tje-dark{background:var(--shadow);color:var(--cream)}
+/* shared: controls */
+.tje-label{display:block;margin:0 0 .5rem;font-size:.84375rem;font-weight:600;color:var(--ink)}
+.tje-input{flex:1 1 auto;min-width:0;height:3.5rem;padding:0 1.375rem;border-radius:62.4375rem;border:1.5px solid rgba(28,24,18,.2);background:#fdfdfc;color:var(--ink);font:inherit;font-size:1rem;transition:border-color .2s ease,box-shadow .2s ease}
+.tje-input::placeholder{color:#7a7164}
+.tje-input:hover{border-color:rgba(28,24,18,.34)}
+.tje-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 .25rem rgba(62,108,171,.18)}
+.tje-input.is-invalid{border-color:#a3241b;box-shadow:0 0 0 .25rem rgba(163,36,27,.12)}
+.tje-cta{display:inline-flex;align-items:center;justify-content:center;gap:.625rem;height:3.5rem;padding:0 1.625rem;border:0;border-radius:62.4375rem;background:var(--orange);color:#241904;font:inherit;font-size:1rem;font-weight:600;white-space:nowrap;cursor:pointer;text-decoration:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,background .2s ease}
+.tje-cta svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tje-cta:hover{background:#f08a55;color:#241904;transform:translateY(-2px);box-shadow:0 1.125rem 2.125rem -.875rem rgba(232,116,58,.8)}
+.tje-cta:hover svg{transform:translateX(.25rem)}
+.tje-cta:active{transform:translateY(1px) scale(.98)}
+.tje-cta[disabled]{cursor:progress;background:#ec8a57;transform:none;box-shadow:none}
+.tje-spin{width:1rem;height:1rem;border-radius:50%;border:2px solid rgba(36,25,4,.25);border-top-color:#241904;animation:tje-rot .8s linear infinite}
+.tje-suggest button{min-height:2rem;padding:0;border:0;background:none;font:inherit;font-weight:600;color:var(--blue);text-decoration:underline;text-underline-offset:.1875rem;cursor:pointer}
+.tje-story{display:inline-flex;align-items:center;gap:.5rem;width:fit-content;min-height:2.75rem;font-size:.9375rem;font-weight:600;color:var(--orange-deep);text-decoration:none}
+.tje-story svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tje-story:hover{color:#7e3412}
+.tje-story:hover svg{transform:translateX(.25rem)}
+.tje-check{flex:none;display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:50%;background:var(--orange);color:#241904;animation:tje-pop .5s cubic-bezier(.34,1.56,.64,1) both}
+.tje-success-title{margin:0;font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:2.125rem;line-height:1.05;color:var(--ink)}
+.tje-textbtn{display:inline-flex;align-items:center;min-height:2.75rem;padding:0;border:0;background:none;font:inherit;font-size:.90625rem;font-weight:600;color:var(--orange-deep);cursor:pointer;text-decoration:underline;text-underline-offset:.25rem}
+.tje-textbtn:hover{color:#7e3412}
+.tje-success-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem 1.5rem}
+/* ================= wayfinding: floating chapter bar (desktop) + thumb dock (phone) ================= */
+.tje-bar{position:fixed;z-index:30;top:.75rem;left:50%;width:min(calc(100% - 1.5rem),57.5rem);transform:translate(-50%,-150%);opacity:0;visibility:hidden;transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s linear .5s}
+.tje-bar.is-on{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s}
+.tje-bar-in{position:relative;display:flex;align-items:center;gap:1.125rem;height:3.75rem;padding:0 .5rem 0 1.25rem;overflow:hidden;border-radius:62.4375rem;background:rgba(253,253,252,.94);border:1px solid rgba(28,24,18,.08);box-shadow:0 1.125rem 2.5rem -1.375rem rgba(6,12,24,.45);-webkit-backdrop-filter:blur(1rem) saturate(1.4);backdrop-filter:blur(1rem) saturate(1.4);transition:background .45s ease,border-color .45s ease}
+.tje-bar-logo{position:relative;display:block;flex:none;border-radius:.5rem}
+.tje-bar-logo img{display:block;height:2.125rem;width:auto;transition:opacity .45s ease}
+.tje-bar-logo .tje-bar-logo-d{position:absolute;left:0;top:0;opacity:0}
+.tje-bar-ch{flex:1;min-width:0;margin:0;font-size:.78125rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .45s ease}
+.tje-bar.is-dark .tje-bar-in{background:rgba(14,26,44,.9);border-color:rgba(239,231,218,.14)}
+.tje-bar.is-dark .tje-bar-ch{color:var(--cream-dim)}
+.tje-bar.is-dark .tje-bar-logo-l{opacity:0}
+.tje-bar.is-dark .tje-bar-logo-d{opacity:1}
+/* never point at a form that's already on screen: the bar's CTA steps aside */
+.tje-bar .tje-btn-sm{transition:opacity .3s ease,visibility 0s linear 0s,transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,background .2s ease}
+.tje-bar.is-quiet .tje-btn-sm{opacity:0;visibility:hidden;transform:translateX(.625rem);pointer-events:none;transition:opacity .25s ease,visibility 0s linear .25s,transform .3s ease}
+.tje-bar-prog{position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--orange);transform-origin:left center;transform:scaleX(0);opacity:0}
+@supports (animation-timeline: scroll()){.tje-bar-prog{opacity:1;animation:tje-prog linear both;animation-timeline:scroll(root)}}
+@media (max-width:767px){.tje-bar{display:none}}
+.tje-dock{display:none}
+/* ================= 00 · hero ================= */
+.tje-nav{position:absolute;z-index:6;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.25rem var(--pad)}
+.tje-logo{display:block;border-radius:.5rem}
+.tje-logo img{display:block;height:3.25rem;width:auto;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.tje-logo:hover img{transform:translateY(-2px) scale(1.04)}
+.tje-links{display:flex;align-items:center;gap:2rem}
+.tje-link{position:relative;padding:.5rem 0;font-size:.9375rem;font-weight:500;color:var(--cream);text-decoration:none}
+.tje-link::after{content:"";position:absolute;left:0;right:100%;bottom:2px;height:1px;background:var(--orange-hi);transition:right .25s ease}
+.tje-link:hover{color:#ffffff}
+.tje-link:hover::after{right:0}
+.tje-btn-sm{display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:0 1.25rem;border-radius:62.4375rem;background:var(--orange);color:#241904;font-size:.90625rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,background .2s ease}
+.tje-btn-sm:hover{background:#f08a55;color:#241904;transform:translateY(-2px);box-shadow:0 .875rem 1.75rem -.75rem rgba(232,116,58,.75)}
+/* the guide cover (hero + offer) */
+.tje-cover-stage{position:relative;width:100%;margin:0;padding:1.625rem 0;display:flex;justify-content:center;align-items:center}
+.tje-cover-glow{position:absolute;left:50%;top:50%;width:32.5rem;height:32.5rem;max-width:140%;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(62,108,171,.34),rgba(62,108,171,.1) 58%,rgba(62,108,171,0));pointer-events:none}
+.tje-cover-glow::after{content:"";position:absolute;inset:13%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(239,231,218,.09)}
+.tje-cover-float{position:relative}
+.tje-cover{position:relative;width:15.75rem;aspect-ratio:252/348;transform:perspective(87.5rem) rotateY(-16deg) rotateX(5deg) rotateZ(2.5deg);transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.tje-cover-stage:hover .tje-cover{transform:perspective(87.5rem) rotateY(-5deg) rotateX(2deg) rotateZ(1deg)}
+.tje-cover-pages{position:absolute;top:.3125rem;right:-.5rem;bottom:-.375rem;left:.375rem;border-radius:.25rem .625rem .625rem .25rem;background:repeating-linear-gradient(90deg,#e6ddcd 0 1px,#f8f3ea 1px .1875rem);box-shadow:0 2.75rem 4rem -1.625rem rgba(0,0,0,.7)}
+.tje-cover-face{position:absolute;inset:0;display:flex;flex-direction:column;padding:1.625rem 1.375rem 1.25rem 1.875rem;overflow:hidden;border-radius:.25rem .625rem .625rem .25rem;background:#fbf8f2;box-shadow:inset 0 0 0 1px rgba(28,24,18,.06)}
+.tje-cover-spine{position:absolute;left:0;top:0;bottom:0;width:1rem;background:linear-gradient(90deg,rgba(28,24,18,.2),rgba(28,24,18,.05) 45%,rgba(255,255,255,.55) 62%,rgba(28,24,18,0))}
+.tje-cover-kicker{margin:0;font-size:.625rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--orange-deep)}
+.tje-emblem{width:4.75rem;height:4.75rem;margin:1.25rem 0 1.25rem;box-shadow:0 0 0 .375rem #fbf8f2,0 0 0 .4375rem rgba(28,24,18,.22),0 .75rem 1rem -.375rem rgba(28,24,18,.35)}
+.tje-cover-title{margin:0;font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:1.6875rem;line-height:1.04;letter-spacing:-.005em;color:var(--ink)}
+.tje-cover-title i{font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:.86em;color:var(--orange-deep)}
+.tje-cover-foot{margin-top:auto;padding-top:.75rem;border-top:1px solid rgba(28,24,18,.1)}
+.tje-cover-foot img{display:block;height:2.125rem;width:auto}
+.tje-sticker{position:absolute;top:-1.375rem;right:-1.625rem;width:5.625rem;height:5.625rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:50%;background:var(--orange);color:#241904;text-align:center;transform:rotate(12deg);box-shadow:0 .875rem 1.625rem -.625rem rgba(0,0,0,.5)}
+.tje-sticker b{font-family:"Libre Caslon Display",Georgia,serif;font-weight:400;font-size:1.5rem;line-height:1}
+.tje-sticker span{font-size:.625rem;font-weight:700;letter-spacing:.1em;line-height:1.15;text-transform:uppercase}
+/* ================= footer ================= */
+/* light + quiet: the finale panel is the last strong shape on the page */
+.tje-foot{padding:3.5rem var(--pad) 2.25rem;background:var(--pearl);color:var(--ink)}
+@media (max-width:767px){.tje-foot{padding:2.75rem var(--pad) max(2.25rem,env(safe-area-inset-bottom))}}
+.tje-foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.75rem}
+.tje-foot-brand{display:flex;flex-wrap:wrap;align-items:center;gap:1.375rem}
+.tje-foot-brand img{display:block;height:3.25rem;width:auto}
+.tje-foot-tag{margin:0;font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:1.1875rem;color:var(--dim)}
+.tje-foot-links{display:flex;flex-wrap:wrap;align-items:center;gap:1.75rem}
+.tje-foot .tje-link{color:var(--ink)}
+.tje-foot .tje-link:hover{color:var(--orange-deep)}
+.tje-foot .tje-link::after{background:var(--orange)}
+.tje-foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.875rem;margin-top:2.5rem;padding-top:1.375rem;border-top:1px solid var(--line);font-size:.84375rem;color:#6b6254}
+.tje-foot-bottom a{color:#6b6254;text-decoration:none}
+.tje-foot-bottom a:hover{color:var(--ink)}
+.tje-foot-legal{display:flex;flex-wrap:wrap;gap:1.25rem}
+@keyframes tje-rise{from{opacity:0;transform:translateY(1.125rem)}to{opacity:1;transform:none}}
+@keyframes tje-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-.5625rem)}}
+@keyframes tje-prog{to{transform:scaleX(1)}}
+@keyframes tje-rot{to{transform:rotate(360deg)}}
+@keyframes tje-pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
