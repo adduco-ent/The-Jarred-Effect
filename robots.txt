@@ -1,3 +1,6 @@
+# Every crawler is welcome, including AI search and assistant crawlers (OAI-SearchBot, GPTBot, ClaudeBot, PerplexityBot, Google-Extended).
 User-agent: *
 Allow: /
 Disallow: /api/
+
+Sitemap: https://thejarredeffect.com/sitemap.xml

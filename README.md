@@ -9,6 +9,7 @@ Static HTML, CSS and JavaScript with no build step, plus two small Vercel functi
 | `index.html` | Homepage |
 | `about.html` | About page |
 | `opt-in.html` | Get the guide page |
+| `compare.html` | Manifestation methods compared: what each approach gets right and leaves out |
 | `guide/index.html` | Makes the `/guide` short link work on any server, including a plain local one: it forwards to `opt-in.html` |
 | `privacy.html` | Privacy policy, a **starter draft** to review before launch |
 | `unsubscribed.html` | Where the unsubscribe link in emails lands |
@@ -22,6 +23,7 @@ Static HTML, CSS and JavaScript with no build step, plus two small Vercel functi
 | `api/unsubscribe.js` | Handles the unsubscribe link in emails, including Gmail and Yahoo one-click unsubscribe |
 | `lib/` | Code shared by the two functions, including the guide email itself (`lib/guide-email.js`) |
 | `vercel.json` | Redirects `/guide` to `opt-in.html` on the live site, plus security headers |
+| `sitemap.xml`, `robots.txt`, `llms.txt` | Search and AI-assistant discovery (see "Search and AI visibility" below) |
 
 ## How the pages work
 
@@ -47,6 +49,13 @@ All sizes in the CSS are in `rem`, and `1rem` is the browser's base size (16px b
 - Phones and tablets (under 1180px wide) always render at 100%. There the hero stacks and scrolls as designed.
 - To change it, edit the `@media … {:root{--z:…}}` lines. Each line sets the zoom for windows up to that height.
 - When you add CSS, use `rem` (px ÷ 16) so new sizes scale with the rest. Hairlines of 1–2px can stay in `px`.
+
+## Search and AI visibility
+
+- Every main page has a title, description, canonical URL, social-share tags and structured data (JSON-LD) in its `<head>`. The homepage and `compare.html` also mark up their FAQs, which is what Google and AI assistants quote.
+- All of these use **`https://thejarredeffect.com`**. If the site goes live on a different domain, find and replace that address across the `.html` files, `sitemap.xml`, `robots.txt` and `llms.txt`.
+- When you add a page, add it to `sitemap.xml`. When you change the homepage FAQ, update the FAQ block in the homepage's structured data to match.
+- After launch, add the site to Google Search Console and Bing Webmaster Tools and submit `sitemap.xml`.
 
 ## Deploy (GitHub + Vercel)
 

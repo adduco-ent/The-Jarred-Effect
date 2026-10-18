@@ -88,6 +88,25 @@
 .tje-note-name{margin:0;font-size:.9375rem;font-weight:600;color:var(--ink)}
 .tje-note-role{margin:2px 0 0;font-size:.84375rem;color:var(--dim)}
 @media (max-width:767px){.tje-cover-glow{width:21.25rem;height:21.25rem;opacity:.7}.tje-cover{width:13.75rem}.tje-cover-title{font-size:1.4375rem}.tje-emblem{width:4rem;height:4rem;margin:1rem 0}.tje-sticker{width:5rem;height:5rem;right:-1.25rem}.tje-sticker b{font-size:1.3125rem}}
+.tje-card-hook{display:none}
+/* phone: the guide becomes a product row inside the form card. A small upright cover sits top-left, the label and a
+   one-line hook sit beside it, and the form runs full width below. The note from Jarred steps aside (About is in the menu).
+   zoom shrinks the whole cover, layout box included, so its margins are written in pre-zoom units (÷ .42). */
+@media (max-width:767px){
+  .tje-lower{gap:0;margin-top:2rem}
+  .tje-note{display:none}
+  .tje-hero .tje-cover-stage{grid-row:1;grid-column:1;justify-self:start;align-self:start;z-index:2;width:auto;padding:0;margin:calc(1.5rem / .42) 0 0 calc(1.25rem / .42);zoom:.42}
+  .tje-hero .tje-cover-glow,.tje-hero .tje-sticker{display:none}
+  .tje-hero .tje-cover{transform:none}
+  .tje-hero .tje-cover-float{animation:none!important}
+  .tje-hero .tje-cover-pages{box-shadow:0 1.5rem 2.5rem -1rem rgba(0,0,0,.45)}
+  .tje-hero .tje-card{grid-row:1;grid-column:1;padding-top:1.5rem}
+  .tje-hero .tje-cardkick,.tje-hero .tje-card-hook{margin-left:7rem}
+  .tje-hero .tje-cardkick{align-items:flex-start;margin-top:.25rem;margin-bottom:.5rem;font-size:.6875rem;letter-spacing:.14em;text-wrap:balance}
+  .tje-hero .tje-cardkick .tje-dot{margin-top:.125rem}
+  .tje-hero .tje-card-hook{display:block;min-height:5.75rem;margin-top:0;margin-bottom:1.5rem;font-family:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;font-weight:400;font-size:1.5rem;line-height:1.12;color:var(--ink);text-wrap:balance}
+  .tje-hero .tje-card-lede{display:none}
+}
 .tje-cover--lg{width:20rem}
 .tje-cover--lg .tje-cover-face{padding:2.125rem 1.75rem 1.625rem 2.375rem}
 .tje-cover--lg .tje-cover-kicker{font-size:.71875rem}
