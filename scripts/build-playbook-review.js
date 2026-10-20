@@ -9,15 +9,29 @@ const sideName = (s) => s[0].toUpperCase() + s.slice(1);
 const pairOf = { desire: 'Desire ↔ Discipline', discipline: 'Desire ↔ Discipline', faith: 'Faith ↔ Friction', friction: 'Faith ↔ Friction', ambition: 'Ambition ↔ Acceptance', acceptance: 'Ambition ↔ Acceptance', control: 'Control ↔ Trust', trust: 'Control ↔ Trust' };
 const whoNeeds = { discipline: 'People who run on wanting (often Dreamers)', desire: 'People who run on effort (often Achievers)', faith: 'People who get stuck in what’s wrong', friction: 'People who push fear aside fast (often Dreamers)', ambition: 'People at peace who risk settling', acceptance: 'People always reaching for next', control: 'People who hand everything off', trust: 'People who carry it all themselves (often Achievers)' };
 
-const decide = (id) => `<div class="dec" data-id="${id}" role="group" aria-label="Your decision">
+// Change opens the item's own wording, prefilled, so Jarred can write the exact version he wants
+const ORIG = {};
+const field = (id, f) => {
+  ORIG[id + '.' + f.key] = f.value;
+  const fid = 'e-' + id + '-' + f.key;
+  const box = f.short ? `<input id="${fid}" data-edit="${id}" data-key="${f.key}" type="${f.type || 'text'}" value="${esc(f.value)}">`
+    : `<textarea id="${fid}" data-edit="${id}" data-key="${f.key}" rows="${f.rows || 2}">${esc(f.value)}</textarea>`;
+  return `<div class="f"><label for="${fid}">${esc(f.label)}</label>${box}</div>`;
+};
+const decide = (id, fields) => `<div class="dec" data-id="${id}" role="group" aria-label="Your decision">
   <button type="button" data-c="approve">Approve</button><button type="button" data-c="change">Change</button><button type="button" data-c="hold">Hold</button>
 </div>
-<div class="note" data-note="${id}" hidden><label for="n-${id}">What should change?</label><textarea id="n-${id}" rows="2" placeholder="Say it how you’d say it. I’ll rewrite from your note."></textarea><button type="button" class="save" data-save="${id}">Save note</button></div>`;
+<div class="note" data-note="${id}" hidden>
+  <p class="note-h">Write it exactly how you want it</p>
+  ${fields.map((f) => field(id, f)).join('')}
+  <div class="f"><label for="n-${id}">Anything else? <i>optional</i></label><textarea id="n-${id}" rows="2" placeholder="A note for me, if the wording isn’t the whole story."></textarea></div>
+  <div class="note-a"><button type="button" class="save" data-save="${id}">Save my wording</button><button type="button" class="reset" data-reset="${id}">Undo my edits</button></div>
+</div>`;
 
 const listItem = (id, kicker, title, lines) => `<article class="item" data-item="${id}">
   <header><p class="k">${esc(kicker)}</p><h3>${esc(title)}</h3></header>
   <ol class="lines">${lines.map((l) => `<li>${esc(l)}</li>`).join('')}</ol>
-  ${decide(id)}
+  ${decide(id, lines.map((l, i) => ({ key: 'line' + (i + 1), label: 'Rule ' + (i + 1), value: l, rows: 2 })))}
 </article>`;
 
 const rep = (r) => `<article class="item rep" data-item="${r.id}">
@@ -25,7 +39,13 @@ const rep = (r) => `<article class="item rep" data-item="${r.id}">
   <p class="what">${esc(r.what)}</p>
   <p class="eg"><span>For example</span>${esc(r.example)}</p>
   <p class="rough"><span>Rough day?</span>${esc(r.rough)}</p>
-  ${decide(r.id)}
+  ${decide(r.id, [
+    { key: 'title', label: 'Title', value: r.title, short: true },
+    { key: 'minutes', label: 'Minutes', value: String(r.minutes), short: true, type: 'number' },
+    { key: 'what', label: 'What to do', value: r.what, rows: 3 },
+    { key: 'example', label: 'For example', value: r.example },
+    { key: 'rough', label: 'Rough day?', value: r.rough }
+  ])}
 </article>`;
 
 const groups = sideOrder.map((s) => `<section class="side" id="side-${s}">
@@ -36,8 +56,12 @@ const groups = sideOrder.map((s) => `<section class="side" id="side-${s}">
 const sq = P.shadowQuestions.map((q) => `<article class="item" data-item="sq-${q.id}">
   <header><p class="k">${esc(q.name)}</p><h3 class="q">${esc(q.ask)}</h3></header>
   <p class="eg"><span>If they want to go deeper</span>${q.followUps.map(esc).join(' ')}</p>
-  ${decide('sq-' + q.id)}
-</article>`).join('') + `<article class="item" data-item="going-deep"><header><p class="k">Shown with every shadow question</p><h3>Going deep</h3></header><p class="what">${esc(P.goingDeep)}</p>${decide('going-deep')}</article>`;
+  ${decide('sq-' + q.id, [
+    { key: 'ask', label: 'The question', value: q.ask },
+    { key: 'followUp1', label: 'Follow-up 1', value: q.followUps[0] },
+    { key: 'followUp2', label: 'Follow-up 2', value: q.followUps[1] }
+  ])}
+</article>`).join('') + `<article class="item" data-item="going-deep"><header><p class="k">Shown with every shadow question</p><h3>Going deep</h3></header><p class="what">${esc(P.goingDeep)}</p>${decide('going-deep', [{ key: 'text', label: 'The note', value: P.goingDeep, rows: 3 }])}</article>`;
 
 const ids = ['shape', 'voice', 'hard'].concat(P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
 
@@ -110,9 +134,16 @@ section{padding-block:2.5rem 0}
 .dec button[aria-pressed="true"][data-c="approve"]{background:var(--ok);border-color:var(--ok);color:var(--card)}
 .dec button[aria-pressed="true"][data-c="change"]{background:var(--orange);border-color:var(--orange);color:#241904}
 .dec button[aria-pressed="true"][data-c="hold"]{background:var(--hold);border-color:var(--hold);color:var(--card)}
-.note{display:grid;gap:.375rem}
-.note label{font-size:.8125rem;font-weight:600}
-.note textarea{font:inherit;font-size:.9375rem;width:100%;padding:.625rem .75rem;border-radius:.75rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);resize:vertical}
+.note{display:grid;gap:.75rem;padding:1rem;margin-top:.25rem;border-radius:1rem;background:var(--bg);border:1px solid var(--orange)}
+.note-h{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust)}
+.f{display:grid;gap:.3rem;min-width:0}
+.f label{font-size:.8125rem;font-weight:600}
+.f label i{font-style:normal;font-weight:400;color:var(--faint)}
+.note textarea,.note input{font:inherit;font-size:.9375rem;width:100%;padding:.55rem .7rem;border-radius:.65rem;border:1px solid var(--line);background:var(--card);color:var(--fg);resize:vertical}
+.note input[type=number]{max-width:6rem}
+.note [data-edit].is-edited{border-color:var(--orange);box-shadow:0 0 0 2px rgba(232,116,58,.15)}
+.note-a{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+.reset{font:inherit;font-size:.8125rem;padding:0;border:0;background:none;color:var(--faint);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
 .save{justify-self:start;font:inherit;font-size:.8125rem;font-weight:600;padding:.4rem .9rem;border-radius:99px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
 .saved{font-size:.8125rem;color:var(--ok)}
 .toc{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.5rem}
@@ -128,7 +159,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <p class="k">The Other Half · Playbook version ${P.version}</p>
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
-  <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> I rewrite it from your note</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
+  <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> edit the wording right there, exactly how you want it</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
   <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules'].map((t,i)=>`<a href="#${['shape','voice','hard'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
@@ -159,6 +190,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
 <script>
 (function () {
   var IDS = ${JSON.stringify(ids)};
+  var ORIG = ${JSON.stringify(ORIG)};
   var state = {}; // id -> {choice, note}
   var db = null;
   var statusEl = document.getElementById('status');
@@ -169,8 +201,16 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
       if (!item) return;
       if (d.choice) { item.setAttribute('data-choice', d.choice); n[d.choice]++; } else item.removeAttribute('data-choice');
       [].forEach.call(item.querySelectorAll('.dec button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-c') === d.choice)); });
-      var note = item.querySelector('[data-note]'), ta = note && note.querySelector('textarea');
-      if (note) { note.hidden = d.choice !== 'change'; if (ta && document.activeElement !== ta && d.note != null) ta.value = d.note; }
+      var note = item.querySelector('[data-note]'), ta = document.getElementById('n-' + id);
+      if (note) {
+        note.hidden = d.choice !== 'change';
+        if (ta && document.activeElement !== ta && d.note != null) ta.value = d.note;
+        [].forEach.call(note.querySelectorAll('[data-edit]'), function (el) {
+          var k = id + '.' + el.getAttribute('data-key');
+          if (document.activeElement !== el) el.value = (d.edit && d.edit[el.getAttribute('data-key')] != null) ? d.edit[el.getAttribute('data-key')] : ORIG[k];
+          el.classList.toggle('is-edited', el.value !== ORIG[k]);
+        });
+      }
     });
     var done = n.approve + n.change + n.hold, t = IDS.length;
     document.getElementById('tally').innerHTML = '<b>' + done + '</b> of ' + t + ' decided · ' + n.approve + ' approved · ' + n.change + ' to change · ' + n.hold + ' held';
@@ -182,7 +222,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   function write(id) {
     var d = state[id];
     if (!db) return;
-    db.collection('decisions').doc(id).set({ choice: d.choice || null, note: d.note || '', at: new Date().toISOString() })
+    db.collection('decisions').doc(id).set({ choice: d.choice || null, note: d.note || '', edit: d.edit || {}, at: new Date().toISOString() })
       .then(function () { statusEl.className = 'status'; statusEl.textContent = 'Saved. Claude can read your choices.'; })
       .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That choice didn’t save. Try it again in a moment.'; });
   }
@@ -193,14 +233,27 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
       var d = state[id] = Object.assign({}, state[id]);
       d.choice = d.choice === c ? null : c;
       paint(); write(id);
-      if (d.choice === 'change') { var ta = document.getElementById('n-' + id); if (ta) ta.focus(); }
+      if (d.choice === 'change') { var first = document.querySelector('[data-note="' + id + '"] [data-edit]'); if (first) first.focus(); }
       return;
     }
     var s = e.target.closest('[data-save]');
     if (s) {
-      var sid = s.getAttribute('data-save');
-      state[sid] = Object.assign({}, state[sid], { note: document.getElementById('n-' + sid).value.trim() });
-      write(sid); s.textContent = 'Note saved'; setTimeout(function () { s.textContent = 'Save note'; }, 1500);
+      var sid = s.getAttribute('data-save'), edit = {};
+      // keep only the fields he actually changed
+      [].forEach.call(document.querySelectorAll('[data-edit="' + sid + '"]'), function (el) {
+        var key = el.getAttribute('data-key'), v = el.value.trim();
+        if (v !== ORIG[sid + '.' + key]) edit[key] = v;
+      });
+      state[sid] = Object.assign({}, state[sid], { note: document.getElementById('n-' + sid).value.trim(), edit: edit });
+      paint(); write(sid); s.textContent = 'Saved'; setTimeout(function () { s.textContent = 'Save my wording'; }, 1500);
+      return;
+    }
+    var rs = e.target.closest('[data-reset]');
+    if (rs) {
+      var rid = rs.getAttribute('data-reset');
+      state[rid] = Object.assign({}, state[rid], { edit: {} });
+      [].forEach.call(document.querySelectorAll('[data-edit="' + rid + '"]'), function (el) { el.value = ORIG[rid + '.' + el.getAttribute('data-key')]; });
+      paint(); write(rid);
       return;
     }
     var f = e.target.closest('[data-f]');
@@ -210,6 +263,10 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
       [].forEach.call(document.querySelectorAll('[data-f]'), function (x) { x.setAttribute('aria-pressed', String(x === f)); });
     }
   });
+  document.addEventListener('input', function (e) {
+    var el = e.target.closest('[data-edit]');
+    if (el) el.classList.toggle('is-edited', el.value.trim() !== ORIG[el.getAttribute('data-edit') + '.' + el.getAttribute('data-key')]);
+  });
   paint();
   if (!window.claude || !window.claude.use) { statusEl.className = 'status warn'; statusEl.textContent = 'Open this page on claude.ai to save your choices.'; return; }
   window.claude.use('db').then(function (d) {
@@ -217,7 +274,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     if (!db) { statusEl.className = 'status warn'; statusEl.textContent = 'Sign in on claude.ai to save your choices. You can still read everything.'; return; }
     statusEl.textContent = 'Your choices save as you make them.';
     db.collection('decisions').onSnapshot(function (snap) {
-      snap.docs.forEach(function (doc) { var v = doc.data(); if (v) state[doc.id] = { choice: v.choice || null, note: v.note || '' }; });
+      snap.docs.forEach(function (doc) { var v = doc.data(); if (v) state[doc.id] = { choice: v.choice || null, note: v.note || '', edit: v.edit || {} }; });
       paint();
     }, function () { statusEl.className = 'status warn'; statusEl.textContent = 'Lost the connection. Reload the page to keep saving.'; });
   });
