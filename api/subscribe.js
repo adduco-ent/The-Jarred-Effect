@@ -10,12 +10,22 @@
 //   UNSUBSCRIBE_SECRET  required  any long random string; signs the unsubscribe links
 //   RESEND_SEGMENT_ID   optional  add every new contact to this Resend segment
 //   RESEND_REPLY_TO     optional  where replies go (defaults to the from address)
+//   TEST_EMAILS         optional  comma-separated addresses that skip the once-a-day limit, for testing.
+//                                 Gmail-style "+tags" count as the same address (you+anything@gmail.com).
 const crypto = require('crypto');
 const { resend, reply, unsubscribeUrl } = require('../lib/resend');
 const guideEmail = require('../lib/guide-email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const REQUIRED = ['RESEND_API_KEY', 'RESEND_FROM', 'GUIDE_URL', 'SITE_URL', 'UNSUBSCRIBE_SECRET'];
+
+// testers get every email they ask for; everyone else gets at most one guide email a day
+function isTester(email) {
+  const list = String(process.env.TEST_EMAILS || '').toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
+  if (!list.length) return false;
+  const bare = email.replace(/\+[^@]*@/, '@');
+  return list.includes(email) || list.includes(bare);
+}
 
 module.exports = async function subscribe(req, res) {
   if (req.method !== 'POST') {
@@ -60,7 +70,7 @@ module.exports = async function subscribe(req, res) {
   const unsub = unsubscribeUrl(site, email);
   const msg = guideEmail({ firstName, guideUrl: process.env.GUIDE_URL, siteUrl: site, unsubscribeUrl: unsub });
   const day = new Date().toISOString().slice(0, 10);
-  const key = 'guide-' + crypto.createHash('sha256').update(email + '|' + day).digest('hex').slice(0, 40);
+  const key = isTester(email) ? undefined : 'guide-' + crypto.createHash('sha256').update(email + '|' + day).digest('hex').slice(0, 40);
   const sent = await resend('/emails', 'POST', {
     from: process.env.RESEND_FROM,
     to: [email],
