@@ -216,14 +216,14 @@
     setTimeout(function () { busy = false; go('result'); }, 1700);
   }
   function shareIcon() { return '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 13V3M6 7l4-4 4 4M4 11v5h12v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
-  function quizUrl() { return location.origin + location.pathname.replace(/[^/]*$/, ''); }
+  function quizUrl() { return location.origin + '/app/'; }
   // share: the type card image plus a link to take the quiz; falls back to copying the link
   function share(btn) {
     var r = score(state.answers), t = C.types[r.type];
     var note = root.querySelector('.oh-share-note');
     var text = 'I’m ' + t.name + '. ' + t.line + ' Which one are you?';
     var url = quizUrl();
-    var img = 'share/' + r.type + '.jpg';
+    var img = '/app/share/' + r.type + '.jpg';
     var save = ' <a href="' + img + '" download="the-jarred-effect-' + r.type + '.jpg">Save the image</a>';
     var say = function (html) { if (note) note.innerHTML = html; };
     // no share sheet (most computers): copy the link and offer the card image to post
@@ -233,7 +233,7 @@
       try { navigator.clipboard.writeText(text + ' ' + url).then(done, fail); } catch (e) { fail(); }
     };
     if (!navigator.share) { copy(); return; }
-    fetch('share/' + r.type + '.jpg').then(function (res) { return res.blob(); }).then(function (blob) {
+    fetch('/app/share/' + r.type + '.jpg').then(function (res) { return res.blob(); }).then(function (blob) {
       var file = new File([blob], 'the-jarred-effect-' + r.type + '.jpg', { type: 'image/jpeg' });
       var data = navigator.canShare && navigator.canShare({ files: [file] }) ? { files: [file], text: text, url: url } : { text: text, url: url };
       return navigator.share(data);

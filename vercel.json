@@ -10,6 +10,11 @@
       "source": "/guide/",
       "destination": "/opt-in.html",
       "permanent": false
+    },
+    {
+      "source": "/app",
+      "destination": "/app/",
+      "permanent": true
     }
   ],
   "headers": [
