@@ -10,6 +10,11 @@
   var root = document.getElementById('app');
 
   var state = load();
+  (function () {
+    var m = /[?&]r=([a-z]+)/i.exec(location.search);
+    var answers = m && window.OH_SCORE.decode(m[1], C.questions.length);
+    if (answers) { state = { answers: answers, step: C.questions.length - 1, done: true }; save(); if (location.hash !== '#result') location.hash = 'result'; }
+  })();
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY)) || { answers: [] }; } catch (e) { return { answers: [] }; }
   }
@@ -17,35 +22,9 @@
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private window: the quiz still works, it just won't remember */ }
   }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function avg(list) { return list.length ? list.reduce(function (a, b) { return a + b; }, 0) / list.length : 0; }
 
-  // ---------------------------------------------------------------- scoring
-  // Each answer is -2 (strongly A) .. +2 (strongly B). Pairs: negative leans to the A pole.
-  function score(answers) {
-    var by = {};
-    C.questions.forEach(function (q, i) { (by[q.on] = by[q.on] || []).push(answers[i] || 0); });
-    var pairs = {};
-    C.pairs.forEach(function (p) { pairs[p.id] = avg(by[p.id] || []); });
-    var swing = avg(by.swing || []);
-    var insight = avg(by.insight || []);
-    var dreamer = -(pairs.dd + pairs.ff) / 2;      // leans desire + faith
-    var achiever = (pairs.dd - pairs.ct) / 2;      // leans discipline + control
-    var type;
-    if (swing >= 1) type = 'pendulum';
-    else if (insight >= 1) type = 'excavator';
-    else if (dreamer >= 1) type = 'dreamer';
-    else if (achiever >= 1) type = 'achiever';
-    else {
-      var leans = { dreamer: dreamer, achiever: achiever, pendulum: swing, excavator: insight };
-      var top = Object.keys(leans).sort(function (a, b) { return leans[b] - leans[a]; })[0];
-      type = leans[top] > 0.5 ? top : 'calibrated';
-    }
-    // the missing half: the far pole of the pair they lean hardest on
-    var far = C.pairs.slice().sort(function (a, b) { return Math.abs(pairs[b.id]) - Math.abs(pairs[a.id]); })[0];
-    var missing = Math.abs(pairs[far.id]) < 0.5 ? null : (pairs[far.id] < 0 ? far.b : far.a);
-    var leaning = missing ? (pairs[far.id] < 0 ? far.a : far.b) : null;
-    return { pairs: pairs, swing: swing, insight: insight, type: type, missing: missing, leaning: leaning };
-  }
+  // scoring lives in score.js, shared with the server
+  function score(answers) { return window.OH_SCORE.score(C, answers); }
 
   // ---------------------------------------------------------------- screens
   var screens = {
@@ -105,6 +84,7 @@
           '<h1 class="oh-type-name">' + esc(t.name) + '</h1>' +
           '<p class="oh-type-line">' + esc(t.line) + '</p>' +
         '</div>' +
+        '<div class="oh-share-row"><button class="oh-share" type="button" data-share>' + shareIcon() + '<span>Share your type</span></button><span class="oh-share-note" role="status"></span></div>' +
         '<div class="oh-sec">' +
           '<p class="oh-sec-k">Your balance</p>' +
           '<ul class="oh-map" aria-label="Your balance map">' + map + '</ul>' +
@@ -140,11 +120,16 @@
           '<p class="oh-shadow-by">— ' + esc(t.question.name) + '</p>' +
           '<p class="oh-fine">' + esc(t.question.hint) + ' Answer it honestly, not nicely.</p>' +
         '</div>' +
-        '<div class="oh-next" aria-disabled="true">' +
-          '<p class="oh-next-k">Your next step <span>Coming soon</span></p>' +
+        '<form class="oh-next" data-results novalidate>' +
+          '<p class="oh-next-k">Your next step</p>' +
           '<p class="oh-next-t">Turn this into a plan.</p>' +
-          '<p class="oh-next-d">Name the one thing you want. You’ll get a 7-day plan built for your type, one small step a day, starting with your other half.</p>' +
-        '</div>' +
+          '<p class="oh-next-d">Name the one thing you want, and get your full results by email. Your 7-day plan follows as soon as it’s ready.</p>' +
+          '<label class="oh-field"><span>The one thing you want <i>optional</i></span><input name="ask" type="text" maxlength="200" autocomplete="off" placeholder="e.g. run a 5K by spring"></label>' +
+          '<label class="oh-field"><span>Your email</span><input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></label>' +
+          '<input class="oh-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+          '<button class="oh-cta" type="submit">Email me my results' + arrow() + '</button>' +
+          '<p class="oh-form-note" role="status">One email with your results now, and your plan when it’s ready. Unsubscribe anytime.</p>' +
+        '</form>' +
         '<p class="oh-fine oh-retake"><button class="oh-link" type="button" data-retake>Retake the quiz</button></p>' +
         '</section>';
     }
@@ -230,6 +215,51 @@
     }, 340);
     setTimeout(function () { busy = false; go('result'); }, 1700);
   }
+  function shareIcon() { return '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 13V3M6 7l4-4 4 4M4 11v5h12v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function quizUrl() { return location.origin + location.pathname.replace(/[^/]*$/, ''); }
+  // share: the type card image plus a link to take the quiz; falls back to copying the link
+  function share(btn) {
+    var r = score(state.answers), t = C.types[r.type];
+    var note = root.querySelector('.oh-share-note');
+    var text = 'I’m ' + t.name + '. ' + t.line + ' Which one are you?';
+    var url = quizUrl();
+    var img = 'share/' + r.type + '.jpg';
+    var save = ' <a href="' + img + '" download="the-jarred-effect-' + r.type + '.jpg">Save the image</a>';
+    var say = function (html) { if (note) note.innerHTML = html; };
+    // no share sheet (most computers): copy the link and offer the card image to post
+    var copy = function () {
+      var done = function () { say('Link copied.' + save); };
+      var fail = function () { say('<a href="' + url + '">' + esc(url.replace(/^https?:\/\//, '')) + '</a> ·' + save); };
+      try { navigator.clipboard.writeText(text + ' ' + url).then(done, fail); } catch (e) { fail(); }
+    };
+    if (!navigator.share) { copy(); return; }
+    fetch('share/' + r.type + '.jpg').then(function (res) { return res.blob(); }).then(function (blob) {
+      var file = new File([blob], 'the-jarred-effect-' + r.type + '.jpg', { type: 'image/jpeg' });
+      var data = navigator.canShare && navigator.canShare({ files: [file] }) ? { files: [file], text: text, url: url } : { text: text, url: url };
+      return navigator.share(data);
+    }).catch(function (err) { if (!err || err.name !== 'AbortError') copy(); });
+  }
+  // the next step: save their Ask and email their results
+  function sendResults(form) {
+    var email = form.email.value.trim(), note = form.querySelector('.oh-form-note'), btn = form.querySelector('button[type=submit]');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { note.textContent = 'That email doesn’t look right. Check it and try again.'; form.email.focus(); return; }
+    btn.disabled = true; form.classList.add('is-sending'); note.textContent = 'Sending…';
+    fetch('/api/quiz', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, ask: form.ask.value, r: window.OH_SCORE.encode(state.answers), source: 'quiz', company: form.company.value }) })
+      .then(function (res) { return res.json().catch(function () { return {}; }).then(function (d) { if (!res.ok || !d.ok) throw new Error('failed'); }); })
+      .then(function () {
+        state.sentTo = email; save();
+        form.classList.remove('is-sending'); form.classList.add('is-sent');
+        form.innerHTML = '<p class="oh-next-k">Your next step</p><p class="oh-next-t">It’s on its way.</p>' +
+          '<p class="oh-next-d">Your results are headed to <b>' + esc(email) + '</b>. If it’s not there in a few minutes, check your spam folder.</p>' +
+          '<p class="oh-next-d">While you wait: who do you know who’d want to see their type?</p>' +
+          '<button class="oh-share oh-share--dark" type="button" data-share>' + shareIcon() + '<span>Share your type</span></button>';
+      })
+      .catch(function () {
+        btn.disabled = false; form.classList.remove('is-sending');
+        note.textContent = 'That didn’t go through. Give it another try in a moment.';
+      });
+  }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function arrow() { return '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
   function backArrow() { return '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 10H5M9 5l-5 5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
@@ -275,9 +305,15 @@
     } else if (t.hasAttribute('data-back')) {
       if (busy) return;
       if ((state.step || 0) > 0) { state.step -= 1; save(); turn(state.step, -1); } else go('welcome');
+    } else if (t.hasAttribute('data-share')) {
+      share(t);
     } else if (t.hasAttribute('data-retake')) {
       state = { answers: [], step: 0 }; save(); go('quiz');
     }
+  });
+  root.addEventListener('submit', function (e) {
+    var f = e.target.closest('[data-results]');
+    if (f) { e.preventDefault(); sendResults(f); }
   });
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || root.getAttribute('data-screen') !== 'quiz') return;

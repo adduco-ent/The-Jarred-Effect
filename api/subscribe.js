@@ -13,7 +13,7 @@
 //   TEST_EMAILS         optional  comma-separated addresses that skip the once-a-day limit, for testing.
 //                                 Gmail-style "+tags" count as the same address (you+anything@gmail.com).
 const crypto = require('crypto');
-const { resend, reply, unsubscribeUrl, isTester } = require('../lib/resend');
+const { resend, reply, unsubscribeUrl, isTester, saveContact } = require('../lib/resend');
 const guideEmail = require('../lib/guide-email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -45,17 +45,8 @@ module.exports = async function subscribe(req, res) {
     return reply(res, 503, { ok: false, error: 'not_configured' });
   }
 
-  // 1. the contact. Asking again counts as opting back in.
-  const contact = { email, unsubscribed: false };
-  if (firstName) contact.first_name = firstName;
-  if (process.env.RESEND_SEGMENT_ID) contact.segments = [{ id: process.env.RESEND_SEGMENT_ID }];
-  const created = await resend('/contacts', 'POST', contact);
-  if (!created.ok) {
-    const patch = { unsubscribed: false };
-    if (firstName) patch.first_name = firstName;
-    const updated = await resend('/contacts/' + encodeURIComponent(email), 'PATCH', patch);
-    if (!updated.ok) console.error('subscribe: contact not saved', created.status, created.data, updated.status, updated.data);
-  }
+  // 1. the contact
+  await saveContact(email, firstName);
 
   // 2. the guide. One send per address per day, so double clicks and repeat bots don't stack emails.
   const site = process.env.SITE_URL.replace(/\/+$/, '');

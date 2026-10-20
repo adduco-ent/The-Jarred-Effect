@@ -22,6 +22,8 @@ Static HTML, CSS and JavaScript with no build step, plus two small Vercel functi
 | `api/subscribe.js` | Receives every sign-up: saves the contact in Resend and emails the guide |
 | `api/unsubscribe.js` | Handles the unsubscribe link in emails, including Gmail and Yahoo one-click unsubscribe |
 | `lib/` | Code shared by the two functions: the layout every email is built from (`lib/email-layout.js`), the guide email (`lib/guide-email.js`) and the app's sign-in emails (`lib/auth-emails.js`) |
+| `api/quiz.js` | The quiz's "Email me my results": scores the answers, saves the result and Ask in Supabase (`docs/supabase/quiz_results.sql`) and emails the results |
+| `app/` | The Other Half app (test build): the quiz at `/app`, its copy in `app/content.js`, scoring in `app/score.js`, share cards in `app/share/` |
 | `api/send-previews.js` | Emails a tester a "[Preview]" copy of every email (see `docs/email-design.md`) |
 | `docs/email-design.md` | The email design rules, and how to update the app's sign-in emails in Supabase |
 | `scripts/`, `emails/supabase/` | Builds the app's branded sign-in emails for Supabase (not part of the live site) |

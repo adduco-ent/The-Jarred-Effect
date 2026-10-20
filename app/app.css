@@ -308,3 +308,27 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-sec--q .oh-sec-k{margin-bottom:1.25rem}
 .oh-sec--q .oh-shadow{margin:0}
 .oh-shadow-by{margin:.875rem 0 1.5rem;font-family:var(--serif);font-style:italic;font-size:.9375rem;color:var(--faint)}
+
+/* ---- share and the results form ---- */
+.oh-share-row{display:flex;align-items:center;gap:1rem;margin-top:1rem}
+.oh-share{display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:0 1.125rem;border-radius:99px;border:1px solid rgba(28,24,18,.14);background:var(--pearl);font-size:.9375rem;font-weight:600;color:var(--ink);cursor:pointer;transition:border-color .2s ease,transform .3s cubic-bezier(.22,1,.36,1)}
+.oh-share:hover{border-color:rgba(28,24,18,.3);transform:translateY(-1px)}
+.oh-share--dark{margin-top:.5rem;background:var(--ink);border-color:var(--ink);color:var(--pearl)}
+.oh-share-note{font-size:.875rem;color:var(--faint)}
+.oh-next{border-style:solid;border-color:rgba(28,24,18,.1);background:#ffffff;padding:1.5rem;box-shadow:0 1.5rem 3rem -2.5rem rgba(6,12,24,.4)}
+.oh-next .oh-next-t{font-size:1.75rem}
+.oh-next-d b{color:var(--ink);font-weight:600}
+.oh-next-d+.oh-next-d{margin-top:.75rem}
+.oh-field{display:grid;gap:.375rem;margin-top:1.125rem}
+.oh-field span{font-size:.8125rem;font-weight:600;color:var(--ink)}
+.oh-field i{font-style:normal;font-weight:400;color:var(--faint)}
+.oh-field input{width:100%;min-height:3.25rem;padding:0 1rem;border-radius:.875rem;border:1px solid rgba(28,24,18,.16);background:var(--pearl);font:inherit;font-size:1rem;color:var(--ink);transition:border-color .2s ease,box-shadow .2s ease}
+.oh-field input::placeholder{color:#a39a8c}
+.oh-field input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,24,18,.08)}
+.oh-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.oh-next .oh-cta{margin-top:1.25rem}
+.oh-form-note{margin:.75rem 0 0;font-size:.8125rem;line-height:1.5;color:var(--faint);text-align:center}
+.oh-next.is-sending .oh-cta{opacity:.7}
+.oh-share-note a{color:var(--ink);font-weight:600;text-underline-offset:.2em}
+.oh-share-row{flex-wrap:wrap;gap:.5rem 1rem}
+.oh-share{flex:none;white-space:nowrap}

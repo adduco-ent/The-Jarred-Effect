@@ -1,6 +1,6 @@
 /* The Other Half app — words the app shows. Edit copy here; app.js only reads it.
    Quiz answers score -2 (A), 0 (both) or +2 (B). */
-window.OH_CONTENT = {
+var OH_CONTENT = {
   pairs: [
     { id: 'dd', a: 'Desire', b: 'Discipline' },
     { id: 'ff', a: 'Faith', b: 'Friction' },
@@ -105,3 +105,5 @@ window.OH_CONTENT = {
     insight: 'You think before you act. Good instinct. Just make sure the thinking ends in a step.'
   }
 };
+// the browser reads window.OH_CONTENT; the server (api/quiz.js) requires this file
+if (typeof module !== 'undefined' && module.exports) module.exports = OH_CONTENT; else window.OH_CONTENT = OH_CONTENT;

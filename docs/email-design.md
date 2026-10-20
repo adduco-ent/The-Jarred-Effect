@@ -36,6 +36,7 @@ Write in the brand voice: warm, blunt, plain words, no hype. Sign-in emails get 
 | Email | Sent by | File |
 |---|---|---|
 | The free guide | `api/subscribe.js` through Resend | `lib/guide-email.js` |
+| Your quiz results (the Polarity Profile) | `api/quiz.js` through Resend | `lib/quiz-email.js` (copy comes from `app/content.js`) |
 | App sign-in emails (sign-in link, confirm email, invite, change email, reset password, code) | Supabase | wording in `lib/auth-emails.js`; `scripts/build-auth-emails.js` writes them into `emails/supabase/` |
 
 ## Updating the Supabase sign-in emails
@@ -63,7 +64,7 @@ Leave the `{{ .ConfirmationURL }}`, `{{ .Token }}`, `{{ .Email }}` and `{{ .NewE
 
 Addresses in the `TEST_EMAILS` setting in Vercel skip the once-a-day limit on the guide email. Gmail "+" versions count too (`you+test1@gmail.com`). Sign up on the live site with one of them to see the real thing.
 
-To get a copy of every email (the guide plus all six sign-in emails, with sample details filled in) in your inbox, run this in Terminal with your tester address:
+To get a copy of every email (the guide, the quiz results and all six sign-in emails, with sample details filled in) in your inbox, run this in Terminal with your tester address:
 
 ```bash
 curl -s -X POST https://thejarredeffect.com/api/send-previews -H 'content-type: application/json' -d '{"email":"letofsky11@gmail.com"}'

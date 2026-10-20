@@ -1,10 +1,13 @@
 // POST /api/send-previews  {"email": "<a TEST_EMAILS address>"}
-// Emails that tester one copy of every email the brand sends, with sample details filled in, so new designs
+// Emails that tester one copy of every email the brand sends (the guide, a sample quiz result, the sign-in emails), with sample details filled in, so new designs
 // can be checked in a real inbox (and in dark mode) before real people see them. Subjects start with [Preview].
 // Only addresses in TEST_EMAILS can receive previews; anything else gets a plain 404.
 const { resend, reply, unsubscribeUrl, isTester } = require('../lib/resend');
 const guideEmail = require('../lib/guide-email');
 const { AUTH_EMAILS, buildAuthEmail } = require('../lib/auth-emails');
+const quizEmail = require('../lib/quiz-email');
+const content = require('../app/content');
+const { score, decode } = require('../app/score');
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -21,7 +24,10 @@ module.exports = async function sendPreviews(req, res) {
   const sample = { '{{ .ConfirmationURL }}': site + '/app', '{{ .Token }}': '482913', '{{ .Email }}': email, '{{ .NewEmail }}': 'new-address@example.com' };
   const fill = (s) => Object.entries(sample).reduce((t, [k, v]) => t.split(k).join(v), s);
 
-  const all = [{ name: 'guide', subject: g.subject, html: g.html, text: g.text }]
+  // a sample quiz result: an Achiever who named an Ask
+  const sampleCode = 'bbooooaaoooo';
+  const q = quizEmail({ content, result: score(content, decode(sampleCode, content.questions.length)), ask: 'Run a 5K by spring', resultsUrl: site + '/app/?r=' + sampleCode + '#result', siteUrl: site, unsubscribeUrl: unsub });
+  const all = [{ name: 'guide', subject: g.subject, html: g.html, text: g.text }, { name: 'quiz', subject: q.subject, html: q.html, text: q.text }]
     .concat(Object.keys(AUTH_EMAILS).map((name) => { const e = buildAuthEmail(name); return { name, subject: e.subject, html: fill(e.html) }; }));
 
   // one batch per address per 10 minutes, so a repeated click doesn't stack copies
