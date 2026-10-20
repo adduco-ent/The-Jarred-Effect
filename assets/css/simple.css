@@ -44,3 +44,10 @@
 
 @keyframes tsp-rise{from{opacity:0;transform:translateY(1rem)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:no-preference){.is-motion .tsp-hero > *{animation:tsp-rise .8s cubic-bezier(.22,1,.36,1) both}.is-motion .tsp-hero > :nth-child(2){animation-delay:.06s}.is-motion .tsp-hero > :nth-child(3){animation-delay:.12s}.is-motion .tsp-hero > :nth-child(4){animation-delay:.18s}.is-motion .tsp-hero > :nth-child(5){animation-delay:.24s}}
+/* 404: the quiz's lighting. A cool slate light from the top right, a faint warm counter-light rising from the
+   bottom left, and a slightly cooler floor. Clipped on every edge so the page ends where its content ends. */
+body[data-page="404"] .tje{isolation:isolate;overflow:clip;background:linear-gradient(180deg,#fdfdfc 0%,#fdfdfc 35%,#f4f6f9 100%)}
+body[data-page="404"] .tje-foot{background:transparent}
+body[data-page="404"] .tje-aura{position:fixed;z-index:-1;left:auto;right:-34rem;top:-30rem;width:70rem;height:56rem;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(62,108,171,.11),rgba(62,108,171,.045) 50%,rgba(62,108,171,0))}
+body[data-page="404"] .tje::after{content:"";position:absolute;z-index:-1;width:60rem;height:44rem;left:-30rem;bottom:-24rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(243,163,120,.075),rgba(243,163,120,.03) 50%,rgba(243,163,120,0));pointer-events:none}
+@media (max-width:767px){body[data-page="404"] .tje-aura{width:44rem;height:36rem;right:-24rem;top:-20rem}}
