@@ -9,43 +9,31 @@ const sideName = (s) => s[0].toUpperCase() + s.slice(1);
 const pairOf = { desire: 'Desire ↔ Discipline', discipline: 'Desire ↔ Discipline', faith: 'Faith ↔ Friction', friction: 'Faith ↔ Friction', ambition: 'Ambition ↔ Acceptance', acceptance: 'Ambition ↔ Acceptance', control: 'Control ↔ Trust', trust: 'Control ↔ Trust' };
 const whoNeeds = { discipline: 'People who run on wanting (often Dreamers)', desire: 'People who run on effort (often Achievers)', faith: 'People who get stuck in what’s wrong', friction: 'People who push fear aside fast (often Dreamers)', ambition: 'People at peace who risk settling', acceptance: 'People always reaching for next', control: 'People who hand everything off', trust: 'People who carry it all themselves (often Achievers)' };
 
-// Change opens the item's own wording, prefilled, so Jarred can write the exact version he wants
+// Change makes the card's own text editable in place: Jarred types over the exact words, nothing else appears.
+// Every editable piece carries data-f (its field) and its original text lives in ORIG.
 const ORIG = {};
-const field = (id, f) => {
-  ORIG[id + '.' + f.key] = f.value;
-  const fid = 'e-' + id + '-' + f.key;
-  const box = f.short ? `<input id="${fid}" data-edit="${id}" data-key="${f.key}" type="${f.type || 'text'}" value="${esc(f.value)}">`
-    : `<textarea id="${fid}" data-edit="${id}" data-key="${f.key}" rows="${f.rows || 2}">${esc(f.value)}</textarea>`;
-  return `<div class="f"><label for="${fid}">${esc(f.label)}</label>${box}</div>`;
-};
-const decide = (id, fields) => `<div class="dec" data-id="${id}" role="group" aria-label="Your decision">
+const ed = (id, key, value, tag = 'span', cls = '') => { ORIG[id + '.' + key] = String(value); return `<${tag} class="ed ${cls}" data-f="${key}" data-of="${id}">${esc(value)}</${tag}>`; };
+const decide = (id) => `<p class="hint" data-hint="${id}" hidden>Tap any text above to rewrite it. It saves when you tap away.</p>
+<div class="dec" data-id="${id}" role="group" aria-label="Your decision">
   <button type="button" data-c="approve">Approve</button><button type="button" data-c="change">Change</button><button type="button" data-c="hold">Hold</button>
 </div>
-<div class="note" data-note="${id}" hidden>
-  <p class="note-h">Write it exactly how you want it</p>
-  ${fields.map((f) => field(id, f)).join('')}
-  <div class="f"><label for="n-${id}">Anything else? <i>optional</i></label><textarea id="n-${id}" rows="2" placeholder="A note for me, if the wording isn’t the whole story."></textarea></div>
-  <div class="note-a"><button type="button" class="save" data-save="${id}">Save my wording</button><button type="button" class="reset" data-reset="${id}">Undo my edits</button></div>
+<div class="more" data-more="${id}" hidden>
+  <button type="button" class="link" data-addnote="${id}">Add a note</button><button type="button" class="link" data-reset="${id}" hidden>Undo my edits</button><span class="saved" data-saved="${id}" aria-live="polite"></span>
+  <textarea id="n-${id}" data-note="${id}" rows="2" placeholder="A note for me, if the wording isn’t the whole story." hidden></textarea>
 </div>`;
 
 const listItem = (id, kicker, title, lines) => `<article class="item" data-item="${id}">
   <header><p class="k">${esc(kicker)}</p><h3>${esc(title)}</h3></header>
-  <ol class="lines">${lines.map((l) => `<li>${esc(l)}</li>`).join('')}</ol>
-  ${decide(id, lines.map((l, i) => ({ key: 'line' + (i + 1), label: 'Rule ' + (i + 1), value: l, rows: 2 })))}
+  <ol class="lines">${lines.map((l, i) => ed(id, 'line' + (i + 1), l, 'li')).join('')}</ol>
+  ${decide(id)}
 </article>`;
 
 const rep = (r) => `<article class="item rep" data-item="${r.id}">
-  <header><h3>${esc(r.title)}</h3><span class="min">${r.minutes} min</span></header>
-  <p class="what">${esc(r.what)}</p>
-  <p class="eg"><span>For example</span>${esc(r.example)}</p>
-  <p class="rough"><span>Rough day?</span>${esc(r.rough)}</p>
-  ${decide(r.id, [
-    { key: 'title', label: 'Title', value: r.title, short: true },
-    { key: 'minutes', label: 'Minutes', value: String(r.minutes), short: true, type: 'number' },
-    { key: 'what', label: 'What to do', value: r.what, rows: 3 },
-    { key: 'example', label: 'For example', value: r.example },
-    { key: 'rough', label: 'Rough day?', value: r.rough }
-  ])}
+  <header>${ed(r.id, 'title', r.title, 'h3')}<span class="min">${ed(r.id, 'minutes', r.minutes)} min</span></header>
+  ${ed(r.id, 'what', r.what, 'p', 'what')}
+  <p class="eg"><span class="lab">For example</span>${ed(r.id, 'example', r.example)}</p>
+  <p class="rough"><span class="lab">Rough day?</span>${ed(r.id, 'rough', r.rough)}</p>
+  ${decide(r.id)}
 </article>`;
 
 const groups = sideOrder.map((s) => `<section class="side" id="side-${s}">
@@ -53,15 +41,11 @@ const groups = sideOrder.map((s) => `<section class="side" id="side-${s}">
   <div class="grid">${P.reps.filter((r) => r.side === s).map(rep).join('')}</div>
 </section>`).join('');
 
-const sq = P.shadowQuestions.map((q) => `<article class="item" data-item="sq-${q.id}">
-  <header><p class="k">${esc(q.name)}</p><h3 class="q">${esc(q.ask)}</h3></header>
-  <p class="eg"><span>If they want to go deeper</span>${q.followUps.map(esc).join(' ')}</p>
-  ${decide('sq-' + q.id, [
-    { key: 'ask', label: 'The question', value: q.ask },
-    { key: 'followUp1', label: 'Follow-up 1', value: q.followUps[0] },
-    { key: 'followUp2', label: 'Follow-up 2', value: q.followUps[1] }
-  ])}
-</article>`).join('') + `<article class="item" data-item="going-deep"><header><p class="k">Shown with every shadow question</p><h3>Going deep</h3></header><p class="what">${esc(P.goingDeep)}</p>${decide('going-deep', [{ key: 'text', label: 'The note', value: P.goingDeep, rows: 3 }])}</article>`;
+const sq = P.shadowQuestions.map((q) => { const id = 'sq-' + q.id; return `<article class="item" data-item="${id}">
+  <header><p class="k">${esc(q.name)}</p>${ed(id, 'ask', q.ask, 'h3', 'q')}</header>
+  <div class="eg"><span class="lab">If they want to go deeper</span>${ed(id, 'followUp1', q.followUps[0], 'p')}${ed(id, 'followUp2', q.followUps[1], 'p')}</div>
+  ${decide(id)}
+</article>`; }).join('') + `<article class="item" data-item="going-deep"><header><p class="k">Shown with every shadow question</p><h3>Going deep</h3></header>${ed('going-deep', 'text', P.goingDeep, 'p', 'what')}${decide('going-deep')}</article>`;
 
 const ids = ['shape', 'voice', 'hard'].concat(P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
 
@@ -120,31 +104,31 @@ section{padding-block:2.5rem 0}
 .min{font-size:.75rem;font-weight:600;padding:.15rem .55rem;border-radius:99px;background:var(--chip);color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
 .what{color:var(--fg)}
 .eg,.rough{font-size:.9375rem;color:var(--dim)}
-.eg span,.rough span{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
-.rough span{color:var(--rust)}
+.eg .lab,.rough .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
+.rough .lab{color:var(--rust)}
 .lines{margin:0;padding-left:1.25rem;display:grid;gap:.4rem;color:var(--fg);font-size:.9375rem}
 .wide{max-width:46rem}
 .dec{display:grid;grid-template-columns:repeat(3,1fr);gap:.375rem;margin-top:auto;padding-top:.5rem}
 .dec button{font:inherit;font-size:.875rem;font-weight:600;min-height:2.5rem;border-radius:.75rem;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
 .dec button:hover{border-color:var(--faint);color:var(--fg)}
-.dec button:focus-visible,.filters button:focus-visible,.save:focus-visible,textarea:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+.dec button:focus-visible,.filters button:focus-visible,.link:focus-visible,textarea:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
 .item[data-choice="approve"]{border-color:var(--ok)}
 .item[data-choice="change"]{border-color:var(--orange)}
 .item[data-choice="hold"]{border-style:dashed;border-color:var(--hold)}
 .dec button[aria-pressed="true"][data-c="approve"]{background:var(--ok);border-color:var(--ok);color:var(--card)}
 .dec button[aria-pressed="true"][data-c="change"]{background:var(--orange);border-color:var(--orange);color:#241904}
 .dec button[aria-pressed="true"][data-c="hold"]{background:var(--hold);border-color:var(--hold);color:var(--card)}
-.note{display:grid;gap:.75rem;padding:1rem;margin-top:.25rem;border-radius:1rem;background:var(--bg);border:1px solid var(--orange)}
-.note-h{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust)}
-.f{display:grid;gap:.3rem;min-width:0}
-.f label{font-size:.8125rem;font-weight:600}
-.f label i{font-style:normal;font-weight:400;color:var(--faint)}
-.note textarea,.note input{font:inherit;font-size:.9375rem;width:100%;padding:.55rem .7rem;border-radius:.65rem;border:1px solid var(--line);background:var(--card);color:var(--fg);resize:vertical}
-.note input[type=number]{max-width:6rem}
-.note [data-edit].is-edited{border-color:var(--orange);box-shadow:0 0 0 2px rgba(232,116,58,.15)}
-.note-a{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
-.reset{font:inherit;font-size:.8125rem;padding:0;border:0;background:none;color:var(--faint);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
-.save{justify-self:start;font:inherit;font-size:.8125rem;font-weight:600;padding:.4rem .9rem;border-radius:99px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.hint{font-size:.8125rem;color:var(--rust)}
+.ed{border-radius:.375rem;transition:background .2s ease,box-shadow .2s ease}
+.item[data-choice="change"] .ed{cursor:text;background:var(--chip);box-shadow:0 0 0 .25rem var(--chip);outline:none}
+.item[data-choice="change"] .ed:hover{box-shadow:0 0 0 .25rem var(--chip),0 0 0 calc(.25rem + 1px) var(--faint)}
+.item[data-choice="change"] .ed:focus{background:var(--card);box-shadow:0 0 0 .25rem var(--card),0 0 0 calc(.25rem + 1.5px) var(--orange)}
+.ed.is-edited,.item[data-choice="change"] .ed.is-edited{background:rgba(232,116,58,.16);box-shadow:0 0 0 .25rem rgba(232,116,58,.16)}
+.lines .ed{display:list-item}
+.eg p{margin:0}.eg p+p{margin-top:.25rem}
+.more{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem}
+.more textarea{width:100%;font:inherit;font-size:.9375rem;padding:.55rem .7rem;border-radius:.65rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);resize:vertical}
+.link{font:inherit;font-size:.8125rem;padding:0;border:0;background:none;color:var(--dim);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
 .saved{font-size:.8125rem;color:var(--ok)}
 .toc{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.5rem}
 .toc a{font-size:.8125rem;color:var(--dim);text-decoration:none;padding:.25rem .7rem;border-radius:99px;border:1px solid var(--line);background:var(--card)}
@@ -159,14 +143,14 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <p class="k">The Other Half · Playbook version ${P.version}</p>
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
-  <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> edit the wording right there, exactly how you want it</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
+  <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
   <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules'].map((t,i)=>`<a href="#${['shape','voice','hard'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
   <div class="meter" aria-hidden="true"><i class="a"></i><i class="c"></i><i class="h"></i></div>
   <p class="tally" id="tally"><b>0</b> of ${ids.length} decided</p>
-  <div class="filters" role="group" aria-label="Show"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="open" aria-pressed="false">Undecided</button><button type="button" data-f="change" aria-pressed="false">To change</button></div>
+  <div class="filters" role="group" aria-label="Show"><button type="button" data-filterbtn="all" aria-pressed="true">All</button><button type="button" data-filterbtn="open" aria-pressed="false">Undecided</button><button type="button" data-filterbtn="change" aria-pressed="false">To change</button></div>
   <p class="status" id="status" role="status">Connecting, so your choices save…</p>
 </div></div>
 
@@ -191,26 +175,34 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
 (function () {
   var IDS = ${JSON.stringify(ids)};
   var ORIG = ${JSON.stringify(ORIG)};
-  var state = {}; // id -> {choice, note}
+  var state = {}; // id -> {choice, note, edit}
   var db = null;
   var statusEl = document.getElementById('status');
+  var EDITABLE = (function () { var d = document.createElement('div'); d.contentEditable = 'plaintext-only'; return d.contentEditable === 'plaintext-only' ? 'plaintext-only' : 'true'; })();
   function paint() {
     var n = { approve: 0, change: 0, hold: 0 };
     IDS.forEach(function (id) {
       var d = state[id] || {}, item = document.querySelector('[data-item="' + id + '"]');
       if (!item) return;
+      var changing = d.choice === 'change', edit = d.edit || {}, edited = false;
       if (d.choice) { item.setAttribute('data-choice', d.choice); n[d.choice]++; } else item.removeAttribute('data-choice');
       [].forEach.call(item.querySelectorAll('.dec button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-c') === d.choice)); });
-      var note = item.querySelector('[data-note]'), ta = document.getElementById('n-' + id);
-      if (note) {
-        note.hidden = d.choice !== 'change';
-        if (ta && document.activeElement !== ta && d.note != null) ta.value = d.note;
-        [].forEach.call(note.querySelectorAll('[data-edit]'), function (el) {
-          var k = id + '.' + el.getAttribute('data-key');
-          if (document.activeElement !== el) el.value = (d.edit && d.edit[el.getAttribute('data-key')] != null) ? d.edit[el.getAttribute('data-key')] : ORIG[k];
-          el.classList.toggle('is-edited', el.value !== ORIG[k]);
-        });
-      }
+      [].forEach.call(item.querySelectorAll('[data-of="' + id + '"]'), function (el) {
+        var key = el.getAttribute('data-f'), orig = ORIG[id + '.' + key];
+        var text = changing && edit[key] != null ? edit[key] : orig;
+        if (document.activeElement !== el && el.textContent !== text) el.textContent = text;
+        el.contentEditable = changing ? EDITABLE : 'false';
+        if (changing) { el.setAttribute('role', 'textbox'); el.setAttribute('aria-label', 'Edit ' + key); } else { el.removeAttribute('role'); el.removeAttribute('aria-label'); }
+        var isEd = changing && el.textContent.trim() !== orig;
+        el.classList.toggle('is-edited', isEd);
+        if (isEd) edited = true;
+      });
+      item.querySelector('[data-hint]').hidden = !changing;
+      item.querySelector('[data-more]').hidden = !changing;
+      item.querySelector('[data-reset]').hidden = !edited;
+      var ta = item.querySelector('[data-note]');
+      if (d.note && ta.hidden) { ta.hidden = false; item.querySelector('[data-addnote]').hidden = true; }
+      if (document.activeElement !== ta && d.note != null) ta.value = d.note;
     });
     var done = n.approve + n.change + n.hold, t = IDS.length;
     document.getElementById('tally').innerHTML = '<b>' + done + '</b> of ' + t + ' decided · ' + n.approve + ' approved · ' + n.change + ' to change · ' + n.hold + ' held';
@@ -219,12 +211,22 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     m.querySelector('.c').style.width = (n.change / t * 100) + '%';
     m.querySelector('.h').style.width = (n.hold / t * 100) + '%';
   }
+  function flash(id) { var s = document.querySelector('[data-saved="' + id + '"]'); if (s) { s.textContent = 'Saved'; clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = ''; }, 1600); } }
   function write(id) {
-    var d = state[id];
+    var d = state[id] || {};
     if (!db) return;
     db.collection('decisions').doc(id).set({ choice: d.choice || null, note: d.note || '', edit: d.edit || {}, at: new Date().toISOString() })
-      .then(function () { statusEl.className = 'status'; statusEl.textContent = 'Saved. Claude can read your choices.'; })
-      .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That choice didn’t save. Try it again in a moment.'; });
+      .then(function () { flash(id); statusEl.className = 'status'; statusEl.textContent = 'Saved. Claude can read your choices.'; })
+      .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That didn’t save. Try it again in a moment.'; });
+  }
+  // keep only the words he actually changed
+  function collect(id) {
+    var edit = {};
+    [].forEach.call(document.querySelectorAll('[data-of="' + id + '"]'), function (el) {
+      var key = el.getAttribute('data-f'), v = el.textContent.replace(/\s+/g, ' ').trim();
+      if (v && v !== ORIG[id + '.' + key]) edit[key] = v;
+    });
+    return edit;
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest('.dec button');
@@ -233,40 +235,53 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
       var d = state[id] = Object.assign({}, state[id]);
       d.choice = d.choice === c ? null : c;
       paint(); write(id);
-      if (d.choice === 'change') { var first = document.querySelector('[data-note="' + id + '"] [data-edit]'); if (first) first.focus(); }
+      if (d.choice === 'change') { var first = document.querySelector('[data-of="' + id + '"]'); if (first) first.focus(); }
       return;
     }
-    var s = e.target.closest('[data-save]');
-    if (s) {
-      var sid = s.getAttribute('data-save'), edit = {};
-      // keep only the fields he actually changed
-      [].forEach.call(document.querySelectorAll('[data-edit="' + sid + '"]'), function (el) {
-        var key = el.getAttribute('data-key'), v = el.value.trim();
-        if (v !== ORIG[sid + '.' + key]) edit[key] = v;
-      });
-      state[sid] = Object.assign({}, state[sid], { note: document.getElementById('n-' + sid).value.trim(), edit: edit });
-      paint(); write(sid); s.textContent = 'Saved'; setTimeout(function () { s.textContent = 'Save my wording'; }, 1500);
-      return;
-    }
+    var an = e.target.closest('[data-addnote]');
+    if (an) { var nid = an.getAttribute('data-addnote'), ta = document.getElementById('n-' + nid); an.hidden = true; ta.hidden = false; ta.focus(); return; }
     var rs = e.target.closest('[data-reset]');
-    if (rs) {
-      var rid = rs.getAttribute('data-reset');
-      state[rid] = Object.assign({}, state[rid], { edit: {} });
-      [].forEach.call(document.querySelectorAll('[data-edit="' + rid + '"]'), function (el) { el.value = ORIG[rid + '.' + el.getAttribute('data-key')]; });
-      paint(); write(rid);
+    if (rs) { var rid = rs.getAttribute('data-reset'); state[rid] = Object.assign({}, state[rid], { edit: {} }); [].forEach.call(document.querySelectorAll('[data-of="' + rid + '"]'), function (el) { el.textContent = ORIG[rid + '.' + el.getAttribute('data-f')]; }); paint(); write(rid); return; }
+    var fl = e.target.closest('[data-filterbtn]');
+    if (fl) {
+      document.body.classList.remove('f-open', 'f-change');
+      if (fl.getAttribute('data-filterbtn') !== 'all') document.body.classList.add('f-' + fl.getAttribute('data-filterbtn'));
+      [].forEach.call(document.querySelectorAll('[data-filterbtn]'), function (x) { x.setAttribute('aria-pressed', String(x === fl)); });
+    }
+  });
+  // edits save when he taps away; a note saves the same way
+  document.addEventListener('focusout', function (e) {
+    var el = e.target.closest('[data-of]');
+    if (el && el.isContentEditable) {
+      var id = el.getAttribute('data-of'), edit = collect(id), prev = JSON.stringify((state[id] || {}).edit || {});
+      if (!el.textContent.trim()) el.textContent = ORIG[id + '.' + el.getAttribute('data-f')];
+      if (JSON.stringify(edit) !== prev) { state[id] = Object.assign({}, state[id], { edit: edit }); paint(); write(id); }
       return;
     }
-    var f = e.target.closest('[data-f]');
-    if (f) {
-      document.body.classList.remove('f-open', 'f-change');
-      if (f.getAttribute('data-f') !== 'all') document.body.classList.add('f-' + f.getAttribute('data-f'));
-      [].forEach.call(document.querySelectorAll('[data-f]'), function (x) { x.setAttribute('aria-pressed', String(x === f)); });
-    }
+    var ta = e.target.closest('[data-note]');
+    if (ta) { var nid = ta.getAttribute('data-note'), v = ta.value.trim(); if (v !== ((state[nid] || {}).note || '')) { state[nid] = Object.assign({}, state[nid], { note: v }); write(nid); } }
   });
+  // also save a moment after he stops typing, so closing the page mid-edit loses nothing
+  var timers = {};
+  function saveEdits(id) {
+    var edit = collect(id);
+    if (JSON.stringify(edit) === JSON.stringify((state[id] || {}).edit || {})) return;
+    state[id] = Object.assign({}, state[id], { edit: edit }); write(id);
+    var reset = document.querySelector('[data-reset="' + id + '"]'); if (reset) reset.hidden = !Object.keys(edit).length;
+  }
   document.addEventListener('input', function (e) {
-    var el = e.target.closest('[data-edit]');
-    if (el) el.classList.toggle('is-edited', el.value.trim() !== ORIG[el.getAttribute('data-edit') + '.' + el.getAttribute('data-key')]);
+    var el = e.target.closest('[data-of]');
+    if (el) {
+      var id = el.getAttribute('data-of');
+      el.classList.toggle('is-edited', el.textContent.trim() !== ORIG[id + '.' + el.getAttribute('data-f')]);
+      clearTimeout(timers[id]); timers[id] = setTimeout(function () { saveEdits(id); }, 900);
+      return;
+    }
+    var ta = e.target.closest('[data-note]');
+    if (ta) { var nid = ta.getAttribute('data-note'); clearTimeout(timers['n' + nid]); timers['n' + nid] = setTimeout(function () { state[nid] = Object.assign({}, state[nid], { note: ta.value.trim() }); write(nid); }, 900); }
   });
+  // Enter finishes an edit instead of adding a line
+  document.addEventListener('keydown', function (e) { var el = e.target.closest('[data-of]'); if (el && el.isContentEditable && e.key === 'Enter') { e.preventDefault(); el.blur(); } });
   paint();
   if (!window.claude || !window.claude.use) { statusEl.className = 'status warn'; statusEl.textContent = 'Open this page on claude.ai to save your choices.'; return; }
   window.claude.use('db').then(function (d) {
