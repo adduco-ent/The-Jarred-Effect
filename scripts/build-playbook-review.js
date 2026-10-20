@@ -72,7 +72,7 @@ const people = group('people', 'side-people', 'Connection, quiet and new doors',
 const agency = group('agency', 'side-agency', 'Your yes and your no', 'Agency', 'Pausing before a yes you’ll regret, filling your own cup first, and staying yourself around people who take advantage.');
 const worth = group('worth', 'side-worth', 'Held, not hyped', 'Voice and worth', 'Saying no, speaking up, and building worth on proof and kept promises instead of pep talks.');
 const thoughts = group('thoughts', 'side-thoughts', 'Unlearning what you tell yourself', 'Error thoughts', 'Catch the harsh thought, name it “error thought”, flip it to words you can believe, and back it up with one small action.');
-const circle = group('circle', 'side-circle', 'The family you’re building', 'Your five', 'The people closest to you shape your habits, moods and chances. Rebalance toward the ones who lift you, and be the friend you want to have.');
+const circle = group('circle', 'side-circle', 'The family you’re building', 'Your five', 'The people closest to you shape your habits, moods and chances. Rebalance toward the ones who amplify you, and be the friend you want to have.');
 const agreements = group('agreements', 'side-agreements', 'How you carry yourself', 'Four ways to stay clear', 'Mean what you say, their world not your worth, ask don’t guess, and your best for the day you have, as small daily steps.');
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
