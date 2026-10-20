@@ -50,6 +50,7 @@ const sq = P.shadowQuestions.map((q) => { const id = 'sq-' + q.id; return `<arti
 const proto = (pr) => { const id = 'pr-' + pr.id; return `<article class="item proto" data-item="${id}">
   <header><p class="k">Protocol</p><h3>${esc(pr.name)}</h3></header>
   <p class="eg"><span class="lab">Use it</span>${ed(id, 'when', pr.when)}</p>
+  ${pr.lens ? `<div class="lens"><p><span class="lab">Energy lens</span>${ed(id, 'lens-energy', pr.lens.energy)}</p><p><span class="lab">Mind lens</span>${ed(id, 'lens-mind', pr.lens.mind)}</p></div>` : ''}
   <ol class="lines">${pr.steps.map((l, i) => ed(id, 'step' + (i + 1), l, 'li')).join('')}</ol>
   ${pr.safety ? `<p class="safety"><span class="lab">Safety</span>${ed(id, 'safety', pr.safety)}</p>` : ''}
   ${decide(id)}
@@ -115,6 +116,7 @@ const pathways = `<section class="side" id="pathways">
   <div class="sec-h"><p class="k">Arcs over several weeks</p><h2>Pathways</h2><p>Protocols that lead into each other, so a plan can carry someone through real change, one protocol at a time.</p></div>
   <div class="grid">${P.pathways.map(pathItem).join('')}</div>
 </section>`;
+const signal = group('signal', 'side-signal', 'The manifestation layer', 'Your signal', 'Feeling the future now, facing the gap, holding a steady feeling, living it in small choices, and moving through big emotions instead of covering them.');
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
 const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.protocols.filter((x) => P.layers[x.id]).map((x) => 'ly-' + x.id), P.areas.map((a) => 'area-' + a.id), P.pathways.map((w) => 'path-' + w.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
@@ -182,6 +184,9 @@ section{padding-block:2.5rem 0}
 .lyr .lines{font-size:.9375rem}
 .lyr-next{font-size:.875rem;color:var(--dim);display:grid;gap:.25rem}
 .path{margin:0;padding-left:1.25rem;display:grid;gap:.3rem;font-size:.9375rem;font-weight:600}
+.lens{display:grid;gap:.5rem;padding:.75rem .9rem;border-radius:.75rem;border:1px dashed var(--line)}
+.lens p{margin:0;font-size:.9375rem;color:var(--dim)}
+.lens .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
 .safety{font-size:.9375rem;color:var(--dim);padding:.75rem .9rem;border-radius:.75rem;background:var(--chip)}
 .safety .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:.125rem}
 .lines{margin:0;padding-left:1.25rem;display:grid;gap:.4rem;color:var(--fg);font-size:.9375rem}
@@ -223,7 +228,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page, and it moves with real life: no fixed times, a full, half or rough version every day, and no catch-up debt. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
   <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
-  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols','Layers','Pathways','Life areas'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols','layers','pathways','areas'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-foundations">Foundations</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
+  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols','Layers','Pathways','Life areas'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols','layers','pathways','areas'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-foundations">Foundations</a><a href="#side-signal">Your signal</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
@@ -246,7 +251,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     </div>
   </section>
   <section class="side" id="protocols">
-    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, opening doors to new people and opportunities, reading flow and resistance, the pause before yes, your own agency, saying no, speaking up, your worth held, catching error thoughts, your five: the family you’re building, four ways to stay clear, the comeback, body basics, big life changes, and what you actually value.</p></div>
+    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, opening doors to new people and opportunities, reading flow and resistance, the pause before yes, your own agency, saying no, speaking up, your worth held, catching error thoughts, your five: the family you’re building, four ways to stay clear, the comeback, body basics, big life changes, what you actually value, your signal, and navigating your emotions.</p></div>
     <div class="grid" style="grid-template-columns:1fr">${protocols.split('</article>').filter(Boolean).map((a) => '<div class="wide">' + a + '</article></div>').join('')}</div>
   </section>
   ${layers}
@@ -263,6 +268,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   ${circle}
   ${agreements}
   ${foundations}
+  ${signal}
   ${tools}
   <section class="side" id="shadow">
     <div class="sec-h"><p class="k">From the guide</p><h2>Shadow questions</h2><p>Day 4 of every plan is one of these, chosen by type, with gentle follow-ups for anyone who wants to go further.</p></div>
