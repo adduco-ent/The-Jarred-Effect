@@ -1,0 +1,310 @@
+/* The Other Half app — styles. Same tokens and type as the site (styles.css), sized for a phone first. */
+:root{--ink:#1c1812;--dim:#574f43;--faint:#6b6254;--pearl:#fdfdfc;--cream:#efe7da;--panel:#f6f1e8;--orange:#e8743a;--orange-hi:#f3a378;--orange-deep:#a8471c;--blue:#3e6cab;--shadow:#0e1a2c;--line:rgba(28,24,18,.12);
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;--serif:"Libre Caslon Text",Georgia,serif;--sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--pearl);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:.5rem}
+[tabindex="-1"]:focus{outline:none}
+
+.oh{position:relative;isolation:isolate;min-height:100svh;overflow-x:clip}
+/* the light: a cool slate-blue wash falling from the top right, and a faintly cooler floor, for depth */
+.oh{background:linear-gradient(180deg,var(--pearl) 0%,var(--pearl) 35%,#f4f6f9 100%)}
+.oh::before{content:"";position:absolute;z-index:-1;width:70rem;height:56rem;right:-34rem;top:-30rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(62,108,171,.11),rgba(62,108,171,.045) 50%,rgba(62,108,171,0));pointer-events:none}
+/* the counter-light: a faint warmth rising from the bottom left, so the lighting holds both poles (delete this rule to undo) */
+.oh::after{content:"";position:absolute;z-index:-1;width:60rem;height:44rem;left:-30rem;bottom:-24rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(243,163,120,.075),rgba(243,163,120,.03) 50%,rgba(243,163,120,0));pointer-events:none}
+.oh-head{display:flex;align-items:center;justify-content:space-between;max-width:34rem;margin:0 auto;padding:max(1rem,env(safe-area-inset-top)) max(1.25rem,env(safe-area-inset-right)) .5rem max(1.25rem,env(safe-area-inset-left))}
+.oh-logo img{display:block;height:2.5rem;width:auto}
+.oh-badge{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);padding:.25rem .625rem;border:1px solid rgba(62,108,171,.35);border-radius:99px}
+.oh-main{max-width:34rem;margin:0 auto;padding:1.5rem max(1.25rem,env(safe-area-inset-right)) max(3rem,env(safe-area-inset-bottom)) max(1.25rem,env(safe-area-inset-left))}
+.oh-screen{display:flex;flex-direction:column;gap:1.25rem;animation:oh-in .45s cubic-bezier(.22,1,.36,1) both}
+@keyframes oh-in{from{opacity:0;transform:translateY(.5rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.oh-screen{animation:none}}
+
+.oh-kick{display:flex;align-items:center;gap:.625rem;margin:0;font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+.oh-dot{flex:none;width:.75rem;height:.75rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+.oh-h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2.5rem,11vw,3.5rem);line-height:1.02;letter-spacing:-.012em;text-wrap:balance}
+.oh-it{font-family:var(--serif);font-style:italic;font-size:.86em;color:var(--orange-deep)}
+.oh-lead{margin:0;font-size:1.125rem;color:var(--dim);text-wrap:pretty}
+.oh-fine{margin:0;font-size:.875rem;color:var(--faint)}
+.oh-mini{margin:0 0 .25rem;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep)}
+
+.oh-cta{display:inline-flex;align-items:center;justify-content:center;gap:.625rem;width:100%;min-height:3.5rem;padding:0 1.5rem;border:0;border-radius:99px;background:var(--orange);color:#241904;font-size:1.0625rem;font-weight:600;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .2s ease}
+.oh-cta:hover{background:#f08a55;transform:translateY(-2px)}
+.oh-cta:active{transform:translateY(1px) scale(.98)}
+.oh-cta[disabled]{background:var(--panel);color:var(--faint);cursor:not-allowed;transform:none}
+.oh-link{padding:0;border:0;background:none;color:var(--orange-deep);font-weight:600;text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+
+/* quiz */
+.oh-top{display:flex;align-items:center;justify-content:space-between}
+.oh-back{display:inline-flex;align-items:center;gap:.375rem;min-height:2.75rem;padding:0 .25rem;border:0;background:none;font-size:.9375rem;font-weight:500;color:var(--dim);cursor:pointer}
+.oh-count{font-size:.875rem;color:var(--faint);font-variant-numeric:tabular-nums}
+.oh-bar{height:3px;border-radius:99px;background:rgba(28,24,18,.08);overflow:hidden}
+.oh-bar i{display:block;height:100%;min-width:3px;background:linear-gradient(90deg,var(--orange-hi),var(--orange));border-radius:99px;transition:width .4s cubic-bezier(.22,1,.36,1)}
+.oh-q{margin:.75rem 0 0;font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.1}
+/* the two endings are the buttons, styled as the brand's two sides: A warm (light, orange), B deep (navy).
+   "Both" sits on the seam between them, ringed in both colors. Tap the one that's you. */
+.oh-quiz .oh-q{font-size:clamp(2rem,8.5vw,2.5rem);line-height:1.08;margin-top:0;text-wrap:balance}
+.oh-choose{display:flex;flex-direction:column;align-items:stretch;margin-top:1.75rem}
+.oh-end{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1.25rem;width:100%;min-height:clamp(9rem,26svh,13rem);margin:0;padding:1.25rem 1.5rem 1.5rem;border-radius:1.75rem;text-align:left;cursor:pointer;
+  font-family:var(--serif);font-size:1.375rem;line-height:1.25;letter-spacing:-.005em;
+  transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .35s ease,filter .35s ease,box-shadow .45s ease,background-color .3s ease;-webkit-tap-highlight-color:transparent}
+.oh-end b{font-family:var(--sans);font-size:.6875rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.oh-end span{text-wrap:pretty}
+.oh-end--a{border:1px solid rgba(232,116,58,.14);color:var(--ink);
+  background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.09),rgba(243,163,120,0) 60%),var(--pearl);
+  box-shadow:0 1.5rem 3rem -2.25rem rgba(168,71,28,.55)}
+.oh-end--a b{color:var(--orange-deep)}
+.oh-end--b{border:1px solid var(--shadow);color:var(--cream);
+  background:radial-gradient(130% 120% at 100% 100%,rgba(62,108,171,.45),rgba(62,108,171,0) 62%),var(--shadow);
+  box-shadow:0 1.75rem 3rem -2rem rgba(6,12,24,.75)}
+.oh-end--b b{color:var(--orange-hi)}
+.oh-end:hover{transform:translateY(-3px)}
+.oh-end--a:hover{box-shadow:inset 0 1px 0 #ffffff,0 2rem 3.5rem -2.25rem rgba(90,60,40,.42)}
+.oh-end--b:hover{box-shadow:0 2.25rem 3.5rem -2rem rgba(6,12,24,.9)}
+.oh-end:active{transform:scale(.98)}
+/* Both: "or both", read as part of the sentence between the two endings. Hairlines fade in from the edges;
+   it only becomes a filled pill when picked. The whole row is the tap target. */
+.oh-both{display:flex;align-items:center;gap:1rem;width:100%;min-height:3.5rem;margin:.25rem 0;padding:0;border:0;background:none;cursor:pointer;color:var(--faint);-webkit-tap-highlight-color:transparent;transition:opacity .35s ease,transform .45s cubic-bezier(.22,1,.36,1)}
+.oh-both::before,.oh-both::after{content:"";flex:1;height:1px;transition:opacity .3s ease}
+.oh-both::before{background:linear-gradient(90deg,rgba(28,24,18,0),rgba(28,24,18,.14))}
+.oh-both::after{background:linear-gradient(90deg,rgba(28,24,18,.14),rgba(28,24,18,0))}
+.oh-both span{padding:.375rem .875rem;border-radius:99px;font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.2;letter-spacing:.01em;transition:background .3s ease,color .3s ease,transform .35s cubic-bezier(.22,1,.36,1),box-shadow .3s ease}
+.oh-both:hover span{color:var(--ink);background:rgba(28,24,18,.04)}
+.oh-both:active span{transform:scale(.96)}
+.oh-both[aria-checked="true"] span{background:var(--ink);color:var(--pearl);box-shadow:0 .5rem 1rem -.5rem rgba(6,12,24,.5)}
+.oh-both[aria-checked="true"]::before{background:linear-gradient(90deg,rgba(232,116,58,0),var(--orange))}
+.oh-both[aria-checked="true"]::after{background:linear-gradient(90deg,var(--shadow),rgba(14,26,44,0))}
+/* the counter and the small moments that build toward the result */
+.oh-count{font-size:.8125rem;letter-spacing:.06em;color:var(--faint);font-variant-numeric:tabular-nums}
+.oh-count b{font-weight:600;color:var(--ink)}
+.oh-moment{min-height:1.5rem;margin:1.5rem 0 .625rem;font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.5;color:var(--orange-deep)}
+/* the finish: a big faint serif letter in each card's corner, a fine paper grain like the guide's navy pages,
+   and a thin light edge along the top so the cards read as objects */
+.oh-end{overflow:hidden;isolation:isolate;justify-content:flex-end}
+.oh-end b{position:absolute;right:1.125rem;top:-.25rem;z-index:-1;font-family:var(--display);font-size:7.5rem;font-weight:400;line-height:1;letter-spacing:0;text-transform:none}
+.oh-end--a b{color:rgba(232,116,58,.1)}
+.oh-end--b b{color:rgba(239,231,218,.07)}
+.oh-end::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;mix-blend-mode:overlay;opacity:.5}
+.oh-end--a::after{mix-blend-mode:multiply;opacity:.045;filter:invert(1)}
+.oh-end--a{box-shadow:inset 0 1px 0 #ffffff,0 1.5rem 3rem -2.25rem rgba(90,60,40,.32)}
+.oh-end--b{box-shadow:inset 0 1px 0 rgba(239,231,218,.14),0 1.75rem 3rem -2rem rgba(6,12,24,.75)}
+.oh-end span{position:relative;max-width:85%}
+/* picked: the chosen card keeps its colors and gets a fine ring in its own pole color plus a small check;
+   everything else quietly fades away */
+.oh-check{position:absolute;top:1.125rem;right:1.125rem;display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;opacity:0;transform:scale(.6);transition:opacity .25s ease,transform .4s cubic-bezier(.34,1.56,.64,1)}
+.oh-check svg{width:1.125rem;height:1.125rem}
+.oh-end--a .oh-check{background:var(--ink);color:var(--pearl)}
+.oh-end--b .oh-check{background:var(--cream);color:var(--shadow)}
+.oh-end[aria-checked="true"] .oh-check{opacity:1;transform:none}
+.oh-end b{transition:opacity .2s ease}
+.oh-end[aria-checked="true"] b{opacity:0}
+.oh-end--a[aria-checked="true"]{box-shadow:0 0 0 2px var(--pearl),0 0 0 3.5px var(--ink),0 1.5rem 3rem -2.25rem rgba(90,60,40,.32)}
+.oh-end--b[aria-checked="true"]{box-shadow:0 0 0 2px var(--pearl),0 0 0 3.5px var(--shadow),0 1.75rem 3rem -2rem rgba(6,12,24,.75)}
+.oh-choose.is-choosing [data-answer]:not([aria-checked="true"]){opacity:0;transform:scale(.98);pointer-events:none;transition:opacity .28s ease,transform .4s cubic-bezier(.22,1,.36,1)}
+
+/* between questions: the stage drifts up and out of focus, the next comes into focus from below, piece by piece */
+.oh-stage{transition:opacity .32s cubic-bezier(.4,0,.2,1),transform .34s cubic-bezier(.4,0,.2,1),filter .32s ease}
+.oh-stage.is-leaving{opacity:0;transform:translateY(-.875rem);filter:blur(6px)}
+.oh-stage.is-leaving-back{opacity:0;transform:translateY(.875rem);filter:blur(6px)}
+@keyframes oh-focus-in{from{opacity:0;transform:translateY(.875rem);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes oh-focus-in-back{from{opacity:0;transform:translateY(-.875rem);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.oh-stage>*,.oh-choose>*{animation:oh-focus-in .55s cubic-bezier(.22,1,.36,1) backwards}
+.oh-stage.is-entering-back>*,.oh-stage.is-entering-back .oh-choose>*{animation-name:oh-focus-in-back}
+.oh-stage>.oh-choose{animation:none}
+.oh-stage>.oh-moment{animation-delay:0s}
+.oh-stage>.oh-q{animation-delay:.05s}
+.oh-choose>.oh-end--a{animation-delay:.12s}
+.oh-choose>.oh-both{animation-delay:.18s}
+.oh-choose>.oh-end--b{animation-delay:.22s}
+.oh-bar i{transition:width .7s cubic-bezier(.22,1,.36,1)}
+.oh-quiz{animation:none}
+@media (prefers-reduced-motion:reduce){.oh-end,.oh-both,.oh-stage,.oh-check{transition:none}.oh-stage>*,.oh-choose>*{animation:none}.oh-stage.is-leaving,.oh-stage.is-leaving-back{filter:none;transform:none}}
+
+/* result: the reveal */
+.oh-result{gap:0;padding-top:.5rem}
+/* the type, as a card worth keeping */
+.oh-type{position:relative;isolation:isolate;overflow:hidden;padding:1.75rem 1.5rem 2rem;border-radius:1.75rem;color:var(--cream);
+  background:radial-gradient(120% 110% at 100% 100%,rgba(62,108,171,.5),rgba(62,108,171,0) 60%),radial-gradient(90% 80% at 0% 0%,rgba(232,116,58,.16),rgba(232,116,58,0) 55%),var(--shadow);
+  box-shadow:inset 0 1px 0 rgba(239,231,218,.14),0 2rem 3.5rem -2.25rem rgba(6,12,24,.8)}
+.oh-type-k{display:flex;align-items:center;gap:.625rem;margin:0 0 2.75rem;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-hi)}
+.oh-type-name{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2.75rem,12vw,3.75rem);line-height:1;letter-spacing:-.015em}
+.oh-type-line{margin:.75rem 0 0;font-family:var(--serif);font-style:italic;font-size:1.1875rem;line-height:1.4;color:#c4bcaf}
+/* sections: a small label, then the content */
+.oh-sec{padding:2rem 0 0}
+.oh-sec+.oh-sec{margin-top:2rem;border-top:1px solid rgba(28,24,18,.08)}
+.oh-sec-k{margin:0 0 1rem;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+/* the balance map: each row reveals in turn and its dot glides from the center to where they lean */
+.oh-map{list-style:none;margin:0;padding:0;display:grid;gap:1.125rem}
+.oh-bal{display:grid;grid-template-columns:5.5rem minmax(0,1fr) 5.5rem;gap:.875rem;align-items:center;font-size:.875rem;color:var(--faint)}
+.oh-pole{transition:color .4s ease}
+.oh-pole--b{text-align:right}
+.oh-bal[data-side="a"] .oh-pole--a,.oh-bal[data-side="b"] .oh-pole--b{color:var(--ink);font-weight:600}
+.oh-track{position:relative;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(232,116,58,.5),rgba(28,24,18,.1) 50%,rgba(14,26,44,.45))}
+.oh-track::after{content:"";position:absolute;left:50%;top:-6px;width:1px;height:14px;background:rgba(28,24,18,.25)}
+.oh-track i{position:absolute;top:50%;left:var(--at);z-index:1;width:.875rem;height:.875rem;border-radius:50%;background:var(--ink);transform:translate(-50%,-50%);box-shadow:0 0 0 .25rem var(--pearl),0 .25rem .75rem rgba(6,12,24,.25)}
+.oh-bal[data-side="a"] .oh-track i{background:var(--orange)}
+.oh-bal[data-side="b"] .oh-track i{background:var(--shadow)}
+@keyframes oh-glide{from{left:50%}to{left:var(--at)}}
+.oh-track i{animation:oh-glide 1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(.55s + var(--k) * .12s)}
+.oh-map-note{margin-top:1.125rem}
+.oh-read{margin:0;font-family:var(--serif);font-size:1.25rem;line-height:1.5;color:var(--ink);text-wrap:pretty}
+.oh-half{margin:0 0 .5rem;font-family:var(--display);font-size:1.75rem;line-height:1.2;color:var(--ink);text-wrap:balance}
+.oh-half i{font-family:var(--serif);color:var(--orange-deep)}
+/* coming next: a teaser, not a dead button */
+.oh-next{margin-top:2.5rem;padding:1.375rem 1.5rem;border-radius:1.5rem;border:1px dashed rgba(28,24,18,.18);background:rgba(255,255,255,.5)}
+.oh-next-k{display:flex;align-items:center;justify-content:space-between;margin:0 0 .5rem;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.oh-next-k span{padding:.1875rem .5rem;border-radius:99px;background:var(--panel);letter-spacing:.12em;color:var(--orange-deep)}
+.oh-next-t{margin:0;font-family:var(--display);font-size:1.5rem;line-height:1.15;color:var(--ink)}
+.oh-next-d{margin:.375rem 0 0;font-size:.9375rem;color:var(--dim)}
+.oh-retake{margin-top:1.25rem;text-align:center}
+/* the reveal arrives piece by piece */
+.oh-result>*{animation:oh-focus-in .7s cubic-bezier(.22,1,.36,1) backwards}
+.oh-result>:nth-child(2){animation-delay:.25s}
+.oh-result>:nth-child(n+3){animation-delay:.9s}
+.oh-result>:nth-child(n+4){animation-delay:1.05s}
+/* the beat before the reveal */
+.oh-reading{display:grid;justify-items:center;gap:1.25rem;padding:4rem 0;text-align:center;animation:oh-focus-in .5s cubic-bezier(.22,1,.36,1) both}
+.oh-reading p{margin:0;font-family:var(--serif);font-style:italic;font-size:1.125rem;color:var(--dim)}
+.oh-reading-mark{width:2.25rem;height:2.25rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%);animation:oh-breathe 1.4s ease-in-out infinite}
+@keyframes oh-breathe{0%,100%{transform:scale(.9) rotate(0deg);opacity:.85}50%{transform:scale(1.05) rotate(90deg);opacity:1}}
+@media (prefers-reduced-motion:reduce){.oh-result>*,.oh-track i,.oh-reading,.oh-reading-mark{animation:none}}
+
+/* "See all 12 questions": a toggle under the start button */
+.oh-all{margin-top:.5rem;border-top:1px solid var(--line)}
+.oh-all summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.25rem;cursor:pointer;list-style:none;font-weight:600;color:var(--ink)}
+.oh-all summary::-webkit-details-marker{display:none}
+.oh-all summary i{flex:none;position:relative;width:1.75rem;height:1.75rem;border-radius:50%;border:1px solid var(--line);transition:transform .3s cubic-bezier(.22,1,.36,1),background .2s ease}
+.oh-all summary i::before,.oh-all summary i::after{content:"";position:absolute;left:50%;top:50%;width:.625rem;height:1.5px;background:var(--ink);transform:translate(-50%,-50%)}
+.oh-all summary i::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.oh-all[open] summary i{background:var(--panel)}
+.oh-all[open] summary i::after{transform:translate(-50%,-50%) rotate(0deg)}
+.oh-all summary:hover i{border-color:var(--orange)}
+.oh-all[open]>*:not(summary){animation:oh-in .35s cubic-bezier(.22,1,.36,1) both}
+.oh-all>.oh-fine{margin-bottom:1.25rem}
+.oh-all-g{margin-bottom:1.5rem}
+.oh-all-g ol{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.625rem}
+.oh-all-g li{display:grid;grid-template-columns:1.75rem minmax(0,1fr);gap:.5rem;padding:.875rem 1rem;border-radius:1rem;background:#ffffff;border:1px solid rgba(28,24,18,.08)}
+.oh-all-n{font-family:var(--display);font-size:1.125rem;line-height:1.4;color:var(--faint)}
+.oh-all-g li p{display:grid;grid-template-columns:1.375rem minmax(0,1fr);gap:.5rem;margin:0;font-size:.9375rem;line-height:1.45;color:var(--dim)}
+.oh-all-g li p+p{margin-top:.375rem}
+.oh-all-g li p.oh-all-ask{display:block;margin-bottom:.125rem;font-weight:600;color:var(--ink)}
+.oh-all-g li p.oh-all-ask+p{margin-top:.375rem}
+.oh-all-g li p.oh-all-ask+p b{background:#fbe7da;color:var(--orange-deep)}
+.oh-all-g li b{display:grid;place-items:center;width:1.375rem;height:1.375rem;border-radius:50%;font-family:var(--display);font-weight:400;font-size:.8125rem}
+.oh-all-g li p:first-child b{background:#fbe7da;color:var(--orange-deep)}
+.oh-all-g li p+p b{background:var(--shadow);color:var(--cream)}
+
+/* ---- focus mode: while the quiz runs, the page header steps away and one slim bar remains ---- */
+body[data-screen="quiz"] .oh-head{display:none}
+body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top))}
+.oh-quiz{min-height:calc(100svh - 2.5rem);gap:0}
+.oh-qbar{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:2.5rem minmax(0,1fr) auto;align-items:center;gap:1rem;padding:.5rem 0;background:none;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(#000 75%,transparent);mask-image:linear-gradient(#000 75%,transparent)}
+.oh-back--icon{justify-content:center;width:2.5rem;height:2.5rem;min-height:0;padding:0;border-radius:50%;border:1px solid rgba(28,24,18,.1);background:var(--pearl);color:var(--ink);transition:border-color .2s ease,transform .3s cubic-bezier(.22,1,.36,1)}
+.oh-back--icon:hover{border-color:rgba(28,24,18,.25);transform:translateX(-2px)}
+/* twelve segments: answered fill in ink, the current one glows orange */
+.oh-seg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}
+.oh-seg i{height:3px;border-radius:3px;background:rgba(28,24,18,.1);transition:background .5s cubic-bezier(.22,1,.36,1),box-shadow .5s ease}
+.oh-seg i.is-done{background:var(--ink)}
+.oh-seg i.is-now{background:var(--orange);box-shadow:0 0 .5rem rgba(232,116,58,.45)}
+/* the question block sits balanced in the middle of the screen */
+.oh-stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1.5rem 0 2rem}
+.oh-stage .oh-moment{margin-top:0}
+
+/* ---- the start screen ---- */
+.oh-welcome{min-height:calc(100svh - 5.5rem);justify-content:center;gap:0;padding:1rem 0 2rem}
+.oh-welcome .oh-kick{margin-bottom:1.25rem}
+.oh-welcome .oh-lead{margin-top:1rem;max-width:26rem}
+/* the preview: a pearl question card fanned behind the navy type card */
+.oh-peek{position:relative;height:15.25rem;margin:2.25rem .5rem 2rem}
+.oh-peek>div{position:absolute;border-radius:1.5rem}
+.oh-peek-q{left:0;top:0;width:80%;height:9rem;display:flex;flex-direction:column;justify-content:flex-start;padding:1.125rem 1.25rem;border:1px solid rgba(232,116,58,.14);
+  background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.09),rgba(243,163,120,0) 60%),var(--pearl);box-shadow:inset 0 1px 0 #fff,0 1.25rem 2.5rem -2rem rgba(90,60,40,.4);
+  transform:rotate(-5deg);font-family:var(--serif);font-size:.9375rem;line-height:1.3;color:var(--ink);white-space:nowrap}
+.oh-peek-q b{position:absolute;right:.875rem;top:-.25rem;font-family:var(--display);font-weight:400;font-size:4.5rem;line-height:1;color:rgba(232,116,58,.1)}
+.oh-peek-t{right:0;bottom:0;width:76%;min-height:9rem;padding:1.125rem 1.25rem 1.25rem;color:var(--cream);
+  background:radial-gradient(120% 110% at 100% 100%,rgba(62,108,171,.5),rgba(62,108,171,0) 60%),radial-gradient(90% 80% at 0% 0%,rgba(232,116,58,.16),rgba(232,116,58,0) 55%),var(--shadow);
+  box-shadow:inset 0 1px 0 rgba(239,231,218,.14),0 1.75rem 3rem -1.75rem rgba(6,12,24,.8);transform:rotate(3deg)}
+.oh-peek-k{display:flex;align-items:center;gap:.5rem;margin:0 0 1.25rem;font-size:.625rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-hi)}
+.oh-peek-k .oh-dot{width:.625rem;height:.625rem}
+.oh-peek-name{margin:0;font-family:var(--display);font-size:1.625rem;line-height:1.05}
+.oh-peek-list{display:flex;flex-wrap:wrap;gap:.25rem .5rem;margin:.625rem 0 0;font-family:var(--serif);font-style:italic;font-size:.8125rem;color:#9ea6b5}
+.oh-peek-list i{font-style:normal;color:rgba(239,231,218,.3)}
+@media (hover:hover){.oh-peek>div{transition:transform .6s cubic-bezier(.22,1,.36,1)}.oh-peek:hover .oh-peek-q{transform:rotate(-7deg) translate(-4px,-4px)}.oh-peek:hover .oh-peek-t{transform:rotate(4deg) translate(4px,2px)}}
+.oh-facts{display:flex;justify-content:center;gap:0;margin:1rem 0 0;font-size:.8125rem;color:var(--faint)}
+.oh-facts span+span::before{content:"";display:inline-block;width:3px;height:3px;margin:0 .75rem;border-radius:50%;background:currentColor;vertical-align:middle;opacity:.6}
+.oh-welcome .oh-all{margin-top:2rem}
+/* the start screen arrives piece by piece */
+.oh-welcome{animation:none}
+.oh-welcome>*{animation:oh-focus-in .7s cubic-bezier(.22,1,.36,1) backwards}
+.oh-welcome>:nth-child(2){animation-delay:.06s}
+.oh-welcome>:nth-child(3){animation-delay:.12s}
+.oh-welcome>:nth-child(4){animation-delay:.2s}
+.oh-welcome>:nth-child(5){animation-delay:.3s}
+.oh-welcome>:nth-child(n+6){animation-delay:.36s}
+@media (prefers-reduced-motion:reduce){.oh-welcome>*{animation:none}.oh-peek>div{transition:none}}
+
+/* the two-tone dot on a navy card gets a fine cream ring, so its navy half doesn't vanish into the card */
+.oh-type .oh-dot,.oh-peek-t .oh-dot{box-shadow:0 0 0 1.5px rgba(239,231,218,.7)}
+
+/* ---- the longer read on the result screen ---- */
+.oh-body{margin:0;font-size:1rem;line-height:1.65;color:var(--dim);text-wrap:pretty}
+.oh-signs{list-style:none;margin:1.25rem 0 0;padding:0;display:grid;gap:.625rem}
+.oh-signs li{position:relative;padding-left:1.375rem;font-size:1rem;line-height:1.5;color:var(--ink)}
+.oh-signs li::before{content:"";position:absolute;left:0;top:.6em;width:.5rem;height:.5rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+.oh-says{display:grid;gap:1.25rem}
+.oh-say{padding-left:1rem;border-left:2px solid rgba(28,24,18,.12)}
+.oh-say[data-side="a"]{border-left-color:var(--orange)}
+.oh-say[data-side="b"]{border-left-color:var(--shadow)}
+.oh-say-k{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .625rem;margin:0 0 .375rem;font-weight:600;font-size:.9375rem;color:var(--ink)}
+.oh-say-k i{font-style:normal;font-weight:400;color:var(--faint)}
+.oh-say-k span{flex-basis:100%;margin-top:.125rem;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.oh-say[data-side="a"] .oh-say-k span{color:var(--orange-deep)}
+.oh-say[data-side="b"] .oh-say-k span{color:var(--blue)}
+.oh-two{display:grid;gap:1.75rem}
+@media (min-width:34rem){.oh-two{grid-template-columns:1fr 1fr;gap:2rem}}
+.oh-rep{padding:1.375rem 1.5rem;border-radius:1.5rem;border:1px solid rgba(232,116,58,.16);background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.1),rgba(243,163,120,0) 60%),var(--pearl);box-shadow:inset 0 1px 0 #fff,0 1.5rem 3rem -2.25rem rgba(90,60,40,.35)}
+.oh-rep-t{margin:0 0 .5rem;font-family:var(--display);font-size:1.5rem;line-height:1.15;color:var(--ink)}
+.oh-rep-w{margin:0;font-size:1rem;line-height:1.6;color:var(--dim)}
+.oh-rep-r{margin:1rem 0 0;padding-top:.875rem;border-top:1px solid rgba(28,24,18,.08);font-size:.9375rem;color:var(--dim)}
+.oh-rep-r b{color:var(--orange-deep);font-weight:600}
+.oh-shadow{margin:0 0 .75rem;font-family:var(--serif);font-style:italic;font-size:1.5rem;line-height:1.3;color:var(--ink);text-wrap:balance}
+.oh-shadow span{display:block;margin-bottom:.5rem;font-family:var(--sans);font-style:normal;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-deep)}
+
+/* ---- result: neat and quiet. Ink on pearl; the navy type card is the only bold color. ---- */
+.oh-type{background:radial-gradient(120% 110% at 100% 100%,rgba(62,108,171,.42),rgba(62,108,171,0) 60%),var(--shadow)}
+.oh-type-k{color:rgba(239,231,218,.7)}
+.oh-track{background:rgba(28,24,18,.12)}
+.oh-track i,.oh-bal[data-side="a"] .oh-track i,.oh-bal[data-side="b"] .oh-track i{background:var(--ink)}
+.oh-signs li::before{top:.68em;width:.3125rem;height:.3125rem;background:var(--ink);opacity:.45}
+.oh-say,.oh-say[data-side="a"],.oh-say[data-side="b"]{border-left-color:rgba(28,24,18,.12)}
+.oh-say[data-side="a"],.oh-say[data-side="b"]{border-left-color:var(--ink)}
+.oh-say-k span,.oh-say[data-side="a"] .oh-say-k span,.oh-say[data-side="b"] .oh-say-k span{color:var(--faint)}
+.oh-half i{color:var(--ink)}
+.oh-rep{border-color:rgba(28,24,18,.1);background:#ffffff;box-shadow:0 1.25rem 2.5rem -2.25rem rgba(6,12,24,.35)}
+.oh-rep-r b{color:var(--ink)}
+.oh-shadow span{color:var(--faint)}
+.oh-next-k span{background:rgba(28,24,18,.05);color:var(--dim)}
+
+/* ---- under "The read": set like the guide. Numbered serif lines and clean report rows, separated by hairlines ---- */
+.oh-sub{margin:1.75rem 0 .25rem;font-family:var(--serif);font-style:italic;font-size:.9375rem;color:var(--faint)}
+.oh-signs{list-style:none;margin:0;padding:0;display:block;border-top:1px solid rgba(28,24,18,.1)}
+.oh-signs li{display:grid;grid-template-columns:2.25rem minmax(0,1fr);align-items:baseline;gap:.5rem;padding:.9375rem 0;border-bottom:1px solid rgba(28,24,18,.1)}
+.oh-signs li::before{content:none}
+.oh-signs li span{font-family:var(--display);font-size:.9375rem;letter-spacing:.04em;color:var(--faint);font-variant-numeric:tabular-nums}
+.oh-signs li p{margin:0;font-family:var(--serif);font-size:1.125rem;line-height:1.4;color:var(--ink);text-wrap:pretty}
+.oh-says{display:block;gap:0;border-top:1px solid rgba(28,24,18,.1)}
+.oh-say,.oh-say[data-side="a"],.oh-say[data-side="b"]{padding:1.125rem 0 1.25rem;border-left:0;border-bottom:1px solid rgba(28,24,18,.1)}
+.oh-say-k{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.25rem 1rem;margin:0 0 .5rem}
+.oh-say-k b{font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.oh-say-k b i{font-style:normal;color:var(--faint);padding:0 .125rem}
+.oh-say-k span,.oh-say[data-side="a"] .oh-say-k span,.oh-say[data-side="b"] .oh-say-k span{flex-basis:auto;margin:0;font-family:var(--serif);font-style:italic;font-size:.875rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint)}
+.oh-say[data-side="a"] .oh-say-k span,.oh-say[data-side="b"] .oh-say-k span{color:var(--ink)}
+.oh-signs li:last-child,.oh-says .oh-say:last-child{border-bottom:0}
+
+/* the question: no divider after the 7-day card, room to breathe, its name credited underneath like a quote */
+.oh-sec.oh-sec--q{margin-top:1.5rem;padding-top:2.5rem;border-top:0}
+.oh-sec--q .oh-sec-k{margin-bottom:1.25rem}
+.oh-sec--q .oh-shadow{margin:0}
+.oh-shadow-by{margin:.875rem 0 1.5rem;font-family:var(--serif);font-style:italic;font-size:.9375rem;color:var(--faint)}
