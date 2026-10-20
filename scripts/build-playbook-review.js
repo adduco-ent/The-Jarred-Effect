@@ -68,6 +68,7 @@ const group = (side, id, kicker, title, desc) => `<section class="side" id="${id
   <div class="grid">${P.reps.filter((r) => r.side === side).map(rep).join('')}</div>
 </section>`;
 const loose = group('loose', 'side-loose', 'Let loose', 'Living lightly', 'Laugh in the hard moments instead of leaning into anger and pressure. Hold your Ask with a light grip, and enjoy the life you’re building.');
+const people = group('people', 'side-people', 'Connection, quiet and new doors', 'People and doors', 'Reaching out when you feel alone, finding quiet when it’s too much, and opening doors to new people and opportunities of every kind.');
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
 const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
@@ -169,7 +170,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page, and it moves with real life: no fixed times, a full, half or rough version every day, and no catch-up debt. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
   <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
-  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
+  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
@@ -192,13 +193,14 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     </div>
   </section>
   <section class="side" id="protocols">
-    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls and the word check.</p></div>
+    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, and opening doors to new people and opportunities.</p></div>
     <div class="grid" style="grid-template-columns:1fr">${protocols.split('</article>').filter(Boolean).map((a) => '<div class="wide">' + a + '</article></div>').join('')}</div>
   </section>
   ${groups}
   ${habits}
   ${field}
   ${loose}
+  ${people}
   ${tools}
   <section class="side" id="shadow">
     <div class="sec-h"><p class="k">From the guide</p><h2>Shadow questions</h2><p>Day 4 of every plan is one of these, chosen by type, with gentle follow-ups for anyone who wants to go further.</p></div>
