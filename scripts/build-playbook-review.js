@@ -74,9 +74,50 @@ const worth = group('worth', 'side-worth', 'Held, not hyped', 'Voice and worth',
 const thoughts = group('thoughts', 'side-thoughts', 'Unlearning what you tell yourself', 'Error thoughts', 'Catch the harsh thought, name it “error thought”, flip it to words you can believe, and back it up with one small action.');
 const circle = group('circle', 'side-circle', 'The family you’re building', 'Your five', 'The people closest to you shape your habits, moods and chances. Rebalance toward the ones who amplify you, and be the friend you want to have.');
 const agreements = group('agreements', 'side-agreements', 'How you carry yourself', 'Four ways to stay clear', 'Mean what you say, their world not your worth, ask don’t guess, and your best for the day you have, as small daily steps.');
+const foundations = group('foundations', 'side-foundations', 'Foundations and big seasons', 'Foundations', 'Coming back after a gap, body basics, getting through big life changes, and checking that your Ask is truly yours.');
+const TYPES = { dreamer: 'Dreamer', achiever: 'Achiever', excavator: 'Excavator', pendulum: 'Pendulum', calibrated: 'Calibrated' };
+const pname = (pid) => (P.protocols.find((x) => x.id === pid) || {}).name || pid;
+const layerItem = (pr) => { const L = P.layers[pr.id]; if (!L) return ''; const id = 'ly-' + pr.id; return `<article class="item layer" data-item="${id}">
+  <header><p class="k">Layers</p><h3>${esc(pr.name)}</h3></header>
+  <div class="lyr"><span class="lab">Bring it up when</span><ul class="lines">${L.signals.map((x, i) => ed(id, 'signal' + (i + 1), x, 'li')).join('')}</ul></div>
+  <div class="lyr"><span class="lab">Start here</span>${ed(id, 'start', L.start, 'p')}</div>
+  <div class="lyr"><span class="lab">Go deeper</span>${ed(id, 'deeper', L.deeper, 'p')}</div>
+  <div class="lyr"><span class="lab">Signs it’s working</span><ul class="lines">${L.working.map((x, i) => ed(id, 'working' + (i + 1), x, 'li')).join('')}</ul></div>
+  <div class="lyr"><span class="lab">When it’s done</span>${ed(id, 'done', L.done, 'p')}</div>
+  ${Object.keys(L.byType || {}).length ? `<div class="lyr"><span class="lab">By type</span><ul class="lines">${Object.keys(L.byType).map((t) => `<li><b>${TYPES[t]}:</b> ${ed(id, 'type-' + t, L.byType[t], 'span', 'inl')}</li>`).join('')}</ul></div>` : ''}
+  ${L.next && L.next.length ? `<p class="lyr-next"><span class="lab">Leads to</span>${L.next.map((n) => esc(pname(n))).join(' · ')}</p>` : ''}
+  ${decide(id)}
+</article>`; };
+const layers = `<section class="side" id="layers">
+  <div class="sec-h"><p class="k">Drill-down layers</p><h2>Layers</h2><p>For each protocol: when to bring it up, where to start, how to go deeper, how to tell it’s working, when it’s done, how it shifts by type, and what comes next. The plan generator uses these to choose and pace protocols.</p></div>
+  <div class="grid">${P.protocols.map(layerItem).join('')}</div>
+</section>`;
+const areaItem = (a) => { const id = 'area-' + a.id; return `<article class="item" data-item="${id}">
+  <header><p class="k">Life area</p><h3>${esc(a.name)}</h3></header>
+  <p class="eg"><span class="lab">An Ask</span>${ed(id, 'ask', a.ask)}</p>
+  <p class="eg"><span class="lab">A tiny step</span>${ed(id, 'step', a.step)}</p>
+  <p class="eg"><span class="lab">A boundary</span>${ed(id, 'boundary', a.boundary)}</p>
+  <p class="eg"><span class="lab">An error thought, flipped</span>${ed(id, 'flip', a.flip)}</p>
+  <p class="eg"><span class="lab">A Try</span>${ed(id, 'tryIt', a.tryIt)}</p>
+  ${decide(id)}
+</article>`; };
+const areas = `<section class="side" id="areas">
+  <div class="sec-h"><p class="k">Tailoring</p><h2>Life areas</h2><p>Examples for each area of life, so a plan about money doesn’t show a running example.</p></div>
+  <div class="grid">${P.areas.map(areaItem).join('')}</div>
+</section>`;
+const pathItem = (w) => { const id = 'path-' + w.id; return `<article class="item" data-item="${id}">
+  <header><p class="k">Pathway</p><h3>${esc(w.name)}</h3></header>
+  <p class="eg"><span class="lab">For</span>${ed(id, 'for', w.for)}</p>
+  <ol class="path">${w.path.map((n) => `<li>${esc(pname(n))}</li>`).join('')}</ol>
+  ${decide(id)}
+</article>`; };
+const pathways = `<section class="side" id="pathways">
+  <div class="sec-h"><p class="k">Arcs over several weeks</p><h2>Pathways</h2><p>Protocols that lead into each other, so a plan can carry someone through real change, one protocol at a time.</p></div>
+  <div class="grid">${P.pathways.map(pathItem).join('')}</div>
+</section>`;
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
-const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
+const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.protocols.filter((x) => P.layers[x.id]).map((x) => 'ly-' + x.id), P.areas.map((a) => 'area-' + a.id), P.pathways.map((w) => 'path-' + w.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
 
 const html = `<title>Other Half Playbook</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -135,6 +176,12 @@ section{padding-block:2.5rem 0}
 .eg,.rough{font-size:.9375rem;color:var(--dim)}
 .eg .lab,.rough .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
 .rough .lab{color:var(--rust)}
+.lyr{display:grid;gap:.25rem}
+.lyr .lab,.lyr-next .lab{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.lyr p{margin:0;font-size:.9375rem}
+.lyr .lines{font-size:.9375rem}
+.lyr-next{font-size:.875rem;color:var(--dim);display:grid;gap:.25rem}
+.path{margin:0;padding-left:1.25rem;display:grid;gap:.3rem;font-size:.9375rem;font-weight:600}
 .safety{font-size:.9375rem;color:var(--dim);padding:.75rem .9rem;border-radius:.75rem;background:var(--chip)}
 .safety .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:.125rem}
 .lines{margin:0;padding-left:1.25rem;display:grid;gap:.4rem;color:var(--fg);font-size:.9375rem}
@@ -156,6 +203,7 @@ section{padding-block:2.5rem 0}
 .item[data-choice="change"] .ed:focus{background:var(--card);box-shadow:0 0 0 .25rem var(--card),0 0 0 calc(.25rem + 1.5px) var(--orange)}
 .ed.is-edited,.item[data-choice="change"] .ed.is-edited{background:rgba(232,116,58,.16);box-shadow:0 0 0 .25rem rgba(232,116,58,.16)}
 .lines .ed{display:list-item}
+.lines .ed.inl{display:inline}
 .eg p{margin:0}.eg p+p{margin-top:.25rem}
 .more{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem}
 .more textarea{width:100%;font:inherit;font-size:.9375rem;padding:.55rem .7rem;border-radius:.65rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);resize:vertical}
@@ -175,7 +223,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page, and it moves with real life: no fixed times, a full, half or rough version every day, and no catch-up debt. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
   <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
-  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
+  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols','Layers','Pathways','Life areas'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols','layers','pathways','areas'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-foundations">Foundations</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
@@ -198,9 +246,12 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     </div>
   </section>
   <section class="side" id="protocols">
-    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, opening doors to new people and opportunities, reading flow and resistance, the pause before yes, your own agency, saying no, speaking up, your worth held, catching error thoughts, your five: the family you’re building, and four ways to stay clear.</p></div>
+    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, opening doors to new people and opportunities, reading flow and resistance, the pause before yes, your own agency, saying no, speaking up, your worth held, catching error thoughts, your five: the family you’re building, four ways to stay clear, the comeback, body basics, big life changes, and what you actually value.</p></div>
     <div class="grid" style="grid-template-columns:1fr">${protocols.split('</article>').filter(Boolean).map((a) => '<div class="wide">' + a + '</article></div>').join('')}</div>
   </section>
+  ${layers}
+  ${pathways}
+  ${areas}
   ${groups}
   ${habits}
   ${field}
@@ -211,6 +262,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   ${thoughts}
   ${circle}
   ${agreements}
+  ${foundations}
   ${tools}
   <section class="side" id="shadow">
     <div class="sec-h"><p class="k">From the guide</p><h2>Shadow questions</h2><p>Day 4 of every plan is one of these, chosen by type, with gentle follow-ups for anyone who wants to go further.</p></div>
