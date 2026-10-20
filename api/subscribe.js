@@ -13,19 +13,11 @@
 //   TEST_EMAILS         optional  comma-separated addresses that skip the once-a-day limit, for testing.
 //                                 Gmail-style "+tags" count as the same address (you+anything@gmail.com).
 const crypto = require('crypto');
-const { resend, reply, unsubscribeUrl } = require('../lib/resend');
+const { resend, reply, unsubscribeUrl, isTester } = require('../lib/resend');
 const guideEmail = require('../lib/guide-email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const REQUIRED = ['RESEND_API_KEY', 'RESEND_FROM', 'GUIDE_URL', 'SITE_URL', 'UNSUBSCRIBE_SECRET'];
-
-// testers get every email they ask for; everyone else gets at most one guide email a day
-function isTester(email) {
-  const list = String(process.env.TEST_EMAILS || '').toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
-  if (!list.length) return false;
-  const bare = email.replace(/\+[^@]*@/, '@');
-  return list.includes(email) || list.includes(bare);
-}
 
 module.exports = async function subscribe(req, res) {
   if (req.method !== 'POST') {

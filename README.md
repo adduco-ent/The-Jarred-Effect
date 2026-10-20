@@ -21,7 +21,8 @@ Static HTML, CSS and JavaScript with no build step, plus two small Vercel functi
 | `assets/img`, `assets/video` | Images, icons, the share image and the compressed homepage video |
 | `api/subscribe.js` | Receives every sign-up: saves the contact in Resend and emails the guide |
 | `api/unsubscribe.js` | Handles the unsubscribe link in emails, including Gmail and Yahoo one-click unsubscribe |
-| `lib/` | Code shared by the two functions: the layout every email is built from (`lib/email-layout.js`) and the guide email (`lib/guide-email.js`) |
+| `lib/` | Code shared by the two functions: the layout every email is built from (`lib/email-layout.js`), the guide email (`lib/guide-email.js`) and the app's sign-in emails (`lib/auth-emails.js`) |
+| `api/send-previews.js` | Emails a tester a "[Preview]" copy of every email (see `docs/email-design.md`) |
 | `docs/email-design.md` | The email design rules, and how to update the app's sign-in emails in Supabase |
 | `scripts/`, `emails/supabase/` | Builds the app's branded sign-in emails for Supabase (not part of the live site) |
 | `vercel.json` | Redirects `/guide` to `opt-in.html` on the live site, plus security headers |
