@@ -193,7 +193,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
     </div>
   </section>
   <section class="side" id="protocols">
-    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, and opening doors to new people and opportunities.</p></div>
+    <div class="sec-h"><p class="k">For each kind of Ask, and each stage</p><h2>Protocols</h2><p>Step-by-step programs a plan follows: building or breaking a habit, clearing your field, and each stage of an Ask (the Price when it gets hard, Receiving it, Holding the new level), plus Tries, gut calls, the word check, feeling alone, feeling it’s too much, opening doors to new people and opportunities, and reading flow and resistance.</p></div>
     <div class="grid" style="grid-template-columns:1fr">${protocols.split('</article>').filter(Boolean).map((a) => '<div class="wide">' + a + '</article></div>').join('')}</div>
   </section>
   ${groups}
