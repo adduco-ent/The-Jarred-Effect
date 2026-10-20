@@ -244,7 +244,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   function collect(id) {
     var edit = {};
     [].forEach.call(document.querySelectorAll('[data-of="' + id + '"]'), function (el) {
-      var key = el.getAttribute('data-f'), v = el.textContent.replace(/\s+/g, ' ').trim();
+      var key = el.getAttribute('data-f'), v = el.textContent.replace(/\\s+/g, ' ').trim();
       if (v && v !== ORIG[id + '.' + key]) edit[key] = v;
     });
     return edit;
