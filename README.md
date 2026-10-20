@@ -21,7 +21,9 @@ Static HTML, CSS and JavaScript with no build step, plus two small Vercel functi
 | `assets/img`, `assets/video` | Images, icons, the share image and the compressed homepage video |
 | `api/subscribe.js` | Receives every sign-up: saves the contact in Resend and emails the guide |
 | `api/unsubscribe.js` | Handles the unsubscribe link in emails, including Gmail and Yahoo one-click unsubscribe |
-| `lib/` | Code shared by the two functions, including the guide email itself (`lib/guide-email.js`) |
+| `lib/` | Code shared by the two functions: the layout every email is built from (`lib/email-layout.js`) and the guide email (`lib/guide-email.js`) |
+| `docs/email-design.md` | The email design rules, and how to update the app's sign-in emails in Supabase |
+| `scripts/`, `emails/supabase/` | Builds the app's branded sign-in emails for Supabase (not part of the live site) |
 | `vercel.json` | Redirects `/guide` to `opt-in.html` on the live site, plus security headers |
 | `sitemap.xml`, `robots.txt`, `llms.txt` | Search and AI-assistant discovery (see "Search and AI visibility" below) |
 
@@ -79,9 +81,10 @@ All sizes in the CSS are in `rem`, and `1rem` is the browser's base size (16px b
 | `RESEND_API_KEY` | yes | `re_…` |
 | `RESEND_FROM` | yes | `Jarred <jarred@yourdomain.com>` (that domain must be verified in Resend) |
 | `GUIDE_URL` | yes | the link the email's button opens |
-| `SITE_URL` | yes | `https://www.yourdomain.com` (used for the email logo and unsubscribe links) |
+| `SITE_URL` | yes | `https://www.yourdomain.com` (used for email images and unsubscribe links) |
 | `UNSUBSCRIBE_SECRET` | yes | any long random string; it signs unsubscribe links |
 | `RESEND_SEGMENT_ID` | no | adds every new contact to that segment |
+| `TEST_EMAILS` | no | comma-separated addresses that skip the once-a-day guide email limit, for testing (Gmail `+` versions count) |
 | `RESEND_REPLY_TO` | no | where replies go (defaults to the from address) |
 
 What happens on submit:
