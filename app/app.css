@@ -8,7 +8,7 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:.5rem}
 [tabindex="-1"]:focus{outline:none}
 
-.oh{position:relative;isolation:isolate;min-height:100svh;overflow-x:clip}
+.oh{position:relative;isolation:isolate;min-height:100svh;overflow:clip}
 /* the light: a cool slate-blue wash falling from the top right, and a faintly cooler floor, for depth */
 .oh{background:linear-gradient(180deg,var(--pearl) 0%,var(--pearl) 35%,#f4f6f9 100%)}
 .oh::before{content:"";position:absolute;z-index:-1;width:70rem;height:56rem;right:-34rem;top:-30rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(62,108,171,.11),rgba(62,108,171,.045) 50%,rgba(62,108,171,0));pointer-events:none}
