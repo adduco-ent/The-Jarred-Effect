@@ -75,6 +75,12 @@ module.exports = async function subscribe(req, res) {
     tags: [{ name: 'type', value: 'guide' }, { name: 'source', value: source }]
   }, key);
 
+  // 409 means this address already got the guide today (the once-a-day key above), possibly from another
+  // form or an older version of the email. They have it, so that's a success, not an error.
+  if (!sent.ok && sent.status === 409) {
+    console.log('subscribe: guide already sent to this address today');
+    return reply(res, 200, { ok: true });
+  }
   if (!sent.ok) {
     console.error('subscribe: send failed', sent.status, sent.data);
     return reply(res, 502, { ok: false, error: 'failed' });
