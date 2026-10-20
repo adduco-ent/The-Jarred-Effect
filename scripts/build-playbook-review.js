@@ -67,7 +67,7 @@ const group = (side, id, kicker, title, desc) => `<section class="side" id="${id
   <div class="side-h"><p class="k">${esc(kicker)}</p><h2>${esc(title)}</h2><p class="side-d">${esc(desc)}</p></div>
   <div class="grid">${P.reps.filter((r) => r.side === side).map(rep).join('')}</div>
 </section>`;
-const loose = group('loose', 'side-loose', 'Let loose', 'Living lightly', 'Hold your Ask with a light grip. Enjoy the life you’re building, not only the finish.');
+const loose = group('loose', 'side-loose', 'Let loose', 'Living lightly', 'Laugh in the hard moments instead of leaning into anger and pressure. Hold your Ask with a light grip, and enjoy the life you’re building.');
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
 const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
