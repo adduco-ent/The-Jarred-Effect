@@ -47,7 +47,20 @@ const sq = P.shadowQuestions.map((q) => { const id = 'sq-' + q.id; return `<arti
   ${decide(id)}
 </article>`; }).join('') + `<article class="item" data-item="going-deep"><header><p class="k">Shown with every shadow question</p><h3>Going deep</h3></header>${ed('going-deep', 'text', P.goingDeep, 'p', 'what')}${decide('going-deep')}</article>`;
 
-const ids = ['shape', 'voice', 'hard'].concat(P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
+const proto = (pr) => { const id = 'pr-' + pr.id; return `<article class="item proto" data-item="${id}">
+  <header><p class="k">Protocol</p><h3>${esc(pr.name)}</h3></header>
+  <p class="eg"><span class="lab">Use it</span>${ed(id, 'when', pr.when)}</p>
+  <ol class="lines">${pr.steps.map((l, i) => ed(id, 'step' + (i + 1), l, 'li')).join('')}</ol>
+  ${pr.safety ? `<p class="safety"><span class="lab">Safety</span>${ed(id, 'safety', pr.safety)}</p>` : ''}
+  ${decide(id)}
+</article>`; };
+const protocols = P.protocols.map(proto).join('');
+const habits = `<section class="side" id="side-habits">
+  <div class="side-h"><p class="k">Habits and flow</p><h2>Habit steps</h2><p class="side-d">The tools the two protocols use, and that any plan can lean on when energy, time or ideas run low.</p></div>
+  <div class="grid">${P.reps.filter((r) => r.side === 'habits').map(rep).join('')}</div>
+</section>`;
+
+const ids = ['shape', 'voice', 'hard', 'flow'].concat(P.protocols.map((x) => 'pr-' + x.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
 
 const html = `<title>Other Half Playbook</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -106,6 +119,8 @@ section{padding-block:2.5rem 0}
 .eg,.rough{font-size:.9375rem;color:var(--dim)}
 .eg .lab,.rough .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
 .rough .lab{color:var(--rust)}
+.safety{font-size:.9375rem;color:var(--dim);padding:.75rem .9rem;border-radius:.75rem;background:var(--chip)}
+.safety .lab{display:block;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:.125rem}
 .lines{margin:0;padding-left:1.25rem;display:grid;gap:.4rem;color:var(--fg);font-size:.9375rem}
 .wide{max-width:46rem}
 .dec{display:grid;grid-template-columns:repeat(3,1fr);gap:.375rem;margin-top:auto;padding-top:.5rem}
@@ -142,9 +157,9 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
 <div class="wrap"><div class="hero">
   <p class="k">The Other Half · Playbook version ${P.version}</p>
   <h1>The method, <i>step by step.</i></h1>
-  <p class="lead">Every 7-day plan is built only from what’s on this page. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
+  <p class="lead">Every 7-day plan is built only from what’s on this page, and it moves with real life: no fixed times, a full, half or rough version every day, and no catch-up debt. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
   <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
-  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules'].map((t,i)=>`<a href="#${['shape','voice','hard'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#shadow">Shadow questions</a></nav>
+  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Protocols'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','protocols'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
@@ -161,9 +176,15 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
       <div class="wide" id="shape">${listItem('shape', 'The shape of a week', 'How a 7-day plan is put together', P.planShape)}</div>
       <div class="wide" id="voice">${listItem('voice', 'Your voice', 'How every plan sounds', P.voice)}</div>
       <div class="wide" id="hard">${listItem('hard', 'Never', 'The hard rules', P.hardRules)}</div>
+      <div class="wide" id="flow">${listItem('flow', 'Ebb and flow', 'How plans move with real life', P.flow)}</div>
     </div>
   </section>
+  <section class="side" id="protocols">
+    <div class="sec-h"><p class="k">When the Ask is a habit</p><h2>Protocols</h2><p>Step-by-step programs a plan follows when someone wants to build a habit or break one. They use the habit steps below and the ebb-and-flow rules above.</p></div>
+    <div class="grid" style="grid-template-columns:1fr">${protocols.split('</article>').filter(Boolean).map((a) => '<div class="wide">' + a + '</article></div>').join('')}</div>
+  </section>
   ${groups}
+  ${habits}
   <section class="side" id="shadow">
     <div class="sec-h"><p class="k">From the guide</p><h2>Shadow questions</h2><p>Day 4 of every plan is one of these, chosen by type, with gentle follow-ups for anyone who wants to go further.</p></div>
     <div class="grid">${sq}</div>
