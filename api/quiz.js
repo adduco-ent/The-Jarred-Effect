@@ -56,7 +56,7 @@ module.exports = async function quiz(req, res) {
   const site = process.env.SITE_URL.replace(/\/+$/, '');
 
   // 1 + 2: save the result and the contact (a failed save never blocks their email)
-  await Promise.all([
+  const [saved] = await Promise.all([
     saveResult({ email, type: result.type, answers: code, pairs: result.pairs, swing: result.swing, insight: result.insight, ask: ask || null, source }),
     saveContact(email)
   ]);
@@ -76,10 +76,10 @@ module.exports = async function quiz(req, res) {
     headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
     tags: [{ name: 'type', value: 'quiz' }, { name: 'result', value: result.type }, { name: 'source', value: source }]
   }, key);
-  if (!sent.ok && sent.status === 409) return reply(res, 200, { ok: true, type: result.type });
+  if (!sent.ok && sent.status === 409) return reply(res, 200, { ok: true, type: result.type, saved });
   if (!sent.ok) {
     console.error('quiz: send failed', sent.status, sent.data);
     return reply(res, 502, { ok: false, error: 'failed' });
   }
-  return reply(res, 200, { ok: true, type: result.type });
+  return reply(res, 200, { ok: true, type: result.type, saved });
 };
