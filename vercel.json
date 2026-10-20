@@ -59,6 +59,25 @@
           "value": "public, max-age=3600, stale-while-revalidate=86400"
         }
       ]
+    },
+    {
+      "source": "/download/guide",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"What-All-Gurus-Are-Failing-To-Disclose-About-Manifestation.pdf\""
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/download/guide",
+      "destination": "/assets/guide/what-all-gurus-are-failing-to-disclose-about-manifestation.pdf"
     }
   ]
 }
