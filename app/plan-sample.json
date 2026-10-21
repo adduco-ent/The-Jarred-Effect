@@ -1,5 +1,6 @@
 {
   "playbook": 1,
+  "tier": "free",
   "type": "achiever",
   "typeName": "The Achiever",
   "asks": [
@@ -93,6 +94,7 @@
     "missedDay": "This one slipped by. That’s okay. No catch-up, just today.",
     "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week."
   },
+  "focus": "Add as many Asks as you want. Fewer at once works better, though: with one to three, you’ll see the progress you’re after sooner.",
   "r": "bbaoobaooaoa",
   "library": [
     "Building a new habit",
