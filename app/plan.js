@@ -209,12 +209,13 @@
         '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
     }
     return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '">' +
-      '<div class="pl-day-h">' + head + doneBtn(k, many ? plan.asks[s.ask].text : '') + '</div>' + reply(k) +
+      '<div class="pl-day-h">' + head + (isDone ? doneBtn(k, many ? plan.asks[s.ask].text : '') : '') + '</div>' +
       (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
       (rough
         ? '<div class="pl-v"><span>Your rough-day version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>') +
-      afterStep(k, isDone) + layers(d, s) + '</article>';
+      (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
+      reply(k) + afterStep(k, isDone) + layers(d, s) + '</article>';
   }
 
   // ---- the question day and the look back
@@ -313,8 +314,24 @@
         (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '">Back to today</button>' : '') + '</section>';
     }
 
+    if (d.kind === 'step' && st.guide) {
+      var steps3 = [
+        ['ci', 'Check in', !!st.checkin[sel]],
+        ['steps', many ? 'Do a step' : 'Do your step', kept(d)],
+        [kept(d) ? 'rc' : 'steps', 'Your receipt', !!((fb.receipt[sel] || {}).text || '').trim()]
+      ];
+      var cur = -1; steps3.forEach(function (x, i) { if (cur < 0 && !x[2]) cur = i; });
+      html += '<ol class="fl" aria-label="Today, in three steps">' + steps3.map(function (x, i) {
+        return '<li><button type="button" class="fl-i' + (x[2] ? ' is-done' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x[0] + '"' + (i === cur ? ' aria-current="step"' : '') + '>' +
+          '<span class="fl-n">' + (x[2] ? check : i + 1) + '</span><span class="fl-l">' + x[1] + '</span></button></li>';
+      }).join('') + '</ol>';
+    }
     if (!st.guide && d.kind === 'step') {
-      html += '<section class="gd"><p class="ci-q">How do you like your steps?</p>' +
+      html += '<section class="gd"><p class="pl-k">Welcome to your week</p><h2 class="gd-t">Here’s how this works</h2>' +
+        '<ol class="gd-l"><li><b>One day at a time.</b> Today’s step is the only one that matters.</li>' +
+        '<li><b>Check in, do your step, then say how it went.</b> That’s the whole loop.</li>' +
+        '<li><b>Your words shape next week.</b> Nothing is graded.</li></ol>' +
+        '<p class="ci-q">How do you like your steps?</p>' +
         '<div class="gd-o"><button type="button" data-guide="step"><b>Just the step</b><span>Short and simple. More help is a tap away.</span></button>' +
         '<button type="button" data-guide="walk"><b>Walk me through it</b><span>Mini-steps and a real-life example, open from the start.</span></button></div>' +
         '<p class="gd-k">You can change this any time in You.</p></section>';
@@ -322,18 +339,18 @@
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
-      html += '<section class="ci"><p class="ci-q">' + (sel === T ? 'How’s today?' : 'How was that day?') + '</p>' +
+      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'How’s today?' : 'How was that day?') + '</p><p class="ci-s">Your steps adjust to fit.</p>' +
         chips('data-checkin', sel, [['full', 'Full'], ['half', 'Half'], ['rough', 'Rough']], ci) +
         (ciLine ? '<p class="ci-a">' + esc(ciLine) + '</p>' : '') +
         (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'What’s going on today? Optional, and it helps shape your next week.') : '') + '</section>';
-      html += d.steps.map(function (x) { return stepCard(d, x, many); }).join('');
+      html += '<div id="j-steps" class="pl-steps">' + d.steps.map(function (x) { return stepCard(d, x, many); }).join('') + '</div>';
     } else {
       html += wholeDayCard(d);
     }
 
     // the day kept: their receipt, in one line
     if (kept(d) && d.kind === 'step') {
-      html += '<section class="rc"><p class="fb-q">Your receipt</p>' + words('receipt', d.day, 'text', 'One line on what you actually did today.', 2) + '</section>';
+      html += '<section class="rc" id="j-rc"><p class="fb-q">Your receipt</p>' + words('receipt', d.day, 'text', 'One line on what you actually did today.', 2) + '</section>';
     }
     // once, on day 3: is the app easy to use?
     if (sel === 3 && kept(d)) {
@@ -506,6 +523,11 @@
     if ((el = t.closest('[data-view-day]'))) {
       sel = parseInt(el.getAttribute('data-view-day'), 10); said = null;
       if (tab !== 'today') { location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      return;
+    }
+    if ((el = t.closest('[data-jump]'))) {
+      var to = root.querySelector('#j-' + el.getAttribute('data-jump'));
+      if (to) { to.scrollIntoView({ behavior: 'smooth', block: 'start' }); var f = to.querySelector('button,textarea'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 450); }
       return;
     }
     if ((el = t.closest('[data-guide]'))) { st.guide = el.getAttribute('data-guide'); save(); keepLayers = false; render(); return; }
