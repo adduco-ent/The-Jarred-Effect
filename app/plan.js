@@ -15,6 +15,14 @@
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+  // "Need more help with this step?": closed by default, for people who want the why and the how
+  function more(h) {
+    if (!h) return '';
+    return '<details class="pl-more"><summary><span>Need more help with this step?</span><i aria-hidden="true"></i></summary><div class="pl-more-b">' +
+      '<div><p class="pl-more-k">Why it helps</p><p>' + esc(h.why) + '</p></div>' +
+      '<div><p class="pl-more-k">How to do it</p><ol>' + h.how.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol></div>' +
+      '<div><p class="pl-more-k">If you get stuck</p><p>' + esc(h.stuck) + '</p></div></div></details>';
+  }
   function dayCard(d) {
     var isDone = !!done[d.day];
     var head = '<div class="pl-day-h"><p class="pl-day-k">Day ' + d.day + (d.minutes ? '<span>' + d.minutes + ' min' + (d.steps && d.steps.length > 1 ? ' total' : '') + '</span>' : '') + '</p>' +
@@ -39,7 +47,7 @@
           '<h3 class="pl-day-t">' + esc(s.title) + '</h3>' +
           '<p class="pl-text">' + esc(s.what) + '</p>' +
           '<div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div>' +
-          '<p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p></div>';
+          '<p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>' + more(s.help) + '</div>';
       }).join('');
     }
     return '<li class="pl-day pl-day--' + d.kind + (isDone ? ' is-done' : '') + '" data-card="' + d.day + '">' + head + body + '</li>';

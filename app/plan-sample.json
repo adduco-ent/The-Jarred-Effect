@@ -35,7 +35,16 @@
           "minutes": 5,
           "what": "Write why you want your Ask. Then ask “why?” about your answer, twice more.",
           "example": "Run a 5K → feel strong in my body again → keep up with my kids on Saturdays.",
-          "rough": "Just the first why."
+          "rough": "Just the first why.",
+          "help": {
+            "why": "Wants that sit on the surface fade fast. The deeper why is what pulls you through the low days, because it’s about how you want to feel, not only what you want to get.",
+            "how": [
+              "Write your Ask at the top of a page or a note.",
+              "Under it, write why you want it, in one honest line.",
+              "Ask “why does that matter?” about that line, and write the answer. Do it once more."
+            ],
+            "stuck": "If the answers sound like what you’re supposed to say, ask: what would I want here if no one would ever know?"
+          }
         },
         {
           "ask": 1,
@@ -44,7 +53,16 @@
           "minutes": 5,
           "what": "Each time the old habit shows up today, note what set it off and how you felt.",
           "example": "7:20 p.m., one more email “so tomorrow’s easier”. Felt: anxious, behind.",
-          "rough": "Tally marks only."
+          "rough": "Tally marks only.",
+          "help": {
+            "why": "Habits run on autopilot, and you can’t change what you can’t see. Writing down the moment it shows up turns a blur into a pattern you can work with.",
+            "how": [
+              "Keep a note on your phone called “Triggers”.",
+              "Each time the old habit shows up, write the time, what just happened, and how you felt.",
+              "No judging and no fixing yet. Just notice."
+            ],
+            "stuck": "If you forget in the moment, write it down afterward. Even a few entries a day show the pattern."
+          }
         }
       ]
     },
@@ -60,7 +78,16 @@
           "minutes": 10,
           "what": "Do the smallest daily step toward your Ask, whenever today allows.",
           "example": "Walk-run for ten minutes: one minute jogging, two minutes walking.",
-          "rough": "Two minutes. Open it, start it, stop."
+          "rough": "Two minutes. Open it, start it, stop.",
+          "help": {
+            "why": "Small steps you actually take teach your gut that this is real. A big plan you skip teaches it the opposite.",
+            "how": [
+              "Pick the smallest action that still moves your Ask forward.",
+              "Do it whenever today allows, wherever it fits.",
+              "Stop when the time’s up, even if you want to keep going. Leave yourself wanting more."
+            ],
+            "stuck": "If it feels too big to start, cut it in half, then in half again. Two minutes is still a step."
+          }
         },
         {
           "ask": 1,
@@ -69,7 +96,16 @@
           "minutes": 5,
           "what": "Pick one drain and set a clear, kind boundary around it. Say it once, simply.",
           "example": "Tell the team: “I’m offline after 7. I’ll pick it up first thing.”",
-          "rough": "Write the boundary down. Say it this week."
+          "rough": "Write the boundary down. Say it this week.",
+          "help": {
+            "why": "Drains rarely stop on their own. A clear, kind boundary protects your energy without making anyone the bad guy.",
+            "how": [
+              "Pick one drain that keeps costing you.",
+              "Write the boundary in one sentence: what you will or won’t do, and when.",
+              "Say it once, calmly, without a long explanation."
+            ],
+            "stuck": "If saying it feels too hard, start by living it quietly, and say it out loud when it comes up."
+          }
         }
       ]
     },
@@ -85,7 +121,16 @@
           "minutes": 3,
           "what": "Attach your step to something you already do every day, instead of a set time.",
           "example": "Right after school drop-off, I walk-run before I go home.",
-          "rough": "Pick any anchor for today. Try a better one tomorrow."
+          "rough": "Pick any anchor for today. Try a better one tomorrow.",
+          "help": {
+            "why": "Clock times break the moment your day changes. Anchoring your step to something you already do every day lets the old habit carry the new one.",
+            "how": [
+              "List three things you do every day without thinking: coffee, brushing your teeth, the school run.",
+              "Pick the one that comes right before a good moment for your step.",
+              "Finish this line: “After I ___, I ___.”"
+            ],
+            "stuck": "If the anchor keeps slipping, try a different one tomorrow. The right anchor feels easy."
+          }
         },
         {
           "ask": 1,
@@ -94,7 +139,16 @@
           "minutes": 10,
           "what": "Add one step between you and the old habit.",
           "example": "Laptop goes in the hall closet at 7. Email off my phone’s home screen.",
-          "rough": "Move it out of sight."
+          "rough": "Move it out of sight.",
+          "help": {
+            "why": "Willpower runs out. Friction doesn’t. One extra step between you and the old habit gives you a moment to choose.",
+            "how": [
+              "Look at how the old habit happens: where, with what, and how fast.",
+              "Add one step in the way: move it, log out, put it in another room.",
+              "At the same time, make the better option easier, if you can."
+            ],
+            "stuck": "If you push straight through the barrier, make it a little bigger, or pair it with a swap."
+          }
         }
       ]
     },
@@ -123,7 +177,16 @@
           "minutes": 2,
           "what": "Close your eyes and picture an ordinary moment after your Ask is real, in first person. Notice how it feels in your body.",
           "example": "Crossing the finish line in April, legs heavy, someone handing me water, smiling for no reason.",
-          "rough": "Thirty seconds is enough."
+          "rough": "Thirty seconds is enough.",
+          "help": {
+            "why": "Your body responds to what you picture as if it’s partly real. Practicing the feeling of your future makes it familiar instead of far away.",
+            "how": [
+              "Sit somewhere quiet and close your eyes.",
+              "Picture an ordinary moment after your Ask is real. Not the big finish: a normal Tuesday.",
+              "Notice where you feel it in your body, and stay with it for two minutes."
+            ],
+            "stuck": "If doubt crashes in, that’s normal. Notice it, write it down afterward, and come back to the picture."
+          }
         },
         {
           "ask": 1,
@@ -132,7 +195,16 @@
           "minutes": 5,
           "what": "Pick something that gives you the same payoff in a better way, and use it the next time the urge shows up.",
           "example": "When the urge to check email hits after 7: ten minutes outside with the dog instead.",
-          "rough": "Name the swap. Use it tomorrow."
+          "rough": "Name the swap. Use it tomorrow.",
+          "help": {
+            "why": "Every habit gives you something. Take it away without replacing it and the need comes back louder. A swap meets the same need in a better way.",
+            "how": [
+              "Name what the old habit gives you: relief, comfort, a break, a sense of control.",
+              "Pick something that gives you the same thing in a better way.",
+              "Decide ahead of time: “When the urge hits, I’ll ___ instead.”"
+            ],
+            "stuck": "If the swap doesn’t satisfy, it may be meeting the wrong need. Look again at what the old habit really gives you."
+          }
         }
       ]
     },
@@ -148,7 +220,16 @@
           "minutes": 10,
           "what": "Do something just for fun, with no goal and no score.",
           "example": "A goofy race with the kids around the block. No watch, no pace.",
-          "rough": "Two minutes of something silly."
+          "rough": "Two minutes of something silly.",
+          "help": {
+            "why": "Play isn’t a break from growing; it’s fuel for it. It drops stress, brings back ideas, and reminds you that life is for enjoying.",
+            "how": [
+              "Pick something you do only because it’s fun.",
+              "Set ten minutes aside, with no goal and no score.",
+              "Let yourself be a little silly."
+            ],
+            "stuck": "If nothing comes to mind, think of what you loved doing at ten years old, and try a grown-up version of it."
+          }
         },
         {
           "ask": 1,
@@ -157,7 +238,16 @@
           "minutes": 5,
           "what": "If the old habit won today, write what set it off and what would help next time. Then let it go.",
           "example": "Worked till 8 on Thursday. What set it off: a late client email. Next time: reply at 8 a.m.",
-          "rough": "One line."
+          "rough": "One line.",
+          "help": {
+            "why": "A slip is information, not a verdict. Looking at it calmly shows you exactly what to change next time.",
+            "how": [
+              "Write what happened, in one line.",
+              "Write what set it off: the time, the place, the feeling.",
+              "Write one thing that would help next time. Then let it go."
+            ],
+            "stuck": "If guilt takes over, remember that you’re learning the pattern. That is the work."
+          }
         }
       ]
     },
