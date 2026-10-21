@@ -157,12 +157,10 @@
 .pl-step-card .pl-step-ask{padding-top:.375rem}
 .pl-step-card.is-done{background:var(--card-bg) padding-box,var(--card-rim) border-box}
 .pl-step-card.is-done .pl-day-t,.pl-step-card.is-done>.pl-text{opacity:.55}
-.pl-step-card.is-skipped>.pl-day-t,.pl-step-card.is-skipped>.pl-text,.pl-step-card.is-skipped>.pl-sub,.pl-step-card.is-skipped>.pl-rough{opacity:.45}
 .pl-sum{margin:.25rem 0 0;font-size:.875rem;color:var(--faint)}
 
 /* feedback, in their own words: quiet, inline, never a form */
 .fb{display:grid;gap:.75rem;margin-top:.125rem;padding-top:1.125rem;border-top:1px solid rgba(28,24,18,.07)}
-.fb--gut .fb-q{font-size:1rem;color:var(--dim)}
 .fb-q{margin:0;font-family:var(--serif);font-size:1.0625rem;line-height:1.4;color:var(--ink)}
 .fb-l{display:block;margin:0;font-size:.875rem;font-weight:600;line-height:1.45;color:var(--ink)}
 .fb-t{box-sizing:border-box;display:block;width:100%;min-height:2.875rem;padding:.6875rem .875rem;border-radius:.9375rem;border:1.5px solid transparent;background:var(--sky-field) padding-box,var(--edge-in) border-box;box-shadow:var(--sink);font-family:var(--sans);font-size:.9375rem;line-height:1.5;color:var(--ink);resize:none;overflow:hidden;transition:box-shadow .2s ease}
@@ -197,6 +195,26 @@
 .ci-o.ci-o--split{gap:.5rem;padding:0;border:0;background:none;box-shadow:none}
 .ci-o--split button{min-height:2.875rem;color:var(--ink);background:var(--sheen) padding-box,#fff padding-box,var(--edge-up) border-box;box-shadow:var(--lift)}
 .ci-o--split button:hover{color:var(--accent-ink);background:var(--sheen) padding-box,#fff padding-box,var(--edge-up) border-box;transform:translateY(-1px)}
+
+/* gut calls: a step skipped or changed on purpose gets a clear, saved status, never a faded maybe */
+.st-chip{flex:none;display:inline-flex;align-items:center;gap:.375rem;min-height:2.25rem;padding:0 .875rem 0 .75rem;border-radius:99px;border:1.5px solid transparent;background:var(--sheen) padding-box,linear-gradient(135deg,#eef2fb,#f1eefa) padding-box,var(--edge-up) border-box;box-shadow:var(--lift);font-size:.8125rem;font-weight:600;color:#47546a}
+.st-chip svg,.st-t svg,.st-tag svg{width:1rem;height:1rem;flex:none}
+.st-tag{justify-self:start;display:inline-flex;align-items:center;gap:.3125rem;padding:.1875rem .625rem .1875rem .5rem;border-radius:99px;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.4);font-size:.75rem;font-weight:600;color:var(--accent-ink)}
+.st-box{display:grid;gap:.625rem;margin-top:.25rem;padding:1rem 1.125rem 1.125rem;border-radius:1.125rem;border:1.5px solid transparent;background:var(--sheen) padding-box,var(--sky) padding-box,var(--edge-up) border-box;box-shadow:var(--lift)}
+.st-t{display:flex;align-items:center;gap:.5rem;margin:0;font-size:.9375rem;font-weight:600;color:var(--ink)}
+.st-t svg{color:var(--accent-ink)}
+.st-x{margin:-.25rem 0 .125rem;font-size:.875rem;line-height:1.5;color:var(--dim)}
+.st-box .fb-t{background:#fff padding-box,var(--edge-in) border-box}
+.st-undo{justify-self:start;display:inline-flex;align-items:center;gap:.375rem;min-height:2.25rem;margin-top:.125rem;padding:0 .875rem 0 .625rem;border-radius:99px;border:1.5px solid transparent;background:var(--sheen) padding-box,#fff padding-box,var(--edge-up) border-box;box-shadow:0 1px 2px rgba(14,26,44,.06);font:inherit;font-size:.8125rem;font-weight:600;color:var(--dim);cursor:pointer;transition:color .2s ease,transform .2s ease}
+.st-undo svg{width:.9375rem;height:.9375rem}
+.st-undo:hover{color:var(--accent-ink);transform:translateY(-1px)}
+.st-undo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pl-step-card.is-skipped .pl-day-t{color:var(--dim)}
+/* a gut-call day in the strip and the week list */
+.ds-d.is-gut b{color:#d9e4f5;box-shadow:inset 0 0 0 1.5px rgba(184,168,222,.75);background:rgba(184,168,222,.16)}
+.ds-d b .sk-i{width:1rem;height:1rem}
+.pg-row.is-gut .pg-dot{color:var(--accent-ink);background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.5)}
+.pg-dot .sk-i{width:.9375rem;height:.9375rem}
 
 /* locked layers: shown plainly, with a quiet lock. A preview of what's inside, then one clear button. */
 .lk{display:grid;gap:.75rem;margin-top:2rem;padding:1.5rem 1.375rem;border-radius:1.5rem;border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(240,243,250,.78)) padding-box,var(--card-rim) border-box;box-shadow:var(--card);-webkit-backdrop-filter:var(--frost);backdrop-filter:var(--frost)}

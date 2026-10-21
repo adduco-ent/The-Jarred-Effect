@@ -73,6 +73,8 @@
   var skipOpen = {}, appThanks = false, addOpen = false;
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var skipIcon = '<svg class="sk-i" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 14c1.2-4.2 4.6-6.5 8.6-6.1M10.5 4.5l3.3 3.3-3.4 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var undoIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 6.5L4 10l3.5 3.5M4.5 10H12a4 4 0 010 8h-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var lock = '<svg class="lk-i" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.25" y="7" width="9.5" height="6.75" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V5.25a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.4"/></svg>';
 
   // ---- days and dates
@@ -91,7 +93,14 @@
   // a day counts once any step is done: on a half or rough day, one Ask's step is the day
   function kept(d) { return d.kind === 'step' ? stepsDone(d) > 0 : !!done[key(d)]; }
   function keptCount(p) { return p.days.filter(kept).length; }
-  function dayState(d) { return kept(d) ? 'kept' : d.day < T ? 'missed' : d.day === T ? 'today' : 'future'; }
+  // a step skipped on purpose is a gut call, not a miss
+  // (today only counts as a gut call once every step is skipped, since there's still time to do one)
+  function skippedOnly(d) {
+    if (d.kind !== 'step' || kept(d)) return false;
+    var sk = function (s) { return (fb.skip[key(d, s)] || {}).action === 'skip'; };
+    return d.day === T ? d.steps.every(sk) : d.steps.some(sk);
+  }
+  function dayState(d) { return kept(d) ? 'kept' : skippedOnly(d) && d.day <= T ? 'gut' : d.day < T ? 'missed' : d.day === T ? 'today' : 'future'; }
   function titles(d) { return d.kind === 'step' ? d.steps.map(function (s) { return s.title; }) : [d.title]; }
 
   // ---- Jarred's encouragement (plan.cheer, from the playbook): answers real moments, never hype
@@ -173,9 +182,11 @@
     }
     var sk = fb.skip[k];
     if (sk && sk.action) {
-      return '<div class="fb fb--gut"><p class="fb-q">' + (sk.action === 'skip' ? 'You skipped this one. That’s a gut call, and it counts as information.' : 'You changed this one to fit. Mark it done when you’ve done your version.') + '</p>' +
-        words('skip', k, 'note', 'What did your gut say?') +
-        '<button type="button" class="lnk" data-unskip="' + k + '">Undo</button></div>';
+      var skip = sk.action === 'skip';
+      return '<div class="st-box" role="status"><p class="st-t">' + (skip ? skipIcon + 'Skipped today, on purpose' : check + 'Your version') + '</p>' +
+        '<p class="st-x">' + (skip ? 'A gut call counts as information. Tomorrow’s step is a fresh start.' : 'Do your version, then mark it done. It counts the same.') + '</p>' +
+        words('skip', k, 'note', skip ? 'What did your gut say?' : 'What did you change it to?') +
+        '<button type="button" class="st-undo" data-unskip="' + k + '">' + undoIcon + (skip ? 'Undo skip' : 'Undo change') + '</button></div>';
     }
     if (skipOpen[k]) {
       return '<div class="fb fb--gut"><p class="fb-q">Your gut has the final say. What fits today?</p>' +
@@ -188,13 +199,18 @@
   // ---- one card per Ask's step
   function stepCard(d, s, many) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
-    var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip';
+    var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
     var head = many
       ? '<p class="pl-step-ask"><i>' + (s.ask + 1) + '</i><span>' + esc(plan.asks[s.ask].text) + '</span></p>'
       : '<p class="pl-day-k"><span class="pl-min">' + s.minutes + ' min</span></p>';
-    return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (skipped ? ' is-skipped' : '') + '">' +
+    var title = '<h3 class="pl-day-t">' + esc(s.title) + (many ? ' <span class="pl-t-min">' + s.minutes + ' min</span>' : '') + '</h3>';
+    if (skipped) {
+      return '<article class="pl-day pl-step-card is-skipped">' +
+        '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
+    }
+    return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '">' +
       '<div class="pl-day-h">' + head + doneBtn(k, many ? plan.asks[s.ask].text : '') + '</div>' + reply(k) +
-      '<h3 class="pl-day-t">' + esc(s.title) + (many ? ' <span class="pl-t-min">' + s.minutes + ' min</span>' : '') + '</h3>' +
+      (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
       (rough
         ? '<div class="pl-v"><span>Your rough-day version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>') +
@@ -243,12 +259,12 @@
 
   // ---- the plan card: their Ask(s) and the seven days, on navy
   function strip() {
-    var LABEL = { kept: 'kept', missed: 'not marked', today: 'today', future: 'coming up' };
+    var LABEL = { kept: 'kept', gut: 'gut call', missed: 'not marked', today: 'today', future: 'coming up' };
     return '<div class="ds" role="group" aria-label="Your seven days">' + plan.days.map(function (d) {
       var s = dayState(d);
       return '<button type="button" class="ds-d is-' + s + (d.day === sel ? ' is-sel' : '') + '" data-view-day="' + d.day + '"' +
         ' aria-label="Day ' + d.day + ', ' + weekday(d.day) + ', ' + LABEL[s] + '"' + (d.day === sel ? ' aria-current="true"' : '') + '>' +
-        '<small>' + weekday(d.day, true) + '</small><b>' + (s === 'kept' ? check : d.day) + '</b></button>';
+        '<small>' + weekday(d.day, true) + '</small><b>' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</b></button>';
     }).join('') + '</div>';
   }
   function planCard(p) {
@@ -364,9 +380,9 @@
     var rows = p.days.map(function (d) {
       var s = dayState(d), ci = st.checkin[d.day];
       return '<li><button type="button" class="pg-row is-' + s + '" data-view-day="' + d.day + '">' +
-        '<span class="pg-dot">' + (s === 'kept' ? check : d.day) + '</span>' +
+        '<span class="pg-dot">' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</span>' +
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
-        (ci ? '<span class="pg-ci">' + cap(ci) + '</span>' : '<span></span>') + '</button></li>';
+        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + cap(ci) + '</span>' : '<span></span>') + '</button></li>';
     }).join('');
     // their own words, day by day
     var theirs = p.days.map(function (d) {
