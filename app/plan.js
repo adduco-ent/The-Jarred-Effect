@@ -20,7 +20,7 @@
   // review mode (local, or ?review): every day opens, and ?day=N pretends today is day N. ?review=0 turns it off.
   var REVIEW = params.get('review') !== '0' && (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || params.has('review'));
   var TABS = ['today', 'progress', 'playbook', 'you'];
-  var FB_KINDS = ['step', 'skip', 'checkin', 'receipt', 'note', 'lookback', 'next', 'app'];
+  var FB_KINDS = ['step', 'skip', 'checkin', 'receipt', 'note', 'lookback', 'next', 'app', 'ask'];
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function ymd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -31,6 +31,7 @@
     try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { /* ignore */ }
     s = s && typeof s === 'object' ? s : {};
     s.done = s.done || {}; s.checkin = s.checkin || {}; s.walk = s.walk || {}; s.fb = s.fb || {};
+    s.at = s.at || {}; // when each step was marked done, for "when you show up" in Patterns
     FB_KINDS.forEach(function (k) { s.fb[k] = s.fb[k] || {}; });
     // notes from the earlier version move into feedback
     if (s.notes) { Object.keys(s.notes).forEach(function (d) { if (s.notes[d]) s.fb.note[d] = { text: s.notes[d] }; }); delete s.notes; }
@@ -70,6 +71,14 @@
   window.addEventListener('pagehide', function () { Object.keys(pending).forEach(function (k) { clearTimeout(pending[k].t); send(pending[k].kind, pending[k].ref); }); });
 
   var plan = null, tab = 'today', T = 1, sel = 1, said = null, keepLayers = true;
+  var pbId = null, lib = null, libAsked = false; // the playbook library (app/playbook.json), loaded when first needed
+  // the full app: a paid plan, or ?tier=paid in review mode to see the paid screens
+  function paid() { return (REVIEW && params.get('tier') === 'paid') || (plan && plan.tier === 'paid'); }
+  function needLib() {
+    if (lib || libAsked) return;
+    libAsked = true;
+    fetch('/app/playbook.json').then(function (r) { return r.json(); }).then(function (d) { lib = d; render(); }).catch(function () { libAsked = false; });
+  }
   var skipOpen = {}, appThanks = false, addOpen = false;
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -286,7 +295,10 @@
     return '<section class="lk"><p class="lk-k">' + lock + esc(kicker) + '</p><h2 class="lk-t">' + esc(title) + '</h2><p class="lk-x">' + esc(text) + '</p>' +
       (preview ? '<div class="lk-peek" aria-hidden="true">' + preview + '</div>' : '') + unlock(what) + '</section>';
   }
-  function week2() { return lockedCard('Week 2', 'Your next week, built from this one', 'What worked stays. What didn’t gets changed. Your second week is shaped by how this one actually went, in your own words.', '', 'week 2'); }
+  function week2() {
+    if (paid()) return nextCard();
+    return lockedCard('Week 2', 'Your next week, built from this one', 'What worked stays. What didn’t gets changed. Your second week is shaped by how this one actually went, in your own words.', '', 'week 2');
+  }
 
   // ---- Today
   function todayView(p) {
@@ -381,6 +393,75 @@
       '<ul class="lk-rows">' + rows.map(function (r) { return '<li><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></li>'; }).join('') + '</ul>' +
       unlock('the full app') + '</section>';
   }
+  function mine(p) { return uniq(p.asks.map(function (a) { return a.protocol; })); }
+
+  // ---- next week (full app): what week 2 is being built from, in their words
+  function nextCard() {
+    var n = fb.next['1'] || {};
+    var asks = plan.asks.map(function (a, i) { return [a, (n.asks || [])[i] || {}]; });
+    var LABEL = { keep: 'Keep going', change: 'Change it', done: 'Done with it', pause: 'Pause it' };
+    var extra = (st.extraAsks || []).filter(function (x) { return x.status !== 'removed'; });
+    if (!n.sent) {
+      return '<section class="sc nx-card"><p class="pl-k">Week 2</p><h2 class="lk-t">Built from how this week goes</h2>' +
+        '<p class="pl-text">On day 7, you’ll tell me what stays, what changes and how much to take on. Week 2 is built from exactly that.</p>' +
+        '<a class="yu-link" href="#today" data-view-day="7">Go to day 7<span aria-hidden="true">→</span></a></section>';
+    }
+    return '<section class="sc nx-card"><p class="pl-k">Week 2</p><h2 class="lk-t">Being built from your words</h2>' +
+      '<ul class="nx-sum">' + asks.map(function (x, i) {
+        return '<li><p class="pg-ask"><i>' + (i + 1) + '</i>' + esc(end(x[0].text)) + '</p><span class="pg-ci">' + esc(LABEL[x[1].choice] || 'No answer yet') + '</span>' +
+          (x[1].note ? '<p class="nx-note">' + esc(x[1].note) + '</p>' : '') + '</li>';
+      }).join('') +
+      extra.map(function (x) { return '<li><p class="pg-ask"><i>+</i>' + esc(end(x.text)) + '</p><span class="pg-ci">New Ask</span></li>'; }).join('') + '</ul>' +
+      (n.pace ? '<p class="nx-pace">Pace: <b>' + esc({ light: 'a little more', right: 'about the same', much: 'a little less' }[n.pace]) + '</b></p>' : '') +
+      '<p class="pb-x">Ready on ' + esc(weekday(8)) + '. Your new week opens here.</p></section>';
+  }
+
+  // ---- Patterns (full app): what this week says about how they move
+  function patterns(p) {
+    var ciCount = { full: 0, half: 0, rough: 0 };
+    var cols = p.days.map(function (d) {
+      var ci = st.checkin[d.day]; if (ci) ciCount[ci]++;
+      var s = dayState(d);
+      var h = { full: 100, half: 62, rough: 32 }[ci] || 10;
+      return '<div class="pt-c is-' + (ci || 'none') + '"><span class="pt-bw"><span class="pt-b" style="height:' + h + '%"></span></span>' +
+        '<span class="pt-k">' + (s === 'kept' ? check : s === 'gut' ? skipIcon : '') + '</span><small>' + esc(weekday(d.day, true)) + '</small></div>';
+    }).join('');
+    var easy = [], hard = [], guts = [];
+    p.days.forEach(function (d) {
+      if (d.kind !== 'step') return;
+      d.steps.forEach(function (s) {
+        var k = key(d, s), f = (fb.step[k] || {}).feel, g = fb.skip[k] || {};
+        if (f === 'easy') easy.push(s.title);
+        if (f === 'hard') hard.push(s.title + ((fb.step[k] || {}).note ? ': “' + fb.step[k].note + '”' : ''));
+        if (g.action) guts.push(s.title + ' · ' + (g.action === 'skip' ? 'skipped' : 'changed') + (g.note ? ': “' + g.note + '”' : ''));
+      });
+    });
+    // when they show up: morning before noon, afternoon before 5, evening after
+    var when = { Morning: 0, Afternoon: 0, Evening: 0 };
+    Object.keys(st.at).forEach(function (k) { var h = new Date(st.at[k]).getHours(); when[h < 12 ? 'Morning' : h < 17 ? 'Afternoon' : 'Evening']++; });
+    var whenTotal = when.Morning + when.Afternoon + when.Evening;
+    var top = Object.keys(when).sort(function (a, b) { return when[b] - when[a]; })[0];
+    var order = Object.keys(ciCount).sort(function (a, b) { return ciCount[b] - ciCount[a]; });
+    var most = ciCount[order[0]] > ciCount[order[1]] ? order[0] : null; // only "mostly" when one clearly leads
+    var read = !ciCount.full && !ciCount.half && !ciCount.rough ? 'Check in each day, and your rhythm shows up here.'
+      : ciCount.rough >= 2 ? 'Rough days showed up ' + ciCount.rough + ' times, and the small versions kept you going. That’s the method working.'
+      : most === 'full' ? 'Mostly full days. Good steam. Keep the steps small so it stays easy.'
+      : most === 'half' ? 'Mostly half days. That’s real life, and it still counts.'
+      : 'A mix of days so far. The plan bends with you, and every version counts.';
+    function list(items, empty) { return items.length ? '<ul class="pt-l">' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p class="pt-e">' + esc(empty) + '</p>'; }
+    return '<section class="fs"><p class="pl-k">Patterns</p><h2 class="fs-t">How you moved this week</h2></section>' +
+      '<section class="sc pt"><div class="pt-g" role="img" aria-label="Check-ins by day: ' + ciCount.full + ' full, ' + ciCount.half + ' half, ' + ciCount.rough + ' rough">' + cols + '</div>' +
+        '<p class="pt-leg"><span class="is-full"></span>Full ' + ciCount.full + '<span class="is-half"></span>Half ' + ciCount.half + '<span class="is-rough"></span>Rough ' + ciCount.rough + '</p>' +
+        '<p class="pl-note">' + esc(read) + '</p></section>' +
+      '<section class="fs fs--tight"><p class="pl-k">What came easy</p>' + list(easy, 'Mark how steps feel, and the easy ones collect here.') + '</section>' +
+      '<section class="fs fs--tight"><p class="pl-k">What felt hard</p>' + list(hard, 'Nothing marked hard yet.') + '</section>' +
+      '<section class="fs fs--tight"><p class="pl-k">Your gut calls</p>' + list(guts, 'No gut calls this week.') + '</section>' +
+      '<section class="fs fs--tight"><p class="pl-k">When you show up</p>' +
+        (whenTotal ? '<div class="pt-w">' + Object.keys(when).map(function (k) { return '<span' + (k === top ? ' class="is-top"' : '') + '><b>' + when[k] + '</b>' + k + '</span>'; }).join('') + '</div>' +
+          '<p class="pl-note">Most of your steps happen in the ' + top.toLowerCase() + '. Plan the hard ones there.</p>'
+          : '<p class="pt-e">Mark steps done, and the time of day you tend to show up appears here.</p>') + '</section>' +
+      '<section class="pt-soon"><p class="pl-k">Over the weeks</p><p class="pl-text">Week-over-week trends start after week 2, and a look back every month after week 4.</p></section>';
+  }
 
   // ---- Progress
   function progressView(p) {
@@ -412,7 +493,6 @@
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
         (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + cap(ci) + '</span>' : '<span></span>') + '</button></li>';
     }).join('');
-    // their own words, day by day
     var theirs = p.days.map(function (d) {
       var bits = [];
       var r = (fb.receipt[d.day] || {}).text; if (r && r.trim()) bits.push(r);
@@ -430,53 +510,105 @@
       '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
       '<section class="sc-plain"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
       (theirs ? '<section class="sc"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
-      fullApp('Keep going past week one', [
+      (paid() ? patterns(p) + nextCard() : fullApp('Keep going past week one', [
         ['Your patterns', 'Which days go best and which steps stick, week over week, with a look back every month.'],
         ['Week 2', 'Your next week, built from how this one went, in your own words.']
-      ]);
+      ]));
   }
 
+  // ---- Playbook: the library. Free: their own protocols open in full, the rest locked. Full app: everything.
+  function protoRow(x, isMine) {
+    return '<li class="pb-li"><a class="pb-a' + (isMine ? ' is-mine' : '') + '" href="#playbook/' + esc(x.id) + '" data-pb-name="' + esc(x.name.toLowerCase()) + '">' +
+      '<span class="pb-i' + (isMine ? '' : ' pb-i--dot') + '">' + (isMine ? check : paid() ? '' : lock) + '</span><span class="pb-n">' + esc(x.name) + '</span>' +
+      (isMine ? '<span class="pb-tag">In your plan</span>' : '<span class="pb-go" aria-hidden="true">›</span>') + '</a></li>';
+  }
   function playbookView(p) {
-    var lib = p.library || [];
-    var mine = uniq(p.asks.map(function (a) { return a.deeper && a.deeper.name; }));
-    var rest = lib.filter(function (x) { return mine.indexOf(x) < 0; });
-    return screenHead('The method', 'Playbook', 'Everything behind your plan, in plain words.') +
-      (mine.length ? '<section class="sc"><p class="pl-k">In your plan</p><ul class="pb-rows">' +
-        mine.map(function (x) { return '<li><span class="pb-i">' + check + '</span><span class="pb-n">' + esc(x) + '</span><span class="pb-tag">Included</span></li>'; }).join('') +
-        '</ul><p class="pb-x">Open it from any step: tap <b>Go deeper</b>.</p></section>' : '') +
-      '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">All ' + lib.length + ' protocols</h2>' +
-        '<p class="lk-x">From building a habit to keeping your power. Read any of it, any time, and pull steps into your week.</p>' +
-        '<div class="lk-peek" aria-hidden="true"><ul class="pb-rows pb-rows--locked">' + rest.slice(0, 6).map(function (x) { return '<li><span class="pb-i">' + lock + '</span><span class="pb-n">' + esc(x) + '</span></li>'; }).join('') + '</ul>' +
-        (rest.length > 6 ? '<p class="lk-more">and ' + (rest.length - 6) + ' more</p>' : '') + '</div>' +
-        unlock('the playbook') + '</section>';
+    needLib();
+    if (pbId) return protocolView(p, pbId);
+    var my = mine(p);
+    var protos = lib ? lib.protocols : (p.library || []).map(function (n, i) { return { id: '', name: n }; });
+    var byId = {}; protos.forEach(function (x) { byId[x.id] = x; });
+    var myRows = (lib ? my.map(function (id) { return byId[id]; }).filter(Boolean) : []).map(function (x) { return protoRow(x, true); }).join('');
+    if (!paid()) {
+      var rest = protos.filter(function (x) { return my.indexOf(x.id) < 0; });
+      return screenHead('The method', 'Playbook', 'Everything behind your plan, in plain words.') +
+        (myRows ? '<section class="fs"><p class="pl-k">In your plan</p><ul class="pb-rows">' + myRows + '</ul><p class="pb-x">Free with your plan. Tap one to read it in full.</p></section>' : '') +
+        '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">All ' + protos.length + ' protocols</h2>' +
+          '<p class="lk-x">From building a habit to keeping your power. Read any of it, any time, and pull steps into your week.</p>' +
+          '<div class="lk-peek" aria-hidden="true"><ul class="pb-rows pb-rows--locked">' + rest.slice(0, 6).map(function (x) { return '<li><span class="pb-i">' + lock + '</span><span class="pb-n">' + esc(x.name) + '</span></li>'; }).join('') + '</ul>' +
+          (rest.length > 6 ? '<p class="lk-more">and ' + (rest.length - 6) + ' more</p>' : '') + '</div>' +
+          unlock('the playbook') + '</section>';
+    }
+    if (!lib) return screenHead('The method', 'Playbook', 'Opening the library…');
+    var paths = lib.pathways.map(function (w) {
+      return '<li class="pw"><p class="pw-n">' + esc(w.name) + '</p><p class="pw-f">' + esc(w.for) + '</p><div class="pw-c">' +
+        w.path.map(function (id, i) { var x = byId[id]; return x ? '<a href="#playbook/' + esc(id) + '"><i>' + (i + 1) + '</i>' + esc(x.name) + '</a>' : ''; }).join('') + '</div></li>';
+    }).join('');
+    return screenHead('The method', 'Playbook', 'Every protocol behind your plan. Read any of it, any time.') +
+      '<div class="pb-s"><input type="search" id="pb-q" class="fb-t" placeholder="Search the playbook" aria-label="Search the playbook" autocomplete="off"></div>' +
+      (myRows ? '<section class="fs"><p class="pl-k">In your plan</p><ul class="pb-rows">' + myRows + '</ul></section>' : '') +
+      '<section class="fs pb-paths"><p class="pl-k">Paths</p><p class="pb-x pb-x--top">Protocols that work best in order, for a kind of stuck.</p><ul class="pw-l">' + paths + '</ul></section>' +
+      '<section class="fs"><p class="pl-k">All protocols</p><ul class="pb-rows" id="pb-all">' + protos.map(function (x) { return protoRow(x, my.indexOf(x.id) >= 0); }).join('') + '</ul>' +
+        '<p class="pt-e" id="pb-none" hidden>Nothing matches. Try another word.</p></section>';
+  }
+  function protocolView(p, id) {
+    var back = '<a class="pb-back" href="#playbook"><span aria-hidden="true">‹</span>Playbook</a>';
+    if (!lib) return back + screenHead('Protocol', 'Opening…', '');
+    var x = lib.protocols.filter(function (y) { return y.id === id; })[0];
+    if (!x) return back + screenHead('Protocol', 'Not found', 'Pick one from the playbook.');
+    var isMine = mine(p).indexOf(id) >= 0, open = paid() || isMine;
+    var html = back + '<header class="td-head sc-head"><p class="pl-k">' + (isMine ? 'In your plan' : 'Protocol') + '</p><h1 class="td-h pb-h">' + esc(x.name) + '</h1></header>' +
+      '<p class="pb-when">' + esc(x.when) + '</p>';
+    if (!open) return html + fullApp('Read this protocol in full', [['The whole method', 'How it works, step by step.'], ['Signs it fits, and signs it’s working', 'So you know where you are.'], ['Where to go next', 'The protocols that follow it.']]);
+    function lst(a) { return '<ul class="pt-l">' + a.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>'; }
+    var byId = {}; lib.protocols.forEach(function (y) { byId[y.id] = y; });
+    return html +
+      (x.lens ? '<section class="fs fs--tight pb-lens"><div><p class="pl-k">If you see it as energy</p><p class="pl-text">' + esc(x.lens.energy) + '</p></div><div><p class="pl-k">If you see it as psychology</p><p class="pl-text">' + esc(x.lens.mind) + '</p></div></section>' : '') +
+      '<section class="sc"><p class="pl-k">How it works</p><ol class="pb-steps">' + x.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol></section>' +
+      (x.signals.length ? '<section class="fs fs--tight"><p class="pl-k">Signs it fits you</p>' + lst(x.signals) + '</section>' : '') +
+      (x.start ? '<section class="fs fs--tight"><p class="pl-k">Where to start</p><p class="pl-text">' + esc(x.start) + '</p></section>' : '') +
+      (x.deeper ? '<section class="fs fs--tight"><p class="pl-k">Going deeper</p><p class="pl-text">' + esc(x.deeper) + '</p></section>' : '') +
+      (x.working.length ? '<section class="fs fs--tight"><p class="pl-k">Signs it’s working</p>' + lst(x.working) + '</section>' : '') +
+      (x.done ? '<section class="fs fs--tight"><p class="pl-k">When it’s done</p><p class="pl-text">' + esc(x.done) + '</p></section>' : '') +
+      (x.safety ? '<section class="pb-safe"><p class="pl-k">Take care</p><p class="pl-text">' + esc(x.safety) + '</p></section>' : '') +
+      (x.next.length ? '<section class="fs fs--tight"><p class="pl-k">Where to go next</p><div class="pw-c">' + x.next.map(function (n, i) { var y = byId[n]; return y ? '<a href="#playbook/' + esc(n) + '"><i>' + (i + 1) + '</i>' + esc(y.name) + '</a>' : ''; }).join('') + '</div></section>' : '');
   }
 
+  // ---- You: one navy card for who they are, then content that floats, and one card for settings
   function youView(p) {
     var link = p.r ? '/app/?r=' + encodeURIComponent(p.r) + '#result' : '/app/';
-    var paid = p.tier === 'paid';
+    var full = paid();
+    var extra = (st.extraAsks || []).map(function (x, i) { return [x, i]; }).filter(function (x) { return x[0].status !== 'removed'; });
+    var total = p.asks.length + extra.length;
+    var addBox = !addOpen ? '' : full
+      ? '<div class="yu-addb"><label class="fb-l" for="new-ask">A new Ask, in your words</label><div class="yu-addr"><input id="new-ask" class="fb-t" type="text" maxlength="200" placeholder="e.g. Read one book a month." autocomplete="off"><button type="button" class="send-btn" data-ask-add>Add</button></div>' +
+        '<p class="yu-focus' + (total >= 3 ? ' is-strong' : '') + '">' + esc(p.focus || '') + '</p><p class="pt-e">New Asks start with next week’s plan.</p></div>'
+      : '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + unlock('more Asks') + '</div>';
     return screenHead('Your profile', 'You', '') +
       '<section class="pl-card pl-card--app yu-card"><p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your type</p>' +
         '<p class="yu-type">' + esc(p.typeName) + '</p>' +
         (others(p) ? '<p class="pl-meta">Your other half: <b>' + esc(others(p)) + '</b></p>' : '') +
         '<a class="yu-link" href="' + link + '">Read your full result<span aria-hidden="true">→</span></a></section>' +
-      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
-        '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>' +
-        '<button type="button" class="st-undo yu-add" data-add-ask aria-expanded="' + addOpen + '">' + (paid ? '' : lock) + '<span>Add an Ask</span></button>' +
-        (addOpen ? '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + (paid ? '' : unlock('more Asks')) + '</div>' : '') + '</section>' +
-      '<section class="sc"><p class="pl-k">This week</p><p class="yu-read">' + esc(p.read) + '</p>' +
+      '<section class="fs"><p class="pl-k">' + (total > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
+        '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') +
+        extra.map(function (x, n) { return '<li class="is-new"><i>' + (p.asks.length + n + 1) + '</i><span>' + esc(end(x[0].text)) + '<em>Starts next week</em></span><button type="button" class="lnk" data-ask-remove="' + x[1] + '" aria-label="Remove ' + esc(x[0].text) + '">Remove</button></li>'; }).join('') + '</ol>' +
+        '<button type="button" class="st-undo yu-add" data-add-ask aria-expanded="' + addOpen + '">' + (full ? '<span aria-hidden="true">+</span>' : lock) + '<span>Add an Ask</span></button>' + addBox + '</section>' +
+      '<section class="fs"><p class="pl-k">This week</p><p class="yu-read">' + esc(p.read) + '</p>' +
         (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
-      '<section class="sc"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
-      '<section class="sc"><p class="pl-k">Your steps</p><p class="sc-q">How much guidance do you like?</p>' +
-        chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</section>' +
-      '<section class="sc"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
+      '<section class="fs"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
+      '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">Your steps<span>How much guidance you see</span></p>' +
+        chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</div></section>' +
+      '<section class="fs"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
-        '<button type="button" class="st-undo sc-send" data-app-send>Send</button>' + (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
-      (paid ? '' : fullApp('Your plan is free. There’s more.', [
-        ['The whole playbook', 'All the protocols, any time.'],
-        ['Your patterns', 'What works for you, week over week.'],
-        ['A new plan every week', 'Built from your own words.'],
-        ['More Asks', 'As many as you want, at your pace.']
-      ]));
+        '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+        (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
+      (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every protocol, your patterns, a new plan every week, and as many Asks as you want.</p></section>'
+        : fullApp('Your plan is free. There’s more.', [
+          ['The whole playbook', 'All the protocols, any time.'],
+          ['Your patterns', 'What works for you, week over week.'],
+          ['A new plan every week', 'Built from your own words.'],
+          ['More Asks', 'As many as you want, at your pace.']
+        ]));
   }
 
   function render() {
@@ -488,13 +620,16 @@
     if (keepLayers) root.querySelectorAll('details[data-l]').forEach(function (x) { var v = was[x.getAttribute('data-l')]; if (v !== undefined) x.open = v; });
     keepLayers = true;
     root.querySelectorAll('.fb-t').forEach(grow);
+    nav.classList.toggle('is-full', !!paid());
     nav.querySelectorAll('[data-tab]').forEach(function (b) {
       if (b.getAttribute('data-tab') === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
   }
   function go(t, scroll) {
-    if (t === 'week') t = 'today';
+    var parts = String(t || '').split('/');
+    t = parts[0] === 'week' ? 'today' : parts[0];
     tab = TABS.indexOf(t) >= 0 ? t : 'today';
+    pbId = tab === 'playbook' ? parts[1] || null : null;
     said = null; appThanks = false;
     render();
     if (scroll) window.scrollTo(0, 0);
@@ -519,10 +654,24 @@
   root.addEventListener('click', function (e) {
     var t = e.target, el;
     if ((el = t.closest('[data-unlock]'))) { var note = el.parentNode.querySelector('.lk-soon'); if (note) note.hidden = false; return; }
-    if ((el = t.closest('[data-add-ask]'))) { addOpen = !addOpen; render(); refocus('[data-add-ask]'); return; }
+    if ((el = t.closest('[data-add-ask]'))) { addOpen = !addOpen; render(); refocus(addOpen && paid() ? '#new-ask' : '[data-add-ask]'); return; }
+    if ((el = t.closest('[data-ask-add]'))) {
+      var inp = root.querySelector('#new-ask'), txt = inp && inp.value.replace(/\s+/g, ' ').trim();
+      if (!txt) { if (inp) inp.focus(); return; }
+      st.extraAsks = st.extraAsks || [];
+      var ref = 'a' + Date.now();
+      st.extraAsks.push({ text: txt, ref: ref, status: 'next' });
+      fb.ask[ref] = { text: txt, status: 'next' }; sync('ask', ref, true);
+      addOpen = false; render(); return;
+    }
+    if ((el = t.closest('[data-ask-remove]'))) {
+      var x = (st.extraAsks || [])[+el.getAttribute('data-ask-remove')];
+      if (x) { x.status = 'removed'; fb.ask[x.ref] = { text: x.text, status: 'removed' }; sync('ask', x.ref, true); render(); }
+      return;
+    }
     if ((el = t.closest('[data-view-day]'))) {
       sel = parseInt(el.getAttribute('data-view-day'), 10); said = null;
-      if (tab !== 'today') { location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      if (tab !== 'today') { e.preventDefault(); location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       return;
     }
     if ((el = t.closest('[data-jump]'))) {
@@ -570,7 +719,9 @@
     var k = b.getAttribute('data-done');
     var day = parseInt(k, 10);
     var wasKept = kept(plan.days[day - 1]);
-    done[k] = !done[k]; save();
+    done[k] = !done[k];
+    if (done[k]) st.at[k] = Date.now(); else delete st.at[k];
+    save();
     var list = cheer().done || [];
     // the day's first step gets the day's line; another Ask's step on the same day gets a different one
     said = done[k] ? { key: k, line: wasKept ? list[(day + 2) % (list.length || 1)] || '' : doneLine(day) } : null;
@@ -589,6 +740,13 @@
   });
   // their words save as they type, without re-rendering (so the cursor stays put)
   root.addEventListener('input', function (e) {
+    if (e.target.id === 'pb-q') {
+      var q = e.target.value.trim().toLowerCase(), any = false;
+      root.querySelectorAll('#pb-all [data-pb-name]').forEach(function (a) { var hit = !q || a.getAttribute('data-pb-name').indexOf(q) >= 0; a.parentNode.hidden = !hit; if (hit) any = true; });
+      var none = root.querySelector('#pb-none'); if (none) none.hidden = any;
+      root.querySelectorAll('.pb-paths, .pb-s ~ .fs:not(.pb-paths):not(:last-child)').forEach(function (sec) { sec.hidden = !!q; });
+      return;
+    }
     if (e.target.classList && e.target.classList.contains('fb-t')) grow(e.target);
     var t = e.target.closest('[data-fb]');
     if (!t) return;

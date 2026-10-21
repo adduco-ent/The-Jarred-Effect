@@ -12,6 +12,7 @@
 --   lookback (week number)         → { did, changed, keep }
 --   next     (week number)         → { asks: [{ choice: keep | change | done | pause, note }], pace: light | right | much, want }
 --   app      (moment, e.g. "day3" or a timestamp) → { ease: yes | kind_of | not_really, text }
+--   ask      (a timestamp)       → { text, status: next | removed }  an Ask added in the app (full app), for next week
 create table if not exists public.plan_feedback (
   id bigint generated always as identity primary key,
   plan_id text not null,

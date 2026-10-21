@@ -5,6 +5,7 @@
   "typeName": "The Achiever",
   "asks": [
     {
+      "protocol": "new-habit",
       "text": "Run a 5K by spring.",
       "otherHalf": "Desire",
       "focus": "Building a new habit",
@@ -25,6 +26,7 @@
       }
     },
     {
+      "protocol": "unlearn",
       "text": "Stop working past 7 p.m.",
       "otherHalf": "Trust",
       "focus": "Unlearning an old habit",

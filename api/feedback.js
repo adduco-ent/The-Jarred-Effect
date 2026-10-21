@@ -15,7 +15,8 @@ const KINDS = {
   note: { text: 'text' },
   lookback: { did: 'text', changed: 'text', keep: 'text' },
   next: { asks: 'asks', pace: ['light', 'right', 'much'], want: 'text' },
-  app: { ease: ['yes', 'kind_of', 'not_really'], text: 'text' }
+  app: { ease: ['yes', 'kind_of', 'not_really'], text: 'text' },
+  ask: { text: 'text', status: ['next', 'removed'] }
 };
 const NEXT = ['keep', 'change', 'done', 'pause'];
 // their words, kept as written: control characters out, length capped
