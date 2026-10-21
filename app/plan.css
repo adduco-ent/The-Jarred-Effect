@@ -110,6 +110,33 @@
 .pl-more-b p{margin:0;font-size:.9375rem;line-height:1.6;color:var(--dim)}
 .pl-more-b ol{margin:0;padding-left:1.25rem;display:grid;gap:.3rem;font-size:.9375rem;line-height:1.55;color:var(--dim)}
 
+/* the layers under each step */
+.pl-layers{display:grid}
+.pl-more summary em{margin-left:.5rem;font-style:normal;font-weight:500;font-size:.75rem;color:var(--accent-ink)}
+.wk{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.wk label{display:grid;grid-template-columns:1.375rem minmax(0,1fr);align-items:start;gap:.75rem;cursor:pointer;font-size:.9375rem;line-height:1.55;color:var(--ink)}
+.wk input{appearance:none;-webkit-appearance:none;margin:.125rem 0 0;width:1.375rem;height:1.375rem;border-radius:.4375rem;border:1.5px solid rgba(28,24,18,.25);background:#fff;cursor:pointer;display:grid;place-items:center;transition:background .15s ease,border-color .15s ease}
+.wk input::after{content:"";width:.375rem;height:.6875rem;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg) scale(0);transition:transform .15s ease}
+.wk input:checked{background:var(--accent);border-color:var(--accent)}
+.wk input:checked::after{transform:translateY(-1px) rotate(45deg) scale(1)}
+.wk input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wk input:checked+span{color:var(--faint);text-decoration:line-through;text-decoration-color:rgba(28,24,18,.25)}
+.pl-more-b .pl-story{margin:0;font-family:var(--serif);font-size:1.0625rem;line-height:1.55;color:var(--ink)}
+.pl-more-b .pl-story-k{margin:-.5rem 0 0;font-size:.75rem;color:var(--faint)}
+.pl-more-b .pl-safe{padding:.625rem .75rem;border-radius:.75rem;background:rgba(28,24,18,.04);font-size:.875rem}
+.pl-more-b .yu-link{margin-top:0}
+
+/* the one-time guidance question */
+.gd{margin-top:1.25rem;padding:1.125rem 1.25rem 1.25rem;border-radius:1.25rem;background:#fff;border:1px solid var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+.gd-o{display:grid;gap:.5rem}
+.gd-o button{display:grid;gap:.125rem;padding:.875rem 1rem;border-radius:.875rem;border:1px solid rgba(28,24,18,.14);background:#fff;font:inherit;text-align:left;cursor:pointer;transition:border-color .2s ease}
+.gd-o button:hover{border-color:var(--accent)}
+.gd-o button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gd-o b{font-size:.9375rem;font-weight:600;color:var(--ink)}
+.gd-o span{font-size:.875rem;line-height:1.45;color:var(--dim)}
+.gd-k{margin:.75rem 0 0;font-size:.75rem;color:var(--faint)}
+.ci-o--2{grid-template-columns:repeat(2,1fr);margin-top:.75rem}
+
 /* locked layers: shown plainly, with a quiet lock. A preview of what's inside, then one clear button. */
 .lk{display:grid;gap:.75rem;margin-top:2rem;padding:1.5rem 1.375rem;border-radius:1.375rem;border:1px solid rgba(28,24,18,.1);background:linear-gradient(180deg,#fbfbfa,#f3f5f8)}
 .pl>.lk:first-child{margin-top:.25rem}

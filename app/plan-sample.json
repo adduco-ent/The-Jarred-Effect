@@ -6,12 +6,42 @@
     {
       "text": "Run a 5K by spring.",
       "otherHalf": "Desire",
-      "focus": "Building a new habit"
+      "focus": "Building a new habit",
+      "deeper": {
+        "name": "Building a new habit",
+        "when": "When their Ask is something they want to do regularly: move, write, save, wake earlier.",
+        "steps": [
+          "Name it as who you’re becoming, plus one tiny action: “I’m someone who moves every day. Shoes on, ten minutes.”",
+          "Shrink it until it survives a Tuesday. If it feels too small, it’s probably the right size.",
+          "Anchor it to something you already do, not to a clock: after coffee, after the school run, before your phone.",
+          "Write three versions: full, half and rough-day. All three count.",
+          "Do it most days, at whatever moment works that day.",
+          "Keep a receipt: one line a day about what you did.",
+          "Missed a day? No catch-up. Come back the next day, and try not to miss twice in a row.",
+          "Every 7 days, look back: keep it, shrink it or change its shape. Grow it one notch only when it feels easy most days."
+        ],
+        "safety": null
+      }
     },
     {
       "text": "Stop working past 7 p.m.",
       "otherHalf": "Trust",
-      "focus": "Unlearning an old habit"
+      "focus": "Unlearning an old habit",
+      "deeper": {
+        "name": "Unlearning an old habit",
+        "when": "When their Ask is about stopping something that’s costing them: scrolling, snacking, procrastinating, overworking.",
+        "steps": [
+          "Notice without judging. For three days, write down when it happens: what set it off, how you felt, what you got from it.",
+          "Find the payoff. Ask: what am I getting out of this? Relief, comfort, a break, a sense of control.",
+          "Make the old way a little harder. Move it, log out, put it in another room, add a step between you and it.",
+          "Choose a swap that gives you the same payoff in a better way: a walk for the break, a text to a friend for the comfort.",
+          "When the urge shows up, pause for two minutes and feel it before you choose. Urges rise, and they pass.",
+          "A slip is information. Write what set it off and what would help next time, then carry on.",
+          "Tell one person in your circle what you’re changing, and ask them to check in.",
+          "Count the days you chose differently, not the days you didn’t."
+        ],
+        "safety": "If the habit involves alcohol, drugs, gambling, food, self-harm or anything that puts you in danger, this doesn’t replace real help. Talk to a doctor or counselor. If you’re in crisis, call your local emergency number or a crisis line now."
+      }
     }
   ],
   "read": "You already know how to put the work in. This week isn’t about more effort. It’s about remembering why you want to cross that finish line, and letting the workday end, so both the running and your evenings start to feel like yours.",
@@ -115,7 +145,8 @@
               "Under it, write why you want it, in one honest line.",
               "Ask “why does that matter?” about that line, and write the answer. Do it once more."
             ],
-            "stuck": "If the answers sound like what you’re supposed to say, ask: what would I want here if no one would ever know?"
+            "stuck": "If the answers sound like what you’re supposed to say, ask: what would I want here if no one would ever know?",
+            "story": "Sam wanted to run a 5K. First why: “to get in shape.” Second: “because I’m out of breath chasing my kids.” Third: “because I want to be the dad who’s in the game, not on the bench.” That third one went on a sticky note on his running shoes. On days he didn’t feel like it, he didn’t read “get in shape.” He read the bench line, and he went."
           }
         },
         {
@@ -133,7 +164,8 @@
               "Each time the old habit shows up, write the time, what just happened, and how you felt.",
               "No judging and no fixing yet. Just notice."
             ],
-            "stuck": "If you forget in the moment, write it down afterward. Even a few entries a day show the pattern."
+            "stuck": "If you forget in the moment, write it down afterward. Even a few entries a day show the pattern.",
+            "story": "Mia wanted to stop late-night snacking. She tracked the trigger for three days. Every entry looked the same: after 9 p.m., after a hard work message, feeling wired and alone. It wasn’t about hunger at all. That changed what she worked on next."
           }
         }
       ]
@@ -158,7 +190,8 @@
               "Do it whenever today allows, wherever it fits.",
               "Stop when the time’s up, even if you want to keep going. Leave yourself wanting more."
             ],
-            "stuck": "If it feels too big to start, cut it in half, then in half again. Two minutes is still a step."
+            "stuck": "If it feels too big to start, cut it in half, then in half again. Two minutes is still a step.",
+            "story": "Maya wanted to write a book and had been “about to start” for two years. Her tiny step: one page before she opened her phone in the morning. Some pages were bad. A few were good. After three weeks she had twenty-one pages, and for the first time the book felt like something she was doing instead of something she was waiting on."
           }
         },
         {
@@ -176,7 +209,8 @@
               "Write the boundary in one sentence: what you will or won’t do, and when.",
               "Say it once, calmly, without a long explanation."
             ],
-            "stuck": "If saying it feels too hard, start by living it quietly, and say it out loud when it comes up."
+            "stuck": "If saying it feels too hard, start by living it quietly, and say it out loud when it comes up.",
+            "story": "Mateo’s boss called at all hours. He wrote one sentence: “I’m not taking work calls after 7 anymore, but I’ll reply first thing.” He said it once, on a Monday. His boss said, “Sure, fair.” Mateo had spent months dreading a conversation that took fifteen seconds."
           }
         }
       ]
@@ -201,7 +235,8 @@
               "Pick the one that comes right before a good moment for your step.",
               "Finish this line: “After I ___, I ___.”"
             ],
-            "stuck": "If the anchor keeps slipping, try a different one tomorrow. The right anchor feels easy."
+            "stuck": "If the anchor keeps slipping, try a different one tomorrow. The right anchor feels easy.",
+            "story": "Zoe kept forgetting her evening stretches. Her anchor: after she brushes her teeth at night, she stretches on the bathroom floor for five minutes. Brushing her teeth never gets skipped, so the stretching stopped getting skipped too."
           }
         },
         {
@@ -219,7 +254,8 @@
               "Add one step in the way: move it, log out, put it in another room.",
               "At the same time, make the better option easier, if you can."
             ],
-            "stuck": "If you push straight through the barrier, make it a little bigger, or pair it with a swap."
+            "stuck": "If you push straight through the barrier, make it a little bigger, or pair it with a swap.",
+            "story": "Carlos scrolled for an hour every night in bed. He started charging his phone in the kitchen and put a book on his nightstand. A couple of nights he walked to the kitchen anyway. Most nights he didn’t bother. The extra twenty steps were enough."
           }
         }
       ]
@@ -257,7 +293,8 @@
               "Picture an ordinary moment after your Ask is real. Not the big finish: a normal Tuesday.",
               "Notice where you feel it in your body, and stay with it for two minutes."
             ],
-            "stuck": "If doubt crashes in, that’s normal. Notice it, write it down afterward, and come back to the picture."
+            "stuck": "If doubt crashes in, that’s normal. Notice it, write it down afterward, and come back to the picture.",
+            "story": "Tara pictured walking into her own studio on a Tuesday morning. Keys in hand, light through the window, shoulders loose. She stayed with it for two minutes. She opened her eyes feeling like the studio was somewhere she was going, not just something she wanted."
           }
         },
         {
@@ -275,7 +312,8 @@
               "Pick something that gives you the same thing in a better way.",
               "Decide ahead of time: “When the urge hits, I’ll ___ instead.”"
             ],
-            "stuck": "If the swap doesn’t satisfy, it may be meeting the wrong need. Look again at what the old habit really gives you."
+            "stuck": "If the swap doesn’t satisfy, it may be meeting the wrong need. Look again at what the old habit really gives you.",
+            "story": "Ama’s afternoon vending-machine trip wasn’t about food. It was a break from her desk. Her swap: a five-minute walk to the end of the hall and back, with water. Same break, no crash. Some days she still got the snack, and that was fine."
           }
         }
       ]
@@ -300,7 +338,8 @@
               "Set ten minutes aside, with no goal and no score.",
               "Let yourself be a little silly."
             ],
-            "stuck": "If nothing comes to mind, think of what you loved doing at ten years old, and try a grown-up version of it."
+            "stuck": "If nothing comes to mind, think of what you loved doing at ten years old, and try a grown-up version of it.",
+            "story": "Tom used to love building things as a kid. He bought a cheap Lego set and gave it ten minutes after dinner. No goal, just building. His teenage daughter wandered over and joined him. They didn’t talk about anything serious. It was the most relaxed he’d felt all week."
           }
         },
         {
@@ -318,7 +357,8 @@
               "Write what set it off: the time, the place, the feeling.",
               "Write one thing that would help next time. Then let it go."
             ],
-            "stuck": "If guilt takes over, remember that you’re learning the pattern. That is the work."
+            "stuck": "If guilt takes over, remember that you’re learning the pattern. That is the work.",
+            "story": "Owen skipped the gym after a meeting ran late. His debrief: “Late meeting, tired, gym bag was at home.” What would help: pack the bag the night before and keep it in the car. He did it that night. He noticed he felt like someone solving a problem, not someone who blew it."
           }
         }
       ]

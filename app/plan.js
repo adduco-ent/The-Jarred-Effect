@@ -27,7 +27,8 @@
     var s = null;
     try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { /* ignore */ }
     s = s && typeof s === 'object' ? s : {};
-    s.done = s.done || {}; s.checkin = s.checkin || {}; s.notes = s.notes || {};
+    s.done = s.done || {}; s.checkin = s.checkin || {}; s.notes = s.notes || {}; s.walk = s.walk || {};
+    // s.guide: how much guidance they like. 'step' = just the step, 'walk' = walkthrough and story open by default
     if (!s.start) {
       // ticks from the earlier plan page carry over
       try { var old = JSON.parse(localStorage.getItem('oh.plan.' + (id || 'sample'))); if (old && typeof old === 'object') s.done = old; } catch (e) { /* ignore */ }
@@ -40,7 +41,7 @@
   save();
   var done = st.done;
 
-  var plan = null, tab = 'today', T = 1, sel = 1, said = null;
+  var plan = null, tab = 'today', T = 1, sel = 1, said = null, keepLayers = true;
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var lock = '<svg class="lk-i" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.25" y="7" width="9.5" height="6.75" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V5.25a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.4"/></svg>';
@@ -85,12 +86,38 @@
     return '<button class="pl-done" type="button" data-done="' + k + '" aria-pressed="' + isDone + '"' + (label ? ' aria-label="' + esc((isDone ? 'Done: ' : 'Mark done: ') + label) + '"' : '') + '>' + check + '<span>' + (isDone ? 'Done' : 'Mark done') + '</span></button>';
   }
   function reply(k) { return said && said.key === k && done[k] && said.line ? '<p class="pl-said" role="status">' + esc(said.line) + '</p>' : ''; }
-  function more(h) {
-    if (!h) return '';
-    return '<details class="pl-more"><summary><span>Need more help with this step?</span><i aria-hidden="true"></i></summary><div class="pl-more-b">' +
-      '<div><p class="pl-more-k">Why it helps</p><p>' + esc(h.why) + '</p></div>' +
-      '<div><p class="pl-more-k">How to do it</p><ol>' + h.how.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol></div>' +
-      '<div><p class="pl-more-k">If you get stuck</p><p>' + esc(h.stuck) + '</p></div></div></details>';
+  // ---- the layers under each step, for people who want more before they move. Each opens on a tap, or by
+  // default when they chose "Walk me through it". Every layer ends back at the step.
+  function layers(d, s) {
+    var h = s.help || {}, k = key(d, s), open = st.guide === 'walk';
+    var a = plan.asks[s.ask] || {};
+    function det(id, label, body, isOpen) {
+      return '<details class="pl-more" data-l="' + k + ':' + id + '"' + (isOpen ? ' open' : '') + '><summary><span>' + label + '</span><i aria-hidden="true"></i></summary><div class="pl-more-b">' + body + '</div></details>';
+    }
+    var out = '';
+    if (h.how && h.how.length) {
+      var ticks = st.walk[k] || [];
+      var n = h.how.filter(function (x, i) { return ticks[i]; }).length;
+      out += det('walk', 'Walk me through it <em data-walk-n="' + k + '">' + (n ? n + ' of ' + h.how.length : '') + '</em>',
+        '<ol class="wk">' + h.how.map(function (x, i) {
+          return '<li><label><input type="checkbox" data-walk="' + k + '" data-i="' + i + '"' + (ticks[i] ? ' checked' : '') + '><span>' + esc(x) + '</span></label></li>';
+        }).join('') + '</ol>', open);
+    }
+    if (h.story) {
+      out += det('story', 'See it in real life', '<p class="pl-story">' + esc(h.story) + '</p><p class="pl-story-k">A made-up example, but it’s how this usually goes.</p>', open);
+    }
+    if (h.why || h.stuck) {
+      out += det('why', 'Why it helps, and if you get stuck',
+        (h.why ? '<div><p class="pl-more-k">Why it helps</p><p>' + esc(h.why) + '</p></div>' : '') +
+        (h.stuck ? '<div><p class="pl-more-k">If you get stuck</p><p>' + esc(h.stuck) + '</p></div>' : ''), false);
+    }
+    if (a.deeper) {
+      out += det('deep', 'Go deeper: ' + esc(a.deeper.name),
+        '<p>' + esc(a.deeper.when) + '</p><ol>' + a.deeper.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' +
+        (a.deeper.safety ? '<p class="pl-safe">' + esc(a.deeper.safety) + '</p>' : '') +
+        '<a class="yu-link" href="#playbook">The whole playbook<span aria-hidden="true">→</span></a>', false);
+    }
+    return out ? '<div class="pl-layers">' + out + '</div>' : '';
   }
 
   // ---- the day card. On a rough check-in, the rough-day version leads and the full step steps back.
@@ -102,7 +129,7 @@
       (rough
         ? '<div class="pl-v"><span>Your rough-day version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>') +
-      more(s.help) + '</div>';
+      layers(d, s) + '</div>';
   }
   function noteBox(d, hint) {
     return '<div class="nt"><label for="nt-' + d.day + '">Write it down <span>Only you can see this.</span></label>' +
@@ -191,6 +218,12 @@
         (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '">Back to today</button>' : '') + '</section>';
     }
 
+    if (!st.guide && d.kind === 'step') {
+      html += '<section class="gd"><p class="ci-q">How do you like your steps?</p>' +
+        '<div class="gd-o"><button type="button" data-guide="step"><b>Just the step</b><span>Short and simple. More help is a tap away.</span></button>' +
+        '<button type="button" data-guide="walk"><b>Walk me through it</b><span>Mini-steps and a real-life example, open from the start.</span></button></div>' +
+        '<p class="gd-k">You can change this any time in You.</p></section>';
+    }
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
@@ -266,13 +299,20 @@
       '<section class="pl-sec"><p class="pl-k">This week</p><p class="pl-read">' + esc(p.read) + '</p>' +
         (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
       '<section class="pl-sec"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
+      '<section class="pl-sec"><p class="pl-k">Your steps</p><p class="pl-text">How much guidance do you like?</p>' +
+        '<div class="ci-o ci-o--2"><button type="button" data-guide="step" aria-pressed="' + (st.guide !== 'walk') + '">Just the step</button>' +
+        '<button type="button" data-guide="walk" aria-pressed="' + (st.guide === 'walk') + '">Walk me through it</button></div></section>' +
       '<section class="pl-sec"><p class="pl-k">Your access</p><p class="pl-text">Free: your 7-day plan, your progress and your type. The full playbook, your patterns over time and a new plan every week come with the full app.</p>' + unlock('the full app') + '</section>';
   }
 
   function render() {
     if (!plan) return;
     var views = { today: todayView, progress: progressView, playbook: playbookView, you: youView };
+    var was = {};
+    root.querySelectorAll('details[data-l]').forEach(function (x) { was[x.getAttribute('data-l')] = x.open; });
     root.innerHTML = views[tab](plan);
+    if (keepLayers) root.querySelectorAll('details[data-l]').forEach(function (x) { var v = was[x.getAttribute('data-l')]; if (v !== undefined) x.open = v; });
+    keepLayers = true;
     nav.querySelectorAll('[data-tab]').forEach(function (b) {
       if (b.getAttribute('data-tab') === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
@@ -295,6 +335,9 @@
       if (tab !== 'today') { location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       return;
     }
+    var g = e.target.closest('[data-guide]');
+    // a new guidance choice resets every layer to its default (open for "Walk me through it")
+    if (g) { st.guide = g.getAttribute('data-guide'); save(); keepLayers = false; render(); return; }
     var ci = e.target.closest('[data-checkin]');
     if (ci) {
       var o = ci.getAttribute('data-checkin');
@@ -314,6 +357,16 @@
     said = done[k] ? { key: k, line: wasKept ? list[(day + 2) % (list.length || 1)] || '' : doneLine(day) } : null;
     render();
     var again = root.querySelector('[data-done="' + k + '"]'); if (again) again.focus({ preventScroll: true });
+  });
+  root.addEventListener('change', function (e) {
+    var w = e.target.closest('[data-walk]');
+    if (!w) return;
+    var k = w.getAttribute('data-walk'), i = +w.getAttribute('data-i');
+    var list = st.walk[k] = st.walk[k] || [];
+    list[i] = w.checked; save();
+    var boxes = root.querySelectorAll('[data-walk="' + k + '"]');
+    var n = [].filter.call(boxes, function (b) { return b.checked; }).length;
+    var em = root.querySelector('[data-walk-n="' + k + '"]'); if (em) em.textContent = n ? n + ' of ' + boxes.length : '';
   });
   root.addEventListener('input', function (e) {
     var t = e.target.closest('[data-note]');
