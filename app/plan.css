@@ -3,7 +3,7 @@
    marks what matters right now: the day labels, the day that's up next, Done, and the Ask numbers. */
 .pl{--accent:#3e6cab;--accent-ink:#2f5a94;--accent-soft:rgba(62,108,171,.07);--accent-line:rgba(62,108,171,.28);
   display:flex;flex-direction:column;gap:0;padding-top:.75rem;padding-bottom:calc(6rem + env(safe-area-inset-bottom))}
-.pl-loading{color:var(--faint);font-family:var(--serif);font-style:italic}
+.pl-loading{color:var(--faint)}
 
 /* the plan card: their Ask, front and center */
 .pl-card{position:relative;overflow:hidden;padding:1.75rem 1.5rem 1.5rem;border-radius:1.75rem;color:var(--cream);
@@ -49,8 +49,8 @@
 .pl-sub p{margin:0;font-family:var(--serif);font-size:1rem;line-height:1.5;color:var(--ink)}
 .pl-rough{margin:0;font-size:.9375rem;color:var(--dim)}
 .pl-rough b{color:var(--ink);font-weight:600}
-.pl-q{margin:0;font-family:var(--serif);font-style:italic;font-size:1.375rem;line-height:1.35;color:var(--ink);text-wrap:balance}
-.pl-q-by{margin:-.25rem 0 0;font-family:var(--serif);font-style:italic;font-size:.9375rem;color:var(--faint)}
+.pl-q{margin:0;font-family:var(--serif);font-size:1.375rem;line-height:1.35;color:var(--ink);text-wrap:balance}
+.pl-q-by{margin:-.25rem 0 0;font-size:.875rem;color:var(--faint)}
 .pl-prompts{margin:0;padding-left:1.25rem;display:grid;gap:.375rem;font-family:var(--serif);font-size:1.0625rem;color:var(--ink)}
 .pl-prompts li::marker{color:var(--accent-ink)}
 .pl-day--question{border-style:dashed;border-color:rgba(28,24,18,.18);background:rgba(255,255,255,.5);box-shadow:none}
@@ -83,11 +83,11 @@
 .pl-day.is-done{background:rgba(255,255,255,.7);box-shadow:none}
 .pl-day.is-done:not(.pl-day--question) .pl-day-t,.pl-day.is-done .pl-text,.pl-day.is-done .pl-note{opacity:.55}
 
-/* encouragement: Jarred's voice, quiet and in serif italic, never a banner or a burst of color */
-.pl-cheer{margin:.875rem 0 0;font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.45;color:var(--cream)}
+/* encouragement: Jarred's voice, quiet, in the same upright type as the body, never a banner or a burst of color */
+.pl-cheer{margin:.875rem 0 0;font-size:.9375rem;line-height:1.5;color:var(--cream)}
 .pl-start{margin:-.25rem 0 1.125rem;font-family:var(--serif);font-size:1.0625rem;line-height:1.5;color:var(--dim)}
-.pl-note{margin:0;font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.45;color:var(--dim)}
-.pl-said{margin:0;padding:0 0 0 .875rem;border-left:2px solid var(--accent);font-style:italic;color:var(--accent-ink);font-family:var(--serif);font-size:1rem;line-height:1.45;animation:pl-said .35s ease both}
+.pl-note{margin:0;font-size:.9375rem;line-height:1.55;color:var(--dim)}
+.pl-said{margin:0;padding:.125rem 0 .125rem .875rem;border-left:2px solid var(--accent);font-size:.9375rem;font-weight:500;line-height:1.5;color:var(--accent-ink);animation:pl-said .35s ease both}
 @keyframes pl-said{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 
 .pl-end{display:grid;justify-items:center;gap:.5rem;padding:2.5rem 0 1rem;text-align:center}
@@ -231,7 +231,7 @@
 .ci-o button:hover{border-color:var(--accent);color:var(--accent-ink)}
 .ci-o button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .ci-o button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
-.ci-a{margin:.75rem 0 0;font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.45;color:var(--dim)}
+.ci-a{margin:.75rem 0 0;font-size:.9375rem;line-height:1.55;color:var(--dim)}
 
 /* rough day: the small version leads */
 .pl-v{display:grid;gap:.25rem;padding:.875rem 1rem;border-radius:.875rem;background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)}
