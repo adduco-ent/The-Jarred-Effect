@@ -338,3 +338,10 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-share{background:#ffffff;border-color:rgba(28,24,18,.1);box-shadow:inset 0 1px 0 #fff,0 .625rem 1.5rem -.75rem rgba(6,12,24,.3)}
 .oh-share:hover{box-shadow:inset 0 1px 0 #fff,0 .875rem 1.75rem -.75rem rgba(6,12,24,.38)}
 .oh-share--dark{background:var(--ink);box-shadow:0 .625rem 1.5rem -.75rem rgba(6,12,24,.5)}
+
+/* up to three Asks on the result page */
+.oh-asks{gap:.5rem}
+.oh-asks input{width:100%;min-height:3.25rem;padding:0 1rem;border-radius:.875rem;border:1px solid rgba(28,24,18,.16);background:var(--pearl);font:inherit;font-size:1rem;color:var(--ink)}
+.oh-asks input::placeholder{color:#a39a8c}
+.oh-asks input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,24,18,.08)}
+.oh-add{justify-self:start;padding:.25rem 0;border:0;background:none;font:inherit;font-size:.875rem;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}

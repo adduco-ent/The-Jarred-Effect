@@ -17,7 +17,7 @@
 
   function dayCard(d) {
     var isDone = !!done[d.day];
-    var head = '<div class="pl-day-h"><p class="pl-day-k">Day ' + d.day + (d.minutes ? '<span>' + d.minutes + ' min</span>' : '') + '</p>' +
+    var head = '<div class="pl-day-h"><p class="pl-day-k">Day ' + d.day + (d.minutes ? '<span>' + d.minutes + ' min' + (d.steps && d.steps.length > 1 ? ' total' : '') + '</span>' : '') + '</p>' +
       '<button class="pl-done" type="button" data-day="' + d.day + '" aria-pressed="' + isDone + '">' + check + '<span>' + (isDone ? 'Done' : 'Mark done') + '</span></button></div>';
     var body;
     if (d.kind === 'question') {
@@ -25,32 +25,45 @@
         '<p class="pl-q">' + esc(d.ask) + '</p>' +
         '<p class="pl-q-by">— ' + esc(d.name) + '</p>' +
         (d.hint ? '<p class="pl-text">' + esc(d.hint) + ' Answer it honestly, not nicely.</p>' : '') +
+        (d.forMany ? '<p class="pl-text">Use it on the Ask that feels heaviest right now.</p>' : '') +
         (d.followUps && d.followUps.length ? '<div class="pl-sub"><span>If you want to go deeper</span>' + d.followUps.map(function (f) { return '<p>' + esc(f) + '</p>'; }).join('') + '</div>' : '');
     } else if (d.kind === 'lookback') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
         '<p class="pl-text">Five minutes to see your week clearly, before the next one.</p>' +
         '<ol class="pl-prompts">' + d.prompts.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ol>';
     } else {
-      body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
-        '<p class="pl-text">' + esc(d.what) + '</p>' +
-        '<div class="pl-sub"><span>For example</span><p>' + esc(d.example) + '</p></div>' +
-        '<p class="pl-rough"><b>Rough day?</b> ' + esc(d.rough) + '</p>';
+      var many = plan.asks.length > 1;
+      body = d.steps.map(function (s) {
+        return '<div class="pl-step">' +
+          (many ? '<p class="pl-step-ask"><i>' + (s.ask + 1) + '</i>' + esc(plan.asks[s.ask].text) + '<span>' + s.minutes + ' min</span></p>' : '') +
+          '<h3 class="pl-day-t">' + esc(s.title) + '</h3>' +
+          '<p class="pl-text">' + esc(s.what) + '</p>' +
+          '<div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div>' +
+          '<p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p></div>';
+      }).join('');
     }
     return '<li class="pl-day pl-day--' + d.kind + (isDone ? ' is-done' : '') + '" data-card="' + d.day + '">' + head + body + '</li>';
   }
 
+  // end a sentence with a period only if it doesn't already end in punctuation (so "p.m." stays "p.m.")
+  function end(t) { t = String(t || '').trim(); return /[.!?]$/.test(t) ? t : t + '.'; }
+  function uniq(list) { return list.filter(function (x, i) { return x && list.indexOf(x) === i; }); }
+  function others(p) { return uniq(p.asks.map(function (a) { return a.otherHalf && a.otherHalf.toLowerCase(); })).join(' and '); }
+  function focuses(p) { return uniq(p.asks.map(function (a) { return a.focus; })).join(' · '); }
   function render(p) {
     var n = Object.keys(done).filter(function (k) { return done[k]; }).length;
     var dots = p.days.map(function (d) { return '<i class="' + (done[d.day] ? 'on' : '') + '"></i>'; }).join('');
     root.innerHTML =
       '<section class="pl-card">' +
         '<p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your 7-day plan</p>' +
-        '<p class="pl-ask">“' + esc(p.ask.replace(/[.”"]+$/, '')) + '.”</p>' +
-        '<p class="pl-meta">' + esc(p.typeName) + (p.otherHalf ? ' · Building your other half: <b>' + esc(p.otherHalf.toLowerCase()) + '</b>' : '') + '</p>' +
+        (p.asks.length === 1
+          ? '<p class="pl-ask">“' + esc(end(p.asks[0].text)) + '”</p>'
+          : '<ol class="pl-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>') +
+        '<p class="pl-meta">' + esc(p.typeName) + (others(p) ? ' · Building your other half: <b>' + esc(others(p)) + '</b>' : '') + '</p>' +
         '<div class="pl-progress"><div class="pl-dots" aria-hidden="true">' + dots + '</div><span>' + n + ' of 7 done</span></div>' +
       '</section>' +
       '<section class="pl-sec"><p class="pl-k">This week</p><p class="pl-read">' + esc(p.read) + '</p>' +
-        (p.focus ? '<p class="pl-focus">From the playbook: <b>' + esc(p.focus) + '</b></p>' : '') + '</section>' +
+        (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
       '<section class="pl-sec"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
       '<section class="pl-sec pl-week"><p class="pl-k">Your week</p><ol class="pl-days">' + p.days.map(dayCard).join('') + '</ol></section>' +
       '<section class="pl-end"><p>One week at a time. Next week’s plan builds on what you tell me this week.</p>' +

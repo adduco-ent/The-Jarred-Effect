@@ -123,8 +123,10 @@
         '<form class="oh-next" data-results novalidate>' +
           '<p class="oh-next-k">Your next step</p>' +
           '<p class="oh-next-t">Turn this into a plan.</p>' +
-          '<p class="oh-next-d">Name the one thing you want, and get your full results by email. Your 7-day plan follows as soon as it’s ready.</p>' +
-          '<label class="oh-field"><span>The one thing you want <i>optional</i></span><input name="ask" type="text" maxlength="200" autocomplete="off" placeholder="e.g. run a 5K by spring"></label>' +
+          '<p class="oh-next-d">Name up to three things you want, and get your full results by email. Your 7-day plan follows as soon as it’s ready.</p>' +
+          '<div class="oh-field oh-asks"><span id="asks-l">What you want <i>up to 3, optional</i></span>' +
+            '<input name="ask" type="text" maxlength="200" autocomplete="off" aria-labelledby="asks-l" placeholder="e.g. run a 5K by spring">' +
+            '<button class="oh-add" type="button" data-addask>+ Add another Ask</button></div>' +
           '<label class="oh-field"><span>Your email</span><input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></label>' +
           '<input class="oh-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
           '<button class="oh-cta" type="submit">Email me my results' + arrow() + '</button>' +
@@ -245,7 +247,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { note.textContent = 'That email doesn’t look right. Check it and try again.'; form.email.focus(); return; }
     btn.disabled = true; form.classList.add('is-sending'); note.textContent = 'Sending…';
     fetch('/api/quiz', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, ask: form.ask.value, r: window.OH_SCORE.encode(state.answers), source: 'quiz', company: form.company.value }) })
+      body: JSON.stringify({ email: email, asks: [].map.call(form.querySelectorAll('input[name=ask]'), function (i) { return i.value.trim(); }).filter(Boolean), r: window.OH_SCORE.encode(state.answers), source: 'quiz', company: form.company.value }) })
       .then(function (res) { return res.json().catch(function () { return {}; }).then(function (d) { if (!res.ok || !d.ok) throw new Error('failed'); }); })
       .then(function () {
         state.sentTo = email; save();
@@ -305,6 +307,16 @@
     } else if (t.hasAttribute('data-back')) {
       if (busy) return;
       if ((state.step || 0) > 0) { state.step -= 1; save(); turn(state.step, -1); } else go('welcome');
+    } else if (t.hasAttribute('data-addask')) {
+      var box = t.closest('.oh-asks'), n = box.querySelectorAll('input[name=ask]').length;
+      if (n < 3) {
+        var inp = document.createElement('input');
+        inp.name = 'ask'; inp.type = 'text'; inp.maxLength = 200; inp.autocomplete = 'off';
+        inp.setAttribute('aria-label', 'Ask ' + (n + 1));
+        inp.placeholder = n === 1 ? 'e.g. stop working past 7 p.m.' : 'e.g. save $2,000 by June';
+        box.insertBefore(inp, t); inp.focus();
+      }
+      if (n + 1 >= 3) t.hidden = true;
     } else if (t.hasAttribute('data-share')) {
       share(t);
     } else if (t.hasAttribute('data-retake')) {
