@@ -354,6 +354,17 @@
     return html;
   }
 
+  // ---- each screen opens the same way: a small kicker, a display title, one line under it
+  function screenHead(kicker, title, sub) {
+    return '<header class="td-head sc-head"><p class="pl-k">' + esc(kicker) + '</p><h1 class="td-h">' + esc(title) + '</h1>' +
+      (sub ? '<p class="pl-note">' + esc(sub) + '</p>' : '') + '</header>';
+  }
+  function fullApp(title, rows) {
+    return '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">' + esc(title) + '</h2>' +
+      '<ul class="lk-rows">' + rows.map(function (r) { return '<li><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></li>'; }).join('') + '</ul>' +
+      unlock('the full app') + '</section>';
+  }
+
   // ---- Progress
   function progressView(p) {
     var c = cheer();
@@ -392,45 +403,63 @@
       if (d.kind === 'lookback') { var lb = fb.lookback['1'] || {}; ['did', 'changed', 'keep'].forEach(function (f) { if (lb[f] && lb[f].trim()) bits.push(lb[f]); }); }
       return bits.length ? '<li><p class="pg-nk">Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</p>' + bits.map(function (b) { return '<p class="pg-nt">' + esc(b) + '</p>'; }).join('') + '</li>' : '';
     }).join('');
-    var felt = feel.easy + feel.okay + feel.hard;
-    var peek = '<div class="lk-bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:30%"></i><i style="height:80%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:90%"></i></div>';
-    return '<section class="pg-hero"><p class="pl-k">This week</p><p class="pg-n"><b>' + n + '</b> of 7 days kept</p>' +
+    var felt = feel.easy + feel.okay + feel.hard + guts;
+    return screenHead('Week one', 'Progress', T <= 7 ? 'Day ' + Math.min(T, 7) + ' of 7 · ' + weekday(Math.min(T, 7)) : 'All seven days are open to look back on.') +
+      '<section class="sc pg-hero"><p class="pg-n"><b>' + n + '</b> of 7 days kept</p>' +
         '<div class="pg-bar" aria-hidden="true">' + bar + '</div>' + (c.progress && c.progress[n] ? '<p class="pl-note">' + esc(c.progress[n]) + '</p>' : '') + '</section>' +
       '<section class="pg-stats"><div><b>' + steps + '</b><span>steps done</span></div><div><b>' + mins + '</b><span>minutes in</span></div><div><b>' + cis + '</b><span>check-ins</span></div></section>' +
-      (felt || guts ? '<p class="pg-felt">How steps felt: ' + feel.easy + ' easy · ' + feel.okay + ' okay · ' + feel.hard + ' hard' + (guts ? ' · ' + guts + ' gut call' + (guts > 1 ? 's' : '') : '') + '</p>' : '') +
-      '<section class="pl-sec"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
-      '<section class="pl-sec"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
-      (theirs ? '<section class="pl-sec"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
-      lockedCard('Patterns', 'See what works for you, week over week', 'Your check-ins, your words and your steps over time: which days go best, which steps stick, and how your other half is growing, with a look back every month.', peek, 'patterns') +
-      week2();
+      (felt ? '<section class="sc"><p class="pl-k">How it felt</p><div class="pg-feel">' +
+        [['Easy', feel.easy], ['Okay', feel.okay], ['Hard', feel.hard], ['Gut calls', guts]].map(function (x) { return '<span' + (x[1] ? '' : ' class="is-zero"') + '><b>' + x[1] + '</b>' + x[0] + '</span>'; }).join('') + '</div></section>' : '') +
+      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
+      '<section class="sc-plain"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
+      (theirs ? '<section class="sc"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
+      fullApp('Keep going past week one', [
+        ['Your patterns', 'Which days go best and which steps stick, week over week, with a look back every month.'],
+        ['Week 2', 'Your next week, built from how this one went, in your own words.']
+      ]);
   }
 
   function playbookView(p) {
     var lib = p.library || [];
-    var peek = '<ol class="lk-list">' + lib.slice(0, 6).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' +
-      (lib.length > 6 ? '<p class="lk-more">and ' + (lib.length - 6) + ' more</p>' : '');
-    return lockedCard('The playbook', 'The whole method, ' + (lib.length || 'all') + ' protocols', 'Everything behind your plan, from building a habit to keeping your power. Read any of it, any time, and pull steps into your week.', peek, 'the playbook');
+    var mine = uniq(p.asks.map(function (a) { return a.deeper && a.deeper.name; }));
+    var rest = lib.filter(function (x) { return mine.indexOf(x) < 0; });
+    return screenHead('The method', 'Playbook', 'Everything behind your plan, in plain words.') +
+      (mine.length ? '<section class="sc"><p class="pl-k">In your plan</p><ul class="pb-rows">' +
+        mine.map(function (x) { return '<li><span class="pb-i">' + check + '</span><span class="pb-n">' + esc(x) + '</span><span class="pb-tag">Included</span></li>'; }).join('') +
+        '</ul><p class="pb-x">Open it from any step: tap <b>Go deeper</b>.</p></section>' : '') +
+      '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">All ' + lib.length + ' protocols</h2>' +
+        '<p class="lk-x">From building a habit to keeping your power. Read any of it, any time, and pull steps into your week.</p>' +
+        '<div class="lk-peek" aria-hidden="true"><ul class="pb-rows pb-rows--locked">' + rest.slice(0, 6).map(function (x) { return '<li><span class="pb-i">' + lock + '</span><span class="pb-n">' + esc(x) + '</span></li>'; }).join('') + '</ul>' +
+        (rest.length > 6 ? '<p class="lk-more">and ' + (rest.length - 6) + ' more</p>' : '') + '</div>' +
+        unlock('the playbook') + '</section>';
   }
 
   function youView(p) {
     var link = p.r ? '/app/?r=' + encodeURIComponent(p.r) + '#result' : '/app/';
     var paid = p.tier === 'paid';
-    return '<section class="yu"><p class="pl-k">Your type</p><p class="yu-type">' + esc(p.typeName) + '</p>' +
-        (others(p) ? '<p class="pl-text">Your other half: <b>' + esc(others(p)) + '</b>. That’s what this week is building.</p>' : '') +
+    return screenHead('Your profile', 'You', '') +
+      '<section class="pl-card pl-card--app yu-card"><p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your type</p>' +
+        '<p class="yu-type">' + esc(p.typeName) + '</p>' +
+        (others(p) ? '<p class="pl-meta">Your other half: <b>' + esc(others(p)) + '</b></p>' : '') +
         '<a class="yu-link" href="' + link + '">Read your full result<span aria-hidden="true">→</span></a></section>' +
-      '<section class="pl-sec"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
-        '<ol class="yu-asks">' + p.asks.map(function (a) { return '<li>' + esc(end(a.text)) + '</li>'; }).join('') + '</ol>' +
-        '<button type="button" class="fut-b yu-add" data-add-ask aria-expanded="' + addOpen + '">' + (paid ? '' : lock) + '<span>Add an Ask</span></button>' +
+      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
+        '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>' +
+        '<button type="button" class="st-undo yu-add" data-add-ask aria-expanded="' + addOpen + '">' + (paid ? '' : lock) + '<span>Add an Ask</span></button>' +
         (addOpen ? '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + (paid ? '' : unlock('more Asks')) + '</div>' : '') + '</section>' +
-      '<section class="pl-sec"><p class="pl-k">This week</p><p class="pl-read">' + esc(p.read) + '</p>' +
+      '<section class="sc"><p class="pl-k">This week</p><p class="yu-read">' + esc(p.read) + '</p>' +
         (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
-      '<section class="pl-sec"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
-      '<section class="pl-sec"><p class="pl-k">Your steps</p><p class="pl-text">How much guidance do you like?</p>' +
-        chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step', 'ci-o--2') + '</section>' +
-      '<section class="pl-sec"><p class="pl-k">Help me make this better</p><p class="pl-text">Something confusing, missing or great? Say it plainly.</p>' +
+      '<section class="sc"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
+      '<section class="sc"><p class="pl-k">Your steps</p><p class="sc-q">How much guidance do you like?</p>' +
+        chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</section>' +
+      '<section class="sc"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
-        '<button type="button" class="fut-b" data-app-send>Send</button>' + (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
-      '<section class="pl-sec"><p class="pl-k">Your access</p><p class="pl-text">' + (paid ? 'Full app.' : 'Free: your 7-day plan, your progress and your type. The full playbook, your patterns over time, more Asks and a new plan every week come with the full app.') + '</p>' + (paid ? '' : unlock('the full app')) + '</section>';
+        '<button type="button" class="st-undo sc-send" data-app-send>Send</button>' + (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
+      (paid ? '' : fullApp('Your plan is free. There’s more.', [
+        ['The whole playbook', 'All the protocols, any time.'],
+        ['Your patterns', 'What works for you, week over week.'],
+        ['A new plan every week', 'Built from your own words.'],
+        ['More Asks', 'As many as you want, at your pace.']
+      ]));
   }
 
   function render() {
