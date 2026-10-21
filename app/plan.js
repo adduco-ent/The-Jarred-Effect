@@ -595,9 +595,10 @@
       '<section class="fs"><p class="pl-k">' + (total > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
         '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') +
         extra.map(function (x, n) { return '<li class="is-new"><i>' + (p.asks.length + n + 1) + '</i><span>' + esc(end(x[0].text)) + '<em>Starts next week</em></span><button type="button" class="lnk" data-ask-remove="' + x[1] + '" aria-label="Remove ' + esc(x[0].text) + '">Remove</button></li>'; }).join('') + '</ol>' +
-        '<button type="button" class="st-undo yu-add" data-add-ask aria-expanded="' + addOpen + '">' + (full ? '<span aria-hidden="true">+</span>' : lock) + '<span>Add an Ask</span></button>' + addBox + '</section>' +
-      '<section class="fs"><p class="pl-k">This week</p><p class="yu-read">' + esc(p.read) + '</p>' +
-        (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
+        '<button type="button" class="yu-add" data-add-ask aria-expanded="' + addOpen + '"><span class="yu-plus" aria-hidden="true">+</span><span class="yu-add-l">Add an Ask</span>' + (full ? '' : '<span class="yu-tag">' + lock + 'Full app</span>') + '</button>' + addBox + '</section>' +
+      '<section class="fs"><p class="pl-k">This week</p><blockquote class="yu-read">' + esc(p.read) + '</blockquote>' +
+        (p.asks.some(function (a) { return a.focus; }) ? '<div class="yu-from"><span>From the playbook</span>' +
+          uniq(p.asks.map(function (a) { return a.focus && a.protocol ? a.protocol + '|' + a.focus : ''; })).map(function (x) { var y = x.split('|'); return '<a href="#playbook/' + esc(y[0]) + '">' + esc(y[1]) + '</a>'; }).join('') + '</div>' : '') + '</section>' +
       '<section class="fs"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
       '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">Your steps<span>How much guidance you see</span></p>' +
         chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</div></section>' +
