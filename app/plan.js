@@ -120,9 +120,10 @@
   function words(kind, ref, field, placeholder, rows, label) {
     var v = field.indexOf('ask.') === 0 ? askNote(ref, field) : (fb[kind][ref] || {})[field] || '';
     var idAttr = 'w-' + kind + '-' + String(ref).replace(/\./g, '_') + '-' + field.replace(/\./g, '_');
-    return (label ? '<label class="fb-l" for="' + idAttr + '">' + esc(label) + '</label>' : '') +
-      '<textarea class="fb-t" id="' + idAttr + '" data-fb="' + kind + '" data-ref="' + ref + '" data-field="' + field + '" rows="' + (rows || 2) + '"' +
-      (label ? '' : ' aria-label="' + esc(placeholder) + '"') + ' placeholder="' + esc(placeholder) + '">' + esc(v) + '</textarea>';
+    return '<div class="fbw">' + (label ? '<label class="fb-l" for="' + idAttr + '">' + esc(label) + '</label>' : '') +
+      '<textarea class="fb-t" id="' + idAttr + '" data-fb="' + kind + '" data-ref="' + ref + '" data-field="' + field + '" rows="1"' +
+      (label ? '' : ' aria-label="' + esc(placeholder) + '"') + ' placeholder="' + esc(placeholder) + '">' + esc(v) + '</textarea>' +
+      '<span class="fb-s" aria-hidden="true">' + check + 'Saved</span></div>';
   }
 
   function doneBtn(k, label) {
@@ -424,6 +425,7 @@
     root.innerHTML = views[tab](plan);
     if (keepLayers) root.querySelectorAll('details[data-l]').forEach(function (x) { var v = was[x.getAttribute('data-l')]; if (v !== undefined) x.open = v; });
     keepLayers = true;
+    root.querySelectorAll('.fb-t').forEach(grow);
     nav.querySelectorAll('[data-tab]').forEach(function (b) {
       if (b.getAttribute('data-tab') === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
@@ -436,6 +438,16 @@
     if (scroll) window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', function () { go(location.hash.slice(1), true); });
+  // fields grow with their words instead of scrolling inside a box
+  function grow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; }
+  // a quiet "Saved" a moment after they stop typing, so there's never a save button to hunt for
+  function savedHint(t) {
+    var h = t.parentNode && t.parentNode.querySelector('.fb-s');
+    if (!h) return;
+    clearTimeout(t._saved);
+    h.classList.remove('on');
+    t._saved = setTimeout(function () { h.classList.add('on'); clearTimeout(h._off); h._off = setTimeout(function () { h.classList.remove('on'); }, 1800); }, 700);
+  }
   function refocus(q) { var el = root.querySelector(q); if (el) el.focus({ preventScroll: true }); }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
@@ -507,8 +519,10 @@
   });
   // their words save as they type, without re-rendering (so the cursor stays put)
   root.addEventListener('input', function (e) {
+    if (e.target.classList && e.target.classList.contains('fb-t')) grow(e.target);
     var t = e.target.closest('[data-fb]');
     if (!t) return;
+    savedHint(t);
     var kind = t.getAttribute('data-fb'), ref = t.getAttribute('data-ref'), field = t.getAttribute('data-field');
     if (kind === 'next' && field.indexOf('ask.') === 0) {
       var i = +field.split('.')[1];
