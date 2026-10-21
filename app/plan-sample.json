@@ -50,9 +50,9 @@
   "read": "You already know how to put the work in. This week isn’t about more effort. It’s about remembering why you want to cross that finish line, and letting the workday end, so both the running and your evenings start to feel like yours.",
   "how": [
     "Any moment today counts. There’s no set time.",
-    "Each day, check in on how much steam you have: plenty, some or low. Do the version that fits. All three count.",
+    "Each day, check in on what kind of day it is: good, okay or hard. Do the version that fits. All three count.",
     "Missed a day? No catch-up. Just pick up today’s step.",
-    "When you’re low on steam, pick one Ask and do its step. That counts as the day.",
+    "On an okay or hard day, pick one Ask and do its step. That counts as the day.",
     "Your gut has the final say. Skip or change any step, and note why."
   ],
   "cheer": {
@@ -86,10 +86,10 @@
       "7": "All seven. Take that in. You did this."
     },
     "checkin": {
-      "full": "Plenty of steam. Do the whole step, and enjoy it.",
-      "half": "Some steam. Do a shorter version. It still counts.",
-      "halfMany": "Some steam. Pick one Ask and do its step. That counts as the day.",
-      "rough": "Low steam. Just the small version today. It counts the same."
+      "full": "Good day. Do the whole step, and enjoy it.",
+      "half": "Okay day. Do a shorter version. It still counts.",
+      "halfMany": "Okay day. Pick one Ask and do its step. That counts as the day.",
+      "rough": "Hard day. Just the small version today. It counts the same."
     },
     "tomorrow": "That’s today, done. Rest easy.",
     "future": "Today’s step is the only one that matters.",

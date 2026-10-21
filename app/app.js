@@ -112,7 +112,7 @@
         '<div class="oh-sec">' +
           '<p class="oh-sec-k">Try this for 7 days</p>' +
           '<div class="oh-rep"><p class="oh-rep-t">' + esc(t.rep.title) + '</p><p class="oh-rep-w">' + esc(t.rep.what) + '</p>' +
-            '<p class="oh-rep-r"><b>Low on steam?</b> ' + esc(t.rep.rough) + '</p></div>' +
+            '<p class="oh-rep-r"><b>Hard day?</b> ' + esc(t.rep.rough) + '</p></div>' +
         '</div>' +
         '<div class="oh-sec oh-sec--q">' +
           '<p class="oh-sec-k">A question to sit with</p>' +
