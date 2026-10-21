@@ -10,7 +10,8 @@ button{font:inherit;color:inherit}
 
 .oh{position:relative;isolation:isolate;min-height:100svh;overflow:clip}
 /* the light: a cool slate-blue wash falling from the top right, and a faintly cooler floor, for depth */
-.oh{background:linear-gradient(180deg,var(--pearl) 0%,var(--pearl) 35%,#f4f6f9 100%)}
+/* plus the app's lavender haze on the left, and a floor that fades toward lavender, so quiz and app feel like one sky */
+.oh{background:radial-gradient(56rem 40rem at -8% 62%,rgba(198,182,238,.16),rgba(198,182,238,.06) 45%,rgba(198,182,238,0) 72%),linear-gradient(180deg,var(--pearl) 0%,var(--pearl) 35%,#f5f5fa 100%)}
 .oh::before{content:"";position:absolute;z-index:-1;width:70rem;height:56rem;right:-34rem;top:-30rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(62,108,171,.11),rgba(62,108,171,.045) 50%,rgba(62,108,171,0));pointer-events:none}
 /* the counter-light: a faint warmth rising from the bottom left, so the lighting holds both poles (delete this rule to undo) */
 .oh::after{content:"";position:absolute;z-index:-1;width:60rem;height:44rem;left:-30rem;bottom:-24rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(243,163,120,.075),rgba(243,163,120,.03) 50%,rgba(243,163,120,0));pointer-events:none}
