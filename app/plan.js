@@ -126,8 +126,7 @@
   function others(p) { return uniq(p.asks.map(function (a) { return a.otherHalf && a.otherHalf.toLowerCase(); })).join(' and '); }
   function focuses(p) { return uniq(p.asks.map(function (a) { return a.focus; })).join(' · '); }
   // the check-in, in words people feel: how much steam today. Underneath it's the method's full, half or rough day.
-  var STEAM = { full: 'Plenty', half: 'Some', rough: 'Running low' };
-  var STEAM_DO = { full: 'Full step', half: 'Shorter', rough: 'Small version' };
+  var STEAM = { full: 'Plenty', half: 'Some', rough: 'Low' };
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // a small, obviously tappable row of choices
@@ -354,10 +353,8 @@
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
-      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'How much steam today?' : 'How much steam did you have?') + '</p><p class="ci-s">Pick one. Your steps adjust to fit.</p>' +
-        '<div class="ci-o ci-o--steam" style="--n:3">' + ['full', 'half', 'rough'].map(function (o) {
-          return '<button type="button" data-checkin="' + o + '" data-ref="' + sel + '" aria-pressed="' + (ci === o) + '"><b>' + STEAM[o] + '</b><span>' + STEAM_DO[o] + '</span></button>';
-        }).join('') + '</div>' +
+      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'How much steam today?' : 'How much steam did you have?') + '</p><p class="ci-s">Your steps adjust to fit.</p>' +
+        chips('data-checkin', sel, [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], ci) +
         (ciLine ? '<p class="ci-a">' + esc(ciLine) + '</p>' : '') +
         (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'What’s going on today? Optional, and it helps shape your next week.') : '') + '</section>';
       html += '<div id="j-steps" class="pl-steps">' + d.steps.map(function (x) { return stepCard(d, x, many); }).join('') + '</div>';
@@ -450,14 +447,14 @@
     var order = Object.keys(ciCount).sort(function (a, b) { return ciCount[b] - ciCount[a]; });
     var most = ciCount[order[0]] > ciCount[order[1]] ? order[0] : null; // only "mostly" when one clearly leads
     var read = !ciCount.full && !ciCount.half && !ciCount.rough ? 'Check in each day, and your rhythm shows up here.'
-      : ciCount.rough >= 2 ? 'You ran low ' + ciCount.rough + ' times, and the small versions kept you going. That’s the method working.'
+      : ciCount.rough >= 2 ? 'You were low on steam ' + ciCount.rough + ' times, and the small versions kept you going. That’s the method working.'
       : most === 'full' ? 'Mostly plenty of steam. Keep the steps small so it stays easy.'
       : most === 'half' ? 'Mostly some steam. That’s real life, and it still counts.'
       : 'A mix of days so far. The plan bends with you, and every version counts.';
     function list(items, empty) { return items.length ? '<ul class="pt-l">' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p class="pt-e">' + esc(empty) + '</p>'; }
     return '<section class="fs"><p class="pl-k">Patterns</p><h2 class="fs-t">How you moved this week</h2></section>' +
-      '<section class="sc pt"><div class="pt-g" role="img" aria-label="Steam by day: ' + ciCount.full + ' plenty, ' + ciCount.half + ' some, ' + ciCount.rough + ' running low">' + cols + '</div>' +
-        '<p class="pt-leg"><span class="is-full"></span>Plenty ' + ciCount.full + '<span class="is-half"></span>Some ' + ciCount.half + '<span class="is-rough"></span>Running low ' + ciCount.rough + '</p>' +
+      '<section class="sc pt"><div class="pt-g" role="img" aria-label="Steam by day: ' + ciCount.full + ' plenty, ' + ciCount.half + ' some, ' + ciCount.rough + ' low">' + cols + '</div>' +
+        '<p class="pt-leg"><span class="is-full"></span>Plenty ' + ciCount.full + '<span class="is-half"></span>Some ' + ciCount.half + '<span class="is-rough"></span>Low ' + ciCount.rough + '</p>' +
         '<p class="pl-note">' + esc(read) + '</p></section>' +
       '<section class="fs fs--tight"><p class="pl-k">What came easy</p>' + list(easy, 'Mark how steps feel, and the easy ones collect here.') + '</section>' +
       '<section class="fs fs--tight"><p class="pl-k">What felt hard</p>' + list(hard, 'Nothing marked hard yet.') + '</section>' +

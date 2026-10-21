@@ -567,11 +567,3 @@ body[data-screen="plan"] .oh-badge{border:1px solid transparent;background:linea
 .td-over .lnk,.td-over .yu-link{justify-self:center}
 .pl [hidden]{display:none!important}
 
-/* the steam check-in: each choice says what it means, and what it does */
-.ci-o.ci-o--steam button{display:grid;align-content:center;gap:.125rem;min-height:3.5rem;padding:.5rem .375rem}
-.ci-o--steam b{font-size:.9375rem;font-weight:600;line-height:1.2}
-.ci-o--steam span{font-size:.75rem;font-weight:500;line-height:1.2;opacity:.75}
-.ci-o.ci-o--steam button{padding:.5rem .1875rem}
-.ci-o--steam b{font-size:.875rem;white-space:nowrap}
-.ci-o--steam span{white-space:nowrap}
-@media (max-width:359px){.ci-o--steam b,.ci-o--steam span{white-space:normal}}
