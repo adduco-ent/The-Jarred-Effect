@@ -22,6 +22,38 @@
     "On a half or rough day, pick one Ask and do its step. That counts as the day.",
     "Your gut has the final say. Skip or change any step, and note why."
   ],
+  "cheer": {
+    "planStart": "This week is yours. Seven small steps, and every one counts, including the rough-day versions.",
+    "days": {
+      "1": "Day one. Start small and let it be easy. Showing up is the whole win today.",
+      "2": "Day two is where most people quietly stop. You’re here. That already matters.",
+      "3": "Three days in, you’re building proof, and your gut is starting to notice.",
+      "4": "Halfway. Today is for honesty, not effort. Sit with the question, even if it’s uncomfortable.",
+      "5": "You’re past the middle. Whatever this week has looked like so far, today counts.",
+      "6": "One more step before the look back. Keep it light, and enjoy it if you can.",
+      "7": "Last day. Look at what you actually did. It’s probably more than you think."
+    },
+    "done": [
+      "Done. That’s a receipt your gut can read.",
+      "Kept. Small promises like that are how you start trusting yourself.",
+      "That counts. Quietly, it all adds up.",
+      "Marked. Notice how it feels to follow through.",
+      "Another one. You’re becoming someone who does this.",
+      "Rough-day version? It counts just the same."
+    ],
+    "missed": "Back at it. No catch-up needed. Today’s step is the only one that matters.",
+    "progress": {
+      "0": "Day one is waiting. Start with the smallest version.",
+      "1": "One down. That’s how every change starts.",
+      "2": "Two days. You’re building something.",
+      "3": "Three days of proof. Keep it small and keep going.",
+      "4": "Four days. More than half the week, kept.",
+      "5": "Five days. Your gut has real evidence now.",
+      "6": "Six days. One look back to go.",
+      "7": "All seven. Take that in. You did this."
+    },
+    "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week."
+  },
   "days": [
     {
       "day": 1,

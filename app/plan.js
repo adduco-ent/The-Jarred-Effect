@@ -12,6 +12,18 @@
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
   function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) { /* private window: ticks just won't stick */ } }
   var done = load();
+  var said = null; // the day just marked done, and the line that answers it
+
+  // Jarred's encouragement from the playbook (plan.cheer). It answers real moments: the day, a tap on Done,
+  // coming back after a missed day, and the week finished. Never hype, only what they actually did.
+  function cheer(p) { return p.cheer || {}; }
+  function doneLine(p, day) {
+    var c = cheer(p);
+    // marked a day while an earlier one is still open: that's a comeback, so say so, with no guilt
+    for (var k = 1; k < day; k++) if (!done[k]) { if (c.missed) return c.missed; break; }
+    var list = c.done || [];
+    return list.length ? list[(day - 1) % list.length] : '';
+  }
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -27,6 +39,9 @@
     var isDone = !!done[d.day];
     var head = '<div class="pl-day-h"><p class="pl-day-k">Day ' + d.day + (d.minutes ? '<span>' + d.minutes + ' min' + (d.steps && d.steps.length > 1 ? ' total' : '') + '</span>' : '') + '</p>' +
       '<button class="pl-done" type="button" data-day="' + d.day + '" aria-pressed="' + isDone + '">' + check + '<span>' + (isDone ? 'Done' : 'Mark done') + '</span></button></div>';
+    var c = cheer(plan);
+    var note = c.days && c.days[d.day] ? '<p class="pl-note">' + esc(c.days[d.day]) + '</p>' : '';
+    var reply = said && said.day === d.day && isDone && said.line ? '<p class="pl-said" role="status">' + esc(said.line) + '</p>' : '';
     var body;
     if (d.kind === 'question') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
@@ -50,7 +65,7 @@
           '<p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>' + more(s.help) + '</div>';
       }).join('');
     }
-    return '<li class="pl-day pl-day--' + d.kind + (isDone ? ' is-done' : '') + '" data-card="' + d.day + '">' + head + body + '</li>';
+    return '<li class="pl-day pl-day--' + d.kind + (isDone ? ' is-done' : '') + '" data-card="' + d.day + '">' + head + reply + note + body + '</li>';
   }
 
   // end a sentence with a period only if it doesn't already end in punctuation (so "p.m." stays "p.m.")
@@ -61,6 +76,8 @@
   function render(p) {
     var n = Object.keys(done).filter(function (k) { return done[k]; }).length;
     var dots = p.days.map(function (d) { return '<i class="' + (done[d.day] ? 'on' : '') + '"></i>'; }).join('');
+    var c = cheer(p);
+    var lift = c.progress && c.progress[n] ? '<p class="pl-cheer">' + esc(c.progress[n]) + '</p>' : '';
     root.innerHTML =
       '<section class="pl-card">' +
         '<p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your 7-day plan</p>' +
@@ -68,13 +85,13 @@
           ? '<p class="pl-ask">“' + esc(end(p.asks[0].text)) + '”</p>'
           : '<ol class="pl-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>') +
         '<p class="pl-meta">' + esc(p.typeName) + (others(p) ? ' · Building your other half: <b>' + esc(others(p)) + '</b>' : '') + '</p>' +
-        '<div class="pl-progress"><div class="pl-dots" aria-hidden="true">' + dots + '</div><span>' + n + ' of 7 done</span></div>' +
+        '<div class="pl-progress"><div class="pl-dots" aria-hidden="true">' + dots + '</div><span>' + n + ' of 7 done</span></div>' + lift +
       '</section>' +
       '<section class="pl-sec"><p class="pl-k">This week</p><p class="pl-read">' + esc(p.read) + '</p>' +
         (focuses(p) ? '<p class="pl-focus">From the playbook: <b>' + esc(focuses(p)) + '</b></p>' : '') + '</section>' +
       '<section class="pl-sec"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
-      '<section class="pl-sec pl-week"><p class="pl-k">Your week</p><ol class="pl-days">' + p.days.map(dayCard).join('') + '</ol></section>' +
-      '<section class="pl-end"><p>One week at a time. Next week’s plan builds on what you tell me this week.</p>' +
+      '<section class="pl-sec pl-week"><p class="pl-k">Your week</p>' + (c.planStart ? '<p class="pl-start">' + esc(c.planStart) + '</p>' : '') + '<ol class="pl-days">' + p.days.map(dayCard).join('') + '</ol></section>' +
+      '<section class="pl-end' + (n === 7 ? ' is-all' : '') + '"><p>' + esc(n === 7 && c.allDone ? c.allDone : 'One week at a time. Next week’s plan builds on what you tell me this week.') + '</p>' +
         '<img src="/assets/img/signature-jarred.png" width="104" height="50" alt="Jarred"></section>';
   }
 
@@ -83,7 +100,9 @@
     var b = e.target.closest('[data-day]');
     if (!b || !plan) return;
     var d = b.getAttribute('data-day');
-    done[d] = !done[d]; save(done); render(plan);
+    done[d] = !done[d]; save(done);
+    said = done[d] ? { day: +d, line: doneLine(plan, +d) } : null;
+    render(plan);
     var card = root.querySelector('[data-card="' + d + '"] .pl-done'); if (card) card.focus({ preventScroll: true });
   });
 
