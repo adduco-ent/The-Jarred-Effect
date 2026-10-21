@@ -25,6 +25,14 @@
 .tsp--center .tje-kick{justify-content:center}
 .tsp--center .tje-lead{margin-left:auto;margin-right:auto}
 .tsp--center .tsp-actions{justify-content:center}
+/* reading balance: the headline breaks into two even lines, the lead stays a comfortable measure, and the two
+   buttons are a matched pair (same height and width, an arrow each) so neither one tips the row */
+.tsp--center .tsp-hero{max-width:44rem}
+.tsp--center .tsp-h1 .tje-it{display:block;margin-top:.125em}
+.tsp--center .tje-lead{max-width:29rem;text-wrap:balance}
+.tsp--center .tsp-actions{gap:.875rem;margin-top:2.5rem}
+.tsp--center .tsp-actions>a{justify-content:center;gap:.5rem;min-width:13.5rem;height:3.5rem;min-height:3.5rem;padding:0 1.5rem;font-size:1rem;box-sizing:border-box}
+@media (max-width:767px){.tsp--center .tsp-actions{flex-direction:column-reverse;align-items:stretch;width:100%;max-width:20rem;margin-left:auto;margin-right:auto}.tsp--center .tsp-actions>a{min-width:0;width:100%}}
 .tsp-orb{width:4rem;height:4rem;margin:0 auto 1.875rem;box-shadow:0 0 0 .5rem var(--pearl),0 0 0 .5625rem rgba(28,24,18,.12)}
 
 /* long-form text (privacy) */
