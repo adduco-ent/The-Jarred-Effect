@@ -601,3 +601,7 @@ blockquote.yu-read::before{content:"";position:absolute;left:0;top:.25rem;bottom
 .ds-leg svg{width:.875rem;height:.875rem}
 
 .pl-done[aria-pressed="true"]:hover{color:var(--cream);transform:translateY(-1px)}
+/* the add row lines up with the list above: the + sits in the badge column at the badge's size, and the label
+   starts where the Ask text starts. The button reaches slightly past the list's edges to make room for its padding. */
+.fs .yu-add{width:calc(100% + 1rem);margin:.625rem -.5rem 0;padding:.5rem .875rem .5rem calc(.5rem - 1px);gap:.875rem;min-height:2.875rem}
+.fs .yu-add .yu-plus{width:1.75rem;height:1.75rem;font-size:1.0625rem}
