@@ -448,6 +448,9 @@
     h.classList.remove('on');
     t._saved = setTimeout(function () { h.classList.add('on'); clearTimeout(h._off); h._off = setTimeout(function () { h.classList.remove('on'); }, 1800); }, 700);
   }
+  // re-fit fields when the screen changes width (rotating a phone, resizing a window)
+  var regrow;
+  window.addEventListener('resize', function () { clearTimeout(regrow); regrow = setTimeout(function () { root.querySelectorAll('.fb-t').forEach(grow); }, 120); });
   function refocus(q) { var el = root.querySelector(q); if (el) el.focus({ preventScroll: true }); }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
