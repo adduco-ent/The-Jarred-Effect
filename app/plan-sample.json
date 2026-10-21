@@ -1,0 +1,90 @@
+{
+  "playbook": 1,
+  "type": "achiever",
+  "typeName": "The Achiever",
+  "ask": "Run a 5K by spring.",
+  "otherHalf": "Desire",
+  "focus": "Building a new habit",
+  "read": "You already know how to put the work in. This week isn’t about more effort. It’s about remembering why you want to cross that finish line, so the running feels like yours instead of one more thing to get through.",
+  "how": [
+    "Any moment today counts. There’s no set time.",
+    "Each day, check in: full, half or rough. Do the version that fits. All three count.",
+    "Missed a day? No catch-up. Just pick up today’s step.",
+    "Your gut has the final say. Skip or change any step, and note why."
+  ],
+  "days": [
+    {
+      "day": 1,
+      "kind": "step",
+      "id": "des-1",
+      "title": "Why, three times",
+      "minutes": 5,
+      "what": "Write why you want your Ask. Then ask “why?” about your answer, twice more.",
+      "example": "Run a 5K → feel strong in my body again → keep up with my kids on Saturdays.",
+      "rough": "Just the first why."
+    },
+    {
+      "day": 2,
+      "kind": "step",
+      "id": "dis-1",
+      "title": "One tiny step",
+      "minutes": 10,
+      "what": "Do the smallest daily step toward your Ask, whenever today allows.",
+      "example": "Walk-run for ten minutes: one minute jogging, two minutes walking.",
+      "rough": "Two minutes. Open it, start it, stop."
+    },
+    {
+      "day": 3,
+      "kind": "step",
+      "id": "hab-2",
+      "title": "Anchor it",
+      "minutes": 3,
+      "what": "Attach your step to something you already do every day, instead of a set time.",
+      "example": "Right after school drop-off, I walk-run before I go home.",
+      "rough": "Pick any anchor for today. Try a better one tomorrow."
+    },
+    {
+      "day": 4,
+      "kind": "question",
+      "title": "A question to sit with",
+      "name": "The Payoff",
+      "ask": "What am I getting out of not having it yet?",
+      "hint": "Sometimes staying busy feels safer than getting there.",
+      "followUps": [
+        "What does staying here protect me from?",
+        "Who would I have to become to let that go?"
+      ]
+    },
+    {
+      "day": 5,
+      "kind": "step",
+      "id": "sig-1",
+      "title": "Live it for two minutes",
+      "minutes": 2,
+      "what": "Close your eyes and picture an ordinary moment after your Ask is real, in first person. Notice how it feels in your body.",
+      "example": "Crossing the finish line in April, legs heavy, someone handing me water, smiling for no reason.",
+      "rough": "Thirty seconds is enough."
+    },
+    {
+      "day": 6,
+      "kind": "step",
+      "id": "acc-5",
+      "title": "Rest on purpose",
+      "minutes": 20,
+      "what": "Schedule real rest and keep it like a meeting.",
+      "example": "Twenty minutes on a slow walk with no watch and no pace. Just the walk.",
+      "rough": "Ten minutes."
+    },
+    {
+      "day": 7,
+      "kind": "lookback",
+      "title": "Look back",
+      "minutes": 5,
+      "prompts": [
+        "What did I actually do this week?",
+        "What changed, even a little?",
+        "What do I keep for next week, and what do I change?"
+      ]
+    }
+  ]
+}
