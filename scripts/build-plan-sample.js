@@ -5,7 +5,7 @@ const path = require('path');
 const { assemble } = require('../lib/plan');
 
 const plan = assemble({
-  type: 'achiever', typeName: 'The Achiever',
+  type: 'achiever', typeName: 'The Achiever', r: 'bbaoobaooaoa',
   asks: [
     { text: 'Run a 5K by spring.', otherHalf: 'desire', protocol: 'new-habit' },
     { text: 'Stop working past 7 p.m.', otherHalf: 'trust', protocol: 'unlearn' }
