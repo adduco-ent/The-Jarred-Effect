@@ -1,7 +1,7 @@
 /* The Other Half app, free layer. Everyone who takes the quiz and asks for a plan gets in.
    Today: one day at a time. A daily check-in (full, half or rough), then one card per Ask's step, and a strip of
      the seven days. Days open by the calendar from the day the plan is first opened; future days show a preview.
-   Progress: days kept, steps, minutes, check-ins, each Ask's progress, the week at a glance, and their own words.
+   Progress: days done, steps, minutes, check-ins, each Ask's progress, the week at a glance, and their own words.
    Playbook, patterns over time, week 2 and adding more Asks are shown but locked until they join.
 
    Feedback, in their own words, is asked for at the moment it's true, never as a form:
@@ -148,7 +148,7 @@
 
   function doneBtn(k, label) {
     var isDone = !!done[k];
-    return '<button class="pl-done" type="button" data-done="' + k + '" aria-pressed="' + isDone + '"' + (label ? ' aria-label="' + esc((isDone ? 'Done: ' : 'Mark done: ') + label) + '"' : '') + '>' + check + '<span>' + (isDone ? 'Done' : 'Mark done') + '</span></button>';
+    return '<button class="pl-done" type="button" data-done="' + k + '" aria-pressed="' + isDone + '"' + (label ? ' aria-label="' + esc((isDone ? 'Done: ' : 'Mark done: ') + label) + '"' : '') + '>' + check + '<span>' + (isDone ? 'Done · Undo' : 'Mark done') + '</span></button>';
   }
   function reply(k) { return said && said.key === k && done[k] && said.line ? '<p class="pl-said" role="status">' + esc(said.line) + '</p>' : ''; }
 
@@ -170,12 +170,12 @@
     }
     if (h.story) out += det('story', 'See it in real life', '<p class="pl-story">' + esc(h.story) + '</p><p class="pl-story-k">A made-up example, but it’s how this usually goes.</p>', open);
     if (h.why || h.stuck) {
-      out += det('why', 'Why it helps, and if you get stuck',
-        (h.why ? '<div><p class="pl-more-k">Why it helps</p><p>' + esc(h.why) + '</p></div>' : '') +
+      out += det('why', 'Why it works',
+        (h.why ? '<div><p class="pl-more-k">Why it works</p><p>' + esc(h.why) + '</p></div>' : '') +
         (h.stuck ? '<div><p class="pl-more-k">If you get stuck</p><p>' + esc(h.stuck) + '</p></div>' : ''), false);
     }
     if (a.deeper) {
-      out += det('deep', 'Go deeper: ' + esc(a.deeper.name),
+      out += det('deep', 'The play behind this step: ' + esc(a.deeper.name),
         '<p>' + esc(a.deeper.when) + '</p><ol>' + a.deeper.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' +
         (a.deeper.safety ? '<p class="pl-safe">' + esc(a.deeper.safety) + '</p>' : '') +
         '<a class="yu-link" href="#playbook">The whole playbook<span aria-hidden="true">→</span></a>', false);
@@ -224,7 +224,7 @@
       (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
       (rough
         ? '<div class="pl-v"><span>Your small version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
-        : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Running low?</b> ' + esc(s.rough) + '</p>') +
+        : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Low on steam?</b> ' + esc(s.rough) + '</p>') +
       (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
       reply(k) + afterStep(k, isDone) + layers(d, s) + '</article>';
   }
@@ -234,7 +234,7 @@
     var k = key(d), body;
     if (d.kind === 'question') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
-        '<p class="pl-q">' + esc(d.ask) + '</p><p class="pl-q-by">— ' + esc(d.name) + '</p>' +
+        '<p class="pl-q">' + esc(d.ask) + '</p>' +
         (d.hint ? '<p class="pl-text">' + esc(d.hint) + ' Answer it honestly, not nicely.</p>' : '') +
         (d.forMany ? '<p class="pl-text">Use it on the Ask that feels heaviest right now.</p>' : '') +
         (d.followUps && d.followUps.length ? '<div class="pl-sub"><span>If you want to go deeper</span>' + d.followUps.map(function (f) { return '<p>' + esc(f) + '</p>'; }).join('') + '</div>' : '') +
@@ -250,7 +250,7 @@
   }
 
   // ---- day 7: shape next week. Their answers are the input for week 2.
-  var NEXT = [['keep', 'Keep going'], ['change', 'Change it'], ['done', 'Done with it'], ['pause', 'Pause it']];
+  var NEXT = [['keep', 'Keep going'], ['change', 'Change it'], ['done', 'Reached it'], ['pause', 'Pause it']];
   var NEXT_HINT = { keep: 'Anything to add?', change: 'What would make it fit better?', done: 'What did it take? Say it proudly.', pause: 'What needs to happen first?' };
   function nextWeek(p) {
     var n = fb.next['1'] || {}, asks = n.asks || [];
@@ -279,13 +279,18 @@
         '<small>' + weekday(d.day, true) + '</small><b>' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</b></button>';
     }).join('') + '</div>';
   }
+  function legend(p) {
+    var hasKept = p.days.some(kept), hasGut = p.days.some(function (d) { return dayState(d) === 'gut'; });
+    if (!hasKept && !hasGut) return '';
+    return '<p class="ds-leg">' + (hasKept ? '<span>' + check + 'done</span>' : '') + (hasGut ? '<span>' + skipIcon + 'gut call</span>' : '') + '</p>';
+  }
   function planCard(p) {
     return '<section class="pl-card pl-card--app">' +
       '<p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
       (p.asks.length === 1
         ? '<p class="pl-ask">“' + esc(end(p.asks[0].text)) + '”</p>'
         : '<ol class="pl-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>') +
-      strip() + '</section>';
+      strip() + legend(p) + '</section>';
   }
 
   // ---- what joining opens, said plainly. Membership isn't open yet, so the button says what happens.
@@ -332,7 +337,7 @@
       var steps3 = [
         ['ci', 'Check in', !!st.checkin[sel]],
         ['steps', many ? 'Do a step' : 'Do your step', kept(d)],
-        [kept(d) ? 'rc' : 'steps', 'Your receipt', !!((fb.receipt[sel] || {}).text || '').trim()]
+        [kept(d) ? 'rc' : 'steps', 'Write a line', !!((fb.receipt[sel] || {}).text || '').trim()]
       ];
       var cur = -1; steps3.forEach(function (x, i) { if (cur < 0 && !x[2]) cur = i; });
       html += '<ol class="fl" aria-label="Today, in three steps">' + steps3.map(function (x, i) {
@@ -342,6 +347,7 @@
     }
     if (!st.guide && d.kind === 'step') {
       html += '<section class="gd"><p class="pl-k">Welcome to your week</p><h2 class="gd-t">Here’s how this works</h2>' +
+        '<p class="gd-x">Your Ask is the thing you want most right now.</p>' +
         '<ol class="gd-l"><li><b>One day at a time.</b> Today’s step is the only one that matters.</li>' +
         '<li><b>Check in, do your step, then say how it went.</b> That’s the whole loop.</li>' +
         '<li><b>Your words shape next week.</b> Nothing is graded.</li></ol>' +
@@ -364,7 +370,7 @@
 
     // the day kept: their receipt, in one line
     if (kept(d) && d.kind === 'step') {
-      html += '<section class="rc" id="j-rc"><p class="fb-q">Your receipt</p>' + words('receipt', d.day, 'text', 'One line on what you actually did today.', 2) + '</section>';
+      html += '<section class="rc" id="j-rc"><p class="fb-q">One line on today</p>' + words('receipt', d.day, 'text', 'One line on what you actually did today.', 2) + '</section>';
     }
     // once, on day 3: is the app easy to use?
     if (sel === 3 && kept(d)) {
@@ -402,7 +408,7 @@
   function nextCard() {
     var n = fb.next['1'] || {};
     var asks = plan.asks.map(function (a, i) { return [a, (n.asks || [])[i] || {}]; });
-    var LABEL = { keep: 'Keep going', change: 'Change it', done: 'Done with it', pause: 'Pause it' };
+    var LABEL = { keep: 'Keep going', change: 'Change it', done: 'Reached it', pause: 'Pause it' };
     var extra = (st.extraAsks || []).filter(function (x) { return x.status !== 'removed'; });
     if (!n.sent) {
       return '<section class="sc nx-card"><p class="pl-k">Week 2</p><h2 class="lk-t">Built from how this week goes</h2>' +
@@ -505,11 +511,11 @@
     }).join('');
     var felt = feel.easy + feel.okay + feel.hard + guts;
     return screenHead('Week one', 'Progress', T <= 7 ? 'Day ' + Math.min(T, 7) + ' of 7 · ' + weekday(Math.min(T, 7)) : 'All seven days are open to look back on.') +
-      '<section class="sc pg-hero"><p class="pg-n"><b>' + n + '</b> of 7 days kept</p>' +
+      '<section class="sc pg-hero"><p class="pg-n"><b>' + n + '</b> of 7 days done</p>' +
         '<div class="pg-bar" aria-hidden="true">' + bar + '</div>' + (c.progress && c.progress[n] ? '<p class="pl-note">' + esc(c.progress[n]) + '</p>' : '') + '</section>' +
-      '<section class="pg-stats"><div><b>' + steps + '</b><span>steps done</span></div><div><b>' + mins + '</b><span>minutes in</span></div><div><b>' + cis + '</b><span>check-ins</span></div></section>' +
+      '<section class="pg-stats"><div><b>' + steps + '</b><span>steps done</span></div><div><b>' + mins + '</b><span>minutes spent</span></div><div><b>' + cis + '</b><span>check-ins</span></div></section>' +
       (felt ? '<section class="sc"><p class="pl-k">How it felt</p><div class="pg-feel">' +
-        [['Easy', feel.easy], ['Okay', feel.okay], ['Hard', feel.hard], ['Gut calls', guts]].map(function (x) { return '<span' + (x[1] ? '' : ' class="is-zero"') + '><b>' + x[1] + '</b>' + x[0] + '</span>'; }).join('') + '</div></section>' : '') +
+        [['Easy', feel.easy], ['Okay', feel.okay], ['Hard', feel.hard], ['Skipped or changed', guts]].map(function (x) { return '<span' + (x[1] ? '' : ' class="is-zero"') + '><b>' + x[1] + '</b>' + x[0] + '</span>'; }).join('') + '</div></section>' : '') +
       '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
       '<section class="sc-plain"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
       (theirs ? '<section class="sc"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
@@ -536,33 +542,33 @@
       var rest = protos.filter(function (x) { return my.indexOf(x.id) < 0; });
       return screenHead('The method', 'Playbook', 'Everything behind your plan, in plain words.') +
         (myRows ? '<section class="fs"><p class="pl-k">In your plan</p><ul class="pb-rows">' + myRows + '</ul><p class="pb-x">Free with your plan. Tap one to read it in full.</p></section>' : '') +
-        '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">All ' + protos.length + ' protocols</h2>' +
+        '<section class="lk"><p class="lk-k">' + lock + 'With the full app</p><h2 class="lk-t">All ' + protos.length + ' plays</h2>' +
           '<p class="lk-x">From building a habit to keeping your power. Read any of it, any time, and pull steps into your week.</p>' +
           '<div class="lk-peek" aria-hidden="true"><ul class="pb-rows pb-rows--locked">' + rest.slice(0, 6).map(function (x) { return '<li><span class="pb-i">' + lock + '</span><span class="pb-n">' + esc(x.name) + '</span></li>'; }).join('') + '</ul>' +
           (rest.length > 6 ? '<p class="lk-more">and ' + (rest.length - 6) + ' more</p>' : '') + '</div>' +
           unlock('the playbook') + '</section>';
     }
-    if (!lib) return screenHead('The method', 'Playbook', 'Every protocol behind your plan. Read any of it, any time.') + waiting('Opening the library…');
+    if (!lib) return screenHead('The method', 'Playbook', 'Every play behind your plan. Read any of it, any time.') + waiting('Opening the library…');
     var paths = lib.pathways.map(function (w) {
       return '<li class="pw"><p class="pw-n">' + esc(w.name) + '</p><p class="pw-f">' + esc(w.for) + '</p><div class="pw-c">' +
         w.path.map(function (id, i) { var x = byId[id]; return x ? '<a href="#playbook/' + esc(id) + '"><i>' + (i + 1) + '</i>' + esc(x.name) + '</a>' : ''; }).join('') + '</div></li>';
     }).join('');
-    return screenHead('The method', 'Playbook', 'Every protocol behind your plan. Read any of it, any time.') +
+    return screenHead('The method', 'Playbook', 'Every play behind your plan. Read any of it, any time.') +
       '<div class="pb-s"><input type="search" id="pb-q" class="fb-t" placeholder="Search the playbook" aria-label="Search the playbook" autocomplete="off"></div>' +
       (myRows ? '<section class="fs"><p class="pl-k">In your plan</p><ul class="pb-rows">' + myRows + '</ul></section>' : '') +
-      '<section class="fs pb-paths"><p class="pl-k">Paths</p><p class="pb-x pb-x--top">Protocols that work best in order, for a kind of stuck.</p><ul class="pw-l">' + paths + '</ul></section>' +
-      '<section class="fs"><p class="pl-k">All protocols</p><ul class="pb-rows" id="pb-all">' + protos.map(function (x) { return protoRow(x, my.indexOf(x.id) >= 0); }).join('') + '</ul>' +
+      '<section class="fs pb-paths"><p class="pl-k">Start here</p><p class="pb-x pb-x--top">Plays that work best in order, by what you’re stuck on.</p><ul class="pw-l">' + paths + '</ul></section>' +
+      '<section class="fs"><p class="pl-k">All plays</p><ul class="pb-rows" id="pb-all">' + protos.map(function (x) { return protoRow(x, my.indexOf(x.id) >= 0); }).join('') + '</ul>' +
         '<p class="pt-e" id="pb-none" hidden>Nothing matches. Try another word.</p></section>';
   }
   function protocolView(p, id) {
     var back = '<a class="pb-back" href="#playbook"><span aria-hidden="true">‹</span>Playbook</a>';
-    if (!lib) return back + waiting('Opening this protocol…');
+    if (!lib) return back + waiting('Opening this play…');
     var x = lib.protocols.filter(function (y) { return y.id === id; })[0];
     if (!x) return back + '<div class="wait"><p><b>That one isn’t in the playbook.</b></p><a class="yu-link" href="#playbook">Back to the playbook<span aria-hidden="true">→</span></a></div>';
     var isMine = mine(p).indexOf(id) >= 0, open = paid() || isMine;
-    var html = back + '<header class="td-head sc-head"><p class="pl-k">' + (isMine ? 'In your plan' : 'Protocol') + '</p><h1 class="td-h pb-h">' + esc(x.name) + '</h1></header>' +
+    var html = back + '<header class="td-head sc-head"><p class="pl-k">' + (isMine ? 'In your plan' : 'Play') + '</p><h1 class="td-h pb-h">' + esc(x.name) + '</h1></header>' +
       '<p class="pb-when">' + esc(x.when) + '</p>';
-    if (!open) return html + fullApp('Read this protocol in full', [['The whole method', 'How it works, step by step.'], ['Signs it fits, and signs it’s working', 'So you know where you are.'], ['Where to go next', 'The protocols that follow it.']]);
+    if (!open) return html + fullApp('Read this play in full', [['The whole method', 'How it works, step by step.'], ['Signs it fits, and signs it’s working', 'So you know where you are.'], ['Where to go next', 'The plays that follow it.']]);
     function lst(a) { return '<ul class="pt-l">' + a.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>'; }
     var byId = {}; lib.protocols.forEach(function (y) { byId[y.id] = y; });
     return html +
@@ -590,7 +596,7 @@
     return screenHead('Your profile', 'You', '') +
       '<section class="pl-card pl-card--app yu-card"><p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your type</p>' +
         '<p class="yu-type">' + esc(p.typeName) + '</p>' +
-        (others(p) ? '<p class="pl-meta">Your other half: <b>' + esc(others(p)) + '</b></p>' : '') +
+        (others(p) ? '<p class="pl-meta">What you’re building: <b>' + esc(others(p)) + '</b></p>' : '') +
         '<a class="yu-link" href="' + link + '">Read your full result<span aria-hidden="true">→</span></a></section>' +
       '<section class="fs"><p class="pl-k">' + (total > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
         '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') +
@@ -606,9 +612,9 @@
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
         '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
         (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
-      (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every protocol, your patterns, a new plan every week, and as many Asks as you want.</p></section>'
+      (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every play, your patterns, a new plan every week, and as many Asks as you want.</p></section>'
         : fullApp('Your plan is free. There’s more.', [
-          ['The whole playbook', 'All the protocols, any time.'],
+          ['The whole playbook', 'All the plays, any time.'],
           ['Your patterns', 'What works for you, week over week.'],
           ['A new plan every week', 'Built from your own words.'],
           ['More Asks', 'As many as you want, at your pace.']

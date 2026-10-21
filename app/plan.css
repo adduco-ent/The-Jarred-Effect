@@ -593,3 +593,9 @@ blockquote.yu-read::before{content:"";position:absolute;left:0;top:.25rem;bottom
 .send-btn:hover{background:linear-gradient(180deg,#4b78b6 0%,#375f99 100%);box-shadow:var(--lift-act)}
 @media (prefers-reduced-motion:reduce){.yu-add,.yu-from a{transition:none}}
 .pl>.fs+.lk,.pl>.fs+.sc{margin-top:2rem}
+
+/* the Ask explainer in the welcome, and the week strip's small legend */
+.gd-x{margin:-.375rem 0 1rem;font-family:var(--serif);font-size:1rem;line-height:1.5;color:var(--ink)}
+.ds-leg{display:flex;gap:1rem;margin:.75rem 0 0;font-size:.75rem;color:rgba(239,231,218,.62)}
+.ds-leg span{display:inline-flex;align-items:center;gap:.3125rem}
+.ds-leg svg{width:.875rem;height:.875rem}
