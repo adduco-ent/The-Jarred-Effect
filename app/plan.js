@@ -125,6 +125,9 @@
   function uniq(list) { return list.filter(function (x, i) { return x && list.indexOf(x) === i; }); }
   function others(p) { return uniq(p.asks.map(function (a) { return a.otherHalf && a.otherHalf.toLowerCase(); })).join(' and '); }
   function focuses(p) { return uniq(p.asks.map(function (a) { return a.focus; })).join(' · '); }
+  // the check-in, in words people feel: how much steam today. Underneath it's the method's full, half or rough day.
+  var STEAM = { full: 'Plenty', half: 'Some', rough: 'Running low' };
+  var STEAM_DO = { full: 'Full step', half: 'Shorter', rough: 'Small version' };
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // a small, obviously tappable row of choices
@@ -221,8 +224,8 @@
       '<div class="pl-day-h">' + head + (isDone ? doneBtn(k, many ? plan.asks[s.ask].text : '') : '') + '</div>' +
       (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
       (rough
-        ? '<div class="pl-v"><span>Your rough-day version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
-        : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Rough day?</b> ' + esc(s.rough) + '</p>') +
+        ? '<div class="pl-v"><span>Your small version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
+        : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Running low?</b> ' + esc(s.rough) + '</p>') +
       (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
       reply(k) + afterStep(k, isDone) + layers(d, s) + '</article>';
   }
@@ -351,8 +354,10 @@
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
-      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'How’s today?' : 'How was that day?') + '</p><p class="ci-s">Your steps adjust to fit.</p>' +
-        chips('data-checkin', sel, [['full', 'Full'], ['half', 'Half'], ['rough', 'Rough']], ci) +
+      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'How much steam today?' : 'How much steam did you have?') + '</p><p class="ci-s">Pick one. Your steps adjust to fit.</p>' +
+        '<div class="ci-o ci-o--steam" style="--n:3">' + ['full', 'half', 'rough'].map(function (o) {
+          return '<button type="button" data-checkin="' + o + '" data-ref="' + sel + '" aria-pressed="' + (ci === o) + '"><b>' + STEAM[o] + '</b><span>' + STEAM_DO[o] + '</span></button>';
+        }).join('') + '</div>' +
         (ciLine ? '<p class="ci-a">' + esc(ciLine) + '</p>' : '') +
         (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'What’s going on today? Optional, and it helps shape your next week.') : '') + '</section>';
       html += '<div id="j-steps" class="pl-steps">' + d.steps.map(function (x) { return stepCard(d, x, many); }).join('') + '</div>';
@@ -445,14 +450,14 @@
     var order = Object.keys(ciCount).sort(function (a, b) { return ciCount[b] - ciCount[a]; });
     var most = ciCount[order[0]] > ciCount[order[1]] ? order[0] : null; // only "mostly" when one clearly leads
     var read = !ciCount.full && !ciCount.half && !ciCount.rough ? 'Check in each day, and your rhythm shows up here.'
-      : ciCount.rough >= 2 ? 'Rough days showed up ' + ciCount.rough + ' times, and the small versions kept you going. That’s the method working.'
-      : most === 'full' ? 'Mostly full days. Good steam. Keep the steps small so it stays easy.'
-      : most === 'half' ? 'Mostly half days. That’s real life, and it still counts.'
+      : ciCount.rough >= 2 ? 'You ran low ' + ciCount.rough + ' times, and the small versions kept you going. That’s the method working.'
+      : most === 'full' ? 'Mostly plenty of steam. Keep the steps small so it stays easy.'
+      : most === 'half' ? 'Mostly some steam. That’s real life, and it still counts.'
       : 'A mix of days so far. The plan bends with you, and every version counts.';
     function list(items, empty) { return items.length ? '<ul class="pt-l">' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p class="pt-e">' + esc(empty) + '</p>'; }
     return '<section class="fs"><p class="pl-k">Patterns</p><h2 class="fs-t">How you moved this week</h2></section>' +
-      '<section class="sc pt"><div class="pt-g" role="img" aria-label="Check-ins by day: ' + ciCount.full + ' full, ' + ciCount.half + ' half, ' + ciCount.rough + ' rough">' + cols + '</div>' +
-        '<p class="pt-leg"><span class="is-full"></span>Full ' + ciCount.full + '<span class="is-half"></span>Half ' + ciCount.half + '<span class="is-rough"></span>Rough ' + ciCount.rough + '</p>' +
+      '<section class="sc pt"><div class="pt-g" role="img" aria-label="Steam by day: ' + ciCount.full + ' plenty, ' + ciCount.half + ' some, ' + ciCount.rough + ' running low">' + cols + '</div>' +
+        '<p class="pt-leg"><span class="is-full"></span>Plenty ' + ciCount.full + '<span class="is-half"></span>Some ' + ciCount.half + '<span class="is-rough"></span>Running low ' + ciCount.rough + '</p>' +
         '<p class="pl-note">' + esc(read) + '</p></section>' +
       '<section class="fs fs--tight"><p class="pl-k">What came easy</p>' + list(easy, 'Mark how steps feel, and the easy ones collect here.') + '</section>' +
       '<section class="fs fs--tight"><p class="pl-k">What felt hard</p>' + list(hard, 'Nothing marked hard yet.') + '</section>' +
@@ -492,7 +497,7 @@
       return '<li><button type="button" class="pg-row is-' + s + '" data-view-day="' + d.day + '">' +
         '<span class="pg-dot">' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</span>' +
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
-        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + cap(ci) + '</span>' : '<span></span>') + '</button></li>';
+        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '</button></li>';
     }).join('');
     var theirs = p.days.map(function (d) {
       var bits = [];
