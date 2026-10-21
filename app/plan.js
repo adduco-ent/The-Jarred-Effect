@@ -309,7 +309,7 @@
     var html = '';
     if (T > 7) {
       html += '<section class="td-over"><p class="pl-k">Week one</p><h1 class="td-h">Your week is done.</h1>' +
-        '<p class="td-x">' + esc(c.allDone || '') + '</p>' +
+        '<p class="td-x">' + esc(keptCount(p) === 7 || !c.weekDone ? c.allDone || '' : c.weekDone.replace('{n}', keptCount(p))) + '</p>' +
         (fb.next['1'] && fb.next['1'].sent ? '<a class="yu-link" href="#progress">See your progress<span aria-hidden="true">→</span></a>' : '<button type="button" class="lnk" data-view-day="7">Shape next week →</button>') + '</section>';
     }
     html += planCard(p);
@@ -393,6 +393,7 @@
       '<ul class="lk-rows">' + rows.map(function (r) { return '<li><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></li>'; }).join('') + '</ul>' +
       unlock('the full app') + '</section>';
   }
+  function waiting(text) { return '<div class="wait" role="status"><span class="wait-o" aria-hidden="true"></span><p>' + esc(text) + '</p></div>'; }
   function mine(p) { return uniq(p.asks.map(function (a) { return a.protocol; })); }
 
   // ---- next week (full app): what week 2 is being built from, in their words
@@ -539,7 +540,7 @@
           (rest.length > 6 ? '<p class="lk-more">and ' + (rest.length - 6) + ' more</p>' : '') + '</div>' +
           unlock('the playbook') + '</section>';
     }
-    if (!lib) return screenHead('The method', 'Playbook', 'Opening the library…');
+    if (!lib) return screenHead('The method', 'Playbook', 'Every protocol behind your plan. Read any of it, any time.') + waiting('Opening the library…');
     var paths = lib.pathways.map(function (w) {
       return '<li class="pw"><p class="pw-n">' + esc(w.name) + '</p><p class="pw-f">' + esc(w.for) + '</p><div class="pw-c">' +
         w.path.map(function (id, i) { var x = byId[id]; return x ? '<a href="#playbook/' + esc(id) + '"><i>' + (i + 1) + '</i>' + esc(x.name) + '</a>' : ''; }).join('') + '</div></li>';
@@ -553,9 +554,9 @@
   }
   function protocolView(p, id) {
     var back = '<a class="pb-back" href="#playbook"><span aria-hidden="true">‹</span>Playbook</a>';
-    if (!lib) return back + screenHead('Protocol', 'Opening…', '');
+    if (!lib) return back + waiting('Opening this protocol…');
     var x = lib.protocols.filter(function (y) { return y.id === id; })[0];
-    if (!x) return back + screenHead('Protocol', 'Not found', 'Pick one from the playbook.');
+    if (!x) return back + '<div class="wait"><p><b>That one isn’t in the playbook.</b></p><a class="yu-link" href="#playbook">Back to the playbook<span aria-hidden="true">→</span></a></div>';
     var isMine = mine(p).indexOf(id) >= 0, open = paid() || isMine;
     var html = back + '<header class="td-head sc-head"><p class="pl-k">' + (isMine ? 'In your plan' : 'Protocol') + '</p><h1 class="td-h pb-h">' + esc(x.name) + '</h1></header>' +
       '<p class="pb-when">' + esc(x.when) + '</p>';
