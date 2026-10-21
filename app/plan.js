@@ -111,7 +111,7 @@
 
   // a small, obviously tappable row of choices
   function chips(attr, ref, options, current, cls) {
-    return '<div class="ci-o' + (cls ? ' ' + cls : '') + '">' + options.map(function (o) {
+    return '<div class="ci-o' + (cls ? ' ' + cls : '') + '" style="--n:' + options.length + '">' + options.map(function (o) {
       return '<button type="button" ' + attr + '="' + o[0] + '" data-ref="' + ref + '" aria-pressed="' + (current === o[0]) + '">' + esc(o[1]) + '</button>';
     }).join('') + '</div>';
   }
@@ -179,7 +179,7 @@
     }
     if (skipOpen[k]) {
       return '<div class="fb fb--gut"><p class="fb-q">Your gut has the final say. What fits today?</p>' +
-        chips('data-skip', k, [['change', 'Change it'], ['skip', 'Skip it today']], null) +
+        chips('data-skip', k, [['change', 'Change it'], ['skip', 'Skip it today']], null, 'ci-o--split') +
         '<button type="button" class="lnk" data-skipopen="' + k + '">Never mind</button></div>';
     }
     return '<button type="button" class="lnk lnk--gut" data-skipopen="' + k + '">This step doesn’t fit today</button>';
