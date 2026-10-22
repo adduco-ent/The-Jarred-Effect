@@ -1261,10 +1261,13 @@
     var arrowIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     // the week so far: a dot per day, filled when it's done, ringed for today
     var week = p.days.map(function (x, n) { var s = dayState(x); return '<i class="' + (s === 'kept' ? 'is-done' : x.day === T ? 'is-now' : '') + '" style="--i:' + n + '"></i>'; }).join('');
+    // a few motes of light drifting up through the sky (fixed, not random, so every visit feels the same)
+    var motes = '';
+    for (var m = 0; m < 9; m++) motes += '<i class="wl-mote" style="--x:' + ((m * 37 + 11) % 92 + 4) + '%;--s:' + (2 + (m * 7) % 3) + 'px;--t:' + (13 + (m * 5) % 9) + 's;--dl:-' + ((m * 3.7) % 13).toFixed(1) + 's"></i>';
     // the entrance plays once; picking an answer re-renders without replaying it
     return '<section class="wl wl--' + part + (wlPlayed ? ' is-on' : '') + '" aria-labelledby="wl-hi">' +
       '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-rays"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i><i class="wl-stars wl-stars--b"></i>' : '') +
-        '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i></div>' +
+        '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i>' + motes + '</div>' +
       '<header class="wl-top"><p class="wl-date wl-in" style="--d:0">' + esc(date) + '</p>' +
         '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '</p>' +
         '<h1 class="wl-hi" id="wl-hi">' + hello.split(' ').map(function (x, n) { return '<span class="wl-w" style="--w:' + n + '">' + esc(x) + '</span>'; }).join(' ') + '</h1>' +
@@ -1278,23 +1281,83 @@
           : '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button>') +
       '</div></section>';
   }
-  // leaving: the welcome dissolves upward, then Today fades in beneath it
-  function leaveWelcome() {
-    var go = function () {
-      st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0);
-      if (!calm) { root.classList.add('pl-enter'); setTimeout(function () { root.classList.remove('pl-enter'); }, 900); }
-    };
+  // answering is the way in: the pick lands (it lifts, the others recede), then the welcome gives way to Today. Where
+  // the browser can, the chosen icon travels to Today's check-in row while the welcome zooms softly away and Today rises.
+  var wlLeaving = false;
+  function pickWelcome(o, btn) {
+    if (wlLeaving) return;
+    st.checkin[T] = o; sync('checkin', T, true);
     var sec = root.querySelector('.wl');
-    if (calm || !sec || sec.classList.contains('is-out')) return go();
-    sec.classList.add('is-out'); setTimeout(go, 420);
+    if (!sec) { render(); return; }
+    [].forEach.call(sec.querySelectorAll('[data-wl]'), function (b) { b.setAttribute('aria-checked', String(b === btn)); b.classList.remove('is-press'); });
+    sec.classList.remove('is-idle'); sec.classList.add('is-on', 'is-picked');
+    wlLeaving = true;
+    setTimeout(function () { leaveWelcome(btn); }, calm ? 0 : 620);
   }
+  function enterToday() { root.classList.add('pl-enter'); setTimeout(function () { root.classList.remove('pl-enter'); }, 1600); }
+  function leaveWelcome(btn) {
+    var go = function () { st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0); };
+    var sec = root.querySelector('.wl');
+    wlLeaving = true;
+    if (calm || !sec) { go(); wlLeaving = false; return; }
+    if (document.startViewTransition) {
+      var ic = btn && btn.querySelector('.wl-ic'), to = null;
+      if (ic) ic.style.viewTransitionName = 'wl-mood';
+      document.documentElement.classList.add('vt-welcome');
+      var vt = document.startViewTransition(function () {
+        go(); enterToday();
+        to = ic && root.querySelector('.ci-ic');
+        if (to && to.getBoundingClientRect().top < window.innerHeight - 48) to.style.viewTransitionName = 'wl-mood'; else to = null;
+      });
+      var done = function () { document.documentElement.classList.remove('vt-welcome'); if (to) to.style.viewTransitionName = ''; wlLeaving = false; };
+      vt.finished.then(done, done);
+      return;
+    }
+    sec.classList.add('is-out');
+    setTimeout(function () { go(); enterToday(); wlLeaving = false; }, 420);
+  }
+
+  // depth and touch on the welcome: the sky shifts a little with the pointer or the phone's tilt, and a pressed tile
+  // leans toward the finger with a little light under it
+  var wlRaf = 0;
+  function wlTilt(px, py) {
+    if (calm || wlRaf) return;
+    wlRaf = requestAnimationFrame(function () {
+      wlRaf = 0; var sec = root.querySelector('.wl'); if (!sec) return;
+      sec.style.setProperty('--px', Math.max(-1, Math.min(1, px)).toFixed(3)); sec.style.setProperty('--py', Math.max(-1, Math.min(1, py)).toFixed(3));
+    });
+  }
+  function wlPress(b, e) {
+    var r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    b.style.setProperty('--tx', ((x - .5) * 2).toFixed(3)); b.style.setProperty('--ty', ((y - .5) * 2).toFixed(3));
+    b.style.setProperty('--mx', Math.round(x * 100) + '%'); b.style.setProperty('--my', Math.round(y * 100) + '%');
+  }
+  root.addEventListener('pointermove', function (e) {
+    if (!document.body.classList.contains('is-welcome')) return;
+    if (e.pointerType === 'mouse') wlTilt(e.clientX / window.innerWidth * 2 - 1, e.clientY / window.innerHeight * 2 - 1);
+    var b = e.target.closest && e.target.closest('.wl-o button');
+    if (b && (b.classList.contains('is-press') || e.pointerType === 'mouse')) wlPress(b, e);
+  });
+  root.addEventListener('pointerdown', function (e) {
+    var b = e.target.closest && e.target.closest('.wl-o button'); if (!b || calm || wlLeaving) return;
+    wlPress(b, e); b.classList.add('is-press');
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+    root.addEventListener(ev, function (e) { var b = e.target.closest && e.target.closest('.wl-o button'); if (b) { b.classList.remove('is-press'); if (ev !== 'pointerup') { b.style.setProperty('--tx', 0); b.style.setProperty('--ty', 0); } } }, true);
+  });
+  window.addEventListener('deviceorientation', function (e) {
+    if (e.gamma == null || !document.body.classList.contains('is-welcome')) return;
+    wlTilt(e.gamma / 25, (e.beta - 45) / 30);
+  });
+
 
   function render() {
     if (!plan) return;
     // once a day, a breather before Today
     var wl = needWelcome();
     document.body.classList.toggle('is-welcome', wl);
-    if (wl) { root.innerHTML = welcomeView(plan); wlPlayed = true; nav.hidden = true; root.classList.remove('is-writing'); return; }
+    if (wl) { var firstWl = !wlPlayed; root.innerHTML = welcomeView(plan); wlPlayed = true; nav.hidden = true;
+      if (firstWl && !st.checkin[T] && !calm) setTimeout(function () { var sec = root.querySelector('.wl'); if (sec && !sec.classList.contains('is-picked')) sec.classList.add('is-idle'); }, 5200); root.classList.remove('is-writing'); return; }
     var views = { today: todayView, progress: progressView, playbook: playbookView, journal: journalView, you: youView };
     var was = {};
     root.querySelectorAll('details[data-l]').forEach(function (x) { was[x.getAttribute('data-l')] = x.open; });
@@ -1470,10 +1533,8 @@
       if (tab !== 'today') { e.preventDefault(); location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       return;
     }
-    if ((el = t.closest('[data-wl]'))) {
-      st.checkin[T] = el.getAttribute('data-wl'); sync('checkin', T, true); render(); refocus('[data-wl="' + st.checkin[T] + '"]'); return;
-    }
-    if (t.closest('[data-wl-go]') || t.closest('[data-wl-skip]')) { leaveWelcome(); return; }
+    if ((el = t.closest('[data-wl]'))) { pickWelcome(el.getAttribute('data-wl'), el); return; }
+    if (t.closest('[data-wl-go]') || t.closest('[data-wl-skip]')) { leaveWelcome(root.querySelector('[data-wl][aria-checked="true"]')); return; }
     if ((el = t.closest('[data-unfold]'))) { var uk = el.getAttribute('data-unfold'); openCard[uk] = true; render(); refocus('[data-card="' + uk + '"] .pl-done'); return; }
     if ((el = t.closest('[data-fold]'))) { var fk2 = el.getAttribute('data-fold'); delete openCard[fk2]; delete fresh[fk2]; delete hold[fk2]; render(); refocus('[data-unfold="' + fk2 + '"]'); return; }
     if ((el = t.closest('[data-jump]'))) {

@@ -1253,3 +1253,61 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-enter{animation:pl-enter .7s cubic-bezier(.22,1,.36,1) both}
 @keyframes pl-enter{from{opacity:0;transform:translateY(.75rem)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.wl-sky::after,.wl-week i,.wl-w,.wl-card,.wl-card::after,.wl-o button,.wl-skip,.wl-reply,.wl-go,.pl-enter,.wl.is-out .wl-top,.wl.is-out .wl-q,.wl.is-out .wl-card,.wl.is-out .wl-sky,.wl.is-on .wl-o button[aria-checked="true"] .wl-ic{animation:none}.wl-sky::after{opacity:0}.wl-card::after{display:none}}
+
+/* ---- the welcome, layered (2026-10-22, second motion pass) */
+/* depth: the sky drifts against the pointer or the phone's tilt; the words drift a little with it */
+.wl-sky{translate:calc(var(--px,0) * -10px) calc(var(--py,0) * -8px);scale:1.05;transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
+.wl-top{translate:calc(var(--px,0) * 4px) calc(var(--py,0) * 3px);transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
+.wl-q{translate:calc(var(--px,0) * 7px) calc(var(--py,0) * 5px);transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
+/* motes of light, drifting up */
+.wl-sky .wl-mote{left:var(--x);bottom:18%;width:var(--s);height:var(--s);background:rgba(255,251,242,.95);box-shadow:0 0 .5rem rgba(255,240,214,.9);opacity:0;animation:wl-mote var(--t) linear var(--dl) infinite}
+.wl--night .wl-sky .wl-mote{background:rgba(220,230,255,.9);box-shadow:0 0 .5rem rgba(170,195,240,.8)}
+.wl--afternoon .wl-sky .wl-mote{background:#fff;box-shadow:0 0 .5rem rgba(255,255,255,.95)}
+@keyframes wl-mote{0%{opacity:0;transform:translate3d(0,0,0)}12%{opacity:.75}80%{opacity:.45}100%{opacity:0;transform:translate3d(1.75rem,-58svh,0)}}
+/* the quote writes itself in, left to right */
+.wl-q blockquote{-webkit-mask-image:linear-gradient(90deg,#000 42%,transparent 58%);mask-image:linear-gradient(90deg,#000 42%,transparent 58%);-webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:0 0;mask-position:0 0;animation:wl-write 1.7s cubic-bezier(.45,0,.2,1) 1.15s both}
+@keyframes wl-write{from{-webkit-mask-position:100% 0;mask-position:100% 0}to{-webkit-mask-position:0 0;mask-position:0 0}}
+/* the card tips up into place */
+@keyframes wl-card{from{opacity:0;transform:perspective(900px) translateY(2.5rem) rotateX(12deg) scale(.98)}to{opacity:1;transform:none}}
+/* the tiles: entrance releases its hold when done, so touch can move them */
+.wl-o{perspective:600px}
+.wl-o button{animation-fill-mode:backwards;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .35s ease,border-color .2s ease,box-shadow .3s ease,background .2s ease}
+.wl-o button::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.95),rgba(214,228,248,.55) 30%,rgba(214,228,248,0) 62%);opacity:0;transition:opacity .25s ease;pointer-events:none}
+.wl-o button>:not(.wl-ok){position:relative}
+.wl-o button.is-press{transform:rotateX(calc(var(--ty,0) * -9deg)) rotateY(calc(var(--tx,0) * 9deg)) scale(.965);transition:transform .12s ease-out}
+.wl-o button.is-press::before{opacity:1}
+.wl-o button:active{transform:rotateX(calc(var(--ty,0) * -9deg)) rotateY(calc(var(--tx,0) * 9deg)) scale(.965)}
+@media (hover:hover){.wl-o button:hover{transform:translate(calc(var(--tx,0) * 3px),calc(var(--ty,0) * 3px)) translateY(-2px)}.wl-o button:hover::before{opacity:.6}}
+/* an invitation, once, if nobody has answered after a few seconds */
+.wl.is-idle .wl-o button{animation:wl-invite 1.8s cubic-bezier(.45,0,.2,1)}
+.wl.is-idle .wl-o button.is-press{animation:none}
+.wl.is-idle .wl-o button:nth-child(2){animation-delay:.14s}.wl.is-idle .wl-o button:nth-child(3){animation-delay:.28s}
+@keyframes wl-invite{0%,100%{transform:none}40%{transform:translateY(-3px);box-shadow:0 0 0 4px rgba(86,132,204,.13),inset 0 1px 0 #fff,0 .75rem 1.5rem -1rem rgba(20,34,58,.35)}}
+/* the pick lands: the chosen tile lifts with a ring of light, the others recede */
+.wl.is-picked .wl-o button{pointer-events:none}
+.wl.is-picked .wl-o button:not([aria-checked="true"]){opacity:.35;transform:scale(.94);filter:saturate(.5)}
+.wl.is-picked .wl-o button[aria-checked="true"]{transform:translateY(-4px) scale(1.03)}
+.wl.is-picked .wl-o button[aria-checked="true"]::after{content:"";position:absolute;inset:-1px;border-radius:inherit;animation:wl-ring .8s cubic-bezier(.22,1,.36,1) both;pointer-events:none}
+@keyframes wl-ring{from{box-shadow:0 0 0 0 rgba(86,132,204,.4)}to{box-shadow:0 0 0 1.25rem rgba(86,132,204,0)}}
+.wl.is-picked .wl-ask,.wl.is-picked .wl-skip{transition:opacity .4s ease;opacity:.5}
+
+/* into Today: the welcome zooms softly away and blurs, the chosen icon travels to Today's check-in row, Today rises
+   piece by piece, and the tab bar slides up */
+.vt-welcome::view-transition-old(root){animation:vt-wl-out .55s cubic-bezier(.4,0,.2,1) both}
+.vt-welcome::view-transition-new(root){animation:vt-wl-in .5s ease .1s both}
+@keyframes vt-wl-out{to{opacity:0;transform:scale(1.06);filter:blur(12px)}}
+@keyframes vt-wl-in{from{opacity:0}}
+.vt-welcome::view-transition-group(wl-mood){animation-duration:.85s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+.vt-welcome::view-transition-old(wl-mood),.vt-welcome::view-transition-new(wl-mood){animation-duration:.85s;height:100%}
+.vt-welcome .tb{view-transition-name:oh-tb}
+.vt-welcome::view-transition-new(oh-tb){animation:vt-tb-in .7s cubic-bezier(.22,1,.36,1) .35s both}
+@keyframes vt-tb-in{from{transform:translateY(130%)}}
+.pl-enter{animation:none}
+.pl-enter>*{animation:pl-rise .8s cubic-bezier(.22,1,.36,1) both}
+.pl-enter>:nth-child(1){animation-delay:.12s}.pl-enter>:nth-child(2){animation-delay:.2s}.pl-enter>:nth-child(3){animation-delay:.28s}.pl-enter>:nth-child(4){animation-delay:.36s}.pl-enter>:nth-child(5){animation-delay:.44s}.pl-enter>:nth-child(6){animation-delay:.52s}.pl-enter>:nth-child(n+7){animation-delay:.6s}
+.pl-enter>#j-ci{animation-name:pl-fadein}
+@keyframes pl-rise{from{opacity:0;transform:translateY(1.25rem)}to{opacity:1;transform:none}}
+@keyframes pl-fadein{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.wl-sky,.wl-top,.wl-q{translate:none;transition:none}.wl-sky .wl-mote{display:none}.wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}.wl-o button,.wl-o button.is-press,.wl-o button:active{transform:none;transition:none}.wl.is-idle .wl-o button,.wl.is-picked .wl-o button::after,.pl-enter>*{animation:none}}
+/* nothing replays after the entrance */
+.wl.is-on .wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}
