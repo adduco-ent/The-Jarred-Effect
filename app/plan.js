@@ -1250,7 +1250,7 @@
       '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-rays"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i><i class="wl-stars wl-stars--b"></i>' : '') +
         '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i></div>' +
       '<header class="wl-top"><p class="wl-date wl-in" style="--d:0">' + esc(date) + '</p>' +
-        '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '<span>Day ' + T + ' of 7</span></p>' +
+        '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '</p>' +
         '<h1 class="wl-hi wl-in" id="wl-hi" style="--d:2">' + esc(hello) + '</h1>' +
         '<p class="wl-line wl-in" style="--d:3">' + esc((w.days || [])[T - 1] || w.later || '') + '</p></header>' +
       (qt ? '<figure class="wl-q wl-in" style="--d:4"><blockquote>' + esc(qt.q) + '</blockquote><figcaption>' + esc(qt.by) + '</figcaption></figure>' : '') +

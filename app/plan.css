@@ -1090,3 +1090,21 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 @media (prefers-reduced-motion:reduce){.wl-in,.wl-reply,.wl-go,.wl-sun,.wl-rays,.wl-cloud,.wl-stars{animation:none}.wl-o button,.wl-ok{transition:none}}
 .wl-q{margin-bottom:1.5rem}
 @media (max-height:720px){.wl{padding-top:max(1.75rem,calc(env(safe-area-inset-top) + 1rem))}.wl-top{gap:.5rem}.wl-hi{margin-top:.375rem;font-size:2.375rem}.wl-q{margin-top:1.375rem;margin-bottom:1rem;padding:1.125rem 1.25rem 1rem}.wl-q blockquote{font-size:.9375rem}.wl-card{gap:.75rem;padding-top:1.125rem}.wl-o button{min-height:5.25rem;padding-top:.75rem}}
+/* balance (2026-10-22): the greeting leads, the question comes second, the quote is the quiet one. The quote floats
+   evenly between the greeting and the card, so there is no dead gap on any phone. */
+.wl{row-gap:1.5rem}
+.wl-top{gap:.75rem;margin-top:clamp(0rem,3svh,1.75rem)}
+.wl-week{gap:.375rem}
+.wl-hi{margin-top:.5rem}
+.wl-q{margin:auto 0;max-width:19.5rem;padding:1.125rem 1.25rem 1rem;border-color:rgba(255,255,255,.55);background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.2));box-shadow:0 .5rem 1.5rem -1.25rem rgba(20,34,58,.3)}
+.wl-q::before{top:-.75rem;width:1.5rem;height:1.5rem;padding-top:.5rem;font-size:1.5rem}
+.wl-q blockquote{font-size:.9375rem;line-height:1.5;color:rgba(28,24,18,.86)}
+.wl-q figcaption{margin-top:.5rem}
+.wl-card{margin-top:0}
+.wl-ask{font-size:1.3125rem}
+@media (max-height:720px){.wl{row-gap:1rem}.wl-top{margin-top:0}.wl-q{margin:auto 0}}
+.wl-q+.wl-card{margin-top:0}
+/* the sun rises from just above the card (the card is the horizon); the moon and the afternoon sun sit in the top corner */
+.wl-sky{height:100svh;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 72%,transparent 100%)}
+.wl--morning .wl-sun,.wl--evening .wl-sun{top:calc(100svh - 22.5rem)}
+.wl--night .wl-sun{right:1.25rem;top:max(1.25rem,calc(env(safe-area-inset-top) + .5rem));width:3.25rem;height:3.25rem}
