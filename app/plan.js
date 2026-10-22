@@ -1078,6 +1078,8 @@
   // Push where the phone allows it (Android, or iPhone once it's on the Home Screen); a calendar reminder otherwise.
   // The nudge is skipped on any day they've already done their step (the server is told when they mark one done).
   var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var ANDROID = /Android/i.test(navigator.userAgent);
+  var menuIcon = '<svg class="nd-share" viewBox="0 0 20 20" aria-label="the menu button"><circle cx="10" cy="4.5" r="1.6" fill="currentColor"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/><circle cx="10" cy="15.5" r="1.6" fill="currentColor"/></svg>';
   var TOUCH = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
   function standalone() { return !!((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true); }
   var installEvt = null;
@@ -1222,9 +1224,11 @@
   function installCard() {
     if (standalone() || (!installEvt && !IOS && !TOUCH)) return '';
     return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put Other Half on your Home Screen</h2>' +
-      '<p class="pl-text">One tap to open, full screen, like any app.' + (IOS ? ' On iPhone, daily nudges need it too.' : '') + '</p>' +
+      '<p class="pl-text">Open it with one tap, full screen, just like your other apps.' + (IOS ? ' On iPhone, it’s also how your daily nudge reaches you.' : '') + '</p>' +
       (installEvt ? '<button type="button" class="pl-do" data-install>' + homeIcon + '<span>Add to Home Screen</span></button>'
-        : IOS ? homeSteps(false) : '<p class="pt-e">Open your browser’s menu and choose <b>Add to Home Screen</b> or <b>Install app</b>.</p>') + '</section>';
+        : IOS ? homeSteps(false)
+        : '<ol class="nd-steps"><li>' + (ANDROID ? 'Tap your browser’s menu ' + menuIcon + ' at the top right.' : 'Open your browser’s menu.') + '</li>' +
+          '<li>Choose <b>Add to Home Screen</b> or <b>Install app</b>.</li></ol>') + '</section>';
   }
 
   // ---- the welcome: a breather before the day. Once a day, the first time the app opens: a sky that follows the time

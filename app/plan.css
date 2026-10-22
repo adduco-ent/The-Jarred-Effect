@@ -1331,3 +1331,13 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .wl-qi:first-child{-webkit-mask-image:linear-gradient(90deg,#000 42%,transparent 58%);mask-image:linear-gradient(90deg,#000 42%,transparent 58%);-webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:0 0;mask-position:0 0;animation:wl-write 1.7s cubic-bezier(.45,0,.2,1) 1.85s both}
 .wl.is-on .wl-qi:first-child{animation:none;-webkit-mask-image:none;mask-image:none}
 @media (prefers-reduced-motion:reduce){.wl-qi:first-child{animation:none;-webkit-mask-image:none;mask-image:none}}
+
+/* numbered steps (Home Screen, nudges): each number in a small navy-tint circle, the words hanging cleanly beside it */
+.nd-steps{list-style:none;padding:0;gap:.75rem;counter-reset:nd;font-size:.9375rem;line-height:1.5;text-wrap:pretty}
+.nd-steps li{display:grid;grid-template-columns:1.5rem minmax(0,1fr);gap:.75rem;align-items:start;counter-increment:nd}
+.nd-steps li::before{content:counter(nd);display:grid;place-items:center;width:1.5rem;height:1.5rem;margin-top:-.0625rem;border-radius:50%;background:rgba(15,28,48,.06);box-shadow:inset 0 0 0 1px rgba(15,28,48,.08);font-size:.75rem;font-weight:600;color:var(--accent-ink)}
+.nd-steps .nd-share{display:inline-block;width:1rem;height:1rem;vertical-align:-.1875rem;color:var(--accent-ink)}
+.in-card .pl-text{text-wrap:pretty}
+.in-card .nd-steps{margin-top:.25rem}
+.nd-steps li{position:relative;display:block;padding-left:2.25rem;min-height:1.5rem}
+.nd-steps li::before{position:absolute;left:0;top:0}
