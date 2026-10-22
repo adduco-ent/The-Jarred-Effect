@@ -243,10 +243,12 @@
   // a finished step folds into a slim bar after a short beat; tap it to open again
   var fresh = {}, hold = {}, openCard = {};
   function folded(k) { return !!done[k] && !fresh[k] && !openCard[k]; }
-  function foldBar(k, title, sub, feel) {
+  // a finished step, folded: the check, the title, and one quiet status line (which goal, and how it felt or an ask)
+  function foldBar(k, title, sub, feel, noAsk) {
+    var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
     return '<article class="pl-day pl-foldc" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
-      '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t">' + (sub ? '<small>' + esc(sub) + '</small>' : '') + esc(title) + '</span>' +
-      '<span class="pl-fold-f' + (feel ? '' : ' is-ask') + '">' + (feel ? esc(feel) : 'How did it feel?') + '</span><span class="pl-fold-go" aria-hidden="true">›</span></button></article>';
+      '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(title) + '</b><small>' + status + '</small></span>' +
+      '<span class="pl-fold-go" aria-hidden="true">›</span></button></article>';
   }
   var FEELW = { easy: 'Easy', okay: 'Okay', hard: 'Hard' };
 
@@ -263,7 +265,7 @@
   }
   function stepCard(d, s, many, idx) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
-    if (folded(k)) return foldBar(k, s.title, many ? plan.asks[s.ask].text : '', FEELW[(fb.step[k] || {}).feel]);
+    if (folded(k)) return foldBar(k, s.title, many ? 'Goal ' + (s.ask + 1) : '', FEELW[(fb.step[k] || {}).feel]);
     // an okay or hard day asks for one goal: once one step is done, the rest say so instead of looking unfinished
     var light = many && (st.checkin[d.day] === 'half' || rough) && !isDone && (kept(d) || idx > 0);
     var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
@@ -289,7 +291,7 @@
   // ---- the question day and the look back
   function wholeDayCard(d) {
     var k = key(d), body;
-    if (folded(k)) return foldBar(k, d.kind === 'lookback' ? 'Look back' : 'One honest question', '', '').replace('<span class="pl-fold-f is-ask">How did it feel?</span>', '<span class="pl-fold-f">Done</span>');
+    if (folded(k)) return foldBar(k, d.kind === 'lookback' ? 'Look back' : 'One honest question', '', '', true);
     if (d.kind === 'question') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
         '<p class="pl-q">' + esc(d.ask) + '</p>' +
