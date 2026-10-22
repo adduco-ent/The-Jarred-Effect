@@ -1317,16 +1317,7 @@
     setTimeout(function () { go(); enterToday(); wlLeaving = false; }, 420);
   }
 
-  // depth and touch on the welcome: the sky shifts a little with the pointer or the phone's tilt, and a pressed tile
-  // leans toward the finger with a little light under it
-  var wlRaf = 0;
-  function wlTilt(px, py) {
-    if (calm || wlRaf) return;
-    wlRaf = requestAnimationFrame(function () {
-      wlRaf = 0; var sec = root.querySelector('.wl'); if (!sec) return;
-      sec.style.setProperty('--px', Math.max(-1, Math.min(1, px)).toFixed(3)); sec.style.setProperty('--py', Math.max(-1, Math.min(1, py)).toFixed(3));
-    });
-  }
+  // touch on the welcome: a pressed tile leans toward the finger with a little light under it
   function wlPress(b, e) {
     var r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
     b.style.setProperty('--tx', ((x - .5) * 2).toFixed(3)); b.style.setProperty('--ty', ((y - .5) * 2).toFixed(3));
@@ -1334,9 +1325,8 @@
   }
   root.addEventListener('pointermove', function (e) {
     if (!document.body.classList.contains('is-welcome')) return;
-    if (e.pointerType === 'mouse') wlTilt(e.clientX / window.innerWidth * 2 - 1, e.clientY / window.innerHeight * 2 - 1);
     var b = e.target.closest && e.target.closest('.wl-o button');
-    if (b && (b.classList.contains('is-press') || e.pointerType === 'mouse')) wlPress(b, e);
+    if (b && b.classList.contains('is-press')) wlPress(b, e);
   });
   root.addEventListener('pointerdown', function (e) {
     var b = e.target.closest && e.target.closest('.wl-o button'); if (!b || calm || wlLeaving) return;
@@ -1344,10 +1334,6 @@
   });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
     root.addEventListener(ev, function (e) { var b = e.target.closest && e.target.closest('.wl-o button'); if (b) { b.classList.remove('is-press'); if (ev !== 'pointerup') { b.style.setProperty('--tx', 0); b.style.setProperty('--ty', 0); } } }, true);
-  });
-  window.addEventListener('deviceorientation', function (e) {
-    if (e.gamma == null || !document.body.classList.contains('is-welcome')) return;
-    wlTilt(e.gamma / 25, (e.beta - 45) / 30);
   });
 
 

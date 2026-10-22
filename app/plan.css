@@ -1232,8 +1232,6 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .wl-o button{animation:wl-up .7s cubic-bezier(.22,1,.36,1) both}
 .wl-o button:nth-child(1){animation-delay:1.35s}.wl-o button:nth-child(2){animation-delay:1.43s}.wl-o button:nth-child(3){animation-delay:1.51s}
 .wl-skip{animation:wl-up .7s cubic-bezier(.22,1,.36,1) 1.7s both}
-.wl-card::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.75) 50%,rgba(255,255,255,0) 65%);transform:translateX(-120%);animation:wl-glint 1.3s cubic-bezier(.4,0,.2,1) 2.1s both;pointer-events:none}
-@keyframes wl-glint{to{transform:translateX(120%)}}
 /* after the entrance: nothing replays */
 .wl.is-on .wl-in,.wl.is-on .wl-w,.wl.is-on .wl-week i,.wl.is-on .wl-card,.wl.is-on .wl-o button,.wl.is-on .wl-skip,.wl.is-on .wl-sky::after,.wl.is-on .wl-card::after{animation:none}
 .wl.is-on .wl-sky::after{opacity:0}
@@ -1255,10 +1253,6 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 @media (prefers-reduced-motion:reduce){.wl-sky::after,.wl-week i,.wl-w,.wl-card,.wl-card::after,.wl-o button,.wl-skip,.wl-reply,.wl-go,.pl-enter,.wl.is-out .wl-top,.wl.is-out .wl-q,.wl.is-out .wl-card,.wl.is-out .wl-sky,.wl.is-on .wl-o button[aria-checked="true"] .wl-ic{animation:none}.wl-sky::after{opacity:0}.wl-card::after{display:none}}
 
 /* ---- the welcome, layered (2026-10-22, second motion pass) */
-/* depth: the sky drifts against the pointer or the phone's tilt; the words drift a little with it */
-.wl-sky{translate:calc(var(--px,0) * -10px) calc(var(--py,0) * -8px);scale:1.05;transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
-.wl-top{translate:calc(var(--px,0) * 4px) calc(var(--py,0) * 3px);transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
-.wl-q{translate:calc(var(--px,0) * 7px) calc(var(--py,0) * 5px);transition:translate 1.2s cubic-bezier(.22,1,.36,1)}
 /* motes of light, drifting up */
 .wl-sky .wl-mote{left:var(--x);bottom:18%;width:var(--s);height:var(--s);background:rgba(255,251,242,.95);box-shadow:0 0 .5rem rgba(255,240,214,.9);opacity:0;animation:wl-mote var(--t) linear var(--dl) infinite}
 .wl--night .wl-sky .wl-mote{background:rgba(220,230,255,.9);box-shadow:0 0 .5rem rgba(170,195,240,.8)}
@@ -1277,7 +1271,6 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .wl-o button.is-press{transform:rotateX(calc(var(--ty,0) * -9deg)) rotateY(calc(var(--tx,0) * 9deg)) scale(.965);transition:transform .12s ease-out}
 .wl-o button.is-press::before{opacity:1}
 .wl-o button:active{transform:rotateX(calc(var(--ty,0) * -9deg)) rotateY(calc(var(--tx,0) * 9deg)) scale(.965)}
-@media (hover:hover){.wl-o button:hover{transform:translate(calc(var(--tx,0) * 3px),calc(var(--ty,0) * 3px)) translateY(-2px)}.wl-o button:hover::before{opacity:.6}}
 /* an invitation, once, if nobody has answered after a few seconds */
 .wl.is-idle .wl-o button{animation:wl-invite 1.8s cubic-bezier(.45,0,.2,1)}
 .wl.is-idle .wl-o button.is-press{animation:none}
@@ -1308,6 +1301,9 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-enter>#j-ci{animation-name:pl-fadein}
 @keyframes pl-rise{from{opacity:0;transform:translateY(1.25rem)}to{opacity:1;transform:none}}
 @keyframes pl-fadein{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.wl-sky,.wl-top,.wl-q{translate:none;transition:none}.wl-sky .wl-mote{display:none}.wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}.wl-o button,.wl-o button.is-press,.wl-o button:active{transform:none;transition:none}.wl.is-idle .wl-o button,.wl.is-picked .wl-o button::after,.pl-enter>*{animation:none}}
+@media (prefers-reduced-motion:reduce){.wl-sky .wl-mote{display:none}.wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}.wl-o button,.wl-o button.is-press,.wl-o button:active{transform:none;transition:none}.wl.is-idle .wl-o button,.wl.is-picked .wl-o button::after,.pl-enter>*{animation:none}}
 /* nothing replays after the entrance */
 .wl.is-on .wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}
+
+/* the card comes to rest: as it lands, its shadow spreads and softens, the way a real thing settles (replaces the sheen) */
+@keyframes wl-card{0%{opacity:0;transform:perspective(900px) translateY(2.5rem) rotateX(12deg) scale(.98);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.08),0 .25rem .5rem -.25rem rgba(40,70,120,.5)}60%{opacity:1}100%{opacity:1;transform:none;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 1.25rem 2.5rem -1.25rem rgba(40,70,120,.35)}}
