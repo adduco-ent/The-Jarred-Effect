@@ -14,7 +14,7 @@ const GROUPS = [
   ['acceptance', 'Acceptance'], ['control', 'Control'], ['trust', 'Trust'], ['habits', 'Habits'], ['field', 'Your field'],
   ['loose', 'Living lightly'], ['people', 'People and doors'], ['agency', 'Agency'], ['worth', 'Voice and worth'],
   ['thoughts', 'Error thoughts'], ['circle', 'Your five'], ['agreements', 'Four ways to stay clear'], ['foundations', 'Foundations'],
-  ['signal', 'Your signal'], ['power', 'Your power'], ['tools', 'Tools']
+  ['signal', 'Your signal'], ['power', 'Your power'], ['room', 'Making room'], ['tools', 'Tools']
 ];
 
 const ORIG = {};

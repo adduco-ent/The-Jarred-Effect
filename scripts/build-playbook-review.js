@@ -118,6 +118,7 @@ const pathways = `<section class="side" id="pathways">
 </section>`;
 const signal = group('signal', 'side-signal', 'The manifestation layer', 'Your signal', 'Feeling the future now, facing the gap, holding a steady feeling, living it in small choices, and moving through big emotions instead of covering them.');
 const power = group('power', 'side-power', 'No one holds all the keys', 'Your power', 'Learning from others without handing your power over: advice is input, your gut decides, and your path won’t look like anyone else’s.');
+const room = group('room', 'side-room', 'Letting go of the old', 'Making room', 'Naming what you still carry, honoring it, retiring old labels, stopping paying for the past, forgiving to free yourself, letting grief come, and leaving the space open for what’s next.');
 const tools = group('tools', 'side-tools', 'From the guide, and for each stage', 'Tools', 'Your guide’s own exercises, and the steps the Price, Receive, Hold, Tries, gut call and word check protocols use.');
 
 const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.protocols.filter((x) => P.layers[x.id]).map((x) => 'ly-' + x.id), P.areas.map((a) => 'area-' + a.id), P.pathways.map((w) => 'path-' + w.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
@@ -229,7 +230,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   <h1>The method, <i>step by step.</i></h1>
   <p class="lead">Every 7-day plan is built only from what’s on this page, and it moves with real life: no fixed times, a full, half or rough version every day, and no catch-up debt. The AI tailors the examples to each person’s Ask; it never invents its own method. Approve what sounds like you, mark what needs changing with a note in your own words, and hold anything you’re unsure about.</p>
   <p class="how"><span><b>Approve</b> it ships as written</span><span><b>Change</b> tap the text and rewrite it in place</span><span><b>Hold</b> leave it out of version 1 for now</span></p>
-  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols','Layers','Pathways','Life areas'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols','layers','pathways','areas'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-foundations">Foundations</a><a href="#side-signal">Your signal</a><a href="#side-power">Your power</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
+  <nav class="toc" aria-label="Jump to">${['How a plan is built','Voice','Hard rules','Ebb and flow','Let loose','Their own words','Protocols','Layers','Pathways','Life areas'].map((t,i)=>`<a href="#${['shape','voice','hard','flow','loose','mirror','protocols','layers','pathways','areas'][i]}">${t}</a>`).join('')}${sideOrder.map((s) => `<a href="#side-${s}">${sideName(s)}</a>`).join('')}<a href="#side-habits">Habits</a><a href="#side-field">Your field</a><a href="#side-loose">Living lightly</a><a href="#side-people">People and doors</a><a href="#side-agency">Agency</a><a href="#side-worth">Voice and worth</a><a href="#side-thoughts">Error thoughts</a><a href="#side-circle">Your five</a><a href="#side-agreements">Stay clear</a><a href="#side-foundations">Foundations</a><a href="#side-signal">Your signal</a><a href="#side-power">Your power</a><a href="#side-room">Making room</a><a href="#side-tools">Tools</a><a href="#shadow">Shadow questions</a></nav>
 </div></div>
 
 <div class="bar"><div class="wrap">
@@ -271,6 +272,7 @@ footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
   ${foundations}
   ${signal}
   ${power}
+  ${room}
   ${tools}
   <section class="side" id="shadow">
     <div class="sec-h"><p class="k">From the guide</p><h2>Shadow questions</h2><p>Day 4 of every plan is one of these, chosen by type, with gentle follow-ups for anyone who wants to go further.</p></div>
