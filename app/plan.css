@@ -1324,3 +1324,10 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 @keyframes wl-cap{from{opacity:0}to{opacity:1}}
 .wl.is-on .wl-q::before,.wl.is-on .wl-qi:first-child figcaption{animation:none}
 @media (prefers-reduced-motion:reduce){.wl-q.wl-in,.wl-q::before,.wl-qi:first-child figcaption{animation:none}.wl-qi{transition:none}}
+/* the question, 15% smaller (1.3125rem → 1.115rem); the quote and its author write in together, as one piece */
+.wl-ask{font-size:1.115rem}
+.wl-q blockquote{animation:none;-webkit-mask-image:none;mask-image:none}
+.wl-qi:first-child figcaption{animation:none}
+.wl-qi:first-child{-webkit-mask-image:linear-gradient(90deg,#000 42%,transparent 58%);mask-image:linear-gradient(90deg,#000 42%,transparent 58%);-webkit-mask-size:260% 100%;mask-size:260% 100%;-webkit-mask-position:0 0;mask-position:0 0;animation:wl-write 1.7s cubic-bezier(.45,0,.2,1) 1.85s both}
+.wl.is-on .wl-qi:first-child{animation:none;-webkit-mask-image:none;mask-image:none}
+@media (prefers-reduced-motion:reduce){.wl-qi:first-child{animation:none;-webkit-mask-image:none;mask-image:none}}
