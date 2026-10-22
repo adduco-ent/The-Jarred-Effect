@@ -248,7 +248,7 @@
     var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
     return '<article class="pl-day pl-foldc" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
       '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(title) + '</b><small>' + status + '</small></span>' +
-      '<span class="pl-fold-go" aria-hidden="true">›</span></button></article>';
+      '<span class="pl-fold-go" aria-hidden="true">' + upIcon + '</span></button></article>';
   }
   var FEELW = { easy: 'Easy', okay: 'Okay', hard: 'Hard' };
 
@@ -277,15 +277,21 @@
       return '<article class="pl-day pl-step-card is-skipped">' +
         '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
     }
+    // done and open: the header mirrors the folded bar (check, title, one status line, round arrow), so it reads as
+    // the same thing opened up
+    var doneHead = '<div class="pl-dh"><span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' +
+      (many ? 'Goal ' + (s.ask + 1) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + 'Done</small></span>' +
+      '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button></div>';
     return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
-      '<div class="pl-day-h">' + head + (isDone ? '<span class="pl-hd-r">' + doneBtn(k, many ? plan.asks[s.ask].text : '') + (openCard[k] ? '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button>' : '') + '</span>' : light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
-      (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
+      (isDone ? doneHead : '<div class="pl-day-h">' + head + (light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
+      (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title) +
       // once it's done, the card steps back to its title: the how-to has done its job
       (isDone ? '' : rough
         ? '<div class="pl-v"><span>Your small version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Hard day?</b> ' + esc(s.rough) + '</p>') +
       (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
-      reply(k) + afterStep(k, isDone) + layers(d, s) + '</article>';
+      reply(k) + afterStep(k, isDone) + layers(d, s) +
+      (isDone ? '<button type="button" class="lnk pl-undo" data-done="' + k + '" aria-label="Undo: mark ' + esc(s.title) + ' not done">Not done yet? Undo</button>' : '') + '</article>';
   }
 
   // ---- the question day and the look back
@@ -1525,7 +1531,7 @@
     refocus('[data-done="' + k + '"]');
   });
   ['pointerdown', 'focusin'].forEach(function (ev) {
-    root.addEventListener(ev, function (e) { var c = e.target.closest && e.target.closest('[data-card]'); if (c && fresh[c.getAttribute('data-card')] && !e.target.closest('.pl-done')) hold[c.getAttribute('data-card')] = true; });
+    root.addEventListener(ev, function (e) { var c = e.target.closest && e.target.closest('[data-card]'); if (c && fresh[c.getAttribute('data-card')] && !e.target.closest('.pl-done,.pl-undo')) hold[c.getAttribute('data-card')] = true; });
   });
   root.addEventListener('change', function (e) {
     if (e.target.hasAttribute('data-nd-time')) { nudgeSetTime(e.target.value); return; }

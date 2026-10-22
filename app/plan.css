@@ -1196,3 +1196,19 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-sub span::before{width:.3125rem;height:.3125rem;box-shadow:none}
 .pl-sub p{font-size:.9375rem;line-height:1.55;color:#0f1c30}
 .pl-fold-dot{font-style:normal;margin:0 .375rem;opacity:.7}
+
+/* Today's rows share one rhythm (2026-10-22): the same left edge (1.25rem), the same 2.25rem icon column, the same
+   round 2.25rem arrow on the right. A finished step's open header is its folded bar, opened: check, title, status. */
+.ci--set{padding:.875rem 1rem .875rem 1.25rem}
+.pl-fold{gap:.875rem;min-height:4rem;padding:.875rem 1rem .875rem 1.25rem}
+.pl-step-card{padding-left:1.25rem;padding-right:1.25rem}
+.ci-ic,.pl-fold-ck{width:2.25rem;height:2.25rem}
+.pl-fold-ck svg{width:1.0625rem;height:1.0625rem}
+.pl-fold-go,.pl-fold-x{display:grid;place-items:center;flex:none;width:2.25rem;height:2.25rem;border:0;border-radius:50%;background:rgba(15,28,48,.05);color:var(--accent-ink);box-shadow:none}
+.pl-fold-go svg,.pl-fold-x svg{width:1.125rem;height:1.125rem;transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.pl-fold-go svg{transform:rotate(180deg)}
+.pl-fold:active .pl-fold-go{background:rgba(15,28,48,.09)}
+.pl-dh{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.875rem;margin:-.375rem -.25rem 0 0}
+.pl-dh .pl-fold-t b{font-size:1.25rem}
+.pl-step-card.is-done .pl-dh .pl-fold-t b{opacity:1}
+.pl-undo{justify-self:center;min-height:2.75rem;margin:-.25rem 0 -.5rem;font-size:.8125rem;font-weight:500;color:var(--faint)}
