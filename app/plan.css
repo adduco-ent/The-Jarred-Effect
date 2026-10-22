@@ -188,7 +188,7 @@
 .nx .pl-k,.nx .pl-text{margin:0}
 .nx-a{display:grid;gap:.75rem;padding-top:1.125rem;border-top:1px solid rgba(28,24,18,.07)}
 .ci-o.ci-o--4{grid-template-columns:repeat(2,1fr)}
-.nx-send{justify-self:start}
+.nx-send{justify-self:stretch}
 .nx-ok{display:flex;align-items:center;gap:.5rem;margin:0;font-size:.9375rem;font-weight:600;color:var(--accent-ink)}
 .nx-ok svg{width:1.125rem;height:1.125rem;flex:none}
 .yu-add{display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem}
@@ -828,3 +828,35 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .pb-mine:active{transform:scale(.985)}
 .pw-s a:active{transform:scale(.98)}
 @media (prefers-reduced-motion:reduce){.pb-mine,.pb-r,.pb-y,.pw-s a,.pw summary i,.pw summary i::after{transition:none}.pw-s{animation:none}}
+
+/* ---- refinement pass (2026-10-21): same pattern for the same job on every screen */
+/* an okay or hard day: once one step is done, the others are optional, and say so quietly */
+.pl-opt{flex:none;padding:.1875rem .625rem;border-radius:99px;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.45);font-size:.75rem;font-weight:600;color:var(--accent-ink)}
+.pl-day .pl-do{margin-top:.125rem}
+/* Back to today is an action: white, blue label */
+.fut-b{display:inline-flex;align-items:center;gap:.375rem;border-color:rgba(62,108,171,.22);background:linear-gradient(180deg,#ffffff 0%,#f8fafd 100%);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.06),0 .1875rem .5rem -.25rem rgba(40,70,120,.22);color:var(--accent-ink);transition:transform .15s ease}
+.fut-b span{font-size:1.125rem;line-height:1}
+.fut-b:active{transform:scale(.98)}
+/* how it felt: two by two, so every label fits on one line */
+.pg-feel{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pg-feel span{grid-template-columns:auto minmax(0,1fr);justify-items:start;align-items:center;column-gap:.625rem;padding:.625rem .875rem;text-align:left;line-height:1.3}
+/* the week at a glance: one card of rows with hairlines, like every other list */
+.pg-week{gap:0;padding:.25rem 1.125rem;border-radius:1.5rem;border:1px solid transparent;background:var(--card-bg) padding-box,var(--card-rim) border-box;box-shadow:var(--card);-webkit-backdrop-filter:var(--frost);backdrop-filter:var(--frost)}
+.pg-week li+li{border-top:1px solid rgba(28,24,18,.07)}
+.pg-week .pg-row{padding:.75rem 0;border:0;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;transition:opacity .15s ease}
+.pg-week .pg-row:hover{transform:none}
+.pg-week .pg-row:active{transform:none;opacity:.55}
+.pg-week .pg-row.is-future{opacity:.5}
+/* patterns: what came easy, what felt hard and gut calls in one card */
+.pt-n{display:grid;gap:1rem}
+.pt-n>div+div{padding-top:1rem;border-top:1px solid rgba(28,24,18,.07)}
+.pt-n .pl-k{margin:0 0 .5rem}
+/* settings: the same radio rows as the welcome card */
+.set-r{display:grid;gap:.75rem}
+.set-o button[aria-checked="true"]{background:var(--sheen) padding-box,var(--sky) padding-box,var(--edge-up) border-box}
+.gd-o button[aria-checked="true"] .gd-r{border-color:var(--accent);box-shadow:inset 0 0 0 .3125rem var(--accent)}
+/* three-way choices never wrap a short label */
+.ci-o button{padding-left:.25rem;padding-right:.25rem}
+@media (prefers-reduced-motion:reduce){.fut-b,.pg-week .pg-row{transition:none}}
+/* Shape next week: short choices stay on one line, like every other choice bar */
+.nx .ci-o button{font-size:.875rem;white-space:nowrap;letter-spacing:-.005em}

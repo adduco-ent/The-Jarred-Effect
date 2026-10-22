@@ -218,6 +218,8 @@
   // ---- one card per Ask's step
   function stepCard(d, s, many) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
+    // an okay or hard day asks for one Ask: once one step is done, the rest say so instead of looking unfinished
+    var light = many && (st.checkin[d.day] === 'half' || rough) && kept(d) && !isDone;
     var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
     var head = many
       ? '<p class="pl-step-ask"><i>' + (s.ask + 1) + '</i><span>' + esc(plan.asks[s.ask].text) + '</span></p>'
@@ -228,9 +230,10 @@
         '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
     }
     return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '">' +
-      '<div class="pl-day-h">' + head + (isDone ? doneBtn(k, many ? plan.asks[s.ask].text : '') : '') + '</div>' +
+      '<div class="pl-day-h">' + head + (isDone ? doneBtn(k, many ? plan.asks[s.ask].text : '') : light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
       (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
-      (rough
+      // once it's done, the card steps back to its title: the how-to has done its job
+      (isDone ? '' : rough
         ? '<div class="pl-v"><span>Your small version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Hard day?</b> ' + esc(s.rough) + '</p>') +
       (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
@@ -255,8 +258,8 @@
         (paid() ? '<button type="button" class="lnk jgo" data-jgo="ask" data-jask="What else do you want to remember about this week?">Keep going in your journal<span aria-hidden="true">→</span></button>' : '');
     }
     return '<article class="pl-day pl-day--' + d.kind + (done[k] ? ' is-done' : '') + '">' +
-      '<div class="pl-day-h"><p class="pl-day-k"><span class="pl-min">' + (d.kind === 'lookback' ? '5 min' : 'A few minutes') + '</span></p>' + doneBtn(k) + '</div>' +
-      reply(k) + body + '</article>';
+      '<div class="pl-day-h"><p class="pl-day-k"><span class="pl-min">' + (d.kind === 'lookback' ? '5 min' : 'A few minutes') + '</span></p>' + (done[k] ? doneBtn(k) : '') + '</div>' +
+      reply(k) + body + (done[k] ? '' : '<button type="button" class="pl-do" data-done="' + k + '">' + check + '<span>Mark done</span></button>') + '</article>';
   }
 
   // ---- day 7: shape next week. Their answers are the input for week 2.
@@ -275,7 +278,7 @@
       '<div class="nx-a">' + words('next', '1', 'want', 'A new Ask, a different time of day, more or less help…', 3, 'Anything you want next week to have?') + '</div>' +
       (n.sent
         ? '<p class="nx-ok" role="status">' + check + (plan.tier === 'paid' ? 'Got it. Week 2 is built from exactly this.' : 'Saved. Week 2 comes with the full app, and it’s built from exactly this.') + '</p>'
-        : '<button type="button" class="lk-btn nx-send" data-nx-send>Send it</button>') +
+        : '<button type="button" class="pl-do nx-send" data-nx-send><span>Send it</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>') +
       '</section>';
   }
 
@@ -340,7 +343,7 @@
       return html + '<section class="fut"><p class="fut-k">' + lock + 'Opens ' + esc(weekday(sel)) + '</p>' +
         '<ul class="fut-l">' + titles(d).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
         '<p class="pl-note">' + esc(c.future || '') + '</p>' +
-        (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '">Back to today</button>' : '') + '</section>';
+        (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '"><span aria-hidden="true">‹</span>Back to today</button>' : '') + '</section>';
     }
 
     if (d.kind === 'step' && st.guide) {
@@ -475,9 +478,9 @@
       '<section class="sc pt"><div class="pt-g" role="img" aria-label="Kind of day: ' + ciCount.full + ' good, ' + ciCount.half + ' okay, ' + ciCount.rough + ' hard">' + cols + '</div>' +
         '<p class="pt-leg"><span class="is-full"></span>Good ' + ciCount.full + '<span class="is-half"></span>Okay ' + ciCount.half + '<span class="is-rough"></span>Hard ' + ciCount.rough + '</p>' +
         '<p class="pl-note">' + esc(read) + '</p></section>' +
-      '<section class="fs fs--tight"><p class="pl-k">What came easy</p>' + list(easy, 'Mark how steps feel, and the easy ones collect here.') + '</section>' +
-      '<section class="fs fs--tight"><p class="pl-k">What felt hard</p>' + list(hard, 'Nothing marked hard yet.') + '</section>' +
-      '<section class="fs fs--tight"><p class="pl-k">Your gut calls</p>' + list(guts, 'No gut calls this week.') + '</section>' +
+      '<section class="sc pt-n">' + [['What came easy', easy, 'Mark how steps feel, and the easy ones collect here.'], ['What felt hard', hard, 'Nothing marked hard yet.'], ['Your gut calls', guts, 'No gut calls this week.']].map(function (r) {
+        return '<div><p class="pl-k">' + r[0] + '</p>' + list(r[1], r[2]) + '</div>';
+      }).join('') + '</section>' +
       '<section class="fs fs--tight"><p class="pl-k">When you show up</p>' +
         (whenTotal ? '<div class="pt-w">' + Object.keys(when).map(function (k) { return '<span' + (k === top ? ' class="is-top"' : '') + '><b>' + when[k] + '</b>' + k + '</span>'; }).join('') + '</div>' +
           '<p class="pl-note">Most of your steps happen in the ' + top.toLowerCase() + '. Plan the hard ones there.</p>'
@@ -629,7 +632,7 @@
     var extra = (st.extraAsks || []).map(function (x, i) { return [x, i]; }).filter(function (x) { return x[0].status !== 'removed'; });
     var total = p.asks.length + extra.length;
     var addBox = !addOpen ? '' : full
-      ? '<div class="yu-addb"><label class="fb-l" for="new-ask">A new Ask, in your words</label><div class="yu-addr"><input id="new-ask" class="fb-t" type="text" maxlength="200" placeholder="e.g. Read one book a month." autocomplete="off"><button type="button" class="send-btn" data-ask-add>Add</button></div>' +
+      ? '<div class="yu-addb"><label class="fb-l" for="new-ask">A new Ask, in your words</label><div class="yu-addr"><input id="new-ask" class="fb-t" type="text" maxlength="200" placeholder="e.g. Sleep by 11 p.m." autocomplete="off"><button type="button" class="send-btn" data-ask-add>Add</button></div>' +
         '<p class="yu-focus' + (total >= 3 ? ' is-strong' : '') + '">' + esc(p.focus || '') + '</p><p class="pt-e">New Asks start with next week’s plan.</p></div>'
       : '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + unlock('more Asks') + '</div>';
     return screenHead('Your profile', 'You', '') +
@@ -645,8 +648,11 @@
         (p.asks.some(function (a) { return a.focus; }) ? '<div class="yu-from"><span>From the playbook</span>' +
           uniq(p.asks.map(function (a) { return a.focus && a.protocol ? a.protocol + '|' + a.focus : ''; })).map(function (x) { var y = x.split('|'); return '<a href="#playbook/' + esc(y[0]) + '">' + esc(y[1]) + '</a>'; }).join('') + '</div>' : '') + '</section>' +
       '<section class="fs"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
-      '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">Help with each step<span>Change it any time</span></p>' +
-        chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</div></section>' +
+      '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">How much help do you want with each step?</p>' +
+        '<div class="gd-o set-o" role="radiogroup" aria-label="How much help you want with each step">' + [['step', 'Just the step', 'Short and simple. Extra help is one tap away.'], ['walk', 'Walk me through it', 'Mini-steps and a real-life example, open under every step.']].map(function (o) {
+          var on = (st.guide === 'walk' ? 'walk' : 'step') === o[0];
+          return '<button type="button" role="radio" aria-checked="' + on + '" data-guide="' + o[0] + '"><i class="gd-r" aria-hidden="true"></i><span class="gd-b"><b>' + o[1] + '</b><span>' + o[2] + '</span></span></button>';
+        }).join('') + '</div></div></section>' +
       '<section class="fs"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
         '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
