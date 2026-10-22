@@ -1027,7 +1027,7 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 /* afternoon: clear, high and bright */
 .wl--afternoon{background:linear-gradient(180deg,#bfd6f4 0%,#d8e6f9 36%,#ecf1fb 62%,#fafbfd 82%,#fdfdfc 100%)}
 .wl--afternoon .wl-glow{background:radial-gradient(closest-side at 72% 20%,rgba(255,255,255,.9),rgba(255,255,255,0))}
-.wl--afternoon .wl-sun{right:4%;top:2%;width:9rem;height:9rem;background:radial-gradient(circle,#fff 0 16%,#fffbf0 21%,rgba(255,248,226,.7) 30%,rgba(255,248,226,.25) 48%,rgba(255,248,226,0) 70%)}
+.wl--afternoon .wl-sun{right:-2.25rem;top:-2.75rem;width:9rem;height:9rem;background:radial-gradient(circle,#fff 0 16%,#fffbf0 21%,rgba(255,248,226,.7) 30%,rgba(255,248,226,.25) 48%,rgba(255,248,226,0) 70%)}
 .wl--afternoon .wl-rays{left:-2%;top:-62%}
 /* evening: lavender into peach, the sun resting on the horizon */
 .wl--evening{background:linear-gradient(180deg,#bfbbe8 0%,#dccbe4 32%,#f6d0bd 60%,#fcf3ee 82%,#fdfdfc 100%)}
