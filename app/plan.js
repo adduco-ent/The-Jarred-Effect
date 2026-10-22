@@ -389,7 +389,7 @@
 
     if (s === 'future' && !REVIEW) {
       return html + '<section class="fut"><p class="fut-k">' + lock + 'Opens ' + esc(weekday(sel)) + '</p>' +
-        '<ul class="fut-l">' + titles(d).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+        '<ul class="fut-l fut-l--peek">' + (d.kind === 'step' ? d.steps.map(function (x) { return '<li><b>' + esc(x.title) + '</b><span>' + esc(x.what) + '</span></li>'; }).join('') : '<li><b>' + esc(d.title) + '</b>' + (d.ask ? '<span>' + esc(d.ask) + '</span>' : '') + '</li>') + '</ul>' +
         '<p class="pl-note">' + esc(c.future || '') + '</p>' +
         (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '"><span aria-hidden="true">‹</span>Back to today</button>' : '') + '</section>';
     }
@@ -1242,20 +1242,25 @@
     var quotes = w.quotes || [], qt = quotes.length ? quotes[(T - 1) % quotes.length] : null;
     var ask = (w.ask || 'How’s today treating you?').replace(/\?$/, (p.name ? ', ' + p.name : '') + '?');
     var reply = ci && w.today ? w.today[ci === 'half' && many ? 'halfMany' : ci] : '';
+    var date = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     var arrowIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    return '<section class="wl wl--' + part + '" aria-labelledby="wl-ask">' +
-      '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i>' : '') +
+    // the week so far: a dot per day, filled when it's done, ringed for today
+    var week = p.days.map(function (x) { var s = dayState(x); return '<i class="' + (s === 'kept' ? 'is-done' : x.day === T ? 'is-now' : '') + '"></i>'; }).join('');
+    return '<section class="wl wl--' + part + '" aria-labelledby="wl-hi">' +
+      '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-rays"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i><i class="wl-stars wl-stars--b"></i>' : '') +
         '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i></div>' +
-      '<div class="wl-in"><p class="wl-hi">' + esc(hello) + '</p>' +
-        '<p class="wl-line">' + esc((w.days || [])[T - 1] || w.later || '') + '</p>' +
-        (qt ? '<figure class="wl-q"><blockquote>“' + esc(qt.q) + '”</blockquote><figcaption>' + esc(qt.by) + '</figcaption></figure>' : '') +
-        '<h1 class="wl-ask" id="wl-ask">' + esc(ask) + '</h1>' +
+      '<header class="wl-top"><p class="wl-date wl-in" style="--d:0">' + esc(date) + '</p>' +
+        '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '<span>Day ' + T + ' of 7</span></p>' +
+        '<h1 class="wl-hi wl-in" id="wl-hi" style="--d:2">' + esc(hello) + '</h1>' +
+        '<p class="wl-line wl-in" style="--d:3">' + esc((w.days || [])[T - 1] || w.later || '') + '</p></header>' +
+      (qt ? '<figure class="wl-q wl-in" style="--d:4"><blockquote>' + esc(qt.q) + '</blockquote><figcaption>' + esc(qt.by) + '</figcaption></figure>' : '') +
+      '<div class="wl-card wl-in" style="--d:5"><p class="wl-ask" id="wl-ask">' + esc(ask) + '</p>' +
         '<div class="wl-o" role="radiogroup" aria-labelledby="wl-ask">' + [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]].map(function (o) {
-          return '<button type="button" role="radio" aria-checked="' + (ci === o[0]) + '" data-wl="' + o[0] + '">' + wxIcons[o[0]] + '<span>' + o[1] + '</span></button>';
+          return '<button type="button" role="radio" aria-checked="' + (ci === o[0]) + '" data-wl="' + o[0] + '"><span class="wl-ic">' + wxIcons[o[0]] + '</span><span>' + o[1] + '</span><i class="wl-ok" aria-hidden="true">' + check + '</i></button>';
         }).join('') + '</div>' +
-        '<p class="wl-reply" role="status">' + esc(reply) + '</p>' +
-        '<button type="button" class="pl-do wl-go" data-wl-go' + (ci ? '' : ' disabled') + '><span>' + esc(w.go || 'Let’s go') + '</span>' + arrowIcon + '</button>' +
-        '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button></div></section>';
+        (ci ? '<p class="wl-reply" role="status">' + esc(reply) + '</p><button type="button" class="pl-do wl-go" data-wl-go><span>' + esc(w.go || 'Let’s go') + '</span>' + arrowIcon + '</button>'
+          : '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button>') +
+      '</div></section>';
   }
   function leaveWelcome() {
     st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0);

@@ -992,59 +992,101 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .pl-steps .pl-foldc+.pl-foldc{margin-top:-.5rem}
 @media (prefers-reduced-motion:reduce){.db-s,.db-s i,.pl-fold{transition:none;animation:none}.db.is-all .db-segs{animation:none}}
 
-/* ---- the welcome: a breather before the day. A sky that follows the time of day, then one warm question. */
+
+/* a future day: a real peek ahead, each step with what it asks */
+.fut-l--peek{gap:.875rem}
+.fut-l--peek li{display:grid;gap:.25rem}
+.fut-l--peek b{font-weight:400}
+.fut-l--peek span{font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--dim)}
+
+/* ---- the welcome: a breather before the day (premium pass 2026-10-22). The sky fills the screen and follows the time
+   of day; the greeting and a quote sit in the sky; the one question rests on a frosted card at the bottom. */
 body.is-welcome .oh-head,body.is-welcome .tb{display:none}
-body.is-welcome .pl{padding-top:0;padding-bottom:max(2rem,env(safe-area-inset-bottom))}
-.wl{display:grid;min-height:100svh;margin:0 -1.25rem;grid-template-rows:auto 1fr}
-.wl-sky{position:relative;height:clamp(14rem,40svh,20rem);overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%);mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
+body.is-welcome .pl{padding-top:0;padding-bottom:0}
+.wl{--wl-ink:var(--ink);--wl-dim:var(--dim);--wl-faint:var(--faint);position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:100svh;margin:0 -1.25rem;padding:max(2.75rem,calc(env(safe-area-inset-top) + 1.75rem)) 1rem max(1rem,env(safe-area-inset-bottom));overflow:hidden}
+/* the sky */
+.wl-sky{position:absolute;inset:0 0 auto;z-index:-1;height:78svh;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}
 .wl-sky i{position:absolute;display:block;border-radius:50%;pointer-events:none}
-.wl-glow{width:150%;height:120%;left:-25%;top:10%;filter:blur(.5rem)}
-.wl-sun{width:5.5rem;height:5.5rem}
-.wl-cloud{height:2.25rem;background:rgba(255,255,255,.75);filter:blur(.875rem);animation:wl-drift 46s ease-in-out infinite alternate}
-.wl-c1{width:13rem;left:-2rem;top:24%}
-.wl-c2{width:10rem;right:-1rem;top:40%;opacity:.8;animation-duration:58s;animation-delay:-12s}
-.wl-c3{width:15rem;left:28%;top:58%;opacity:.55;animation-duration:66s;animation-delay:-30s}
-.wl-hz{width:160%;height:9rem;left:-30%;bottom:-5rem;background:radial-gradient(closest-side,rgba(253,253,252,.95),rgba(253,253,252,0))}
-@keyframes wl-drift{from{transform:translateX(-1.5rem)}to{transform:translateX(2rem)}}
-@keyframes wl-breathe{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
-/* morning: a gold-peach dawn under pale blue, the sun low */
-.wl--morning .wl-sky{background:linear-gradient(180deg,#d9e6f7 0%,#ece8f3 46%,#fbe4d2 100%)}
-.wl--morning .wl-glow{background:radial-gradient(closest-side at 50% 78%,rgba(255,206,160,.75),rgba(255,206,160,0))}
-.wl--morning .wl-sun{left:calc(50% - 2.75rem);bottom:18%;background:radial-gradient(circle,#fff6e6 0%,#ffe2bd 45%,rgba(255,214,170,0) 72%);animation:wl-breathe 8s ease-in-out infinite}
-/* afternoon: clear and high */
-.wl--afternoon .wl-sky{background:linear-gradient(180deg,#c6dbf5 0%,#dfeafa 52%,#f2f2fb 100%)}
-.wl--afternoon .wl-glow{background:radial-gradient(closest-side at 74% 22%,rgba(255,255,255,.85),rgba(255,255,255,0))}
-.wl--afternoon .wl-sun{right:16%;top:12%;background:radial-gradient(circle,#ffffff 0%,#fff8ea 40%,rgba(255,248,234,0) 72%);animation:wl-breathe 9s ease-in-out infinite}
-/* evening: lavender into peach, the sun at the horizon */
-.wl--evening .wl-sky{background:linear-gradient(180deg,#c5c2ea 0%,#e3cde2 48%,#f8d4c0 100%)}
-.wl--evening .wl-glow{background:radial-gradient(closest-side at 50% 88%,rgba(255,190,150,.8),rgba(255,190,150,0))}
-.wl--evening .wl-sun{left:calc(50% - 2.75rem);bottom:6%;background:radial-gradient(circle,#fff0dc 0%,#ffc9a0 45%,rgba(255,180,140,0) 72%);animation:wl-breathe 8s ease-in-out infinite}
-.wl--evening .wl-cloud{background:rgba(255,236,232,.7)}
-/* night: the navy of the plan card, a moon and a few stars */
-.wl--night .wl-sky{background:linear-gradient(180deg,#0f1c30 0%,#1d2b4a 58%,#45426f 100%)}
-.wl--night .wl-glow{background:radial-gradient(closest-side at 70% 30%,rgba(143,179,227,.28),rgba(143,179,227,0))}
-.wl--night .wl-sun{right:18%;top:16%;width:3.5rem;height:3.5rem;background:radial-gradient(circle at 40% 40%,#fff8ea 0%,#efe7da 55%,rgba(239,231,218,0) 72%);box-shadow:0 0 2.5rem rgba(239,231,218,.35)}
-.wl--night .wl-stars{inset:0;border-radius:0;background:radial-gradient(1.5px 1.5px at 12% 22%,#fff,transparent),radial-gradient(1px 1px at 28% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 30%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 58% 10%,#fff,transparent),radial-gradient(1px 1px at 84% 40%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 92% 18%,#fff,transparent),radial-gradient(1px 1px at 36% 48%,rgba(255,255,255,.6),transparent);animation:wl-breathe 6s ease-in-out infinite}
-.wl--night .wl-cloud{background:rgba(143,160,200,.25)}
-/* the words */
-.wl-in{display:grid;align-content:start;justify-items:center;gap:.75rem;padding:0 max(1.5rem,env(safe-area-inset-left)) 1rem;text-align:center;margin-top:-1.5rem;position:relative}
-.wl-hi{margin:0;font-family:var(--display);font-size:2.125rem;line-height:1.1;color:var(--ink)}
-.wl-line{max-width:22rem;margin:0;font-size:.9375rem;line-height:1.55;color:var(--dim);text-wrap:balance}
-.wl-q{max-width:21rem;margin:.75rem 0 .25rem;padding:0}
+.wl-glow{width:170%;height:95%;left:-35%;top:4%}
+.wl-rays{width:150%;height:150%;left:-25%;top:-25%;border-radius:0!important;opacity:.5;background:conic-gradient(from 200deg at 50% 50%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.35) 12deg,rgba(255,255,255,0) 26deg,rgba(255,255,255,0) 40deg,rgba(255,255,255,.28) 52deg,rgba(255,255,255,0) 66deg,rgba(255,255,255,0) 360deg);-webkit-mask-image:radial-gradient(closest-side,#000,transparent);mask-image:radial-gradient(closest-side,#000,transparent);animation:wl-turn 90s linear infinite}
+.wl-sun{width:7.5rem;height:7.5rem;animation:wl-rise 2.4s cubic-bezier(.22,1,.36,1) both,wl-breathe 9s ease-in-out 2.4s infinite}
+.wl-cloud{height:2.5rem;background:rgba(255,255,255,.72);filter:blur(1rem);animation:wl-drift 52s ease-in-out infinite alternate}
+.wl-c1{width:15rem;left:-3rem;top:22%}
+.wl-c2{width:11rem;right:-2rem;top:36%;opacity:.8;animation-duration:64s;animation-delay:-14s}
+.wl-c3{width:17rem;left:26%;top:52%;opacity:.55;animation-duration:72s;animation-delay:-34s}
+.wl-hz{width:180%;height:14rem;left:-40%;bottom:-7rem;background:radial-gradient(closest-side,rgba(253,253,252,.9),rgba(253,253,252,0))}
+@keyframes wl-drift{from{transform:translateX(-2rem)}to{transform:translateX(2.5rem)}}
+@keyframes wl-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes wl-rise{from{opacity:0;transform:translateY(2.5rem) scale(.92)}to{opacity:1;transform:none}}
+@keyframes wl-turn{to{transform:rotate(360deg)}}
+@keyframes wl-twinkle{0%,100%{opacity:.55}50%{opacity:1}}
+/* morning: a gold-peach dawn under pale blue, the sun just up */
+.wl--morning{background:linear-gradient(180deg,#d6e4f7 0%,#e9e6f3 34%,#fbe3d0 62%,#fdfaf6 82%,#fdfdfc 100%)}
+.wl--morning .wl-glow{background:radial-gradient(closest-side at 50% 62%,rgba(255,204,158,.85),rgba(255,214,176,.35) 45%,rgba(255,214,176,0))}
+.wl--morning .wl-sun{left:calc(50% - 4.5rem);top:50%;width:9rem;height:9rem;background:radial-gradient(circle,#fffdf8 0 17%,#fff1dc 22%,rgba(255,222,186,.75) 30%,rgba(255,206,160,.32) 48%,rgba(255,206,160,0) 70%)}
+/* afternoon: clear, high and bright */
+.wl--afternoon{background:linear-gradient(180deg,#bfd6f4 0%,#d8e6f9 36%,#ecf1fb 62%,#fafbfd 82%,#fdfdfc 100%)}
+.wl--afternoon .wl-glow{background:radial-gradient(closest-side at 72% 20%,rgba(255,255,255,.9),rgba(255,255,255,0))}
+.wl--afternoon .wl-sun{right:4%;top:2%;width:9rem;height:9rem;background:radial-gradient(circle,#fff 0 16%,#fffbf0 21%,rgba(255,248,226,.7) 30%,rgba(255,248,226,.25) 48%,rgba(255,248,226,0) 70%)}
+.wl--afternoon .wl-rays{left:-2%;top:-62%}
+/* evening: lavender into peach, the sun resting on the horizon */
+.wl--evening{background:linear-gradient(180deg,#bfbbe8 0%,#dccbe4 32%,#f6d0bd 60%,#fcf3ee 82%,#fdfdfc 100%)}
+.wl--evening .wl-glow{background:radial-gradient(closest-side at 50% 70%,rgba(255,184,140,.85),rgba(255,196,160,.35) 45%,rgba(255,196,160,0))}
+.wl--evening .wl-sun{left:calc(50% - 4.5rem);top:54%;width:9rem;height:9rem;background:radial-gradient(circle,#fff6ec 0 17%,#ffd9b8 22%,rgba(255,186,146,.7) 30%,rgba(255,176,136,.3) 48%,rgba(255,176,136,0) 70%)}
+.wl--evening .wl-cloud{background:rgba(255,236,230,.66)}
+/* night: the plan card's navy, a moon and twinkling stars */
+.wl--night{--wl-ink:#f4eee4;--wl-dim:rgba(239,231,218,.82);--wl-faint:rgba(239,231,218,.6);background:linear-gradient(180deg,#0d1828 0%,#18263f 34%,#34385f 60%,#9d97b8 80%,#f4f2f6 92%,#fdfdfc 100%)}
+.wl--night .wl-glow{background:radial-gradient(closest-side at 72% 18%,rgba(143,179,227,.3),rgba(143,179,227,0))}
+.wl--night .wl-rays{display:none}
+.wl--night .wl-sun{right:20%;top:59%;width:4.25rem;height:4.25rem;background:radial-gradient(circle at 38% 38%,#fffaf0 0%,#efe7da 58%,rgba(239,231,218,0) 74%);box-shadow:0 0 3rem rgba(239,231,218,.35)}
+.wl--night .wl-stars{inset:0;border-radius:0!important;background:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 26% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 26%,rgba(255,255,255,.85),transparent),radial-gradient(1px 1px at 58% 8%,#fff,transparent),radial-gradient(1px 1px at 84% 36%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 36% 42%,rgba(255,255,255,.6),transparent);animation:wl-twinkle 5s ease-in-out infinite}
+.wl--night .wl-stars--b{background:radial-gradient(1px 1px at 18% 34%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 22%,rgba(255,255,255,.9),transparent),radial-gradient(1px 1px at 92% 12%,#fff,transparent),radial-gradient(1px 1px at 52% 46%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 6% 50%,rgba(255,255,255,.7),transparent);animation-duration:7s;animation-delay:-2s}
+.wl--night .wl-cloud{background:rgba(150,165,205,.22)}
+/* the words in the sky */
+.wl-top{display:grid;justify-items:center;gap:.625rem;text-align:center}
+.wl-date{margin:0;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--wl-dim)}
+.wl-week{display:flex;align-items:center;gap:.3125rem;margin:0}
+.wl-week i{width:.4375rem;height:.4375rem;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(62,108,171,.28)}
+.wl-week i.is-done{background:var(--sky-btn);box-shadow:none}
+.wl-week i.is-now{width:1.125rem;border-radius:99px;background:#fff;box-shadow:0 0 0 1.5px rgba(62,108,171,.55)}
+.wl-week span{margin-left:.375rem;font-size:.6875rem;font-weight:600;color:var(--wl-dim)}
+.wl--night .wl-week i{background:rgba(239,231,218,.22);box-shadow:none}
+.wl--night .wl-week i.is-done{background:#a9c3e6}
+.wl--night .wl-week i.is-now{background:#f4eee4;box-shadow:none}
+.wl-hi{margin:.75rem 0 0;font-family:var(--display);font-weight:400;font-size:clamp(2.5rem,11vw,3rem);line-height:1.02;letter-spacing:-.01em;color:var(--wl-ink);text-shadow:0 1px 1.5rem rgba(255,255,255,.35)}
+.wl--night .wl-hi{text-shadow:0 1px 1.5rem rgba(0,0,0,.25)}
+.wl-line{max-width:20rem;margin:0;font-size:.9375rem;line-height:1.55;color:var(--wl-dim);text-wrap:balance}
+/* the quote: a quiet panel of light */
+.wl-q{position:relative;align-self:center;max-width:21rem;margin:1.75rem 0 0;padding:1.25rem 1.375rem 1.125rem;border-radius:1.375rem;border:1px solid rgba(255,255,255,.65);background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.3));-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 .75rem 2rem -1.5rem rgba(40,70,120,.4);text-align:center}
+.wl-q::before{content:"“";position:absolute;left:50%;top:-.875rem;transform:translateX(-50%);display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:#fff;box-shadow:0 .25rem .75rem -.25rem rgba(40,70,120,.35);padding-top:.625rem;font-family:var(--display);font-size:1.875rem;line-height:1;color:var(--accent)}
 .wl-q blockquote{margin:0;font-family:var(--serif);font-size:1rem;line-height:1.55;color:var(--ink);text-wrap:balance}
-.wl-q figcaption{margin-top:.375rem;font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
-.wl-ask{margin:1.25rem 0 .25rem;font-family:var(--serif);font-weight:400;font-size:1.25rem;line-height:1.35;color:var(--ink);text-wrap:balance}
-.wl-o{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem;width:100%;max-width:22rem}
-.wl-o button{display:grid;justify-items:center;gap:.375rem;min-height:5.75rem;padding:.875rem .25rem;border-radius:1.25rem;border:1px solid rgba(62,108,171,.18);background:linear-gradient(180deg,#ffffff 0%,#f8fafd 100%);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 .25rem .75rem -.375rem rgba(40,70,120,.25);font:inherit;font-size:.9375rem;font-weight:600;color:var(--ink);cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease;--wx-fill:#fff}
-.wl-o button svg{width:2rem;height:2rem;color:var(--accent)}
-.wl-o button[aria-checked="true"]{border-color:rgba(62,108,171,.4);background:var(--sheen),var(--sky);color:var(--accent-ink);box-shadow:0 0 0 3px var(--accent-soft),var(--lift);--wx-fill:#eef3fb}
+.wl-q figcaption{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.625rem;font-size:.625rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.wl-q figcaption::before,.wl-q figcaption::after{content:"";width:1rem;height:1px;background:currentColor;opacity:.5}
+.wl--night .wl-q{border-color:rgba(239,231,218,.18);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05))}
+.wl--night .wl-q blockquote{color:#f4eee4}
+.wl--night .wl-q figcaption{color:rgba(239,231,218,.65)}
+/* the question, on a frosted card */
+.wl-card{display:grid;gap:.875rem;margin-top:auto;padding:1.375rem 1.125rem 1.125rem;border-radius:1.75rem;border:1px solid rgba(255,255,255,.9);background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(250,251,255,.8));-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 1.25rem 2.5rem -1.25rem rgba(40,70,120,.35);text-align:center}
+.wl-q+.wl-card,.wl-top+.wl-card{margin-top:auto}
+.wl-ask{margin:0;font-family:var(--serif);font-size:1.1875rem;line-height:1.35;color:var(--ink);text-wrap:balance}
+.wl-o{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem}
+.wl-o button{position:relative;display:grid;justify-items:center;gap:.5rem;min-height:6rem;padding:.875rem .25rem .75rem;border-radius:1.25rem;border:1px solid rgba(62,108,171,.16);background:linear-gradient(180deg,#ffffff 0%,#f7f9fd 100%);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 .375rem 1rem -.625rem rgba(40,70,120,.3);font:inherit;font-size:.9375rem;font-weight:600;color:var(--ink);cursor:pointer;transition:transform .18s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;--wx-fill:#fff}
+.wl-ic{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;background:var(--sheen),var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.4);color:var(--accent);--wx-fill:#eef3fb}
+.wl-ic svg{width:1.625rem;height:1.625rem}
+.wl-ok{position:absolute;top:.5rem;right:.5rem;display:grid;place-items:center;width:1.125rem;height:1.125rem;border-radius:50%;background:var(--sky-btn);color:#fff;opacity:0;transform:scale(.6);transition:opacity .2s ease,transform .25s cubic-bezier(.22,1,.36,1)}
+.wl-ok svg{width:.75rem;height:.75rem}
+.wl-o button[aria-checked="true"]{border-color:rgba(62,108,171,.45);background:linear-gradient(180deg,#ffffff,#eef3fb);box-shadow:0 0 0 3px var(--accent-soft),inset 0 1px 0 #fff,0 .5rem 1.25rem -.75rem rgba(62,108,171,.5);color:var(--accent-ink);transform:translateY(-2px)}
+.wl-o button[aria-checked="true"] .wl-ok{opacity:1;transform:none}
+.wl-o button[aria-checked="true"] .wl-ic{background:var(--sky-btn);color:#fff;box-shadow:none;--wx-fill:#5c87c4}
 .wl-o button:active{transform:scale(.96)}
 .wl-o button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.wl-reply{min-height:2.75rem;max-width:21rem;margin:.25rem 0 0;font-size:.9375rem;line-height:1.5;color:var(--accent-ink);text-wrap:balance}
-.wl-reply:empty{min-height:2.75rem}
-.wl-go{max-width:22rem;margin-top:0}
+.wl-reply{margin:.125rem 0 0;font-size:.9375rem;line-height:1.5;color:var(--accent-ink);text-wrap:balance;animation:wl-up .45s cubic-bezier(.22,1,.36,1) both}
+.wl-go{margin:0;animation:wl-up .5s cubic-bezier(.22,1,.36,1) .08s both}
 .wl-go svg{width:1rem;height:1rem}
-.wl-go:disabled{opacity:.45;cursor:default;box-shadow:none}
-.wl-skip{justify-self:center;font-weight:500;color:var(--faint)}
-@media (prefers-reduced-motion:reduce){.wl-cloud,.wl-sun,.wl-stars{animation:none}.wl-o button{transition:none}}
+.wl-skip{justify-self:center;min-height:2.5rem;font-weight:500;color:var(--faint)}
+@keyframes wl-up{from{opacity:0;transform:translateY(.75rem)}to{opacity:1;transform:none}}
+/* everything arrives a beat apart */
+.wl-in{animation:wl-up .8s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--d) * 110ms + 150ms)}
+@media (prefers-reduced-motion:reduce){.wl-in,.wl-reply,.wl-go,.wl-sun,.wl-rays,.wl-cloud,.wl-stars{animation:none}.wl-o button,.wl-ok{transition:none}}
+.wl-q{margin-bottom:1.5rem}
+@media (max-height:720px){.wl{padding-top:max(1.75rem,calc(env(safe-area-inset-top) + 1rem))}.wl-top{gap:.5rem}.wl-hi{margin-top:.375rem;font-size:2.375rem}.wl-q{margin-top:1.375rem;margin-bottom:1rem;padding:1.125rem 1.25rem 1rem}.wl-q blockquote{font-size:.9375rem}.wl-card{gap:.75rem;padding-top:1.125rem}.wl-o button{min-height:5.25rem;padding-top:.75rem}}
