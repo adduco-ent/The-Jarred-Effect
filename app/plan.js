@@ -812,10 +812,10 @@
     return (pin ? '<span class="je-tag">' + pinIcon + 'Pinned</span>' : '') + (isPersonal(e) ? '<span class="je-tag">' + lock + 'Personal</span>' : '');
   }
 
+  // talk instead of type: a round mic beside Save; while it listens, the line under the sheet says so
   function talkBtn() {
     var on = !!(talk && talk.on);
-    return '<button type="button" class="jw-mic' + (on ? ' is-on' : '') + '" data-jtalk aria-pressed="' + on + '" aria-label="' + (on ? 'Stop talking' : 'Talk instead of type') + '">' +
-      (on ? '<i class="jw-rec" aria-hidden="true"></i><span>Stop</span>' : micIcon + '<span>Talk</span>') + '</button>';
+    return '<button type="button" class="jw-mic' + (on ? ' is-on' : '') + '" data-jtalk aria-pressed="' + on + '" aria-label="' + (on ? 'Stop talking' : 'Talk instead of type') + '">' + micIcon + '</button>';
   }
 
   // ---- Journal home: what to write today, any draft in progress, then everything written, by week
@@ -851,7 +851,8 @@
           : st.journal.length ? '<button type="button" class="lnk lnk--quiet" data-jwipe>Delete everything you’ve written here</button>' : '') + '</section>';
   }
 
-  // ---- the writer: its own page, a sheet of paper that grows with them, saved as they type
+  // ---- the writer: its own page, a sheet of paper that grows with them, saved as they type.
+  // One quiet header for every kind of entry: what it is, then the question. A letter's "To" sits on the sheet itself.
   function jWriter() {
     var editing = J.view === 'edit', e = editing ? jEntry() : null;
     if (editing && !e) return jGone();
@@ -862,72 +863,88 @@
         : '<a class="pb-back jw-back" href="#' + backTo + '"><span aria-hidden="true">‹</span>' + cap(backTo) + '</a>') +
       '<div class="jw-acts">' + (SR ? talkBtn() : '') +
         (editing ? '<button type="button" class="send-btn" data-jdone>Done</button>' : '<button type="button" class="send-btn" data-jsave>Save</button>') + '</div></div>';
-    var head;
-    if (editing) head = '<p class="pl-k">' + esc(kindLabel(e)) + ' · ' + esc(shortDate(new Date(e.at))) + '</p>' + (e.prompt ? '<h1 class="jw-q">' + esc(e.prompt) + '</h1>' : '<h1 class="sr">Edit your entry</h1>');
-    else if (m === 'prompt') head = '<p class="pl-k">Today’s prompt</p><h1 class="jw-q">' + esc(curPrompt()) + '</h1><button type="button" class="lnk jnext" data-jnext>' + againIcon + 'Another one</button>';
-    else if (m === 'letter') head = '<p class="pl-k">A letter you won’t send</p><p class="fb-l">Who is it to?</p>' + chips('data-jto', 'jw', L.map(function (x, i) { return [String(i), x.to]; }), String(li), 'ci-o--to') + '<h1 class="jw-q">' + esc(L[li].prompt) + '</h1>';
-    else if (m === 'quick') head = '<p class="pl-k">Quick line</p><h1 class="jw-q">One sentence on today.</h1><p class="fb-l">What kind of day is it?</p>' + chips('data-jday', 'jw', [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], d.day != null ? d.day : todayCi());
-    else head = '<p class="pl-k">Free write</p><h1 class="jw-q">Whatever’s on your mind. Any length.</h1>';
+    var kick, q, extra = '';
+    if (editing) { kick = kindLabel(e) + ' · ' + shortDate(new Date(e.at)); q = e.kind === 'letter' ? '' : e.prompt || ''; }
+    else if (m === 'prompt') { kick = 'Today’s prompt'; q = curPrompt(); extra = '<button type="button" class="lnk jnext" data-jnext>' + againIcon + 'Another one</button>'; }
+    else if (m === 'letter') { kick = 'A letter you won’t send'; q = L[li].prompt; }
+    else if (m === 'quick') {
+      kick = 'Quick line'; q = 'One sentence on today.';
+      extra = '<p class="fb-l">What kind of day is it?</p>' + chips('data-jday', 'jw', [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], d.day != null ? d.day : todayCi());
+    } else { kick = 'Free write'; q = 'Whatever’s on your mind. Any length.'; }
     var title = editing ? e.title : d.title, body = editing ? e.body : d.text;
     var withTitle = m === 'free' || m === 'prompt';
+    // a letter starts with who it's to, like a real one
+    var to = m !== 'letter' ? ''
+      : editing ? '<p class="jw-to"><span class="jw-to-k">To</span><span class="jw-to-s">' + esc(e.to || 'Future you') + '</span></p>'
+      : '<div class="jw-to" role="radiogroup" aria-label="Who the letter is to"><span class="jw-to-k">To</span>' +
+        L.map(function (x, i) { return '<button type="button" role="radio" aria-checked="' + (i === li) + '" data-jto="' + i + '">' + esc(x.to) + '</button>'; }).join('') + '</div>';
     var ph = m === 'quick' ? 'Just one line.' : m === 'letter' ? LETTER_HI[li] : 'Start with the first sentence that comes. Keep going as long as you like.';
     var rest = editing ? 'Changes save as you write' : 'Your draft saves as you write';
+    var live = !!(talk && talk.on);
     var hint = talk && talk.note ? talk.note : SR ? '' : 'To talk instead of type, tap the mic on your keyboard.';
-    return bar + '<header class="jw-head">' + head + '</header>' +
-      '<div class="jw-paper' + (m === 'quick' ? ' is-quick' : '') + '">' + (withTitle ? '<input class="jw-title" id="jw-title" data-jw="title" type="text" maxlength="140" placeholder="Title (optional)" aria-label="Title, optional" autocomplete="off" value="' + esc(title || '') + '">' : '') +
+    return bar + '<header class="jw-head"><p class="pl-k">' + esc(kick) + '</p>' + (q ? '<h1 class="jw-q">' + esc(q) + '</h1>' : '<h1 class="sr">Your entry</h1>') + extra + '</header>' +
+      '<div class="jw-paper' + (m === 'quick' ? ' is-quick' : '') + '">' + to +
+        (withTitle ? '<input class="jw-title" id="jw-title" data-jw="title" type="text" maxlength="140" placeholder="Title (optional)" aria-label="Title, optional" autocomplete="off" value="' + esc(title || '') + '">' : '') +
         '<textarea class="jw-t' + (m === 'quick' ? ' is-quick' : '') + '" id="jw-t" data-jw="body" rows="' + (m === 'quick' ? 2 : 10) + '" aria-label="Your entry" placeholder="' + esc(ph) + '">' + esc(body || '') + '</textarea></div>' +
-      '<p class="jw-foot"><span id="jw-wc">' + wcLabel(wc(body)) + '</span><span class="jw-st" id="jw-st" data-rest="' + esc(rest) + '">' + esc(rest) + '</span></p>' +
+      '<p class="jw-foot"><span id="jw-wc">' + wcLabel(wc(body)) + '</span><span class="jw-st' + (live ? ' is-live' : '') + '" id="jw-st" data-rest="' + esc(rest) + '">' + esc(live ? 'Listening. Tap the mic to stop.' : rest) + '</span></p>' +
       (hint ? '<p class="pt-e jw-hint" role="status">' + esc(hint) + '</p>' : '');
   }
 
-  // ---- one entry, on its own page: the whole thing, easy to read, then what they can do with it
+  // ---- one entry, on its own page: the words in full, Edit at the top, and the options as one list of rows
   function jGone() { return '<a class="pb-back" href="#journal"><span aria-hidden="true">‹</span>Journal</a><div class="wait"><p><b>That entry isn’t here anymore.</b></p><a class="yu-link" href="#journal">Back to your journal<span aria-hidden="true">→</span></a></div>'; }
   function jRead() {
     var e = findEntry(J.id);
     if (!e) return jGone();
-    var pin = (st.jmeta[e.id] || {}).pin, personal = isPersonal(e);
+    var pin = !!(st.jmeta[e.id] || {}).pin, personal = isPersonal(e);
     var date = e.src ? dayDate(e.n) : new Date(e.at);
     var kick = e.src ? 'From your plan · Day ' + e.n : kindLabel(e) + ' · ' + clock(e.at);
     var h1 = e.src ? e.label : e.title || longDate(date);
     var sub = e.src || e.title ? longDate(date) : '';
+    var bar = '<div class="jw-bar"><a class="pb-back jw-back" href="#journal"><span aria-hidden="true">‹</span>Journal</a>' +
+      (J.edit ? '' : '<button type="button" class="send-btn jr-edit" data-jedit>' + editIcon + 'Edit</button>') + '</div>';
     var body = J.edit && e.src
       ? '<section class="jw-paper jr-ed">' + words(e.kind, e.ref, e.field, 'In your words', 4) +
         '<p class="pt-e">This is the same note as on day ' + e.n + '. Changing it here changes it there too.</p>' +
         '<button type="button" class="send-btn" data-jedit-done>' + check + 'Done</button></section>'
-      : '<article class="jw-paper jr-body">' + paras(e.body) + '</article>';
-    var acts = J.del
+      : '<article class="jw-paper jr-body">' + (e.kind === 'letter' && !e.src ? '<p class="jr-to">To ' + esc((e.to || 'Future you').replace(/^\w/, function (c) { return c.toLowerCase(); })) + '</p>' : '') + paras(e.body) + '</article>';
+    function row(attr, icon, label, sub2, right, cls) {
+      return '<li><button type="button" class="jr-o' + (cls ? ' ' + cls : '') + '" ' + attr + '><span class="jr-oi">' + icon + '</span>' +
+        '<span class="jr-ot"><b>' + label + '</b>' + (sub2 ? '<span>' + sub2 + '</span>' : '') + '</span>' + (right || '') + '</button></li>';
+    }
+    var sw = '<i class="je-sw-i" aria-hidden="true"></i>';
+    var opts = J.del
       ? '<div class="je-del" role="alert"><p class="fb-q">Delete this entry?</p><p class="pt-e">' + (e.src ? 'It’s removed from day ' + e.n + ' too. ' : '') + 'This can’t be undone.</p>' +
         '<div class="je-del-r"><button type="button" class="je-del-b" data-jdel-yes>' + binIcon + 'Delete</button><button type="button" class="lnk" data-jdel-no>Keep it</button></div></div>'
-      : '<div class="je-acts">' +
-        '<button type="button" class="je-a" data-jedit>' + editIcon + 'Edit</button>' +
-        '<button type="button" class="je-a" data-jpin aria-pressed="' + !!pin + '">' + pinIcon + (pin ? 'Unpin' : 'Pin') + '</button>' +
-        '<button type="button" class="je-a" data-jdel>' + binIcon + 'Delete</button>' +
-        (e.src ? '<button type="button" class="je-a je-a--go" data-view-day="' + e.n + '">Day ' + e.n + '<span aria-hidden="true">→</span></button>' : '') + '</div>';
-    return '<a class="pb-back" href="#journal"><span aria-hidden="true">‹</span>Journal</a>' +
-      '<header class="td-head sc-head jr-head"><p class="pl-k">' + esc(kick) + '</p><h1 class="td-h jr-h">' + esc(h1) + '</h1>' + (sub ? '<p class="pl-note">' + esc(sub) + '</p>' : '') + '</header>' +
+      : '<ul class="pb-card jr-opts">' +
+        row('role="switch" aria-checked="' + pin + '" data-jpin', pinIcon, 'Pin to the top', '', sw) +
+        row('role="switch" aria-checked="' + personal + '" data-jpersonal', lock, 'Keep it personal', 'Just for you. It won’t shape your plans, steps or suggestions.', sw) +
+        (e.src ? row('data-view-day="' + e.n + '"', calIcon, 'Open day ' + e.n, '', chev) : '') +
+        row('data-jdel', binIcon, 'Delete this entry', '', '', 'is-del') + '</ul>';
+    return bar + '<header class="td-head sc-head jr-head"><p class="pl-k">' + esc(kick) + '</p><h1 class="td-h jr-h">' + esc(h1) + '</h1>' + (sub ? '<p class="pl-note">' + esc(sub) + '</p>' : '') + '</header>' +
       (J.warn ? safeCard() : '') +
-      (e.prompt ? '<p class="jr-p">' + esc(e.prompt) + '</p>' : '') + body +
-      '<p class="jw-foot"><span>' + wcLabel(wc(e.body)) + '</span><span class="je-tags">' + tagsFor(e) + '</span></p>' +
-      '<section class="sc jr-acts">' + acts +
-        '<button type="button" class="je-sw" role="switch" aria-checked="' + personal + '" data-jpersonal><span class="je-sw-t"><b>Keep it personal</b>' +
-          '<span>Just for you. It won’t shape your plans, steps or suggestions.</span></span><i class="je-sw-i" aria-hidden="true"></i></button></section>';
+      (e.prompt && e.kind !== 'letter' ? '<p class="jr-p">' + esc(e.prompt) + '</p>' : '') + body +
+      '<p class="jw-foot"><span>' + wcLabel(wc(e.body)) + '</span></p>' +
+      '<section class="jr-acts">' + opts + '</section>';
   }
 
-  // ---- one entry in the list: a few lines of it, tap to read the whole thing
+  // ---- one entry in the list: one quiet line for when and what, then the title or the words. Tap to read it all.
+  function kindShort(e) {
+    if (e.src) return { checkin: 'Check-in', step: 'How your step went', skip: /^Your version/.test(e.label) ? 'Your version' : 'Gut call', receipt: 'One line on today', note: 'Day ' + e.n + ' question', lookback: 'Look back', next: 'Shape next week' }[e.kind] || 'From your plan';
+    if (e.kind === 'letter') return 'Letter';
+    if (e.kind === 'quick') return 'Quick line' + (e.day ? ' · ' + STEAM[e.day] + ' day' : '');
+    return e.kind === 'prompt' ? 'Prompt' : 'Free write';
+  }
   function entryCard(e, ro) {
-    var when = e.src ? 'Day ' + e.n + ' · ' + shortDate(dayDate(e.n)) : shortDate(new Date(e.at)) + ' · ' + clock(e.at);
-    var n = wc(e.body);
-    var text = (kindLabel(e) + ' ' + (e.title || '') + ' ' + e.prompt + ' ' + e.body).toLowerCase();
-    var top = '<span class="je-top"><span class="je-d">' + esc(when) + '</span><span class="je-tags">' + (ro ? '' : tagsFor(e)) + '</span></span>' +
-      '<span class="je-k">' + esc(kindLabel(e)) + '</span>' +
-      (e.title ? '<span class="je-t">' + esc(e.title) + '</span>' : e.prompt ? '<span class="je-p">' + esc(e.prompt) + '</span>' : '');
+    var meta = (e.src ? 'Day ' + e.n : shortDate(new Date(e.at))) + ' · ' + kindShort(e);
+    var head = e.title || (e.kind === 'letter' && !e.src ? 'To ' + (e.to || 'Future you').replace(/^\w/, function (c) { return c.toLowerCase(); }) : '');
+    var pin = (st.jmeta[e.id] || {}).pin, personal = isPersonal(e);
+    var marks = ro ? '' : (pin ? '<span class="je-mark" aria-label="Pinned">' + pinIcon + '</span>' : '') + (personal ? '<span class="je-mark" aria-label="Kept personal">' + lock + '</span>' : '') + '<span class="je-chev" aria-hidden="true">›</span>';
+    var text = (kindLabel(e) + ' ' + (e.title || '') + ' ' + (e.to || '') + ' ' + e.prompt + ' ' + e.body).toLowerCase();
+    var top = '<span class="je-top"><span class="je-d">' + esc(meta) + '</span><span class="je-tags">' + marks + '</span></span>' +
+      (head ? '<span class="je-t">' + esc(head) + '</span>' : '');
     if (ro) return '<li data-jtext="' + esc(text) + '"><article class="je is-ro">' + top + '<div class="je-x je-x--all">' + paras(e.body) + '</div></article></li>';
-    // a long entry says how long it is and offers to read it all; a short one just shows it's tappable
-    var long = n >= 30;
-    if (!long) top = top.replace('<span class="je-tags">' + tagsFor(e) + '</span>', '<span class="je-tags">' + tagsFor(e) + '<span class="je-chev" aria-hidden="true">›</span></span>');
     return '<li data-jtext="' + esc(text) + '"><a class="je' + (J.saved === e.id ? ' is-new' : '') + '" href="#journal/e/' + encodeURIComponent(e.id) + '">' + top +
-      '<span class="je-x">' + esc(oneLine(e.body)) + '</span>' +
-      (long ? '<span class="je-f"><span>' + wcLabel(n) + '</span><span class="je-go">Read it all<span aria-hidden="true">›</span></span></span>' : '') + '</a></li>';
+      '<span class="je-x' + (head ? ' is-short' : '') + '">' + esc(oneLine(e.body)) + '</span></a></li>';
   }
 
   // ---- by week of their plan, newest first, with anything pinned on top
@@ -980,7 +997,11 @@
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var talk = null;
   function sentence(t) { t = t.trim(); if (!t) return ''; t = t.charAt(0).toUpperCase() + t.slice(1); return /[.!?]$/.test(t) ? t : t + '.'; }
-  function paintTalk() { var b = root.querySelector('[data-jtalk]'); if (b) b.outerHTML = talkBtn(); }
+  function paintTalk() {
+    var b = root.querySelector('[data-jtalk]'); if (b) b.outerHTML = talkBtn();
+    var s = root.querySelector('#jw-st'), on = !!(talk && talk.on);
+    if (s) { s.textContent = on ? 'Listening. Tap the mic to stop.' : s.getAttribute('data-rest'); s.classList.toggle('is-live', on); }
+  }
   function talkStop(note) {
     if (talk) { talk.on = false; try { talk.rec.stop(); } catch (x) { /* already stopped */ } }
     talk = note ? { on: false, note: note } : null;

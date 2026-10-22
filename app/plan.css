@@ -893,3 +893,52 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .in-card .lk-t,.in-card .pl-k{margin:0}
 .in-card .pl-k{margin-bottom:-.25rem}
 @media (prefers-reduced-motion:reduce){.nd-help{animation:none}}
+
+/* ---- journal, calmer (2026-10-21): fewer type styles, one action per bar, options as a list of rows */
+/* the bar: Back on the left; on the right a round mic and one labeled action */
+.jw-bar .jw-mic{box-sizing:border-box;display:grid;place-items:center;width:2.5rem;min-height:2.5rem;height:2.5rem;padding:0;border-radius:50%;border:1.5px solid transparent;background:var(--sheen) padding-box,var(--sky) padding-box,var(--edge-up) border-box;box-shadow:0 1px 2px rgba(14,26,44,.06);color:var(--accent-ink)}
+.jw-bar .jw-mic svg{width:1.25rem;height:1.25rem;color:currentColor}
+.jw-bar .jw-mic.is-on{border-color:transparent;background:var(--sky-btn);color:#fff;box-shadow:0 0 0 0 rgba(62,108,171,.4);animation:jw-rec 1.3s ease-in-out infinite}
+.jw-bar .send-btn svg,.jr-edit svg{width:1rem;height:1rem}
+.jw-acts{gap:.625rem}
+.jw-st.is-live{display:inline-flex;align-items:center;gap:.375rem;color:var(--accent-ink)}
+.jw-st.is-live::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:var(--accent);animation:jw-rec 1.3s ease-in-out infinite}
+/* one header for every kind of entry: what it is, then the question at a calm size */
+.jw-head{gap:.5rem}
+.jw-head .jw-q{font-size:1.125rem;line-height:1.45}
+.jw-head .fb-l{margin:.375rem 0 -.125rem}
+/* a letter: To, on the sheet */
+.jw-to{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;margin:0;padding-bottom:.875rem;border-bottom:1px solid rgba(28,24,18,.08)}
+.jw-to-k{margin-right:.25rem;font-family:var(--serif);font-size:1rem;color:var(--dim)}
+.jw-to button{min-height:2.25rem;padding:0 .875rem;border-radius:99px;border:1px solid rgba(28,24,18,.12);background:rgba(255,255,255,.8);font:inherit;font-size:.8125rem;font-weight:600;color:var(--dim);cursor:pointer;transition:border-color .2s ease,color .2s ease,transform .15s ease}
+.jw-to button[aria-checked="true"]{border-color:rgba(62,108,171,.32);background:var(--sheen),var(--sky);color:var(--accent-ink);box-shadow:var(--lift)}
+.jw-to button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.jw-to button:active{transform:scale(.96)}
+.jw-to-s{font-family:var(--serif);font-size:1rem;color:var(--ink)}
+/* the list: one quiet line for when and what, then a title or the words */
+.je{gap:.3125rem}
+.je-d{font-weight:500}
+.je-tags{gap:.5rem;color:var(--accent-ink)}
+.je-mark{display:grid;place-items:center}
+.je-mark svg{width:.9375rem;height:.9375rem}
+.je-t{font-size:1.125rem;line-height:1.25}
+.je-x{margin-top:0;font-size:.9375rem}
+.je-x.is-short{-webkit-line-clamp:2}
+/* reading: Edit in the bar, the options as rows */
+.jr-head{padding-top:.75rem}
+.jr-to{margin:0 0 .5rem!important;color:var(--dim)!important}
+.jr-acts{margin-top:1.5rem}
+.jr-opts{padding:.125rem 1.125rem}
+.jr-o{box-sizing:border-box;width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.875rem;min-height:3.5rem;padding:.75rem 0;border:0;background:none;font:inherit;text-align:left;color:var(--ink);cursor:pointer;transition:opacity .15s ease}
+.jr-o:active{opacity:.55}
+.jr-o:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:.5rem}
+.jr-oi{display:grid;place-items:center;width:2rem;height:2rem;border-radius:.625rem;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.4);color:var(--accent-ink)}
+.jr-oi svg{width:1rem;height:1rem}
+.jr-ot{display:grid;gap:.125rem}
+.jr-ot b{font-size:.9375rem;font-weight:600}
+.jr-ot span{font-size:.8125rem;line-height:1.45;color:var(--dim)}
+.jr-o[aria-checked="true"] .je-sw-i{background:var(--sky-btn)}
+.jr-o[aria-checked="true"] .je-sw-i::after{transform:translateX(1.125rem)}
+.jr-o.is-del{color:#a8471c}
+.jr-o.is-del .jr-oi{background:rgba(232,116,58,.08);box-shadow:inset 0 0 0 1px rgba(232,116,58,.2);color:#a8471c}
+@media (prefers-reduced-motion:reduce){.jw-bar .jw-mic.is-on,.jw-st.is-live::before{animation:none}.jw-to button,.jr-o{transition:none}}
