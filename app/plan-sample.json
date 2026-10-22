@@ -98,6 +98,57 @@
     "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week."
   },
   "focus": "Add as many Asks as you want. Fewer at once works better, though: with one to three, you’ll see the progress you’re after sooner.",
+  "journal": {
+    "general": [
+      "What’s on your mind right now? Start with the first sentence that comes.",
+      "What went better than you expected this week?",
+      "What are you avoiding, and what would the smallest first step be?",
+      "What do you want more of next week? Less of?",
+      "When did you feel most like yourself lately?",
+      "What would you tell a friend in your exact situation?",
+      "What’s one thing you did this week you’re quietly proud of?",
+      "What’s draining you right now, and what’s one kind boundary that would help?"
+    ],
+    "day": {
+      "full": [
+        "What made today a good day? How could you get more of that?",
+        "What did you do today that future you will thank you for?"
+      ],
+      "half": [
+        "What got in the way today, and what still went right?",
+        "What would make tomorrow a little easier?"
+      ],
+      "rough": [
+        "What happened today? Write it plainly, without judging it.",
+        "What do you need right now that you’re not getting?",
+        "What’s one small thing that would help, even a little?"
+      ]
+    },
+    "plays": [
+      "Who are you becoming with this habit? Describe them on an ordinary Tuesday.",
+      "What did the old habit give you today that you still need? Where else could you get it?"
+    ],
+    "letters": [
+      {
+        "to": "Future you",
+        "prompt": "Write to yourself a year from now. What do you hope is true?"
+      },
+      {
+        "to": "Past you",
+        "prompt": "What do you wish you’d known back then?"
+      },
+      {
+        "to": "Someone you’re carrying",
+        "prompt": "Say what happened, how it felt, and what you’re putting down. You won’t send it."
+      }
+    ],
+    "safety": {
+      "title": "You don’t have to carry this alone",
+      "text": "If you’re thinking about hurting yourself, or you’re not safe right now, please reach out now. Call your local emergency number or a crisis line. In the US and Canada, you can call or text 988, any time.",
+      "link": "Find a crisis line where you are",
+      "note": "Your words are saved. This app is for reflection, and it can’t replace real help."
+    }
+  },
   "r": "bbaoobaooaoa",
   "library": [
     "Building a new habit",
