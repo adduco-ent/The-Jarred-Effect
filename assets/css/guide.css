@@ -1,8 +1,11 @@
 /* opt-in.html — page styles (shared ones are in /styles.css). */
 /* shared: the two poles */
-/* the warm light in the top left: a soft haze, not an orb. Peach fading through rose into the app's lavender, with no visible edge */
-.tje-aura{position:absolute;width:62rem;height:46rem;left:-28rem;top:-26rem;border-radius:50%;transform:rotate(-14deg);background:radial-gradient(closest-side,rgba(243,170,132,.15),rgba(238,180,166,.09) 34%,rgba(214,186,226,.045) 64%,rgba(198,182,238,0) 100%);pointer-events:none}
-@media (max-width:767px){.tje-aura{width:34rem;height:26rem;left:-17rem;top:-15rem}}
+/* the light at the top: a wide, soft brow of warm light cast down from the top center. Peach fading through rose
+   into the app's lavender, with no visible edge */
+.tje-aura{position:absolute;left:50%;top:-20rem;width:min(84rem,170%);height:36rem;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(243,170,132,.19),rgba(238,180,166,.11) 34%,rgba(214,186,226,.055) 64%,rgba(198,182,238,0) 100%);pointer-events:none}
+@media (max-width:767px){.tje-aura{top:-13rem;width:160%;height:24rem}}
+/* split hero: the brow spans the light half only, so it fades out before the navy panel */
+@media (min-width:768px){.tgd-hero-a .tje-aura{width:100%}}
 .tje-grain{position:absolute;inset:0;background:url(../img/grain.png) repeat;background-size:11.25rem 11.25rem;opacity:.32;mix-blend-mode:soft-light;pointer-events:none}
 /* on navy the dark half would vanish into the panel: a hairline keeps the dot whole */
 .tje-dark .tje-dot{box-shadow:0 0 0 1.5px rgba(239,231,218,.4)}
