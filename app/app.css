@@ -402,3 +402,11 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-peek-t{width:78%}
 .oh-facts{flex-wrap:wrap;row-gap:.375rem}
 .oh-facts span{white-space:nowrap}
+
+/* the A card, cooler (2026-10-22): nearly white with a whisper of warmth, a neutral edge, letter and shadow */
+.oh-end--a{border-color:rgba(28,24,18,.08);background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.035),rgba(243,163,120,0) 60%),linear-gradient(180deg,#fefefd,#fbfbfa);box-shadow:inset 0 1px 0 #fff,0 1.5rem 3rem -2.25rem rgba(14,26,44,.28)}
+.oh-end--a b{color:rgba(28,24,18,.05)}
+.oh-end--a:hover{box-shadow:inset 0 1px 0 #fff,0 2rem 3.5rem -2.25rem rgba(14,26,44,.34)}
+.oh-end--a[aria-checked="true"]{box-shadow:0 0 0 2px var(--pearl),0 0 0 3.5px var(--ink),0 1.5rem 3rem -2.25rem rgba(14,26,44,.28)}
+.oh-peek-q{border-color:rgba(28,24,18,.08);background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.035),rgba(243,163,120,0) 60%),linear-gradient(180deg,#fefefd,#fbfbfa);box-shadow:inset 0 1px 0 #fff,0 1.25rem 2.5rem -2rem rgba(14,26,44,.3)}
+.oh-peek-q b{color:rgba(28,24,18,.05)}

@@ -25,12 +25,12 @@ var OH_CONTENT = {
     { on: 'swing', ask: 'Most of my weeks are…', a: 'Pretty steady.', b: 'Amazing or awful.' },
     { on: 'swing', ask: 'After a really good stretch…', a: 'I keep the same pace.', b: 'I crash, then scramble to catch up.' },
     { on: 'insight', ask: 'When I notice a pattern in myself…', a: 'I change something that week.', b: 'I think it over for a while first.' },
-    { on: 'insight', ask: 'I’m better at…', a: 'Taking action.', b: 'Figuring out why.' },
+    { on: 'insight', ask: 'I’m better at…', a: 'Taking action.', b: 'Understanding why things happen.' },
     // added 2026-10-22: a third question for each trait, so one answer can't flip a type (kept at the end so old result links still read)
     { on: 'dd', ask: 'On a busy week, the thing I want most…', a: 'Waits until I have time.', b: 'Still gets a small slot.' },
     { on: 'ff', ask: 'When a plan stalls…', a: 'I trust it’ll come together.', b: 'I look for what to change.' },
     { on: 'aa', ask: 'When I look at my life right now…', a: 'I mostly see what’s missing.', b: 'I mostly see what’s working.' },
-    { on: 'ct', ask: 'When plans change last minute…', a: 'I take over and fix it.', b: 'I go with it and adjust.' },
+    { on: 'ct', ask: 'When plans change last minute…', a: 'I step in and get it back on track myself.', b: 'I go with it and adjust.' },
     { on: 'swing', ask: 'My motivation is…', a: 'About the same most days.', b: 'All in, or nothing.' },
     { on: 'insight', ask: 'When I learn something about myself…', a: 'I try something new right away.', b: 'I want to understand it fully first.' }
   ],
@@ -47,11 +47,11 @@ var OH_CONTENT = {
     ['Most of your weeks are pretty steady.', 'Your weeks tend to be amazing or awful.'],
     ['After a good stretch, you keep the same pace.', 'After a good stretch, you crash, then scramble to catch up.'],
     ['When you spot a pattern in yourself, you change something that week.', 'When you spot a pattern in yourself, you think it over first.'],
-    ['You’re better at taking action than figuring out why.', 'You’re better at figuring out why than taking action.'],
+    ['You’re better at taking action than understanding why things happen.', 'You’re better at understanding why things happen than taking action.'],
     ['On busy weeks, what you want most waits until there’s time.', 'Even on busy weeks, what you want most still gets a small slot.'],
     ['When a plan stalls, you trust it’ll come together.', 'When a plan stalls, you look for what to change.'],
     ['When you look at your life, you mostly see what’s missing.', 'When you look at your life, you mostly see what’s working.'],
-    ['When plans change last minute, you take over and fix it.', 'When plans change last minute, you go with it and adjust.'],
+    ['When plans change last minute, you step in and get it back on track yourself.', 'When plans change last minute, you go with it and adjust.'],
     ['Your motivation is about the same most days.', 'Your motivation runs all in, or nothing.'],
     ['When you learn something about yourself, you act on it right away.', 'When you learn something about yourself, you want to understand it fully first.']
   ],
