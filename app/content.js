@@ -10,7 +10,7 @@ var OH_CONTENT = {
   // names for the two patterns that aren't pole pairs (used in the "See all 12 questions" list)
   patterns: { swing: 'The swing', insight: 'Insight vs. action' },
   // short lines that appear above a few questions, so the quiz feels like it's building toward something
-  moments: { 1: 'Go with your first instinct.', 5: 'Your balance is starting to show.', 9: 'Four left. Your type is taking shape.', 12: 'Last one.' },
+  moments: { 1: 'Go with your first instinct.', 6: 'Your balance is starting to show.', 12: 'Six left. Your type is taking shape.', 18: 'Last one.' },
   // `on` is the pair or pattern a question measures: a pair id, or 'swing' / 'insight'.
   // `ask` is the setup, read once; `a` and `b` are short endings. Rule: anyone gets each question in under 5 seconds.
   questions: [
@@ -25,7 +25,70 @@ var OH_CONTENT = {
     { on: 'swing', ask: 'Most of my weeks are…', a: 'Pretty steady.', b: 'Amazing or awful.' },
     { on: 'swing', ask: 'After a really good stretch…', a: 'I keep the same pace.', b: 'I crash, then scramble to catch up.' },
     { on: 'insight', ask: 'When I notice a pattern in myself…', a: 'I change something that week.', b: 'I think it over for a while first.' },
-    { on: 'insight', ask: 'I’m better at…', a: 'Taking action.', b: 'Figuring out why.' }
+    { on: 'insight', ask: 'I’m better at…', a: 'Taking action.', b: 'Figuring out why.' },
+    // added 2026-10-22: a third question for each trait, so one answer can't flip a type (kept at the end so old result links still read)
+    { on: 'dd', ask: 'On a busy week, the thing I want most…', a: 'Waits until I have time.', b: 'Still gets a small slot.' },
+    { on: 'ff', ask: 'When a plan stalls…', a: 'I trust it’ll come together.', b: 'I look for what to change.' },
+    { on: 'aa', ask: 'When I look at my life right now…', a: 'I mostly see what’s missing.', b: 'I mostly see what’s working.' },
+    { on: 'ct', ask: 'When plans change last minute…', a: 'I take over and fix it.', b: 'I go with it and adjust.' },
+    { on: 'swing', ask: 'My motivation is…', a: 'About the same most days.', b: 'All in, or nothing.' },
+    { on: 'insight', ask: 'When I learn something about myself…', a: 'I try something new right away.', b: 'I want to understand it fully first.' }
+  ],
+  // what each answer tells us, said back to them ("why we think so"), one line per ending, in question order
+  evidence: [
+    ['When you want something, you see it and feel it before you plan it.', 'When you want something, you make a plan and get moving.'],
+    ['When motivation fades, you wait for the feeling to come back.', 'When motivation fades, you put the effort in anyway.'],
+    ['When something goes wrong, you trust it happened for a reason.', 'When something goes wrong, you look for what you missed.'],
+    ['When fear shows up, you push it aside and stay positive.', 'When fear shows up, you sit with it and ask what it’s telling you.'],
+    ['Right now, you’re pushing hard for what’s next.', 'Right now, you’re mostly happy with where you are.'],
+    ['When you hit a goal, you set a bigger one right away.', 'When you hit a goal, you let yourself enjoy it.'],
+    ['When something really matters, you do it yourself.', 'When something really matters, you let others help carry it.'],
+    ['Asking for help is hard for you.', 'Asking for help comes easily to you.'],
+    ['Most of your weeks are pretty steady.', 'Your weeks tend to be amazing or awful.'],
+    ['After a good stretch, you keep the same pace.', 'After a good stretch, you crash, then scramble to catch up.'],
+    ['When you spot a pattern in yourself, you change something that week.', 'When you spot a pattern in yourself, you think it over first.'],
+    ['You’re better at taking action than figuring out why.', 'You’re better at figuring out why than taking action.'],
+    ['On busy weeks, what you want most waits until there’s time.', 'Even on busy weeks, what you want most still gets a small slot.'],
+    ['When a plan stalls, you trust it’ll come together.', 'When a plan stalls, you look for what to change.'],
+    ['When you look at your life, you mostly see what’s missing.', 'When you look at your life, you mostly see what’s working.'],
+    ['When plans change last minute, you take over and fix it.', 'When plans change last minute, you go with it and adjust.'],
+    ['Your motivation is about the same most days.', 'Your motivation runs all in, or nothing.'],
+    ['When you learn something about yourself, you act on it right away.', 'When you learn something about yourself, you want to understand it fully first.']
+  ],
+  // how each type tends to answer, trait by trait (-2 to 2, same direction as the answers), and how much each trait
+  // matters to that type. A person's type is the profile their answers sit closest to; nothing depends on order.
+  profiles: {
+    dreamer:    { at: { dd: -1.8, ff: -1.5, aa: -0.5, ct: 0, swing: 0.3, insight: 0.3 }, weight: { dd: 3, ff: 2.5, aa: 0.5, ct: 0.3, swing: 0.5, insight: 0.5 } },
+    achiever:   { at: { dd: 1.8, ff: 0.5, aa: -1.5, ct: -1.5, swing: -0.5, insight: -1 }, weight: { dd: 2.5, ff: 0.7, aa: 2.5, ct: 2, swing: 0.7, insight: 1 } },
+    excavator:  { at: { dd: -0.3, ff: 1, aa: 0, ct: 0, swing: 0, insight: 1.8 }, weight: { dd: 0.6, ff: 1.2, aa: 0.3, ct: 0.3, swing: 0.5, insight: 3 } },
+    pendulum:   { at: { dd: 0, ff: -0.3, aa: -0.6, ct: 0, swing: 1.8, insight: 0 }, weight: { dd: 0.4, ff: 0.4, aa: 0.6, ct: 0.3, swing: 3, insight: 0.3 } },
+    calibrated: { at: { dd: 0, ff: 0, aa: 0, ct: 0, swing: -0.8, insight: 0 }, weight: { dd: 1, ff: 1, aa: 1, ct: 1, swing: 1.2, insight: 1 } }
+  },
+  // the optional last step: a few words they'd use for themselves. Never decides a type alone; it breaks near-ties
+  // and gets quoted back. Each type lists words people often use when they're that type.
+  selfWords: {
+    dreamer: ['dreamer', 'visionary', 'creative', 'hopeful', 'optimistic', 'idealistic', 'spiritual', 'imaginative', 'intuitive', 'positive'],
+    achiever: ['driven', 'hardworking', 'hard-working', 'ambitious', 'busy', 'determined', 'workaholic', 'perfectionist', 'tired', 'exhausted', 'focused', 'disciplined', 'reliable', 'responsible', 'independent'],
+    excavator: ['thoughtful', 'overthinker', 'overthinking', 'analytical', 'introspective', 'curious', 'deep', 'careful', 'reflective', 'cautious', 'logical', 'thinker'],
+    pendulum: ['inconsistent', 'passionate', 'intense', 'restless', 'spontaneous', 'moody', 'impulsive', 'scattered', 'all-or-nothing', 'burnt', 'burned', 'chaotic'],
+    calibrated: ['balanced', 'steady', 'calm', 'grounded', 'patient', 'content', 'stable', 'consistent', 'peaceful', 'centered']
+  },
+  // insights that only show for a particular mix of answers. `need` lists traits and which way they lean (a = the
+  // first pole or low, b = the second pole or high). The two strongest matches are shown.
+  combos: [
+    { need: { dd: 'a', ff: 'a' }, text: 'You can see what you want before anyone else can, and you trust it’s coming. Believing was never the hard part. The hard part is the ordinary Tuesday when the feeling is gone and the step still needs doing.' },
+    { need: { dd: 'b', aa: 'a', ct: 'a' }, text: 'You carry most things yourself, and you rarely stop at a finish line before setting the next one. That’s how you got this far. It’s also why you’re tired.' },
+    { need: { dd: 'b', aa: 'a' }, text: 'You turn wanting into work fast. What gets skipped is the part where you enjoy what the work got you.' },
+    { need: { ct: 'a' }, text: 'You’d rather do it yourself than explain it to someone else. People probably see you as the reliable one. Few of them know how heavy that gets.' },
+    { need: { swing: 'b', dd: 'a' }, text: 'When you’re inspired, you’re unstoppable. When the feeling leaves, the momentum leaves with it, and you wait for it to come back.' },
+    { need: { swing: 'b', dd: 'b' }, text: 'You can push hard, just not evenly. You go all in, burn bright, then need days to recover.' },
+    { need: { swing: 'b', aa: 'a' }, text: 'You chase big, crash, then chase again. The next big push always feels like the fix. Steadier would carry you further.' },
+    { need: { insight: 'b', ff: 'b' }, text: 'You see your own patterns clearly, maybe more clearly than anyone around you. Knowing has never been your problem. Moving before you’re sure is.' },
+    { need: { insight: 'b', dd: 'a' }, text: 'You understand what you want and why you want it. What’s missing is a small, ordinary step that turns the understanding into proof.' },
+    { need: { ff: 'a', ct: 'b' }, text: 'You trust life, and you trust people. That makes you easy to be around. Just make sure trust isn’t standing in for a plan.' },
+    { need: { aa: 'b', dd: 'a' }, text: 'You’re at peace with where you are, and part of you still wants more. The risk is that peace quietly turns into waiting.' },
+    { need: { ff: 'b', ct: 'a' }, text: 'You see what could go wrong, so you hold on tight. Control feels like safety. It costs you rest.' },
+    { need: { swing: 'a', insight: 'a', dd: 'b' }, text: 'You’re steady and you act. People can count on you. The real question is whether you’re steadily walking toward what you actually want.' }
   ],
   // The result screen. Draft copy for Jarred to review. Rules: plain words, every line understood in seconds,
   // Jarred's tone (warm, blunt, never blaming, no hype), and only the guide's own tools, explained in plain words.

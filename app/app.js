@@ -24,7 +24,11 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
   // scoring lives in score.js, shared with the server
-  function score(answers) { return window.OH_SCORE.score(C, answers); }
+  function score(answers) { return window.OH_SCORE.score(C, answers, state.words); }
+  // their type: the closest fit, or the runner-up if they said the first didn't sound like them
+  function final(r) { return state.pick && (state.pick === r.type || state.pick === r.second) ? state.pick : r.type; }
+  function short(t) { return C.types[t].name.replace(/^The /, ''); }
+  function mid(t) { return C.types[t].name.replace(/^The /, 'the '); } // the name mid-sentence: "over the Achiever"
 
   // ---------------------------------------------------------------- screens
   var screens = {
@@ -34,20 +38,20 @@
       return '<section class="oh-screen oh-welcome">' +
         '<p class="oh-kick"><span class="oh-dot" aria-hidden="true"></span>The Polarity Profile</p>' +
         '<h1 class="oh-h1">Find your <span class="oh-it">other half.</span></h1>' +
-        '<p class="oh-lead">Twelve quick choices. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
+        '<p class="oh-lead">Eighteen quick choices. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
         // a preview: a question card fanned behind the card they'll get at the end
         '<div class="oh-peek" aria-hidden="true">' +
           '<div class="oh-peek-q"><b>A</b><span>When I want something…</span></div>' +
           '<div class="oh-peek-t"><p class="oh-peek-k"><span class="oh-dot"></span>Your type</p><p class="oh-peek-name">Which one are you?</p><p class="oh-peek-list">' + names + '</p></div>' +
         '</div>' +
         '<button class="oh-cta" type="button" data-go="quiz">Start the quiz' + arrow() + '</button>' +
-        '<p class="oh-facts"><span>12 questions</span><span>2 minutes</span><span>No sign-up</span></p>' +
+        '<p class="oh-facts"><span>18 questions</span><span>About 2 minutes</span><span>No sign-up</span></p>' +
         (REVIEW ? allQuestions() : '') +
         '</section>';
     },
     // the quiz shell (header, progress, counter) stays put; only the stage inside it changes between questions
     quiz: function () {
-      var i = Math.min(state.step || 0, C.questions.length - 1);
+      var i = Math.min(state.step || 0, C.questions.length);
       return '<section class="oh-screen oh-quiz">' +
         '<div class="oh-qbar"><button class="oh-back oh-back--icon" type="button" data-back aria-label="Back">' + backArrow() + '</button>' +
           '<div class="oh-seg" aria-hidden="true">' + C.questions.map(function () { return '<i></i>'; }).join('') + '</div>' +
@@ -58,7 +62,7 @@
     // the reveal: the type as a card worth keeping, the balance map, the read, and their other half
     result: function () {
       var r = score(state.answers);
-      var t = C.types[r.type];
+      var type = final(r), t = C.types[type];
       var lc = function (s) { return esc(String(s).toLowerCase()); };
       var map = C.pairs.map(function (p, k) {
         var v = r.pairs[p.id];
@@ -71,7 +75,7 @@
       }).join('');
       // what's missing, said in a way that never contradicts the type: a Calibrated result never "leans hard"
       var half;
-      if (r.type !== 'calibrated' && r.missing) {
+      if (type !== 'calibrated' && r.missing) {
         half = 'You lean on <i>' + lc(r.leaning) + '</i>. Your other half is <i>' + lc(r.missing) + '</i>.';
       } else if (r.missing) {
         half = 'No single side runs the show. If one slips first, it’ll be <i>' + lc(r.missing) + '</i>.';
@@ -83,8 +87,10 @@
           '<p class="oh-type-k"><span class="oh-dot" aria-hidden="true"></span>Your Polarity Profile</p>' +
           '<h1 class="oh-type-name">' + esc(t.name) + '</h1>' +
           '<p class="oh-type-line">' + esc(t.line) + '</p>' +
+          (r.streak && type === r.type ? '<p class="oh-type-blend">Mostly ' + esc(short(type)) + ', with a ' + esc(short(r.streak)) + ' streak.</p>' : '') +
         '</div>' +
         '<div class="oh-share-row"><button class="oh-share" type="button" data-share>' + shareIcon() + '<span>Share your type</span></button><span class="oh-share-note" role="status"></span></div>' +
+        why(r, type) + mix(r, type) + confirm(r, type) +
         '<div class="oh-sec">' +
           '<p class="oh-sec-k">Your balance</p>' +
           '<ul class="oh-map" aria-label="Your balance map">' + map + '</ul>' +
@@ -107,7 +113,7 @@
         '<div class="oh-sec">' +
           '<p class="oh-sec-k">Your other half</p>' +
           '<p class="oh-half">' + half + '</p>' +
-          '<p class="oh-fine">' + (r.type !== 'calibrated' && r.missing ? 'It’s the side you use least, and the one your plan builds first.' : 'Your plan keeps both sides strong.') + '</p>' +
+          '<p class="oh-fine">' + (type !== 'calibrated' && r.missing ? 'It’s the side you use least, and the one your plan builds first.' : 'Your plan keeps both sides strong.') + '</p>' +
         '</div>' +
         '<div class="oh-sec">' +
           '<p class="oh-sec-k">Try this for 7 days</p>' +
@@ -137,6 +143,74 @@
     }
   };
 
+  // ---------------------------------------------------------------- the personal read
+  // insights that only show for their particular mix of answers: the two strongest matches
+  function combos(r) {
+    var lean = function (d, dir) { var v = r.dims[d]; return dir === 'a' ? (v <= -0.67 ? -v : 0) : (v >= 0.67 ? v : 0); };
+    var hits = (C.combos || []).map(function (c) {
+      var keys = Object.keys(c.need), sum = 0, ok = true;
+      keys.forEach(function (d) { var x = lean(d, c.need[d]); if (!x) ok = false; sum += x; });
+      return ok ? { c: c, keys: keys, s: sum / keys.length + keys.length * 0.2 } : null;
+    }).filter(Boolean).sort(function (a, b) { return b.s - a.s; });
+    var out = [];
+    hits.forEach(function (h) {
+      // skip one that's a smaller version of an insight already chosen
+      var dup = out.some(function (o) { return h.keys.every(function (k) { return o.keys.indexOf(k) >= 0 && o.c.need[k] === h.c.need[k]; }); });
+      if (!dup && out.length < 2) out.push(h);
+    });
+    return out.map(function (h) { return h.c.text; });
+  }
+  // three of their own answers that most show their type, one per trait
+  function evidence(r, type) {
+    var pr = C.profiles[type], seen = {};
+    if (type === 'calibrated') {
+      var both = state.answers.filter(function (v) { return v === 0; }).length;
+      var out = both >= 3 ? ['You said “both” to ' + both + ' of ' + C.questions.length + ' questions. You can see both sides, which is rarer than you’d think.'] : [];
+      C.questions.forEach(function (q, i) { if (q.on === 'swing' && state.answers[i] === -2 && out.length < 3 && !seen.swing) { seen.swing = 1; out.push(C.evidence[i][0]); } });
+      return out;
+    }
+    return C.questions.map(function (q, i) {
+      var a = state.answers[i]; if (a !== 2 && a !== -2) return null;
+      var agree = (a > 0 ? 1 : -1) * pr.at[q.on];
+      return agree > 0.25 ? { d: q.on, s: agree * pr.weight[q.on], line: C.evidence[i][a > 0 ? 1 : 0] } : null;
+    }).filter(Boolean).sort(function (x, y) { return y.s - x.s; })
+      .filter(function (x) { if (seen[x.d]) return false; seen[x.d] = 1; return true; }).slice(0, 3).map(function (x) { return x.line; });
+  }
+  function why(r, type) {
+    var ins = combos(r), ev = evidence(r, type), words = String(state.words || '').trim(), mirror = '';
+    if (words) {
+      var match = (r.words[type] || [])[0] || (r.streak && (r.words[r.streak] || [])[0]), whose = (r.words[type] || [])[0] ? type : r.streak;
+      mirror = '<p class="oh-words">You called yourself <b>“' + esc(words.replace(/\s+/g, ' ')) + '.”</b>' +
+        (match ? ' “' + esc(match.charAt(0).toUpperCase() + match.slice(1)) + '” is the ' + esc(short(whose)) + ' in you.' : '') + '</p>';
+    }
+    if (!ins.length && !ev.length && !mirror) return '';
+    return '<div class="oh-sec oh-why"><p class="oh-sec-k">Why we think so</p>' +
+      ins.map(function (x) { return '<p class="oh-read">' + esc(x) + '</p>'; }).join('') +
+      (ev.length ? '<p class="oh-sub">In your own answers</p><ul class="oh-ev">' + ev.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
+      mirror + '</div>';
+  }
+  // the mix: how close they are to every type, so it never feels like a box
+  function mix(r, type) {
+    return '<div class="oh-sec"><p class="oh-sec-k">Your mix</p><ul class="oh-mix">' + r.order.map(function (k) {
+      var pct = Math.max(1, Math.round(r.mix[k] * 100));
+      return '<li' + (k === type ? ' class="is-you"' : '') + '><span class="oh-mix-n">' + esc(short(k)) + '</span><span class="oh-mix-b" aria-hidden="true"><i style="width:' + pct + '%"></i></span><span class="oh-mix-p">' + pct + '%</span></li>';
+    }).join('') + '</ul><p class="oh-fine">Everyone carries some of each. These are yours.</p></div>';
+  }
+  // does this sound like you? If not, the next-closest type is one tap away
+  function confirm(r, type) {
+    var other = type === r.type ? r.second : r.type, ot = C.types[other];
+    if (state.pick && state.pick !== r.type) {
+      return '<div class="oh-sec oh-confirm"><p class="oh-body">You chose this one over ' + esc(mid(r.type)) + '. Your plan is built from it.</p>' +
+        '<button class="oh-link" type="button" data-pick="' + r.type + '">Switch back to ' + esc(mid(r.type)) + '</button></div>';
+    }
+    if (state.confirmed) return '<div class="oh-sec oh-confirm"><p class="oh-body oh-confirm-ok">Good. Your plan is built from this.</p></div>';
+    return '<div class="oh-sec oh-confirm"><p class="oh-sec-k">Does this sound like you?</p>' +
+      (state.notQuite
+        ? '<p class="oh-body">The closest after it is <b>' + esc(ot.name) + '</b>: ' + esc(ot.line) + '</p>' +
+          '<div class="oh-confirm-r"><button class="oh-share" type="button" data-pick="' + other + '">That’s more me</button><button class="oh-link" type="button" data-keep>Keep ' + esc(mid(type)) + '</button></div>'
+        : '<div class="oh-confirm-r"><button class="oh-share" type="button" data-yes>Yes, that’s me</button><button class="oh-share oh-share--quiet" type="button" data-notquite>Not quite</button></div>') + '</div>';
+  }
+
   // every question at a glance, grouped by what it measures; a native <details> so it opens and closes with no script
   function allQuestions() {
     var groups = C.pairs.map(function (p) { return { id: p.id, name: p.a + ' ↔ ' + p.b }; })
@@ -154,6 +228,14 @@
   }
 
   function stage(i) {
+    if (i >= C.questions.length) {
+      return '<p class="oh-moment">Last thing. It’s optional.</p>' +
+        '<h2 class="oh-q">In three words, how would you describe yourself?</h2>' +
+        '<label class="oh-field oh-words-in"><span class="oh-sr">Three words</span><input name="words" type="text" maxlength="80" autocomplete="off" placeholder="e.g. driven, restless, loyal" value="' + esc(state.words || '') + '"></label>' +
+        '<p class="oh-fine">We’ll use them to read you better, and quote them back. That’s all.</p>' +
+        '<button class="oh-cta oh-words-go" type="button" data-words>Show me my type' + arrow() + '</button>' +
+        '<p class="oh-fine oh-words-skip"><button class="oh-link" type="button" data-words-skip>Skip</button></p>';
+    }
     var q = C.questions[i];
     var picked = state.answers[i];
     var choice = function (v, cls, inner, label) {
@@ -171,7 +253,10 @@
   // header bits that change per question, updated in place so the progress line glides instead of jumping
   function chrome(i) {
     var count = root.querySelector('.oh-count'), bar = root.querySelector('.oh-bar i');
-    if (count) { count.innerHTML = '<b>' + pad(Math.min(i + 1, C.questions.length)) + '</b> / ' + pad(C.questions.length); count.setAttribute('aria-label', 'Question ' + (i + 1) + ' of ' + C.questions.length); }
+    if (count) {
+      if (i >= C.questions.length) { count.innerHTML = 'Last step'; count.setAttribute('aria-label', 'Last step'); }
+      else { count.innerHTML = '<b>' + pad(i + 1) + '</b> / ' + pad(C.questions.length); count.setAttribute('aria-label', 'Question ' + (i + 1) + ' of ' + C.questions.length); }
+    }
     if (bar) bar.style.width = Math.round(i / C.questions.length * 100) + '%';
     [].forEach.call(root.querySelectorAll('.oh-seg i'), function (s, k) { s.className = k < i ? 'is-done' : (k === i ? 'is-now' : ''); });
   }
@@ -221,12 +306,12 @@
   function quizUrl() { return location.origin + '/app/'; }
   // share: the type card image plus a link to take the quiz; falls back to copying the link
   function share(btn) {
-    var r = score(state.answers), t = C.types[r.type];
+    var r = score(state.answers), type = final(r), t = C.types[type];
     var note = root.querySelector('.oh-share-note');
     var text = 'I’m ' + t.name + '. ' + t.line + ' Which one are you?';
     var url = quizUrl();
-    var img = '/app/share/' + r.type + '.jpg';
-    var save = ' <a href="' + img + '" download="the-jarred-effect-' + r.type + '.jpg">Save the image</a>';
+    var img = '/app/share/' + type + '.jpg';
+    var save = ' <a href="' + img + '" download="the-jarred-effect-' + type + '.jpg">Save the image</a>';
     var say = function (html) { if (note) note.innerHTML = html; };
     // no share sheet (most computers): copy the link and offer the card image to post
     var copy = function () {
@@ -235,8 +320,8 @@
       try { navigator.clipboard.writeText(text + ' ' + url).then(done, fail); } catch (e) { fail(); }
     };
     if (!navigator.share) { copy(); return; }
-    fetch('/app/share/' + r.type + '.jpg').then(function (res) { return res.blob(); }).then(function (blob) {
-      var file = new File([blob], 'the-jarred-effect-' + r.type + '.jpg', { type: 'image/jpeg' });
+    fetch('/app/share/' + type + '.jpg').then(function (res) { return res.blob(); }).then(function (blob) {
+      var file = new File([blob], 'the-jarred-effect-' + type + '.jpg', { type: 'image/jpeg' });
       var data = navigator.canShare && navigator.canShare({ files: [file] }) ? { files: [file], text: text, url: url } : { text: text, url: url };
       return navigator.share(data);
     }).catch(function (err) { if (!err || err.name !== 'AbortError') copy(); });
@@ -247,7 +332,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { note.textContent = 'That email doesn’t look right. Check it and try again.'; form.email.focus(); return; }
     btn.disabled = true; form.classList.add('is-sending'); note.textContent = 'Sending…';
     fetch('/api/quiz', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, asks: [].map.call(form.querySelectorAll('input[name=ask]'), function (i) { return i.value.trim(); }).filter(Boolean), r: window.OH_SCORE.encode(state.answers), source: 'quiz', company: form.company.value }) })
+      body: JSON.stringify({ email: email, asks: [].map.call(form.querySelectorAll('input[name=ask]'), function (i) { return i.value.trim(); }).filter(Boolean), r: window.OH_SCORE.encode(state.answers), words: state.words || '', pick: state.pick || '', source: 'quiz', company: form.company.value }) })
       .then(function (res) { return res.json().catch(function () { return {}; }).then(function (d) { if (!res.ok || !d.ok) throw new Error('failed'); }); })
       .then(function () {
         state.sentTo = email; save();
@@ -276,7 +361,7 @@
     root.innerHTML = screens[name]();
     root.setAttribute('data-screen', name);
     document.body.setAttribute('data-screen', name);
-    if (name === 'quiz') chrome(Math.min(state.step || 0, C.questions.length - 1));
+    if (name === 'quiz') chrome(Math.min(state.step || 0, C.questions.length));
     var focus = root.querySelector('h1, .oh-q');
     if (focus) { focus.setAttribute('tabindex', '-1'); focus.focus({ preventScroll: true }); }
     window.scrollTo(0, 0);
@@ -301,12 +386,25 @@
       // a beat to see the choice land, then hand over to the next question
       setTimeout(function () {
         busy = false;
-        if (i + 1 < C.questions.length) { state.step = i + 1; save(); turn(i + 1, 1); }
-        else { state.done = true; save(); reading(); }
+        // after the last question: the optional three words, then the reveal
+        state.step = i + 1; save(); turn(i + 1, 1);
       }, still ? 120 : 420);
     } else if (t.hasAttribute('data-back')) {
       if (busy) return;
       if ((state.step || 0) > 0) { state.step -= 1; save(); turn(state.step, -1); } else go('welcome');
+    } else if (t.hasAttribute('data-words') || t.hasAttribute('data-words-skip')) {
+      var wi = root.querySelector('input[name=words]');
+      state.words = t.hasAttribute('data-words') && wi ? wi.value.replace(/\s+/g, ' ').trim().slice(0, 80) : '';
+      state.pick = null; state.confirmed = false; state.notQuite = false; state.done = true; save(); reading();
+    } else if (t.hasAttribute('data-yes')) {
+      state.confirmed = true; save(); render(); var cy = root.querySelector('.oh-confirm'); if (cy) cy.scrollIntoView({ block: 'center' });
+    } else if (t.hasAttribute('data-notquite')) {
+      state.notQuite = true; save(); render(); var cn = root.querySelector('.oh-confirm'); if (cn) cn.scrollIntoView({ block: 'center' });
+    } else if (t.hasAttribute('data-keep')) {
+      state.confirmed = true; state.notQuite = false; save(); render(); var ck = root.querySelector('.oh-confirm'); if (ck) ck.scrollIntoView({ block: 'center' });
+    } else if (t.hasAttribute('data-pick')) {
+      var r0 = score(state.answers), pk = t.getAttribute('data-pick');
+      state.pick = pk === r0.type ? null : pk; state.notQuite = false; state.confirmed = pk === r0.type; save(); render();
     } else if (t.hasAttribute('data-addask')) {
       var box = t.closest('.oh-asks'), n = box.querySelectorAll('input[name=ask]').length;
       if (n < 3) {
@@ -326,6 +424,9 @@
   root.addEventListener('submit', function (e) {
     var f = e.target.closest('[data-results]');
     if (f) { e.preventDefault(); sendResults(f); }
+  });
+  root.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.name === 'words') { e.preventDefault(); var b = root.querySelector('[data-words]'); if (b) b.click(); }
   });
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || root.getAttribute('data-screen') !== 'quiz') return;

@@ -346,3 +346,28 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-asks input::placeholder{color:#a39a8c}
 .oh-asks input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,24,18,.08)}
 .oh-add{justify-self:start;padding:.25rem 0;border:0;background:none;font:inherit;font-size:.875rem;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+
+/* ---- the personal read (2026-10-22): a blend under the type, why we think so, the mix, does this sound like you */
+.oh-type-blend{margin:1rem 0 0;padding-top:1rem;border-top:1px solid rgba(239,231,218,.16);font-size:.9375rem;font-weight:600;color:rgba(239,231,218,.86)}
+.oh-why .oh-read+.oh-read{margin-top:1rem}
+.oh-ev{list-style:none;margin:.75rem 0 0;padding:0;display:grid;gap:.625rem}
+.oh-ev li{position:relative;padding-left:1.125rem;font-size:1rem;line-height:1.55;color:var(--ink)}
+.oh-ev li::before{content:"";position:absolute;left:0;top:.6em;width:.4375rem;height:.4375rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+.oh-words{margin:1.5rem 0 0;padding:1rem 1.125rem;border-radius:1rem;background:rgba(62,108,171,.06);font-size:.9375rem;line-height:1.55;color:var(--dim)}
+.oh-words b{font-weight:600;color:var(--ink)}
+.oh-mix{list-style:none;margin:0;padding:0;display:grid;gap:.625rem}
+.oh-mix li{display:grid;grid-template-columns:6.25rem minmax(0,1fr) 2.75rem;align-items:center;gap:.75rem;font-size:.9375rem;color:var(--dim)}
+.oh-mix-b{display:block;height:.5rem;border-radius:99px;background:rgba(28,24,18,.07);overflow:hidden}
+.oh-mix-b i{display:block;height:100%;border-radius:99px;background:rgba(28,24,18,.28)}
+.oh-mix li.is-you{font-weight:600;color:var(--ink)}
+.oh-mix li.is-you .oh-mix-b i{background:linear-gradient(90deg,var(--orange),var(--shadow))}
+.oh-mix-p{text-align:right;font-variant-numeric:tabular-nums}
+.oh-mix+.oh-fine{margin-top:.875rem}
+.oh-confirm-r{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-top:.25rem}
+.oh-confirm .oh-body+.oh-confirm-r,.oh-confirm .oh-body+.oh-link{margin-top:1rem}
+.oh-share--quiet{background:transparent!important;box-shadow:none!important}
+.oh-confirm-ok{color:var(--ink)}
+.oh-words-in{margin-top:1.5rem}
+.oh-words-go{margin-top:1.25rem}
+.oh-words-skip{text-align:center;margin-top:.75rem}
+.oh-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

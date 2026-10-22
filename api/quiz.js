@@ -53,7 +53,12 @@ module.exports = async function quiz(req, res) {
     return reply(res, 503, { ok: false, error: 'not_configured' });
   }
 
-  const result = score(content, answers);
+  // their three words (optional) break near-ties, the same as in the browser; if they said the closest type didn't
+  // sound like them, they can pick the runner-up, and only the runner-up
+  const words = tidy(body.words).slice(0, 80);
+  const result = score(content, answers, words);
+  const pick = String(body.pick || '');
+  if (pick && pick !== result.type && pick === result.second) { result.type = pick; result.picked = true; }
   const site = process.env.SITE_URL.replace(/\/+$/, '');
 
   // 1 + 2: save the result and the contact (a failed save never blocks their email)
