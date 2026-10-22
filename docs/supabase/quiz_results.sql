@@ -17,3 +17,8 @@ alter table public.quiz_results enable row level security;
 grant select, insert, update, delete on table public.quiz_results to service_role;
 grant usage, select on sequence public.quiz_results_id_seq to service_role;
 create index if not exists quiz_results_email_idx on public.quiz_results (email);
+
+-- 2026-10-22: about your life (optional answers: relationship, kids, work, caretaking). Run this once, any time.
+-- Until it runs, results still save, just without these answers.
+alter table public.quiz_results add column if not exists life jsonb;   -- e.g. {"rel":"married","kids":"home","work":["corporate","side"],"care":"no"}
+alter table public.quiz_results add column if not exists words text;   -- their three words, if they gave them

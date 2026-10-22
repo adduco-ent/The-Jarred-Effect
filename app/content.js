@@ -162,6 +162,22 @@ var OH_CONTENT = {
       mid: 'You know what to hold and what to hand off. That’s a skill, not luck.'
     }
   },
+  // About your life (2026-10-22): four optional questions after the eighteen, so the plan fits the life they actually
+  // have. They never change the type; they shape the result's last line and the plan's examples. One tap answers
+  // (work takes several), and every one can be skipped with "Rather not say". Ids and values are checked on the server.
+  lifeIntro: 'A few about your life now, all optional. They help your plan fit the life you actually have.',
+  life: [
+    { id: 'rel', ask: 'Are you in a relationship?', options: [['single', 'Single'], ['dating', 'Dating'], ['together', 'In a relationship'], ['married', 'Married'], ['complicated', 'It’s complicated']] },
+    { id: 'kids', ask: 'Do you have kids?', options: [['none', 'No'], ['home', 'Yes, at home'], ['grown', 'Yes, grown up'], ['coming', 'One on the way']] },
+    { id: 'work', many: true, ask: 'What does your work look like right now?', hint: 'Pick all that fit.', options: [['corporate', 'A corporate career'], ['hourly', 'An hourly or shift job'], ['business', 'My own business'], ['freelance', 'Freelance or contract'], ['side', 'Something I’m building on the side'], ['school', 'In school'], ['none', 'Not working right now']] },
+    { id: 'care', ask: 'Are you caring for someone, like a parent or family member who relies on you?', options: [['yes', 'Yes'], ['sometimes', 'Sometimes'], ['no', 'No']] }
+  ],
+  // how their life reads back on the result: only what takes up their days (relationship status is never read back)
+  lifePhrases: {
+    work: { corporate: 'a corporate career', hourly: 'an hourly job', business: 'your own business', freelance: 'freelance work', side: 'something you’re building on the side', school: 'school' },
+    kids: { home: 'kids at home', coming: 'a little one on the way' },
+    care: { yes: 'someone who relies on your care', sometimes: 'someone who leans on you' }
+  },
   // added when the swing or the thinking pattern shows up, whatever the type
   patternReads: {
     swing: 'Your weeks swing up and down. That’s not a flaw in you. It just means you need a plan for the down part.',

@@ -3,7 +3,8 @@
 // 2. saves the result and their goal in Supabase (table quiz_results; docs/supabase/quiz_results.sql)
 // 3. adds them to Resend Contacts and emails their results, with a one-click unsubscribe link
 //
-// Body: { email, r: 12-letter answer code (a / o / b), asks?: up to 3 things they want (or ask: one), source?, company?: honeypot }
+// Body: { email, r: answer code (a / o / b), asks?: up to 3 things they want (or ask: one), words?, pick?,
+//         life?: { rel, kids, work: [...], care } (optional, checked against app/content.js), source?, company?: honeypot }
 // Environment variables: the same as /api/subscribe, plus SUPABASE_URL and SUPABASE_SECRET_KEY.
 // If Supabase isn't set up yet, the email still goes out and the missing save is logged.
 const crypto = require('crypto');
@@ -18,13 +19,31 @@ const REQUIRED = ['RESEND_API_KEY', 'RESEND_FROM', 'SITE_URL', 'UNSUBSCRIBE_SECR
 async function saveResult(row) {
   const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) { console.error('quiz: Supabase not configured, result not saved'); return false; }
-  const res = await fetch(url.replace(/\/+$/, '') + '/rest/v1/quiz_results', {
+  const post = (body) => fetch(url.replace(/\/+$/, '') + '/rest/v1/quiz_results', {
     method: 'POST',
     headers: { apikey: key, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify(row)
+    body: JSON.stringify(body)
   });
+  let res = await post(row);
+  // the life and words columns are newer (docs/supabase/quiz_results.sql); if they aren't added yet, save the rest
+  if (!res.ok && res.status === 400 && ('life' in row || 'words' in row)) {
+    const { life, words, ...rest } = row;
+    console.error('quiz: saving without life/words (run the 2026-10-22 lines in docs/supabase/quiz_results.sql)');
+    res = await post(rest);
+  }
   if (!res.ok) console.error('quiz: result not saved', res.status, await res.text().catch(() => ''));
   return res.ok;
+}
+// about your life: only the known questions and answers from app/content.js; anything else is dropped
+function tidyLife(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object') return out;
+  (content.life || []).forEach((q) => {
+    const ok = q.options.map((o) => o[0]), v = raw[q.id];
+    if (q.many) { const list = (Array.isArray(v) ? v : []).filter((x) => ok.includes(x)); if (list.length) out[q.id] = [...new Set(list)]; }
+    else if (ok.includes(v)) out[q.id] = v;
+  });
+  return out;
 }
 
 module.exports = async function quiz(req, res) {
@@ -56,6 +75,7 @@ module.exports = async function quiz(req, res) {
   // their three words (optional) break near-ties, the same as in the browser; if they said the closest type didn't
   // sound like them, they can pick the runner-up, and only the runner-up
   const words = tidy(body.words).slice(0, 80);
+  const life = tidyLife(body.life);
   const result = score(content, answers, words);
   const pick = String(body.pick || '');
   if (pick && pick !== result.type && pick === result.second) { result.type = pick; result.picked = true; }
@@ -63,7 +83,8 @@ module.exports = async function quiz(req, res) {
 
   // 1 + 2: save the result and the contact (a failed save never blocks their email)
   const [saved] = await Promise.all([
-    saveResult({ email, type: result.type, answers: code, pairs: result.pairs, swing: result.swing, insight: result.insight, ask: asks.length ? asks.join('\n') : null, source }),
+    saveResult({ email, type: result.type, answers: code, pairs: result.pairs, swing: result.swing, insight: result.insight, ask: asks.length ? asks.join('\n') : null, source,
+      ...(Object.keys(life).length ? { life } : {}), ...(words ? { words } : {}) }),
     saveContact(email)
   ]);
 

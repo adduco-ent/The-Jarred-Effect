@@ -38,20 +38,20 @@
       return '<section class="oh-screen oh-welcome">' +
         '<p class="oh-kick"><span class="oh-dot" aria-hidden="true"></span>The Polarity Profile</p>' +
         '<h1 class="oh-h1">Find your <span class="oh-it">other half.</span></h1>' +
-        '<p class="oh-lead">Eighteen quick choices, about two minutes. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
+        '<p class="oh-lead">Eighteen quick choices and a few about your life, about three minutes. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
         // a preview: a question card fanned behind the card they'll get at the end
         '<div class="oh-peek" aria-hidden="true">' +
           '<div class="oh-peek-q"><b>A</b><span>When I want something…</span></div>' +
           '<div class="oh-peek-t"><p class="oh-peek-k"><span class="oh-dot"></span>Your type</p><p class="oh-peek-name">Which one are you?</p><p class="oh-peek-list">' + names + '</p></div>' +
         '</div>' +
         '<button class="oh-cta" type="button" data-go="quiz">Start the quiz' + arrow() + '</button>' +
-        '<p class="oh-facts"><span>18 questions</span><span>About 2 minutes</span><span>No sign-up</span></p>' +
+        '<p class="oh-facts"><span>22 quick questions</span><span>About 3 minutes</span><span>No sign-up</span></p>' +
         (REVIEW ? allQuestions() : '') +
         '</section>';
     },
     // the quiz shell (header, progress, counter) stays put; only the stage inside it changes between questions
     quiz: function () {
-      var i = Math.min(state.step || 0, C.questions.length);
+      var i = Math.min(state.step || 0, C.questions.length + LIFE.length);
       return '<section class="oh-screen oh-quiz">' +
         '<div class="oh-qbar"><button class="oh-back oh-back--icon" type="button" data-back aria-label="Back">' + backArrow() + '</button>' +
           '<div class="oh-seg" aria-hidden="true">' + C.questions.map(function () { return '<i></i>'; }).join('') + '</div>' +
@@ -182,6 +182,7 @@
       mirror = '<p class="oh-words">You called yourself <b>“' + esc(words.replace(/\s+/g, ' ')) + '.”</b>' +
         (match ? ' “' + esc(match.charAt(0).toUpperCase() + match.slice(1)) + '” is the ' + esc(short(whose)) + ' in you.' : '') + '</p>';
     }
+    mirror += lifeLine();
     if (!ins.length && !ev.length && !mirror) return '';
     return '<div class="oh-sec oh-why"><p class="oh-sec-k">Why we think so</p>' +
       ins.map(function (x) { return '<p class="oh-read">' + esc(x) + '</p>'; }).join('') +
@@ -226,7 +227,34 @@
       '<p class="oh-fine">For each one, tap the ending that’s more like you, or Both.</p>' + body + '</details>';
   }
 
+  // about your life: one question per screen, one tap to answer (work takes several), always skippable
+  var LIFE = C.life || [];
+  function lifeStage(k) {
+    var q = LIFE[k], life = state.life || {}, v = life[q.id];
+    var on = function (o) { return q.many ? (v || []).indexOf(o) >= 0 : v === o; };
+    var mark = '<i class="oh-opt-m" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>';
+    return '<p class="oh-moment">' + esc(k === 0 ? C.lifeIntro : k === LIFE.length - 1 ? 'Last one about your life.' : '') + '</p>' +
+      '<h2 class="oh-q oh-q--life">' + esc(q.ask) + '</h2>' + (q.hint ? '<p class="oh-fine oh-life-hint">' + esc(q.hint) + '</p>' : '') +
+      '<div class="oh-opts' + (q.many ? ' oh-opts--many' : '') + '" role="' + (q.many ? 'group' : 'radiogroup') + '" aria-label="' + esc(q.ask) + '">' + q.options.map(function (o) {
+        return '<button class="oh-opt" type="button" ' + (q.many ? 'aria-pressed' : 'role="radio" aria-checked') + '="' + on(o[0]) + '" data-life="' + q.id + '" data-v="' + o[0] + '"><span>' + esc(o[1]) + '</span>' + mark + '</button>';
+      }).join('') + '</div>' +
+      (q.many ? '<button class="oh-cta oh-life-go" type="button" data-life-next>Continue' + arrow() + '</button>' : '') +
+      '<p class="oh-fine oh-words-skip"><button class="oh-link" type="button" data-life-skip="' + q.id + '">Rather not say</button></p>';
+  }
+  // their life, read back in one line: only what fills their days
+  function lifeLine() {
+    var life = state.life || {}, P = C.lifePhrases || {}, out = [];
+    (life.work || []).forEach(function (w) { if (P.work && P.work[w]) out.push(P.work[w]); });
+    if (P.kids && P.kids[life.kids]) out.push(P.kids[life.kids]);
+    if (P.care && P.care[life.care]) out.push(P.care[life.care]);
+    if (!out.length) return '';
+    var list = out.length === 1 ? out[0] : out.slice(0, -1).join(', ') + ' and ' + out[out.length - 1];
+    return '<p class="oh-words oh-life-read">' + (out.length === 1
+      ? 'With ' + esc(list) + ', your time is already spoken for, so your plan fits around it, one small step at a time.'
+      : 'Between ' + esc(list) + ', your days are already full, so your plan is built to fit around all of it, one small step at a time.') + '</p>';
+  }
   function stage(i) {
+    if (i >= C.questions.length && i < C.questions.length + LIFE.length) return lifeStage(i - C.questions.length);
     if (i >= C.questions.length) {
       return '<p class="oh-moment">Last thing. It’s optional.</p>' +
         '<h2 class="oh-q">In three words, how would you describe yourself?</h2>' +
@@ -253,10 +281,11 @@
   function chrome(i) {
     var count = root.querySelector('.oh-count'), bar = root.querySelector('.oh-bar i');
     if (count) {
-      if (i >= C.questions.length) { count.innerHTML = 'Last step'; count.setAttribute('aria-label', 'Last step'); }
+      if (i >= C.questions.length + LIFE.length) { count.innerHTML = 'Last step'; count.setAttribute('aria-label', 'Last step'); }
+      else if (i >= C.questions.length) { count.innerHTML = 'About you'; count.setAttribute('aria-label', 'About your life, ' + (i - C.questions.length + 1) + ' of ' + LIFE.length); }
       else { count.innerHTML = '<b>' + pad(i + 1) + '</b> / ' + pad(C.questions.length); count.setAttribute('aria-label', 'Question ' + (i + 1) + ' of ' + C.questions.length); }
     }
-    if (bar) bar.style.width = Math.round(i / C.questions.length * 100) + '%';
+    if (bar) bar.style.width = Math.min(100, Math.round(i / C.questions.length * 100)) + '%';
     [].forEach.call(root.querySelectorAll('.oh-seg i'), function (s, k) { s.className = k < i ? 'is-done' : (k === i ? 'is-now' : ''); });
   }
   var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -293,7 +322,7 @@
     var st = root.querySelector('.oh-stage');
     if (!st || still) { go('result'); return; }
     busy = true;
-    chrome(C.questions.length);
+    chrome(C.questions.length + LIFE.length);
     st.classList.add('is-leaving');
     setTimeout(function () {
       st.className = 'oh-stage';
@@ -331,7 +360,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { note.textContent = 'That email doesn’t look right. Check it and try again.'; form.email.focus(); return; }
     btn.disabled = true; form.classList.add('is-sending'); note.textContent = 'Sending…';
     fetch('/api/quiz', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, asks: [].map.call(form.querySelectorAll('input[name=ask]'), function (i) { return i.value.trim(); }).filter(Boolean), r: window.OH_SCORE.encode(state.answers), words: state.words || '', pick: state.pick || '', source: 'quiz', company: form.company.value }) })
+      body: JSON.stringify({ email: email, asks: [].map.call(form.querySelectorAll('input[name=ask]'), function (i) { return i.value.trim(); }).filter(Boolean), r: window.OH_SCORE.encode(state.answers), words: state.words || '', life: state.life || {}, pick: state.pick || '', source: 'quiz', company: form.company.value }) })
       .then(function (res) { return res.json().catch(function () { return {}; }).then(function (d) { if (!res.ok || !d.ok) throw new Error('failed'); }); })
       .then(function () {
         state.sentTo = email; save();
@@ -360,7 +389,7 @@
     root.innerHTML = screens[name]();
     root.setAttribute('data-screen', name);
     document.body.setAttribute('data-screen', name);
-    if (name === 'quiz') chrome(Math.min(state.step || 0, C.questions.length));
+    if (name === 'quiz') chrome(Math.min(state.step || 0, C.questions.length + LIFE.length));
     var focus = root.querySelector('h1, .oh-q');
     if (focus) { focus.setAttribute('tabindex', '-1'); focus.focus({ preventScroll: true }); }
     window.scrollTo(0, 0);
@@ -371,7 +400,7 @@
     var t = e.target.closest('button');
     if (!t || t.disabled) return;
     if (t.hasAttribute('data-go')) {
-      if (t.getAttribute('data-go') === 'quiz') { state.step = 0; state.answers = []; state.done = false; save(); }
+      if (t.getAttribute('data-go') === 'quiz') { state.step = 0; state.answers = []; state.life = {}; state.done = false; save(); }
       go(t.getAttribute('data-go'));
     } else if (t.hasAttribute('data-answer')) {
       if (busy) return;
@@ -388,6 +417,28 @@
         // after the last question: the optional three words, then the reveal
         state.step = i + 1; save(); turn(i + 1, 1);
       }, still ? 120 : 420);
+    } else if (t.hasAttribute('data-life')) {
+      if (busy) return;
+      var lq = LIFE.filter(function (x) { return x.id === t.getAttribute('data-life'); })[0], lv = t.getAttribute('data-v');
+      state.life = state.life || {};
+      if (lq.many) {
+        // several can fit; "Not working right now" stands alone
+        var arr = (state.life[lq.id] || []).slice(), at = arr.indexOf(lv);
+        if (at >= 0) arr.splice(at, 1); else if (lv === 'none') arr = ['none']; else arr = arr.filter(function (x) { return x !== 'none'; }).concat(lv);
+        state.life[lq.id] = arr; save();
+        [].forEach.call(root.querySelectorAll('[data-life="' + lq.id + '"]'), function (b) { b.setAttribute('aria-pressed', String(arr.indexOf(b.getAttribute('data-v')) >= 0)); });
+      } else {
+        state.life[lq.id] = lv; save();
+        [].forEach.call(root.querySelectorAll('[data-life="' + lq.id + '"]'), function (b) { b.setAttribute('aria-checked', String(b === t)); });
+        t.closest('.oh-opts').classList.add('is-choosing');
+        busy = true;
+        var li = state.step || 0;
+        setTimeout(function () { busy = false; state.step = li + 1; save(); turn(li + 1, 1); }, still ? 120 : 420);
+      }
+    } else if (t.hasAttribute('data-life-next') || t.hasAttribute('data-life-skip')) {
+      if (busy) return;
+      if (t.hasAttribute('data-life-skip') && state.life) delete state.life[t.getAttribute('data-life-skip')];
+      var ln = (state.step || 0) + 1; state.step = ln; save(); turn(ln, 1);
     } else if (t.hasAttribute('data-back')) {
       if (busy) return;
       if ((state.step || 0) > 0) { state.step -= 1; save(); turn(state.step, -1); } else go('welcome');
