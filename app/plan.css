@@ -942,3 +942,14 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .jr-o.is-del{color:#a8471c}
 .jr-o.is-del .jr-oi{background:rgba(232,116,58,.08);box-shadow:inset 0 0 0 1px rgba(232,116,58,.2);color:#a8471c}
 @media (prefers-reduced-motion:reduce){.jw-bar .jw-mic.is-on,.jw-st.is-live::before{animation:none}.jw-to button,.jr-o{transition:none}}
+
+/* ---- saving you can see (2026-10-22): a quiet line under each field. "Saving…" while typing, then a check and
+   where it went, and it stays until the next edit. A saved field settles with a soft edge. */
+.fbw .fb-s{position:static;display:flex;align-items:center;gap:.3125rem;min-height:1.125rem;margin:0;padding-left:.125rem;font-size:.75rem;font-weight:600;line-height:1.35;color:var(--faint);opacity:1;pointer-events:none;transition:color .25s ease}
+.fbw .fb-s:empty{min-height:0;margin-top:-.375rem}
+.fbw .fb-s svg{flex:none;width:.875rem;height:.875rem}
+.fbw.is-saved .fb-s{color:var(--accent-ink)}
+.fbw.is-saved .fb-t:not(:focus){background:linear-gradient(180deg,#fdfeff,#f6f8fd) padding-box,linear-gradient(180deg,rgba(143,179,227,.55),rgba(184,168,222,.35)) border-box;box-shadow:inset 0 1px 0 #fff}
+.jw-st.on{display:inline-flex;align-items:center;gap:.3125rem}
+.jw-st.on svg{width:.875rem;height:.875rem}
+@media (prefers-reduced-motion:reduce){.fbw .fb-s{transition:none}}

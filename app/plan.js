@@ -157,10 +157,10 @@
   function words(kind, ref, field, placeholder, rows, label) {
     var v = field.indexOf('ask.') === 0 ? askNote(ref, field) : (fb[kind][ref] || {})[field] || '';
     var idAttr = 'w-' + kind + '-' + String(ref).replace(/\./g, '_') + '-' + field.replace(/\./g, '_');
-    return '<div class="fbw">' + (label ? '<label class="fb-l" for="' + idAttr + '">' + esc(label) + '</label>' : '') +
+    return '<div class="fbw' + (v ? ' is-saved' : '') + '">' + (label ? '<label class="fb-l" for="' + idAttr + '">' + esc(label) + '</label>' : '') +
       '<textarea class="fb-t" id="' + idAttr + '" data-fb="' + kind + '" data-ref="' + ref + '" data-field="' + field + '" rows="1"' +
       (label ? '' : ' aria-label="' + esc(placeholder) + '"') + ' placeholder="' + esc(placeholder) + '">' + esc(v) + '</textarea>' +
-      '<span class="fb-s" aria-hidden="true">' + check + 'Saved</span></div>';
+      '<p class="fb-s" role="status">' + (v ? savedLine() : '') + '</p></div>';
   }
 
   function doneBtn(k, label) {
@@ -805,7 +805,10 @@
     save();
     if (field === 'body') { var c = root.querySelector('#jw-wc'); if (c) c.textContent = wcLabel(wc(val)); }
     var s = root.querySelector('#jw-st');
-    if (s) { clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = 'Saved'; s.classList.add('on'); clearTimeout(s._o); s._o = setTimeout(function () { s.classList.remove('on'); s.textContent = s.getAttribute('data-rest'); }, 1800); }, 600); }
+    if (s && !(talk && talk.on)) {
+      clearTimeout(s._t); s.classList.remove('on'); s.textContent = 'Saving…';
+      s._t = setTimeout(function () { s.innerHTML = navigator.onLine ? check + (J.view === 'edit' ? 'Saved' : 'Draft saved') : check + 'Saved on this phone'; s.classList.add('on'); }, 600);
+    }
   }
   function tagsFor(e) {
     var pin = (st.jmeta[e.id] || {}).pin;
@@ -1240,12 +1243,27 @@
   // fields grow with their words instead of scrolling inside a box
   function grow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; }
   // a quiet "Saved" a moment after they stop typing, so there's never a save button to hunt for
-  function savedHint(t) {
-    var h = t.parentNode && t.parentNode.querySelector('.fb-s');
+  // saving you can see: "Saving…" while they type, then a check and where it went, and it stays until they edit again.
+  // The very first time anyone writes, one line explains it; with no signal, it says so honestly.
+  function savedLine(where) {
+    if (!navigator.onLine) return check + 'Saved on this phone. It’ll sync when you’re back online.';
+    return check + 'Saved' + (where === '' ? '' : ' · ' + (where || 'shapes next week'));
+  }
+  function savedHint(t, where) {
+    var box = t.closest('.fbw'), h = box && box.querySelector('.fb-s');
     if (!h) return;
     clearTimeout(t._saved);
-    h.classList.remove('on');
-    t._saved = setTimeout(function () { h.classList.add('on'); clearTimeout(h._off); h._off = setTimeout(function () { h.classList.remove('on'); }, 1800); }, 700);
+    box.classList.remove('is-saved');
+    var empty = !t.value.trim();
+    box.classList.toggle('is-typing', !empty);
+    h.textContent = empty ? '' : 'Saving…';
+    t._saved = setTimeout(function () {
+      box.classList.remove('is-typing');
+      if (empty) { h.textContent = ''; return; }
+      box.classList.add('is-saved');
+      if (!st.savedTip) { st.savedTip = 1; save(); h.innerHTML = check + 'Everything you write saves on its own. No button needed.'; return; }
+      h.innerHTML = savedLine(where);
+    }, 650);
   }
   // re-fit fields when the screen changes width (rotating a phone, resizing a window)
   var regrow;
