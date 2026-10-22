@@ -1178,9 +1178,11 @@
   }
 
   function homeSteps(forNudges) {
-    return '<ol class="nd-steps"><li>In Safari, tap <b>Share</b> ' + shareIcon + '. On newer iPhones it’s under <b>•••</b>.</li>' +
-      '<li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>' +
-      '<li>Open Other Half from your Home Screen' + (forNudges ? ' and turn nudges on in You.' : '.') + '</li></ol>';
+    // matches Safari as it is now: ••• opens a menu with Share at the top, and Add to Home Screen lives in the Share
+    // sheet, a short scroll down. Older iPhones have Share right in the toolbar.
+    return '<ol class="nd-steps"><li>In Safari, tap <b>•••</b> and then <b>Share</b> ' + shareIcon + ', or tap Share right in the toolbar if you see it there.</li>' +
+      '<li>Scroll down a little and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>' +
+      '<li>Open Other Half from your Home Screen' + (forNudges ? ' and turn on your nudge in You.' : ', and it opens full screen like any app.') + '</li></ol>';
   }
   function nudgeHelp(where) {
     if (ND.where !== where || !ND.show) return '';
