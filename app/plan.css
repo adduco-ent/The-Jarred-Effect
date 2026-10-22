@@ -991,3 +991,60 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .pl-fold-x:active{transform:scale(.94)}
 .pl-steps .pl-foldc+.pl-foldc{margin-top:-.5rem}
 @media (prefers-reduced-motion:reduce){.db-s,.db-s i,.pl-fold{transition:none;animation:none}.db.is-all .db-segs{animation:none}}
+
+/* ---- the welcome: a breather before the day. A sky that follows the time of day, then one warm question. */
+body.is-welcome .oh-head,body.is-welcome .tb{display:none}
+body.is-welcome .pl{padding-top:0;padding-bottom:max(2rem,env(safe-area-inset-bottom))}
+.wl{display:grid;min-height:100svh;margin:0 -1.25rem;grid-template-rows:auto 1fr}
+.wl-sky{position:relative;height:clamp(14rem,40svh,20rem);overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%);mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
+.wl-sky i{position:absolute;display:block;border-radius:50%;pointer-events:none}
+.wl-glow{width:150%;height:120%;left:-25%;top:10%;filter:blur(.5rem)}
+.wl-sun{width:5.5rem;height:5.5rem}
+.wl-cloud{height:2.25rem;background:rgba(255,255,255,.75);filter:blur(.875rem);animation:wl-drift 46s ease-in-out infinite alternate}
+.wl-c1{width:13rem;left:-2rem;top:24%}
+.wl-c2{width:10rem;right:-1rem;top:40%;opacity:.8;animation-duration:58s;animation-delay:-12s}
+.wl-c3{width:15rem;left:28%;top:58%;opacity:.55;animation-duration:66s;animation-delay:-30s}
+.wl-hz{width:160%;height:9rem;left:-30%;bottom:-5rem;background:radial-gradient(closest-side,rgba(253,253,252,.95),rgba(253,253,252,0))}
+@keyframes wl-drift{from{transform:translateX(-1.5rem)}to{transform:translateX(2rem)}}
+@keyframes wl-breathe{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+/* morning: a gold-peach dawn under pale blue, the sun low */
+.wl--morning .wl-sky{background:linear-gradient(180deg,#d9e6f7 0%,#ece8f3 46%,#fbe4d2 100%)}
+.wl--morning .wl-glow{background:radial-gradient(closest-side at 50% 78%,rgba(255,206,160,.75),rgba(255,206,160,0))}
+.wl--morning .wl-sun{left:calc(50% - 2.75rem);bottom:18%;background:radial-gradient(circle,#fff6e6 0%,#ffe2bd 45%,rgba(255,214,170,0) 72%);animation:wl-breathe 8s ease-in-out infinite}
+/* afternoon: clear and high */
+.wl--afternoon .wl-sky{background:linear-gradient(180deg,#c6dbf5 0%,#dfeafa 52%,#f2f2fb 100%)}
+.wl--afternoon .wl-glow{background:radial-gradient(closest-side at 74% 22%,rgba(255,255,255,.85),rgba(255,255,255,0))}
+.wl--afternoon .wl-sun{right:16%;top:12%;background:radial-gradient(circle,#ffffff 0%,#fff8ea 40%,rgba(255,248,234,0) 72%);animation:wl-breathe 9s ease-in-out infinite}
+/* evening: lavender into peach, the sun at the horizon */
+.wl--evening .wl-sky{background:linear-gradient(180deg,#c5c2ea 0%,#e3cde2 48%,#f8d4c0 100%)}
+.wl--evening .wl-glow{background:radial-gradient(closest-side at 50% 88%,rgba(255,190,150,.8),rgba(255,190,150,0))}
+.wl--evening .wl-sun{left:calc(50% - 2.75rem);bottom:6%;background:radial-gradient(circle,#fff0dc 0%,#ffc9a0 45%,rgba(255,180,140,0) 72%);animation:wl-breathe 8s ease-in-out infinite}
+.wl--evening .wl-cloud{background:rgba(255,236,232,.7)}
+/* night: the navy of the plan card, a moon and a few stars */
+.wl--night .wl-sky{background:linear-gradient(180deg,#0f1c30 0%,#1d2b4a 58%,#45426f 100%)}
+.wl--night .wl-glow{background:radial-gradient(closest-side at 70% 30%,rgba(143,179,227,.28),rgba(143,179,227,0))}
+.wl--night .wl-sun{right:18%;top:16%;width:3.5rem;height:3.5rem;background:radial-gradient(circle at 40% 40%,#fff8ea 0%,#efe7da 55%,rgba(239,231,218,0) 72%);box-shadow:0 0 2.5rem rgba(239,231,218,.35)}
+.wl--night .wl-stars{inset:0;border-radius:0;background:radial-gradient(1.5px 1.5px at 12% 22%,#fff,transparent),radial-gradient(1px 1px at 28% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 30%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 58% 10%,#fff,transparent),radial-gradient(1px 1px at 84% 40%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 92% 18%,#fff,transparent),radial-gradient(1px 1px at 36% 48%,rgba(255,255,255,.6),transparent);animation:wl-breathe 6s ease-in-out infinite}
+.wl--night .wl-cloud{background:rgba(143,160,200,.25)}
+/* the words */
+.wl-in{display:grid;align-content:start;justify-items:center;gap:.75rem;padding:0 max(1.5rem,env(safe-area-inset-left)) 1rem;text-align:center;margin-top:-1.5rem;position:relative}
+.wl-hi{margin:0;font-family:var(--display);font-size:2.125rem;line-height:1.1;color:var(--ink)}
+.wl-line{max-width:22rem;margin:0;font-size:.9375rem;line-height:1.55;color:var(--dim);text-wrap:balance}
+.wl-q{max-width:21rem;margin:.75rem 0 .25rem;padding:0}
+.wl-q blockquote{margin:0;font-family:var(--serif);font-size:1rem;line-height:1.55;color:var(--ink);text-wrap:balance}
+.wl-q figcaption{margin-top:.375rem;font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.wl-ask{margin:1.25rem 0 .25rem;font-family:var(--serif);font-weight:400;font-size:1.25rem;line-height:1.35;color:var(--ink);text-wrap:balance}
+.wl-o{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem;width:100%;max-width:22rem}
+.wl-o button{display:grid;justify-items:center;gap:.375rem;min-height:5.75rem;padding:.875rem .25rem;border-radius:1.25rem;border:1px solid rgba(62,108,171,.18);background:linear-gradient(180deg,#ffffff 0%,#f8fafd 100%);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 .25rem .75rem -.375rem rgba(40,70,120,.25);font:inherit;font-size:.9375rem;font-weight:600;color:var(--ink);cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease;--wx-fill:#fff}
+.wl-o button svg{width:2rem;height:2rem;color:var(--accent)}
+.wl-o button[aria-checked="true"]{border-color:rgba(62,108,171,.4);background:var(--sheen),var(--sky);color:var(--accent-ink);box-shadow:0 0 0 3px var(--accent-soft),var(--lift);--wx-fill:#eef3fb}
+.wl-o button:active{transform:scale(.96)}
+.wl-o button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wl-reply{min-height:2.75rem;max-width:21rem;margin:.25rem 0 0;font-size:.9375rem;line-height:1.5;color:var(--accent-ink);text-wrap:balance}
+.wl-reply:empty{min-height:2.75rem}
+.wl-go{max-width:22rem;margin-top:0}
+.wl-go svg{width:1rem;height:1rem}
+.wl-go:disabled{opacity:.45;cursor:default;box-shadow:none}
+.wl-skip{justify-self:center;font-weight:500;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){.wl-cloud,.wl-sun,.wl-stars{animation:none}.wl-o button{transition:none}}
