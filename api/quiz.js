@@ -1,6 +1,6 @@
 // POST /api/quiz: the quiz's result page posts here when someone asks for their results by email.
 // 1. scores their answers again on the server (the type can't be faked from the browser)
-// 2. saves the result and their Ask in Supabase (table quiz_results; docs/supabase/quiz_results.sql)
+// 2. saves the result and their goal in Supabase (table quiz_results; docs/supabase/quiz_results.sql)
 // 3. adds them to Resend Contacts and emails their results, with a one-click unsubscribe link
 //
 // Body: { email, r: 12-letter answer code (a / o / b), asks?: up to 3 things they want (or ask: one), source?, company?: honeypot }
@@ -42,7 +42,7 @@ module.exports = async function quiz(req, res) {
   const code = String(body.r || '').toLowerCase();
   const answers = decode(code, content.questions.length);
   if (!answers) return reply(res, 400, { ok: false, error: 'invalid_answers' });
-  // their Asks: up to 3, each one line with no control characters, capped
+  // their goals: up to 3, each one line with no control characters, capped
   const tidy = (x) => String(x || '').replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
   const asks = (Array.isArray(body.asks) ? body.asks : [body.ask]).map(tidy).filter(Boolean).slice(0, 3);
   const source = String(body.source || 'quiz').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);

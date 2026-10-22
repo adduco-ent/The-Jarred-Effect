@@ -24,7 +24,7 @@ module.exports = async function sendPreviews(req, res) {
   const sample = { '{{ .ConfirmationURL }}': site + '/app', '{{ .Token }}': '482913', '{{ .Email }}': email, '{{ .NewEmail }}': 'new-address@example.com' };
   const fill = (s) => Object.entries(sample).reduce((t, [k, v]) => t.split(k).join(v), s);
 
-  // a sample quiz result: an Achiever who named an Ask
+  // a sample quiz result: an Achiever who named a goal
   const sampleCode = 'bbooooaaoooo';
   const q = quizEmail({ content, result: score(content, decode(sampleCode, content.questions.length)), ask: 'Run a 5K by spring', resultsUrl: site + '/app/?r=' + sampleCode + '#result', siteUrl: site, unsubscribeUrl: unsub });
   const all = [{ name: 'guide', subject: g.subject, html: g.html, text: g.text }, { name: 'quiz', subject: q.subject, html: q.html, text: q.text }]

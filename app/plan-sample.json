@@ -11,7 +11,7 @@
       "focus": "Building a new habit",
       "deeper": {
         "name": "Building a new habit",
-        "when": "When their Ask is something they want to do regularly: move, write, save, wake earlier.",
+        "when": "When their goal is something they want to do regularly: move, write, save, wake earlier.",
         "steps": [
           "Name it as who you’re becoming, plus one tiny action: “I’m someone who moves every day. Shoes on, ten minutes.”",
           "Shrink it until it survives a Tuesday. If it feels too small, it’s probably the right size.",
@@ -32,7 +32,7 @@
       "focus": "Unlearning an old habit",
       "deeper": {
         "name": "Unlearning an old habit",
-        "when": "When their Ask is about stopping something that’s costing them: scrolling, snacking, procrastinating, overworking.",
+        "when": "When their goal is about stopping something that’s costing them: scrolling, snacking, procrastinating, overworking.",
         "steps": [
           "Notice without judging. For three days, write down when it happens: what set it off, how you felt, what you got from it.",
           "Find the payoff. Ask: what am I getting out of this? Relief, comfort, a break, a sense of control.",
@@ -52,7 +52,7 @@
     "Any moment today counts. There’s no set time.",
     "Each day, check in on what kind of day it is: good, okay or hard. Do the version that fits. All three count.",
     "Missed a day? No catch-up. Just pick up today’s step.",
-    "On an okay or hard day, pick one Ask and do its step. That counts as the day.",
+    "On an okay or hard day, pick one goal and do its step. That counts as the day.",
     "Your gut has the final say. Skip or change any step, and note why."
   ],
   "cheer": {
@@ -88,16 +88,24 @@
     "checkin": {
       "full": "Good day. Do the whole step, and enjoy it.",
       "half": "Okay day. Do a shorter version. It still counts.",
-      "halfMany": "Okay day. Pick one Ask and do its step. That counts as the day.",
+      "halfMany": "Okay day. Pick one goal and do its step. That counts as the day.",
       "rough": "Hard day. Just the small version today. It counts the same."
     },
     "tomorrow": "That’s today, done. Rest easy.",
     "future": "Today’s step is the only one that matters.",
     "missedDay": "This one slipped by. That’s okay. No catch-up, just today.",
     "weekDone": "Seven days, {n} done. That’s real information, not a verdict. Take your look back, then shape next week.",
-    "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week."
+    "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week.",
+    "nudge": [
+      "Day {day}. Today’s step is ready, and a few minutes is enough.",
+      "Your goal is still waiting for you. One small step today.",
+      "Hard day? The small version counts the same.",
+      "Check in, do your step, write a line. That’s the whole loop.",
+      "A few minutes for the thing you want most. Today’s step is ready."
+    ],
+    "nudgeLast": "Day 7. Take five minutes to look back and shape next week."
   },
-  "focus": "Add as many Asks as you want. Fewer at once works better, though: with one to three, you’ll see the progress you’re after sooner.",
+  "focus": "Add as many goals as you want. Fewer at once works better, though: with one to three, you’ll see the progress you’re after sooner.",
   "journal": {
     "general": [
       "What’s on your mind right now? Start with the first sentence that comes.",
@@ -192,13 +200,13 @@
           "id": "des-1",
           "title": "Why, three times",
           "minutes": 5,
-          "what": "Write why you want your Ask. Then ask “why?” about your answer, twice more.",
+          "what": "Write why you want your goal. Then ask “why?” about your answer, twice more.",
           "example": "Run a 5K → feel strong in my body again → keep up with my kids on Saturdays.",
           "rough": "Just the first why.",
           "help": {
             "why": "Wants that sit on the surface fade fast. The deeper why is what pulls you through the low days, because it’s about how you want to feel, not only what you want to get.",
             "how": [
-              "Write your Ask at the top of a page or a note.",
+              "Write your goal at the top of a page or a note.",
               "Under it, write why you want it, in one honest line.",
               "Ask “why does that matter?” about that line, and write the answer. Do it once more."
             ],
@@ -237,13 +245,13 @@
           "id": "dis-1",
           "title": "One tiny step",
           "minutes": 10,
-          "what": "Do the smallest daily step toward your Ask, whenever today allows.",
+          "what": "Do the smallest daily step toward your goal, whenever today allows.",
           "example": "Walk-run for ten minutes: one minute jogging, two minutes walking.",
           "rough": "Two minutes. Open it, start it, stop.",
           "help": {
             "why": "Small steps you actually take teach your gut that this is real. A big plan you skip teaches it the opposite.",
             "how": [
-              "Pick the smallest action that still moves your Ask forward.",
+              "Pick the smallest action that still moves your goal forward.",
               "Do it whenever today allows, wherever it fits.",
               "Stop when the time’s up, even if you want to keep going. Leave yourself wanting more."
             ],
@@ -340,14 +348,14 @@
           "id": "sig-1",
           "title": "Live it for two minutes",
           "minutes": 2,
-          "what": "Close your eyes and picture an ordinary moment after your Ask is real, in first person. Notice how it feels in your body.",
+          "what": "Close your eyes and picture an ordinary moment after your goal is real, in first person. Notice how it feels in your body.",
           "example": "Crossing the finish line in April, legs heavy, someone handing me water, smiling for no reason.",
           "rough": "Thirty seconds is enough.",
           "help": {
             "why": "Your body responds to what you picture as if it’s partly real. Practicing the feeling of your future makes it familiar instead of far away.",
             "how": [
               "Sit somewhere quiet and close your eyes.",
-              "Picture an ordinary moment after your Ask is real. Not the big finish: a normal Tuesday.",
+              "Picture an ordinary moment after your goal is real. Not the big finish: a normal Tuesday.",
               "Notice where you feel it in your body, and stay with it for two minutes."
             ],
             "stuck": "If doubt crashes in, that’s normal. Notice it, write it down afterward, and come back to the picture.",

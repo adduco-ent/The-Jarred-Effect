@@ -126,7 +126,7 @@
           '<p class="oh-next-d">Name up to three things you want, and get your full results by email. Your 7-day plan follows as soon as it’s ready.</p>' +
           '<div class="oh-field oh-asks"><span id="asks-l">What you want <i>up to 3, optional</i></span>' +
             '<input name="ask" type="text" maxlength="200" autocomplete="off" aria-labelledby="asks-l" placeholder="e.g. run a 5K by spring">' +
-            '<button class="oh-add" type="button" data-addask>+ Add another Ask</button></div>' +
+            '<button class="oh-add" type="button" data-addask>+ Add another goal</button></div>' +
           '<label class="oh-field"><span>Your email</span><input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></label>' +
           '<input class="oh-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
           '<button class="oh-cta" type="submit">Email me my results' + arrow() + '</button>' +
@@ -241,7 +241,7 @@
       return navigator.share(data);
     }).catch(function (err) { if (!err || err.name !== 'AbortError') copy(); });
   }
-  // the next step: save their Ask and email their results
+  // the next step: save their goal and email their results
   function sendResults(form) {
     var email = form.email.value.trim(), note = form.querySelector('.oh-form-note'), btn = form.querySelector('button[type=submit]');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { note.textContent = 'That email doesn’t look right. Check it and try again.'; form.email.focus(); return; }
@@ -312,7 +312,7 @@
       if (n < 3) {
         var inp = document.createElement('input');
         inp.name = 'ask'; inp.type = 'text'; inp.maxLength = 200; inp.autocomplete = 'off';
-        inp.setAttribute('aria-label', 'Ask ' + (n + 1));
+        inp.setAttribute('aria-label', 'Goal ' + (n + 1));
         inp.placeholder = n === 1 ? 'e.g. stop working past 7 p.m.' : 'e.g. save $2,000 by June';
         box.insertBefore(inp, t); inp.focus();
       }

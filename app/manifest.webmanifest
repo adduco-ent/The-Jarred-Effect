@@ -1,7 +1,7 @@
 {
   "name": "Other Half · The Jarred Effect",
   "short_name": "Other Half",
-  "description": "Your Ask, one day at a time.",
+  "description": "Your goal, one day at a time.",
   "id": "/app/plan.html",
   "start_url": "/app/plan.html?source=home",
   "scope": "/app/",

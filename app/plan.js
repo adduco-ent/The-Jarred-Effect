@@ -1,8 +1,8 @@
 /* The Other Half app, free layer. Everyone who takes the quiz and asks for a plan gets in.
-   Today: one day at a time. A daily check-in (good, okay or hard), then one card per Ask's step, and a strip of
+   Today: one day at a time. A daily check-in (good, okay or hard), then one card per goal's step, and a strip of
      the seven days. Days open by the calendar from the day the plan is first opened; future days show a preview.
-   Progress: days done, steps, minutes, check-ins, each Ask's progress, the week at a glance, and their own words.
-   Playbook, patterns over time, week 2 and adding more Asks are shown but locked until they join.
+   Progress: days done, steps, minutes, check-ins, each goal's progress, the week at a glance, and their own words.
+   Playbook, patterns over time, week 2 and adding more goals are shown but locked until they join.
 
    Feedback, in their own words, is asked for at the moment it's true, never as a form:
      check-in okay or hard → what's going on · step done → how it felt · step doesn't fit → skip or change, and why
@@ -116,7 +116,7 @@
   // ---- done state: a key per step ("3.1" = day 3, Ask 2), a key per day for the question and look back days
   function key(d, s) { return s ? d.day + '.' + s.ask : String(d.day); }
   function stepsDone(d) { return d.steps.filter(function (s) { return done[key(d, s)]; }).length; }
-  // a day counts once any step is done: on a half or rough day, one Ask's step is the day
+  // a day counts once any step is done: on a half or rough day, one goal's step is the day
   function kept(d) { return d.kind === 'step' ? stepsDone(d) > 0 : !!done[key(d)]; }
   function keptCount(p) { return p.days.filter(kept).length; }
   // a step skipped on purpose is a gut call, not a miss
@@ -224,10 +224,10 @@
     return '<button type="button" class="gut-b" data-skipopen="' + k + '">' + skipIcon + '<span>This step doesn’t fit today</span></button>';
   }
 
-  // ---- one card per Ask's step
+  // ---- one card per goal's step
   function stepCard(d, s, many) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
-    // an okay or hard day asks for one Ask: once one step is done, the rest say so instead of looking unfinished
+    // an okay or hard day asks for one goal: once one step is done, the rest say so instead of looking unfinished
     var light = many && (st.checkin[d.day] === 'half' || rough) && kept(d) && !isDone;
     var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
     var head = many
@@ -256,7 +256,7 @@
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
         '<p class="pl-q">' + esc(d.ask) + '</p>' +
         (d.hint ? '<p class="pl-text">' + esc(d.hint) + ' Answer it honestly, not nicely.</p>' : '') +
-        (d.forMany ? '<p class="pl-text">Use it on the Ask that feels heaviest right now.</p>' : '') +
+        (d.forMany ? '<p class="pl-text">Use it on the goal that feels heaviest right now.</p>' : '') +
         (d.followUps && d.followUps.length ? '<div class="pl-sub"><span>If you want to go deeper</span>' + d.followUps.map(function (f) { return '<p>' + esc(f) + '</p>'; }).join('') + '</div>' : '') +
         '<div class="nt">' + words('note', d.day, 'text', 'Whatever comes up. Only you and your next plan see this.', 4, 'Write it down') + '</div>' +
         (paid() ? '<button type="button" class="lnk jgo" data-jgo="ask" data-jask="' + esc(d.ask) + '">Keep going in your journal<span aria-hidden="true">→</span></button>' : '');
@@ -284,14 +284,14 @@
           (c ? words('next', '1', 'ask.' + i, NEXT_HINT[c]) : '') + '</div>';
       }).join('') +
       '<div class="nx-a"><p class="fb-q">How was the pace this week?</p>' + chips('data-pace', '1', [['light', 'Too light'], ['right', 'About right'], ['much', 'Too much']], n.pace) + '</div>' +
-      '<div class="nx-a">' + words('next', '1', 'want', 'A new Ask, a different time of day, more or less help…', 3, 'Anything you want next week to have?') + '</div>' +
+      '<div class="nx-a">' + words('next', '1', 'want', 'A new goal, a different time of day, more or less help…', 3, 'Anything you want next week to have?') + '</div>' +
       (n.sent
         ? '<p class="nx-ok" role="status">' + check + (plan.tier === 'paid' ? 'Got it. Week 2 is built from exactly this.' : 'Saved. Week 2 comes with the full app, and it’s built from exactly this.') + '</p>'
         : '<button type="button" class="pl-do nx-send" data-nx-send><span>Send it</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>') +
       '</section>';
   }
 
-  // ---- the plan card: their Ask(s) and the seven days, on navy
+  // ---- the plan card: their goal(s) and the seven days, on navy
   function strip() {
     var LABEL = { kept: 'kept', gut: 'gut call', missed: 'not marked', today: 'today', future: 'coming up' };
     return '<div class="ds" role="group" aria-label="Your seven days">' + plan.days.map(function (d) {
@@ -308,7 +308,7 @@
   }
   function planCard(p) {
     return '<section class="pl-card pl-card--app">' +
-      '<p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
+      '<p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>' + (p.asks.length > 1 ? 'Your goals' : 'Your goal') + '</p>' +
       (p.asks.length === 1
         ? '<p class="pl-ask">“' + esc(end(p.asks[0].text)) + '”</p>'
         : '<ol class="pl-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>') +
@@ -344,7 +344,7 @@
     html += planCard(p);
     html += '<header class="td-head"><p class="pl-k">Day ' + sel + ' of 7' + (sel === T ? ' · ' + esc(weekday(sel)) : '') + '</p>' +
       '<h1 class="td-h">' + (sel === T ? 'Today' : esc(weekday(sel))) + '</h1>' +
-      (many ? '<p class="pl-sum">' + d.steps.length + ' steps, one for each Ask · ' + d.minutes + ' min in all</p>' : '') +
+      (many ? '<p class="pl-sum">' + d.steps.length + ' steps, one for each goal · ' + d.minutes + ' min in all</p>' : '') +
       (s === 'future' && !REVIEW ? '' : (s === 'missed' && c.missedDay ? '<p class="pl-note">' + esc(c.missedDay) + '</p>' : c.days && c.days[sel] ? '<p class="pl-note">' + esc(c.days[sel]) + '</p>' : '')) +
       '</header>';
 
@@ -369,7 +369,7 @@
     }
     if (!st.guide && d.kind === 'step') {
       html += '<section class="gd"><p class="pl-k">Welcome to your week</p><h2 class="gd-t">Here’s how this works</h2>' +
-        '<p class="gd-x">Your Ask is the thing you want most right now.</p>' +
+        '<p class="gd-x">Your goal is the thing you want most right now.</p>' +
         '<ol class="gd-l"><li><b>One day at a time.</b> Today’s step is the only one that matters.</li>' +
         '<li><b>Check in, do your step, then say how it went.</b> That’s the whole loop.</li>' +
         '<li><b>Your words shape next week.</b> Nothing is graded.</li></ol>' +
@@ -447,7 +447,7 @@
         return '<li><p class="pg-ask"><i>' + (i + 1) + '</i>' + esc(end(x[0].text)) + '</p><span class="pg-ci">' + esc(LABEL[x[1].choice] || 'No answer yet') + '</span>' +
           (x[1].note ? '<p class="nx-note">' + esc(x[1].note) + '</p>' : '') + '</li>';
       }).join('') +
-      extra.map(function (x) { return '<li><p class="pg-ask"><i>+</i>' + esc(end(x.text)) + '</p><span class="pg-ci">New Ask</span></li>'; }).join('') + '</ul>' +
+      extra.map(function (x) { return '<li><p class="pg-ask"><i>+</i>' + esc(end(x.text)) + '</p><span class="pg-ci">New goal</span></li>'; }).join('') + '</ul>' +
       (n.pace ? '<p class="nx-pace">Pace: <b>' + esc({ light: 'a little more', right: 'about the same', much: 'a little less' }[n.pace]) + '</b></p>' : '') +
       '<p class="pb-x">Ready on ' + esc(weekday(8)) + '. Your new week opens here.</p></section>';
   }
@@ -543,7 +543,7 @@
       '<section class="pg-stats"><div><b>' + steps + '</b><span>steps done</span></div><div><b>' + mins + '</b><span>minutes spent</span></div><div><b>' + cis + '</b><span>check-ins</span></div></section>' +
       (felt ? '<section class="sc"><p class="pl-k">How it felt</p><div class="pg-feel">' +
         [['Easy', feel.easy], ['Okay', feel.okay], ['Hard', feel.hard], ['Skipped or changed', guts]].map(function (x) { return '<span' + (x[1] ? '' : ' class="is-zero"') + '><b>' + x[1] + '</b>' + x[0] + '</span>'; }).join('') + '</div></section>' : '') +
-      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your Asks' : 'Your Ask') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
+      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your goals' : 'Your goal') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
       '<section class="sc-plain"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
       (theirs ? '<section class="sc"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
       (paid() ? patterns(p) + nextCard() : fullApp('Keep going past week one', [
@@ -643,18 +643,18 @@
     var extra = (st.extraAsks || []).map(function (x, i) { return [x, i]; }).filter(function (x) { return x[0].status !== 'removed'; });
     var total = p.asks.length + extra.length;
     var addBox = !addOpen ? '' : full
-      ? '<div class="yu-addb"><label class="fb-l" for="new-ask">A new Ask, in your words</label><div class="yu-addr"><input id="new-ask" class="fb-t" type="text" maxlength="200" placeholder="e.g. Sleep by 11 p.m." autocomplete="off"><button type="button" class="send-btn" data-ask-add>Add</button></div>' +
-        '<p class="yu-focus' + (total >= 3 ? ' is-strong' : '') + '">' + esc(p.focus || '') + '</p><p class="pt-e">New Asks start with next week’s plan.</p></div>'
-      : '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + unlock('more Asks') + '</div>';
+      ? '<div class="yu-addb"><label class="fb-l" for="new-ask">A new goal, in your words</label><div class="yu-addr"><input id="new-ask" class="fb-t" type="text" maxlength="200" placeholder="e.g. Sleep by 11 p.m." autocomplete="off"><button type="button" class="send-btn" data-ask-add>Add</button></div>' +
+        '<p class="yu-focus' + (total >= 3 ? ' is-strong' : '') + '">' + esc(p.focus || '') + '</p><p class="pt-e">New goals start with next week’s plan.</p></div>'
+      : '<div class="yu-addb"><p class="pl-text">' + esc(p.focus || '') + '</p>' + unlock('more goals') + '</div>';
     return screenHead('Your profile', 'You', '') +
       '<section class="pl-card pl-card--app yu-card"><p class="pl-card-k"><span class="oh-dot" aria-hidden="true"></span>Your type</p>' +
         '<p class="yu-type">' + esc(p.typeName) + '</p>' +
         (others(p) ? '<p class="pl-meta">What you’re building: <b>' + esc(others(p)) + '</b></p>' : '') +
         '<a class="yu-link" href="' + link + '">Read your full result<span aria-hidden="true">→</span></a></section>' +
-      '<section class="fs"><p class="pl-k">' + (total > 1 ? 'Your Asks' : 'Your Ask') + '</p>' +
+      '<section class="fs"><p class="pl-k">' + (total > 1 ? 'Your goals' : 'Your goal') + '</p>' +
         '<ol class="yu-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') +
         extra.map(function (x, n) { return '<li class="is-new"><i>' + (p.asks.length + n + 1) + '</i><span>' + esc(end(x[0].text)) + '<em>Starts next week</em></span><button type="button" class="lnk" data-ask-remove="' + x[1] + '" aria-label="Remove ' + esc(x[0].text) + '">Remove</button></li>'; }).join('') + '</ol>' +
-        '<button type="button" class="yu-add" data-add-ask aria-expanded="' + addOpen + '"><span class="yu-plus" aria-hidden="true">+</span><span class="yu-add-l">Add an Ask</span>' + (full ? '' : '<span class="yu-tag">' + lock + 'Full app</span>') + '</button>' + addBox + '</section>' +
+        '<button type="button" class="yu-add" data-add-ask aria-expanded="' + addOpen + '"><span class="yu-plus" aria-hidden="true">+</span><span class="yu-add-l">Add a goal</span>' + (full ? '' : '<span class="yu-tag">' + lock + 'Full app</span>') + '</button>' + addBox + '</section>' +
       '<section class="fs"><p class="pl-k">This week</p><blockquote class="yu-read">' + esc(p.read) + '</blockquote>' +
         (p.asks.some(function (a) { return a.focus; }) ? '<div class="yu-from"><span>From the playbook</span>' +
           uniq(p.asks.map(function (a) { return a.focus && a.protocol ? a.protocol + '|' + a.focus : ''; })).map(function (x) { var y = x.split('|'); return '<a href="#playbook/' + esc(y[0]) + '">' + esc(y[1]) + '</a>'; }).join('') + '</div>' : '') + '</section>' +
@@ -668,12 +668,12 @@
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
         '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
         (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
-      (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every play, your patterns, a new plan every week, and as many Asks as you want.</p></section>'
+      (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every play, your patterns, a new plan every week, and as many goals as you want.</p></section>'
         : fullApp('Your plan is free. There’s more.', [
           ['The whole playbook', 'All the plays, any time.'],
           ['Your patterns', 'What works for you, week over week.'],
           ['A new plan every week', 'Built from your own words.'],
-          ['More Asks', 'As many as you want, at your pace.']
+          ['More goals', 'As many as you want, at your pace.']
         ]));
   }
 
@@ -1394,7 +1394,7 @@
     save();
     if (done[k]) nudgeDone(day);
     var list = cheer().done || [];
-    // the day's first step gets the day's line; another Ask's step on the same day gets a different one
+    // the day's first step gets the day's line; another goal's step on the same day gets a different one
     said = done[k] ? { key: k, line: wasKept ? list[(day + 2) % (list.length || 1)] || '' : doneLine(day) } : null;
     render();
     refocus('[data-done="' + k + '"]');
