@@ -1,5 +1,5 @@
 /* The Other Half app — styles. Same tokens and type as the site (styles.css), sized for a phone first. */
-:root{--ink:#1c1812;--dim:#574f43;--faint:#6b6254;--pearl:#fdfdfc;--cream:#efe7da;--panel:#f6f1e8;--orange:#e8743a;--orange-hi:#f3a378;--orange-deep:#a8471c;--blue:#3e6cab;--shadow:#0e1a2c;--line:rgba(28,24,18,.12);
+:root{--ink:#1c1812;--dim:#574f43;--faint:#6b6254;--pearl:#fdfdfc;--cream:#efe7da;--panel:#f6f1e8;--orange:#e8743a;--orange-hi:#f3a378;--orange-deep:#a8471c;--blue:#1a2a44;--shadow:#0e1a2c;--line:rgba(28,24,18,.12);
   --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;--serif:"Libre Caslon Text",Georgia,serif;--sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -17,7 +17,7 @@ button{font:inherit;color:inherit}
 .oh::after{content:"";position:absolute;z-index:-1;width:60rem;height:44rem;left:-30rem;bottom:-24rem;border-radius:50%;transform:rotate(-18deg);background:radial-gradient(closest-side,rgba(243,163,120,.075),rgba(243,163,120,.03) 50%,rgba(243,163,120,0));pointer-events:none}
 .oh-head{display:flex;align-items:center;justify-content:space-between;max-width:34rem;margin:0 auto;padding:max(1rem,env(safe-area-inset-top)) max(1.25rem,env(safe-area-inset-right)) .5rem max(1.25rem,env(safe-area-inset-left))}
 .oh-logo img{display:block;height:2.5rem;width:auto}
-.oh-badge{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);padding:.25rem .625rem;border:1px solid rgba(62,108,171,.35);border-radius:99px}
+.oh-badge{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);padding:.25rem .625rem;border:1px solid rgba(15,28,48,.28);border-radius:99px}
 .oh-main{max-width:34rem;margin:0 auto;padding:1.5rem max(1.25rem,env(safe-area-inset-right)) max(3rem,env(safe-area-inset-bottom)) max(1.25rem,env(safe-area-inset-left))}
 .oh-screen{display:flex;flex-direction:column;gap:1.25rem;animation:oh-in .45s cubic-bezier(.22,1,.36,1) both}
 @keyframes oh-in{from{opacity:0;transform:translateY(.5rem)}to{opacity:1;transform:none}}
@@ -353,7 +353,7 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-ev{list-style:none;margin:.75rem 0 0;padding:0;display:grid;gap:.625rem}
 .oh-ev li{position:relative;padding-left:1.125rem;font-size:1rem;line-height:1.55;color:var(--ink)}
 .oh-ev li::before{content:"";position:absolute;left:0;top:.6em;width:.4375rem;height:.4375rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
-.oh-words{margin:1.5rem 0 0;padding:1rem 1.125rem;border-radius:1rem;background:rgba(62,108,171,.06);font-size:.9375rem;line-height:1.55;color:var(--dim)}
+.oh-words{margin:1.5rem 0 0;padding:1rem 1.125rem;border-radius:1rem;background:rgba(15,28,48,.05);font-size:.9375rem;line-height:1.55;color:var(--dim)}
 .oh-words b{font-weight:600;color:var(--ink)}
 .oh-mix{list-style:none;margin:0;padding:0;display:grid;gap:.625rem}
 .oh-mix li{display:grid;grid-template-columns:6.25rem minmax(0,1fr) 2.75rem;align-items:center;gap:.75rem;font-size:.9375rem;color:var(--dim)}
