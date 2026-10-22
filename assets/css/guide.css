@@ -1,6 +1,8 @@
 /* opt-in.html — page styles (shared ones are in /styles.css). */
 /* shared: the two poles */
-.tje-aura{position:absolute;width:45rem;height:45rem;left:-20rem;top:-22.5rem;border-radius:50%;background:radial-gradient(closest-side,rgba(243,163,120,.24),rgba(243,163,120,0));pointer-events:none}
+/* the warm light in the top left: a soft haze, not an orb. Peach fading through rose into the app's lavender, with no visible edge */
+.tje-aura{position:absolute;width:62rem;height:46rem;left:-28rem;top:-26rem;border-radius:50%;transform:rotate(-14deg);background:radial-gradient(closest-side,rgba(243,170,132,.15),rgba(238,180,166,.09) 34%,rgba(214,186,226,.045) 64%,rgba(198,182,238,0) 100%);pointer-events:none}
+@media (max-width:767px){.tje-aura{width:34rem;height:26rem;left:-17rem;top:-15rem}}
 .tje-grain{position:absolute;inset:0;background:url(../img/grain.png) repeat;background-size:11.25rem 11.25rem;opacity:.32;mix-blend-mode:soft-light;pointer-events:none}
 /* on navy the dark half would vanish into the panel: a hairline keeps the dot whole */
 .tje-dark .tje-dot{box-shadow:0 0 0 1.5px rgba(239,231,218,.4)}

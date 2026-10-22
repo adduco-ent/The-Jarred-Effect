@@ -1,7 +1,9 @@
 /* index.html — page styles (shared ones are in /styles.css). */
 /* shared: the two poles */
 .tje-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
-.tje-aura{position:absolute;width:45rem;height:45rem;left:-20rem;top:-22.5rem;border-radius:50%;background:radial-gradient(closest-side,rgba(243,163,120,.24),rgba(243,163,120,0))}
+/* the warm light in the top left: a soft haze, not an orb. Peach fading through rose into the app's lavender, with no visible edge */
+.tje-aura{position:absolute;width:62rem;height:46rem;left:-28rem;top:-26rem;border-radius:50%;transform:rotate(-14deg);background:radial-gradient(closest-side,rgba(243,170,132,.15),rgba(238,180,166,.09) 34%,rgba(214,186,226,.045) 64%,rgba(198,182,238,0) 100%);pointer-events:none}
+@media (max-width:767px){.tje-aura{width:34rem;height:26rem;left:-17rem;top:-15rem}}
 .tje-shadow{position:absolute;inset:0;background:var(--shadow);clip-path:inset(0 0 0 50%)}
 .tje-grain{position:absolute;inset:0;background:url(../img/grain.png) repeat;background-size:11.25rem 11.25rem;opacity:.32;mix-blend-mode:soft-light}
 .tje-seam{position:absolute;top:0;bottom:0;left:50%;width:1px;transform:translateX(-.5px);background:linear-gradient(180deg,rgba(243,163,120,0) 0%,rgba(243,163,120,.55) 22%,rgba(243,163,120,.55) 78%,rgba(243,163,120,0) 100%);box-shadow:0 0 1.125rem 1px rgba(243,163,120,.22)}
