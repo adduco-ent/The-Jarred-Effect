@@ -605,3 +605,20 @@ blockquote.yu-read::before{content:"";position:absolute;left:0;top:.25rem;bottom
    starts where the Ask text starts. The button reaches slightly past the list's edges to make room for its padding. */
 .fs .yu-add{width:calc(100% + 1rem);margin:.625rem -.5rem 0;padding:.5rem .875rem .5rem calc(.5rem - 1px);gap:.875rem;min-height:2.875rem}
 .fs .yu-add .yu-plus{width:1.75rem;height:1.75rem;font-size:1.0625rem}
+
+/* touch first: tappable things look tappable without a mouse, and every press gives feedback */
+.gd-o button{display:grid;grid-template-columns:1.375rem minmax(0,1fr);align-items:start;gap:.875rem}
+.gd-r{width:1.375rem;height:1.375rem;margin-top:.0625rem;border-radius:50%;border:1.5px solid rgba(62,108,171,.45);background:#fff;box-shadow:inset 0 1px 2px rgba(14,26,44,.08)}
+.gd-b{display:grid;gap:.125rem}
+.gd-b>span{font-size:.875rem;line-height:1.45;color:var(--dim)}
+.gd-o button:active .gd-r{border-color:var(--accent);box-shadow:inset 0 0 0 .3125rem var(--accent)}
+.gut-b{justify-self:start;display:inline-flex;align-items:center;gap:.4375rem;min-height:2.5rem;padding:0 .875rem 0 .75rem;border-radius:99px;border:1px solid rgba(28,24,18,.14);background:rgba(255,255,255,.7);font:inherit;font-size:.8125rem;font-weight:600;color:var(--dim);cursor:pointer;transition:border-color .2s ease,color .2s ease}
+.gut-b svg{width:.9375rem;height:.9375rem;color:var(--accent)}
+.gut-b:hover{border-color:var(--accent-line);color:var(--accent-ink)}
+.gut-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pg-row{grid-template-columns:auto minmax(0,1fr) auto auto}
+.pg-go{font-size:1.25rem;line-height:1;color:var(--faint)}
+.pl-do:active,.send-btn:active,.yu-add:active,.gd-o button:active,.pg-row:active,.pb-a:active,.fl-i:active,.lk-btn:active,.st-undo:active,.gut-b:active,.pw-c a:active,.yu-from a:active,.pl-done:active,.ds-d:active{transform:scale(.98)}
+.ci-o button:active{transform:scale(.96)}
+.pl-more summary:active i{transform:scale(.92)}
+@media (prefers-reduced-motion:reduce){.gut-b{transition:none}}

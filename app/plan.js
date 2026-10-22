@@ -204,7 +204,7 @@
         chips('data-skip', k, [['change', 'Change it'], ['skip', 'Skip it today']], null, 'ci-o--split') +
         '<button type="button" class="lnk" data-skipopen="' + k + '">Never mind</button></div>';
     }
-    return '<button type="button" class="lnk lnk--gut" data-skipopen="' + k + '">This step doesn’t fit today</button>';
+    return '<button type="button" class="gut-b" data-skipopen="' + k + '">' + skipIcon + '<span>This step doesn’t fit today</span></button>';
   }
 
   // ---- one card per Ask's step
@@ -351,9 +351,10 @@
         '<ol class="gd-l"><li><b>One day at a time.</b> Today’s step is the only one that matters.</li>' +
         '<li><b>Check in, do your step, then say how it went.</b> That’s the whole loop.</li>' +
         '<li><b>Your words shape next week.</b> Nothing is graded.</li></ol>' +
-        '<p class="ci-q">How do you like your steps?</p>' +
-        '<div class="gd-o"><button type="button" data-guide="step"><b>Just the step</b><span>Short and simple. More help is a tap away.</span></button>' +
-        '<button type="button" data-guide="walk"><b>Walk me through it</b><span>Mini-steps and a real-life example, open from the start.</span></button></div>' +
+        '<p class="ci-q">How much help do you want with each step?</p>' +
+        '<div class="gd-o" role="radiogroup" aria-label="How much help you want with each step">' +
+          '<button type="button" role="radio" aria-checked="false" data-guide="step"><i class="gd-r" aria-hidden="true"></i><span class="gd-b"><b>Just the step</b><span>Short and simple. Extra help is one tap away.</span></span></button>' +
+          '<button type="button" role="radio" aria-checked="false" data-guide="walk"><i class="gd-r" aria-hidden="true"></i><span class="gd-b"><b>Walk me through it</b><span>Mini-steps and a real-life example, open under every step.</span></span></button></div>' +
         '<p class="gd-k">You can change this any time in You.</p></section>';
     }
     if (d.kind === 'step') {
@@ -500,7 +501,7 @@
       return '<li><button type="button" class="pg-row is-' + s + '" data-view-day="' + d.day + '">' +
         '<span class="pg-dot">' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</span>' +
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
-        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '</button></li>';
+        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '<span class="pg-go" aria-hidden="true">›</span></button></li>';
     }).join('');
     var theirs = p.days.map(function (d) {
       var bits = [];
@@ -606,7 +607,7 @@
         (p.asks.some(function (a) { return a.focus; }) ? '<div class="yu-from"><span>From the playbook</span>' +
           uniq(p.asks.map(function (a) { return a.focus && a.protocol ? a.protocol + '|' + a.focus : ''; })).map(function (x) { var y = x.split('|'); return '<a href="#playbook/' + esc(y[0]) + '">' + esc(y[1]) + '</a>'; }).join('') + '</div>' : '') + '</section>' +
       '<section class="fs"><p class="pl-k">How this week works</p><ul class="pl-how">' + p.how.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul></section>' +
-      '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">Your steps<span>How much guidance you see</span></p>' +
+      '<section class="sc set"><p class="pl-k">Settings</p><div class="set-r"><p class="set-l">Help with each step<span>Change it any time</span></p>' +
         chips('data-guide', 'you', [['step', 'Just the step'], ['walk', 'Walk me through it']], st.guide === 'walk' ? 'walk' : 'step') + '</div></section>' +
       '<section class="fs"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
         '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
