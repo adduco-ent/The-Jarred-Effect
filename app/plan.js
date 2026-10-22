@@ -410,8 +410,13 @@
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
-      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'What kind of day is it?' : 'What kind of day was it?') + '</p><p class="ci-s">Be honest. Your steps adjust to fit.</p>' +
-        chips('data-checkin', sel, [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], ci) +
+      // answered already (on the welcome screen, or earlier): a settled row with Update, not the question again
+      var ciSet = ci && !ciOpen[sel];
+      html += '<section class="ci' + (ciSet ? ' ci--set' : '') + '" id="j-ci">' + (ciSet
+        ? '<div class="ci-set"><span class="ci-ic" aria-hidden="true">' + wxIcons[ci] + '</span><span class="ci-set-t"><span class="ci-set-k">' + (sel === T ? 'Today' : 'Day ' + sel) + '</span><b>' + { full: 'A good day', half: 'An okay day', rough: 'A hard day' }[ci] + '</b></span>' +
+          '<button type="button" class="ci-up" data-ci-up aria-label="Update how ' + (sel === T ? 'today is' : 'that day was') + ' going">Update</button></div>'
+        : '<p class="ci-q">' + (sel === T ? 'What kind of day is it?' : 'What kind of day was it?') + '</p><p class="ci-s">Be honest. Your steps adjust to fit.</p>' +
+        chips('data-checkin', sel, [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], ci)) +
         (ciLine && !todayLine(d, many) ? '<p class="ci-a">' + esc(ciLine) + '</p>' : '') +
         (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'Want to tell me what’s going on? It helps shape next week.') : '') +
         (ci === 'rough' && paid() ? '<button type="button" class="lnk jgo" data-jgo="hard">Want to write it out?<span aria-hidden="true">→</span></button>' : '') + '</section>';
@@ -1218,6 +1223,7 @@
   // of day, a greeting, a line for the day, a quote, and one warm question. The answer is the day's check-in.
   // Review: ?welcome=1 shows it again, ?sky=morning|afternoon|evening|night picks the sky.
   var welcomeSeen = false;
+  var ciOpen = {}, ciTimer = null; // days whose check-in question is open on Today (answered here, or Update tapped)
   function welcomeKey() { return ymd(new Date()) + ':' + T; }
   function needWelcome() {
     if (!plan || tab !== 'today' || T > 7 || welcomeSeen) return false;
@@ -1459,10 +1465,15 @@
       return;
     }
     if ((el = t.closest('[data-guide]'))) { st.guide = el.getAttribute('data-guide'); save(); keepLayers = false; render(); return; }
+    if ((el = t.closest('[data-ci-up]'))) { ciOpen[sel] = true; render(); refocus('[data-checkin][aria-pressed="true"]'); return; }
     if ((el = t.closest('[data-checkin]'))) {
+      ciOpen[sel] = true;
       var o = el.getAttribute('data-checkin');
       if (st.checkin[sel] === o) delete st.checkin[sel]; else st.checkin[sel] = o;
       sync('checkin', sel, true); said = null; render(); refocus('[data-checkin="' + o + '"]');
+      // the pick shows for a beat, then settles into the row with Update
+      var cd = sel; clearTimeout(ciTimer);
+      if (st.checkin[cd]) ciTimer = setTimeout(function () { if (st.checkin[cd] && sel === cd && tab === 'today' && !root.contains(document.activeElement && document.activeElement.tagName === 'TEXTAREA' ? document.activeElement : null)) { delete ciOpen[cd]; render(); refocus('[data-ci-up]'); } }, 700);
       return;
     }
     if ((el = t.closest('[data-feel]'))) {
