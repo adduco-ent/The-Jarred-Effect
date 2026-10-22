@@ -1,0 +1,17 @@
+{
+  "name": "Other Half · The Jarred Effect",
+  "short_name": "Other Half",
+  "description": "Your Ask, one day at a time.",
+  "id": "/app/plan.html",
+  "start_url": "/app/plan.html?source=home",
+  "scope": "/app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdfdfc",
+  "theme_color": "#fdfdfc",
+  "icons": [
+    { "src": "/app/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

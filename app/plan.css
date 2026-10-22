@@ -860,3 +860,36 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 @media (prefers-reduced-motion:reduce){.fut-b,.pg-week .pg-row{transition:none}}
 /* Shape next week: short choices stay on one line, like every other choice bar */
 .nx .ci-o button{font-size:.875rem;white-space:nowrap;letter-spacing:-.005em}
+
+/* ---- the daily nudge and Add to Home Screen: same switch, white actions and sky panels as everywhere else */
+.set .set-r+.set-r{margin-top:1.125rem;padding-top:1.125rem;border-top:1px solid rgba(28,24,18,.07)}
+.nd{display:grid;gap:.75rem}
+.nd .pt-e{margin:-.25rem .25rem 0}
+.nd-t{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3rem;padding:.25rem .25rem .25rem 1rem;border-radius:1rem;background:var(--sky-field);box-shadow:inset 0 0 0 1px rgba(143,179,227,.3);font-size:.9375rem;font-weight:600;color:var(--ink)}
+.nd-t>span{display:inline-flex;align-items:center;gap:.5rem}
+.nd-t svg{width:1.0625rem;height:1.0625rem;color:var(--accent)}
+.nd-time{box-sizing:border-box;min-width:7.5rem;min-height:2.5rem;padding:0 .75rem;border-radius:.75rem;border:1px solid rgba(62,108,171,.2);background:#fff;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.06);font:inherit;font-size:1rem;font-weight:600;color:var(--accent-ink);text-align:center;-webkit-appearance:none;appearance:none}
+.nd-time:focus{outline:2px solid var(--accent);outline-offset:2px}
+.nd-time::-webkit-date-and-time-value{text-align:center}
+.nd-help{display:grid;gap:.625rem;padding:1rem 1.125rem;border:1.5px solid transparent;border-radius:1.0625rem;background:var(--sheen) padding-box,var(--sky) padding-box,var(--edge-up) border-box;box-shadow:var(--lift);animation:pl-open .28s ease both}
+.nd-help .fb-q{margin:0}
+.nd-help .pt-e{margin:0;color:var(--dim)}
+.nd-help .pl-do{margin-top:.125rem;text-decoration:none}
+.nd-or{margin-top:.25rem!important}
+.nd-steps{margin:0;padding:0 0 0 1.25rem;display:grid;gap:.5rem;font-size:.9375rem;line-height:1.5;color:var(--ink)}
+.nd-steps li::marker{font-weight:600;color:var(--accent-ink)}
+.nd-steps b{font-weight:600}
+.nd-share{display:inline-block;width:1.125rem;height:1.125rem;vertical-align:-.1875rem;color:var(--accent)}
+.nd-offer{display:grid;gap:.75rem}
+.nd-offer>.pl-k{margin:0 0 -.25rem}
+.nd-offer .lk-t{margin:0}
+.nd-offer .pl-do{margin-top:.25rem}
+.nd-offer .nx-ok{margin:0}
+.nd-no{justify-self:center;font-weight:500;color:var(--faint)}
+.pl-do[aria-busy="true"],.je-sw[aria-busy="true"]{opacity:.6;pointer-events:none}
+.tm-n{display:flex;align-items:center;gap:.4375rem;margin:.25rem 0 0;font-size:.8125rem;font-weight:600;color:var(--accent-ink)}
+.tm-n svg{width:1rem;height:1rem}
+.in-card{display:grid;gap:.75rem}
+.in-card .lk-t,.in-card .pl-k{margin:0}
+.in-card .pl-k{margin-bottom:-.25rem}
+@media (prefers-reduced-motion:reduce){.nd-help{animation:none}}
