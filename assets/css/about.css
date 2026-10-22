@@ -1,9 +1,5 @@
 /* about.html — page styles (shared ones are in /styles.css). */
 /* shared: the two poles */
-/* the light in the top left: a warm sun just past the corner, cast across the page in three soft steps
-   (gold-peach at the corner, then rose, then the app's lavender). No orb and no edge: each step fades out on its own. */
-.tje-aura{position:absolute;left:0;top:0;width:100%;height:56rem;pointer-events:none;background:radial-gradient(22rem 17rem at 0 0,rgba(247,194,150,.3),rgba(247,194,150,.12) 48%,rgba(247,194,150,0) 100%),radial-gradient(36rem 21rem at 14rem 5rem,rgba(240,178,160,.1),rgba(240,178,160,.04) 55%,rgba(240,178,160,0) 100%),radial-gradient(44rem 26rem at 34rem 12rem,rgba(206,188,236,.07),rgba(206,188,236,.025) 55%,rgba(206,188,236,0) 100%)}
-@media (max-width:767px){.tje-aura{height:34rem;background:radial-gradient(14rem 11rem at 0 0,rgba(247,194,150,.28),rgba(247,194,150,.11) 48%,rgba(247,194,150,0) 100%),radial-gradient(22rem 13rem at 8rem 3rem,rgba(240,178,160,.09),rgba(240,178,160,.035) 55%,rgba(240,178,160,0) 100%),radial-gradient(26rem 16rem at 18rem 8rem,rgba(206,188,236,.06),rgba(206,188,236,.02) 55%,rgba(206,188,236,0) 100%)}}
 .tje-grain{position:absolute;inset:0;background:url(../img/grain.png) repeat;background-size:11.25rem 11.25rem;opacity:.32;mix-blend-mode:soft-light;pointer-events:none}
 .tje-kick-n{font-family:"Libre Caslon Display",Georgia,serif;font-size:.9375rem;letter-spacing:0;color:var(--orange-deep)}
 .tje-kick-rule{width:1.75rem;height:1px;background:currentColor;opacity:.5}
