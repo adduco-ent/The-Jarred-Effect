@@ -95,48 +95,48 @@ var OH_CONTENT = {
   types: {
     dreamer: {
       name: 'The Dreamer', line: 'Big vision. Not much follow-through.',
-      read: 'You’ve got the wanting part down: the vision, the belief, the feeling of it. What’s missing is the doing part. Small daily steps that still happen on a bad day.',
+      read: 'Honestly? You’ve already got the part most people never get: you can see it, believe it and feel it. What slips is the everyday doing, the small steps that still happen on a day you don’t feel like it. That’s the half we’re going to build.',
       signs: ['You can see it clearly. Your calendar can’t.', 'You feel great in the morning and stuck by lunch.', 'When fear shows up, you cover it with a positive thought.'],
-      strength: 'You can feel a future before it exists. That’s real fuel, and most people don’t have it.',
-      cost: 'Feeling it isn’t the same as living it. Without small daily actions, your gut never gets proof, so the good feeling fades instead of sticking.',
+      strength: 'You can feel a future before it exists. That’s real fuel, and most people never get it. Don’t lose that.',
+      cost: 'Here’s the catch: feeling it isn’t living it. Without small daily actions, your gut never gets proof, so the good feeling fades instead of sticking around.',
       rep: { title: 'One tiny step a day', what: 'Pick the thing you want. Choose a daily step so small it feels almost too easy: ten minutes, one page, one call. Do it every day for 7 days.', rough: 'Two minutes still counts. Open the doc, send the text, put your shoes on.' },
-      question: { name: 'The Price', ask: 'What will this really cost me, and will I still pay it on a bad day?', hint: 'Wanting is free. Knowing the price is what makes you ready to pay it.' }
+      question: { name: 'The Price', ask: 'What will this actually cost you, and would you still pay it on a hard day?', hint: 'Think time, money, sleep, comfort. Wanting it is free. Knowing the price is what gets you ready to pay it.' }
     },
     achiever: {
       name: 'The Achiever', line: 'All effort. Busy, and running on fumes.',
-      read: 'You can outwork almost anyone. What’s missing is the reason underneath the work, and letting someone else carry part of it.',
+      read: 'You can outwork almost anyone, and people know they can count on you. What’s missing is the why underneath all that work, and letting someone else carry some of it for once.',
       signs: ['Rest feels like falling behind.', 'It’s easier to do it yourself than to explain it.', 'You hit the goal and feel strangely flat.'],
       strength: 'You keep the promises you make to yourself. That builds real self-trust, and most people never get there.',
-      cost: 'Effort without a reason wears you down. The want behind the work goes quiet, and no one else gets to help carry it.',
+      cost: 'But effort without a reason wears you down. The want behind the work goes quiet, and you end up carrying it all alone.',
       rep: { title: 'The hand-off', what: 'This week, hand one task to someone else and don’t redo it. Spend the time you get back on something you actually want to do.', rough: 'Ask for one small thing. Let it be done their way.' },
-      question: { name: 'The Payoff', ask: 'What am I getting out of not having it yet?', hint: 'Sometimes staying busy feels safer than getting there.' }
+      question: { name: 'The Payoff', ask: 'Is there a hidden upside to not having it yet?', hint: 'Be honest. Staying busy can feel safer than actually getting there. Most of us have a hidden upside, and naming yours loosens its grip.' }
     },
     excavator: {
       name: 'The Excavator', line: 'Deep insight. Not enough action.',
-      read: 'You understand your patterns better than most people ever will. What’s missing is action: one small step that proves the insight changed something.',
+      read: 'You understand yourself better than most people ever will. What’s missing is the next step: one small action that proves all that insight actually changed something.',
       signs: ['You can explain exactly why you do what you do.', 'Figuring something out feels like progress.', 'You think it over, and the week is gone.'],
       strength: 'You look where most people never look. That depth means when you do act, you act on the right thing.',
-      cost: 'Understanding a pattern doesn’t change it. Your gut believes what you do, not what you know.',
+      cost: 'The tricky part: understanding a pattern doesn’t change it. Your gut believes what you do, not what you know.',
       rep: { title: 'One step in 24 hours', what: 'Take one thing you’ve learned about yourself this week and act on it within a day, before you think it through again.', rough: 'Do the smallest version. Two minutes is enough.' },
-      question: { name: 'The Fear on the far side', ask: 'If I got it tomorrow, what would I be afraid of?', hint: 'Sometimes the thinking is a way to stay safe.' }
+      question: { name: 'The Fear on the far side', ask: 'If you got it tomorrow, what would scare you a little?', hint: 'Getting what you want changes things. Sometimes all the thinking is a way of not finding out.' }
     },
     pendulum: {
       name: 'The Pendulum', line: 'Great weeks, then the crash.',
-      read: 'Your good weeks are really good, and then the crash comes. What’s missing is a plan for the crash, so it stops costing you the next good week.',
+      read: 'When you’re on, you’re really on. Then the crash comes, and you spend a week climbing back out. What’s missing isn’t more fire. It’s a plan for the crash, so it stops stealing your next good week.',
       signs: ['Your great weeks feel unstoppable.', 'Then you crash, and scramble to catch up.', 'You restart more often than you keep going.'],
       strength: 'When you’re on, you’re really on. You already know what your best looks like.',
-      cost: 'A high doesn’t last on its own. Every big week borrows energy from the next one, so the crash isn’t random. It’s the other half of the pattern.',
+      cost: 'A high doesn’t last on its own. Every big week borrows energy from the next one, so the crash isn’t bad luck. It’s the other half of the same pattern.',
       rep: { title: 'The five-evening check-in', what: 'For five evenings, write down three things: your lowest moment, your best moment, and how long it took you to bounce back. By day three you’ll see your pattern.', rough: 'One line is enough: low, high, bounced back or not yet.' },
-      question: { name: 'The Price', ask: 'What will this really cost me, and will I still pay it on a bad day?', hint: 'Your good weeks can pay it. Plan for the bad ones.' }
+      question: { name: 'The Price', ask: 'What will this actually cost you, and would you still pay it on a hard day?', hint: 'Your great weeks can pay it easily. The real question is whether your hard weeks can too.' }
     },
     calibrated: {
       name: 'The Calibrated', line: 'Holding both sides.',
-      read: 'You balance both sides better than most people. Your work now is keeping that balance when life gets harder.',
+      read: 'You hold both sides better than most people, and that’s worth saying out loud. Your work now is keeping that balance when life gets loud.',
       signs: ['You can rest without guilt and push without panic.', 'Bad days slow you down. They don’t knock you over.', 'You notice when you start to slip.'],
       strength: 'You already do what the method teaches. You want things and work for them. You trust, and you face what’s hard.',
       cost: 'Balance gets tested when life gets loud. The risk isn’t slipping. It’s not noticing that you have.',
       rep: { title: 'The 2:47 check', what: 'Set an alarm for the middle of your afternoon. When it goes off, ask three things: What am I feeling in my gut right now? Is it what I’d tell someone I’m feeling? Can I feel it and still do my next task?', rough: 'Just ask the last one. If the answer is yes, you’re holding steady.' },
-      question: { name: 'The Fear on the far side', ask: 'If I got it tomorrow, what would I be afraid of?', hint: 'Balanced people still flinch at the finish line. Notice where you would.' }
+      question: { name: 'The Fear on the far side', ask: 'If you got it tomorrow, what would scare you a little?', hint: 'Even really balanced people flinch right before the finish line. Notice where you would.' }
     }
   },
   // what each lean means, per pole pair: `a` when they lean to the first pole, `b` to the second, `mid` when balanced

@@ -38,7 +38,7 @@
       return '<section class="oh-screen oh-welcome">' +
         '<p class="oh-kick"><span class="oh-dot" aria-hidden="true"></span>The Polarity Profile</p>' +
         '<h1 class="oh-h1">Find your <span class="oh-it">other half.</span></h1>' +
-        '<p class="oh-lead">Eighteen quick choices. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
+        '<p class="oh-lead">Eighteen quick choices, about two minutes. You’ll see your balance, your type, and the half you’ve been missing.</p>' +
         // a preview: a question card fanned behind the card they'll get at the end
         '<div class="oh-peek" aria-hidden="true">' +
           '<div class="oh-peek-q"><b>A</b><span>When I want something…</span></div>' +
@@ -121,9 +121,8 @@
             '<p class="oh-rep-r"><b>Hard day?</b> ' + esc(t.rep.rough) + '</p></div>' +
         '</div>' +
         '<div class="oh-sec oh-sec--q">' +
-          '<p class="oh-sec-k">A question to sit with</p>' +
+          '<p class="oh-sec-k">One honest question</p>' +
           '<p class="oh-shadow">' + esc(t.question.ask) + '</p>' +
-          '<p class="oh-shadow-by">— ' + esc(t.question.name) + '</p>' +
           '<p class="oh-fine">' + esc(t.question.hint) + ' Answer it honestly, not nicely.</p>' +
         '</div>' +
         '<form class="oh-next" data-results novalidate>' +

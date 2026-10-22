@@ -86,14 +86,14 @@
       "7": "All seven. Take that in. You did this."
     },
     "checkin": {
-      "full": "Good day. Do the whole step, and enjoy it.",
-      "half": "Okay day. Do a shorter version. It still counts.",
-      "halfMany": "Okay day. Pick one goal and do its step. That counts as the day.",
-      "rough": "Hard day. Just the small version today. It counts the same."
+      "full": "Love that. Go for the whole step, and enjoy it.",
+      "half": "Okay day? That’s real life. Do a shorter version, it still counts.",
+      "halfMany": "Okay day? Pick one goal and do its step. That’s the whole day, done.",
+      "rough": "Hard day? Be easy on yourself. Just the small version today. It counts the same."
     },
-    "tomorrow": "That’s today, done. Rest easy.",
-    "future": "Today’s step is the only one that matters.",
-    "missedDay": "This one slipped by. That’s okay. No catch-up, just today.",
+    "tomorrow": "That’s today, done. Go enjoy the rest of it.",
+    "future": "No need to look ahead. Today’s step is the only one that matters.",
+    "missedDay": "This one slipped by, and that’s okay. No catch-up. Just today.",
     "weekDone": "Seven days, {n} done. That’s real information, not a verdict. Take your look back, then shape next week.",
     "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week.",
     "nudge": [
@@ -386,13 +386,14 @@
     {
       "day": 4,
       "kind": "question",
-      "title": "A question to sit with",
+      "title": "One honest question",
       "name": "The Payoff",
-      "ask": "What am I getting out of not having it yet?",
+      "ask": "Is there a hidden upside to not having it yet?",
+      "help": "Be honest. Maybe it’s easier, or safer, or nobody can judge you for trying. Most of us have one, and naming yours loosens its grip.",
       "hint": "Sometimes staying busy feels safer than getting there.",
       "followUps": [
-        "What does staying here protect me from?",
-        "Who would I have to become to let that go?"
+        "What would you have to face if you really went for it?",
+        "What would you do with that time and energy if the excuse were gone?"
       ],
       "forMany": true
     },

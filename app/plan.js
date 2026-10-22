@@ -289,18 +289,19 @@
   // ---- the question day and the look back
   function wholeDayCard(d) {
     var k = key(d), body;
-    if (folded(k)) return foldBar(k, d.kind === 'lookback' ? 'Look back' : 'A question to sit with', '', '').replace('<span class="pl-fold-f is-ask">How did it feel?</span>', '<span class="pl-fold-f">Done</span>');
+    if (folded(k)) return foldBar(k, d.kind === 'lookback' ? 'Look back' : 'One honest question', '', '').replace('<span class="pl-fold-f is-ask">How did it feel?</span>', '<span class="pl-fold-f">Done</span>');
     if (d.kind === 'question') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
         '<p class="pl-q">' + esc(d.ask) + '</p>' +
-        (d.hint ? '<p class="pl-text">' + esc(d.hint) + ' Answer it honestly, not nicely.</p>' : '') +
+        (d.help ? '<p class="pl-text">' + esc(d.help) + '</p>' : '') +
+        (d.hint ? '<p class="pl-text">' + esc(d.hint) + (d.help ? '' : ' Answer it honestly, not nicely.') + '</p>' : d.help ? '' : '<p class="pl-text">Answer it honestly, not nicely.</p>') +
         (d.forMany ? '<p class="pl-text">Use it on the goal that feels heaviest right now.</p>' : '') +
         (d.followUps && d.followUps.length ? '<div class="pl-sub"><span>If you want to go deeper</span>' + d.followUps.map(function (f) { return '<p>' + esc(f) + '</p>'; }).join('') + '</div>' : '') +
         '<div class="nt">' + words('note', d.day, 'text', 'Whatever comes up. Only you and your next plan see this.', 4, 'Write it down') + '</div>' +
         (paid() ? '<button type="button" class="lnk jgo" data-jgo="ask" data-jask="' + esc(d.ask) + '">Keep going in your journal<span aria-hidden="true">→</span></button>' : '');
     } else {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
-        '<p class="pl-text">Five minutes to see your week clearly, before the next one.</p>' +
+        '<p class="pl-text">Grab five minutes. Let’s look at your week clearly before the next one.</p>' +
         '<div class="lb">' + ['did', 'changed', 'keep'].map(function (f, i) { return '<div class="nt">' + words('lookback', '1', f, 'In your words', 3, (i + 1) + '. ' + d.prompts[i]) + '</div>'; }).join('') + '</div>' +
         (paid() ? '<button type="button" class="lnk jgo" data-jgo="ask" data-jask="What else do you want to remember about this week?">Keep going in your journal<span aria-hidden="true">→</span></button>' : '');
     }
@@ -409,10 +410,10 @@
     if (d.kind === 'step') {
       var ci = st.checkin[sel];
       var ciLine = ci && c.checkin ? c.checkin[ci === 'half' && many ? 'halfMany' : ci] : '';
-      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'What kind of day is it?' : 'What kind of day was it?') + '</p><p class="ci-s">Your steps adjust to fit.</p>' +
+      html += '<section class="ci" id="j-ci"><p class="ci-q">' + (sel === T ? 'What kind of day is it?' : 'What kind of day was it?') + '</p><p class="ci-s">Be honest. Your steps adjust to fit.</p>' +
         chips('data-checkin', sel, [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], ci) +
         (ciLine && !todayLine(d, many) ? '<p class="ci-a">' + esc(ciLine) + '</p>' : '') +
-        (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'What’s going on today? Optional, and it helps shape your next week.') : '') +
+        (ci === 'half' || ci === 'rough' ? words('checkin', sel, 'note', 'Want to tell me what’s going on? It helps shape next week.') : '') +
         (ci === 'rough' && paid() ? '<button type="button" class="lnk jgo" data-jgo="hard">Want to write it out?<span aria-hidden="true">→</span></button>' : '') + '</section>';
       html += '<div id="j-steps" class="pl-steps">' + orderedSteps(d).map(function (x, i) { return stepCard(d, x, many, i); }).join('') + '</div>';
     } else {
