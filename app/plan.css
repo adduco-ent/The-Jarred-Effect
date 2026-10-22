@@ -1212,3 +1212,44 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-dh .pl-fold-t b{font-size:1.25rem}
 .pl-step-card.is-done .pl-dh .pl-fold-t b{opacity:1}
 .pl-undo{justify-self:center;min-height:2.75rem;margin:-.25rem 0 -.5rem;font-size:.8125rem;font-weight:500;color:var(--faint)}
+
+/* ---- the welcome, in motion (2026-10-22): one slow, calm entrance, like the screen waking up.
+   0s the sky emerges from a pearl wash · .3s the week lights up, dot by dot · .4s the greeting comes into focus, word by
+   word · .8s the line · 1s the quote settles · 1.15s the card rises, its tiles land in turn · 2.1s one soft glint.
+   Picking re-renders without replaying any of it; leaving dissolves upward and Today fades in. */
+.wl-sky::after{content:"";position:absolute;inset:0;background:#fdfdfc;animation:wl-veil 1.4s cubic-bezier(.4,0,.2,1) both;pointer-events:none}
+.wl--night .wl-sky::after{background:#0d1828}
+@keyframes wl-veil{from{opacity:1}to{opacity:0}}
+.wl-week i{animation:wl-dot .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i) * 60ms + 300ms)}
+@keyframes wl-dot{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.wl-hi{text-wrap:balance}
+.wl-w{display:inline-block;animation:wl-focus 1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--w) * 120ms + 420ms)}
+@keyframes wl-focus{from{opacity:0;transform:translateY(.35em);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+.wl-line{animation-delay:.8s}
+.wl-q{animation-delay:1s;animation-duration:1s}
+.wl-card{position:relative;overflow:hidden;animation:wl-card 1.1s cubic-bezier(.16,1,.3,1) 1.15s both}
+@keyframes wl-card{from{opacity:0;transform:translateY(2rem) scale(.985)}to{opacity:1;transform:none}}
+.wl-o button{animation:wl-up .7s cubic-bezier(.22,1,.36,1) both}
+.wl-o button:nth-child(1){animation-delay:1.35s}.wl-o button:nth-child(2){animation-delay:1.43s}.wl-o button:nth-child(3){animation-delay:1.51s}
+.wl-skip{animation:wl-up .7s cubic-bezier(.22,1,.36,1) 1.7s both}
+.wl-card::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.75) 50%,rgba(255,255,255,0) 65%);transform:translateX(-120%);animation:wl-glint 1.3s cubic-bezier(.4,0,.2,1) 2.1s both;pointer-events:none}
+@keyframes wl-glint{to{transform:translateX(120%)}}
+/* after the entrance: nothing replays */
+.wl.is-on .wl-in,.wl.is-on .wl-w,.wl.is-on .wl-week i,.wl.is-on .wl-card,.wl.is-on .wl-o button,.wl.is-on .wl-skip,.wl.is-on .wl-sky::after,.wl.is-on .wl-card::after{animation:none}
+.wl.is-on .wl-sky::after{opacity:0}
+.wl.is-on .wl-card::after{transform:translateX(120%)}
+.wl.is-on .wl-sun{animation:wl-breathe 9s ease-in-out infinite}
+/* picking: the icon fills with a gentle swell, the reply comes into focus, Let's go rises */
+.wl.is-on .wl-o button[aria-checked="true"] .wl-ic{animation:wl-swell .5s cubic-bezier(.22,1,.36,1)}
+@keyframes wl-swell{0%{transform:scale(.86)}60%{transform:scale(1.05)}100%{transform:none}}
+.wl-reply{animation:wl-focus .7s cubic-bezier(.22,1,.36,1) both}
+.wl-go{animation:wl-up .6s cubic-bezier(.22,1,.36,1) .12s both}
+/* leaving: the words drift up and soften, the sky fades, Today fades in */
+.wl.is-out .wl-top,.wl.is-out .wl-q,.wl.is-out .wl-card{animation:wl-leave .42s cubic-bezier(.4,0,1,1) forwards}
+.wl.is-out .wl-q{animation-delay:.03s}.wl.is-out .wl-card{animation-delay:.06s}
+.wl.is-out .wl-sky{animation:wl-fade .42s ease forwards}
+@keyframes wl-leave{to{opacity:0;transform:translateY(-.75rem);filter:blur(4px)}}
+@keyframes wl-fade{to{opacity:0}}
+.pl-enter{animation:pl-enter .7s cubic-bezier(.22,1,.36,1) both}
+@keyframes pl-enter{from{opacity:0;transform:translateY(.75rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wl-sky::after,.wl-week i,.wl-w,.wl-card,.wl-card::after,.wl-o button,.wl-skip,.wl-reply,.wl-go,.pl-enter,.wl.is-out .wl-top,.wl.is-out .wl-q,.wl.is-out .wl-card,.wl.is-out .wl-sky,.wl.is-on .wl-o button[aria-checked="true"] .wl-ic{animation:none}.wl-sky::after{opacity:0}.wl-card::after{display:none}}

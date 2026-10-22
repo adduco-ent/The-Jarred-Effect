@@ -1230,7 +1230,8 @@
   // ---- the welcome: a breather before the day. Once a day, the first time the app opens: a sky that follows the time
   // of day, a greeting, a line for the day, a quote, and one warm question. The answer is the day's check-in.
   // Review: ?welcome=1 shows it again, ?sky=morning|afternoon|evening|night picks the sky.
-  var welcomeSeen = false;
+  var welcomeSeen = false, wlPlayed = false;
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ciOpen = {}, ciTimer = null; // days whose check-in question is open on Today (answered here, or Update tapped)
   function welcomeKey() { return ymd(new Date()) + ':' + T; }
   function needWelcome() {
@@ -1259,13 +1260,14 @@
     var date = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     var arrowIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     // the week so far: a dot per day, filled when it's done, ringed for today
-    var week = p.days.map(function (x) { var s = dayState(x); return '<i class="' + (s === 'kept' ? 'is-done' : x.day === T ? 'is-now' : '') + '"></i>'; }).join('');
-    return '<section class="wl wl--' + part + '" aria-labelledby="wl-hi">' +
+    var week = p.days.map(function (x, n) { var s = dayState(x); return '<i class="' + (s === 'kept' ? 'is-done' : x.day === T ? 'is-now' : '') + '" style="--i:' + n + '"></i>'; }).join('');
+    // the entrance plays once; picking an answer re-renders without replaying it
+    return '<section class="wl wl--' + part + (wlPlayed ? ' is-on' : '') + '" aria-labelledby="wl-hi">' +
       '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-rays"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i><i class="wl-stars wl-stars--b"></i>' : '') +
         '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i></div>' +
       '<header class="wl-top"><p class="wl-date wl-in" style="--d:0">' + esc(date) + '</p>' +
         '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '</p>' +
-        '<h1 class="wl-hi wl-in" id="wl-hi" style="--d:2">' + esc(hello) + '</h1>' +
+        '<h1 class="wl-hi" id="wl-hi">' + hello.split(' ').map(function (x, n) { return '<span class="wl-w" style="--w:' + n + '">' + esc(x) + '</span>'; }).join(' ') + '</h1>' +
         '<p class="wl-line wl-in" style="--d:3">' + esc((w.days || [])[T - 1] || w.later || '') + '</p></header>' +
       (qt ? '<figure class="wl-q wl-in" style="--d:4"><blockquote>' + esc(qt.q) + '</blockquote><figcaption>' + esc(qt.by) + '</figcaption></figure>' : '') +
       '<div class="wl-card wl-in" style="--d:5"><p class="wl-ask" id="wl-ask">' + esc(ask) + '</p>' +
@@ -1276,8 +1278,15 @@
           : '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button>') +
       '</div></section>';
   }
+  // leaving: the welcome dissolves upward, then Today fades in beneath it
   function leaveWelcome() {
-    st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0);
+    var go = function () {
+      st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0);
+      if (!calm) { root.classList.add('pl-enter'); setTimeout(function () { root.classList.remove('pl-enter'); }, 900); }
+    };
+    var sec = root.querySelector('.wl');
+    if (calm || !sec || sec.classList.contains('is-out')) return go();
+    sec.classList.add('is-out'); setTimeout(go, 420);
   }
 
   function render() {
@@ -1285,7 +1294,7 @@
     // once a day, a breather before Today
     var wl = needWelcome();
     document.body.classList.toggle('is-welcome', wl);
-    if (wl) { root.innerHTML = welcomeView(plan); nav.hidden = true; root.classList.remove('is-writing'); return; }
+    if (wl) { root.innerHTML = welcomeView(plan); wlPlayed = true; nav.hidden = true; root.classList.remove('is-writing'); return; }
     var views = { today: todayView, progress: progressView, playbook: playbookView, journal: journalView, you: youView };
     var was = {};
     root.querySelectorAll('details[data-l]').forEach(function (x) { was[x.getAttribute('data-l')] = x.open; });
