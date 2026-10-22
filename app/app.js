@@ -96,7 +96,7 @@
           '<ul class="oh-map" aria-label="Your balance map">' + map + '</ul>' +
           '<p class="oh-fine oh-map-note">The center line is balance. The dot is where you lean.</p>' +
         '</div>' +
-        '<div class="oh-sec">' +
+        '<div class="oh-sec oh-sec--open oh-sec--read">' +
           '<p class="oh-sec-k">The read</p>' +
           '<p class="oh-read">' + esc(t.read) + '</p>' +
           '<p class="oh-sub">You might recognize this</p>' +
@@ -110,7 +110,7 @@
           '<div><p class="oh-sec-k">Your strength</p><p class="oh-body">' + esc(t.strength) + '</p></div>' +
           '<div><p class="oh-sec-k">What it’s costing you</p><p class="oh-body">' + esc(t.cost) + '</p></div>' +
         '</div>' +
-        '<div class="oh-sec">' +
+        '<div class="oh-sec oh-sec--half">' +
           '<p class="oh-sec-k">Your other half</p>' +
           '<p class="oh-half">' + half + '</p>' +
           '<p class="oh-fine">' + (type !== 'calibrated' && r.missing ? 'It’s the side you use least, and the one your plan builds first.' : 'Your plan keeps both sides strong.') + '</p>' +
@@ -120,7 +120,7 @@
           '<div class="oh-rep"><p class="oh-rep-t">' + esc(t.rep.title) + '</p><p class="oh-rep-w">' + esc(t.rep.what) + '</p>' +
             '<p class="oh-rep-r"><b>Hard day?</b> ' + esc(t.rep.rough) + '</p></div>' +
         '</div>' +
-        '<div class="oh-sec oh-sec--q">' +
+        '<div class="oh-sec oh-sec--open oh-sec--q">' +
           '<p class="oh-sec-k">One honest question</p>' +
           '<p class="oh-shadow">' + esc(t.question.ask) + '</p>' +
           '<p class="oh-fine">' + esc(t.question.hint) + ' Answer it honestly, not nicely.</p>' +

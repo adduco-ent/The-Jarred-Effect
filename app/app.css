@@ -410,3 +410,38 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-end--a[aria-checked="true"]{box-shadow:0 0 0 2px var(--pearl),0 0 0 3.5px var(--ink),0 1.5rem 3rem -2.25rem rgba(14,26,44,.28)}
 .oh-peek-q{border-color:rgba(28,24,18,.08);background:radial-gradient(120% 110% at 0% 0%,rgba(243,163,120,.035),rgba(243,163,120,0) 60%),linear-gradient(180deg,#fefefd,#fbfbfa);box-shadow:inset 0 1px 0 #fff,0 1.25rem 2.5rem -2rem rgba(14,26,44,.3)}
 .oh-peek-q b{color:rgba(28,24,18,.05)}
+
+/* ---- the result, anchored (2026-10-22): no divider lines. Each part of the reading is its own soft white card,
+   spaced apart; the read and the honest question stay open as editorial moments; "your other half" is the featured
+   card. Every section label carries the brand's half-dot, so the eye can hop from section to section. */
+.oh-result .oh-sec{position:relative;margin-top:1rem;padding:1.375rem 1.375rem 1.5rem;border:0;border-radius:1.5rem;background:#fff;box-shadow:inset 0 0 0 1px rgba(28,24,18,.06),0 1px 2px rgba(14,26,44,.04),0 1rem 2rem -1.5rem rgba(14,26,44,.22)}
+.oh-result .oh-sec+.oh-sec{margin-top:1rem;border-top:0}
+.oh-result .oh-share-row+.oh-sec{margin-top:1.5rem}
+.oh-result .oh-sec-k{display:flex;align-items:center;gap:.5rem;margin:0 0 1rem}
+.oh-result .oh-sec-k::before{content:"";flex:none;width:.5rem;height:.5rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+/* open moments: the read and the honest question, set straight on the page */
+.oh-result .oh-sec--open{margin-top:1.5rem;padding:1.75rem .25rem .75rem;background:none;box-shadow:none;border-radius:0}
+.oh-result .oh-sec--open+.oh-sec{margin-top:1.5rem}
+.oh-sec--read .oh-read{font-size:1.375rem;line-height:1.45}
+/* lists breathe instead of sitting between lines */
+.oh-result .oh-signs{display:grid;gap:.25rem;margin-top:.5rem;border-top:0}
+.oh-result .oh-signs li{grid-template-columns:2rem minmax(0,1fr);align-items:start;padding:.625rem 0;border-bottom:0}
+.oh-result .oh-signs li span{display:grid;place-items:center;width:1.5rem;height:1.5rem;margin-top:.125rem;border-radius:50%;background:rgba(15,28,48,.06);font-family:var(--sans);font-size:.6875rem;font-weight:600;letter-spacing:0;color:var(--blue)}
+.oh-result .oh-says{display:grid;gap:1.375rem;border-top:0}
+.oh-result .oh-say,.oh-result .oh-say[data-side="a"],.oh-result .oh-say[data-side="b"]{padding:0;border-bottom:0}
+.oh-result .oh-two{gap:1.5rem}
+/* the 7-day try sits flat inside its card; "Hard day?" is a soft tinted note, not a line */
+.oh-result .oh-rep{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+.oh-result .oh-rep-r{margin-top:1rem;padding:.75rem .875rem;border-top:0;border-radius:.875rem;background:rgba(15,28,48,.045)}
+/* your other half: the featured card, a soft wash of the brand's navy light */
+.oh-result .oh-sec--half{padding:1.5rem 1.5rem 1.625rem;background:radial-gradient(110% 95% at 100% 100%,rgba(86,132,204,.16),rgba(86,132,204,0) 62%),radial-gradient(80% 75% at 0% 110%,rgba(232,116,58,.08),rgba(232,116,58,0) 60%),linear-gradient(170deg,#f6f7fb,#eef1f8);box-shadow:inset 0 0 0 1px rgba(15,28,48,.09),0 1rem 2rem -1.5rem rgba(14,26,44,.28)}
+.oh-result .oh-sec--half .oh-half{font-size:1.875rem}
+/* the next step follows the cards' rhythm */
+.oh-result .oh-next{margin-top:1.5rem}
+.oh-result .oh-say-k{align-items:center;gap:.375rem .75rem;margin-bottom:.5rem}
+.oh-result .oh-say-k span,.oh-result .oh-say[data-side="a"] .oh-say-k span,.oh-result .oh-say[data-side="b"] .oh-say-k span{padding:.1875rem .625rem;border-radius:99px;background:rgba(15,28,48,.055);font-family:var(--sans);font-style:normal;font-size:.75rem;font-weight:500;color:var(--blue)}
+.oh-result .oh-sec--q .oh-fine{margin-top:.875rem;line-height:1.55}
+.oh-result .oh-next-k{display:flex;align-items:center;gap:.5rem}
+.oh-result .oh-next-k::before{content:"";flex:none;width:.5rem;height:.5rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
+.oh-result .oh-words{background:rgba(15,28,48,.04)}
+.oh-result .oh-say-k span{word-spacing:.18em}
