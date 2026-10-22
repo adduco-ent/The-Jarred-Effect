@@ -634,10 +634,11 @@
         ]));
   }
 
-  // ---- Journal (full app): a private place to write more. Their own entries, plus everything they've written in the
-  // plan, gathered in. Kept on this device until sign-in exists, and never sent as feedback: no one reads it but them.
-  var J = { open: null, edit: null, del: null, saved: null, warn: false, wipe: false, f: 'all', q: '', focus: false };
-  var MODES = [['prompt', 'Today’s prompt'], ['free', 'Free write'], ['quick', 'Quick line'], ['letter', 'Letter']];
+  // ---- Journal (full app): a private place to write more, a line or pages. Home is what to write and everything
+  // written, by week; writing and reading each get their own page. Their own entries, plus everything they've written
+  // in the plan, gathered in. Kept on this device until sign-in exists, and never sent as feedback: no one reads it but them.
+  // view: home | write | edit | read. pend carries "saved" and the safety check across a page change.
+  var J = { view: 'home', id: null, edit: false, del: false, saved: null, warn: false, wipe: false, discard: false, f: 'all', q: '', focus: false, from: null, pend: null, homeY: 0 };
   var LETTERS = [
     { to: 'Future you', prompt: 'Write to yourself a year from now. What do you hope is true?' },
     { to: 'Past you', prompt: 'What do you wish you’d known back then?' },
@@ -649,6 +650,9 @@
   var pinIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 3.25h5l-.75 4.5 2.5 2.5v1.25h-8.5v-1.25l2.5-2.5-.75-4.5zM10 11.5v5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var editIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16l.75-3.25 8.5-8.5a1.6 1.6 0 012.25 0l.25.25a1.6 1.6 0 010 2.25l-8.5 8.5L4 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
   var binIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 6h11M8 6V4.5h4V6M6 6l.6 9.25c.05.7.6 1.25 1.3 1.25h4.2c.7 0 1.25-.55 1.3-1.25L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var penIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16l.75-3.25 8.5-8.5a1.6 1.6 0 012.25 0l.25.25a1.6 1.6 0 010 2.25l-8.5 8.5L4 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  var lineIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 7.5h12M4 12.5h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  var letterIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="5" width="14" height="10.5" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3.75 6.25L10 11l6.25-4.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var againIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15.25 8.25A5.5 5.5 0 005.1 6.9M4.75 11.75A5.5 5.5 0 0014.9 13.1M5 3.75v3.5h3.5M15 16.25v-3.5h-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function jx() { return (plan && plan.journal) || {}; }
@@ -742,62 +746,145 @@
     return e.kind === 'prompt' ? 'Today’s prompt' : 'Free write';
   }
 
-  // ---- the writing card
-  function talkBtn() {
-    var on = !!(talk && talk.on);
-    return '<button type="button" class="jw-mic' + (on ? ' is-on' : '') + '" data-jtalk aria-pressed="' + on + '">' +
-      (on ? '<i class="jw-rec" aria-hidden="true"></i><span>Listening · Tap to stop</span>' : micIcon + '<span>Talk</span>') + '</button>';
+  // ---- small helpers for long writing
+  function wc(t) { return (String(t || '').match(/\S+/g) || []).length; }
+  function wcLabel(n) { return n === 1 ? '1 word' : n.toLocaleString('en-US') + ' words'; }
+  function oneLine(t) { return String(t || '').replace(/\s+/g, ' ').trim(); }
+  // their paragraphs, kept as they wrote them: a blank line starts a new paragraph, a single return stays a line break
+  function paras(t) { return String(t || '').trim().split(/\n\s*\n/).map(function (x) { return '<p>' + esc(x.trim()).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
+  function longDate(d) { return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); }
+  function modeName(m) { return { prompt: 'Today’s prompt', free: 'Free write', quick: 'Quick line', letter: 'Letter' }[m] || 'Free write'; }
+  function jEntry() { return st.journal.filter(function (x) { return x.id === J.id; })[0]; }
+  // words go where they belong: the entry being edited, or the draft. Saved as they type.
+  function putWords(field, val) {
+    if (J.view === 'edit') { var x = jEntry(); if (x) x[field] = val; }
+    else draft()[field === 'body' ? 'text' : field] = val;
+    save();
+    if (field === 'body') { var c = root.querySelector('#jw-wc'); if (c) c.textContent = wcLabel(wc(val)); }
+    var s = root.querySelector('#jw-st');
+    if (s) { clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = 'Saved'; s.classList.add('on'); clearTimeout(s._o); s._o = setTimeout(function () { s.classList.remove('on'); s.textContent = s.getAttribute('data-rest'); }, 1800); }, 600); }
   }
-  function composer() {
-    var d = draft(), m = d.mode, top = '', L = letters(), li = Math.min(d.to || 0, L.length - 1);
-    if (m === 'prompt') top = '<div class="jw-p"><p class="jw-q">' + esc(curPrompt()) + '</p><button type="button" class="lnk" data-jnext>' + againIcon + 'Another one</button></div>';
-    if (m === 'letter') top = '<p class="fb-l">Who is it to?</p>' + chips('data-jto', 'jw', L.map(function (x, i) { return [String(i), x.to]; }), String(li), 'ci-o--to') + '<p class="jw-q">' + esc(L[li].prompt) + '</p>';
-    if (m === 'quick') top = '<p class="fb-l">What kind of day is it?</p>' + chips('data-jday', 'jw', [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], d.day || todayCi());
-    var ph = m === 'quick' ? 'One sentence on today.' : m === 'letter' ? LETTER_HI[li] : m === 'free' ? 'Whatever’s on your mind.' : 'Start with the first sentence that comes.';
-    var hint = talk && talk.note ? talk.note : SR ? '' : 'To talk instead of type, tap the mic on your keyboard.';
-    return '<section class="sc jw" id="j-write"><h2 class="sr">Write</h2>' + chips('data-jmode', 'jw', MODES, m, 'ci-o--4') +
-      (top ? '<div class="jw-top">' + top + '</div>' : '') +
-      '<div class="fbw"><textarea class="fb-t jw-t' + (m === 'quick' ? ' is-quick' : '') + '" id="jw-t" data-jw rows="' + (m === 'quick' ? 2 : 5) + '" aria-label="Your entry" placeholder="' + esc(ph) + '">' + esc(d.text || '') + '</textarea>' +
-        '<span class="fb-s" aria-hidden="true">' + check + 'Draft saved</span></div>' +
-      '<div class="jw-row">' + (SR ? talkBtn() : '<span></span>') + '<button type="button" class="send-btn" data-jsave>Save</button></div>' +
-      (hint ? '<p class="pt-e jw-hint" role="status">' + esc(hint) + '</p>' : '') +
-      (J.saved ? '<p class="nx-ok jw-ok" role="status">' + check + 'Saved to your journal.</p>' : '') + '</section>';
+  function tagsFor(e) {
+    var pin = (st.jmeta[e.id] || {}).pin;
+    return (pin ? '<span class="je-tag">' + pinIcon + 'Pinned</span>' : '') + (isPersonal(e) ? '<span class="je-tag">' + lock + 'Personal</span>' : '');
   }
 
-  // ---- one entry: tap to open it, then pin, edit, keep it personal or delete
+  function talkBtn() {
+    var on = !!(talk && talk.on);
+    return '<button type="button" class="jw-mic' + (on ? ' is-on' : '') + '" data-jtalk aria-pressed="' + on + '" aria-label="' + (on ? 'Stop talking' : 'Talk instead of type') + '">' +
+      (on ? '<i class="jw-rec" aria-hidden="true"></i><span>Stop</span>' : micIcon + '<span>Talk</span>') + '</button>';
+  }
+
+  // ---- Journal home: what to write today, any draft in progress, then everything written, by week
+  function jHome(p) {
+    var d = draft(), all = allEntries(p), list = all.filter(passes);
+    var hasDraft = !!((d.text || '').trim() || (d.title || '').trim());
+    var draftCard = !hasDraft ? '' : '<section class="sc jd"><p class="pl-k">Your draft</p>' +
+      (d.title ? '<p class="jd-t">' + esc(d.title) + '</p>' : '') + (d.text ? '<p class="jd-x">' + esc(oneLine(d.text)) + '</p>' : '') +
+      '<p class="jd-m">' + esc(modeName(d.mode)) + ' · ' + wcLabel(wc(d.text)) + ' · saved as you write</p>' +
+      (J.discard
+        ? '<div class="je-del" role="alert"><p class="fb-q">Throw away this draft?</p><p class="pt-e">It can’t be brought back.</p><div class="je-del-r"><button type="button" class="je-del-b" data-jdiscard-yes>' + binIcon + 'Throw it away</button><button type="button" class="lnk" data-jdiscard-no>Keep it</button></div></div>'
+        : '<div class="jd-r"><button type="button" class="pl-do" data-jgo="draft">' + editIcon + '<span>Keep writing</span></button><button type="button" class="lnk lnk--quiet" data-jdiscard>Throw away</button></div>') + '</section>';
+    var start = '<section class="sc jstart"><p class="pl-k">Today’s prompt</p><p class="jw-q">' + esc(curPrompt()) + '</p>' +
+      '<button type="button" class="lnk jnext" data-jnext>' + againIcon + 'Another one</button>' +
+      '<button type="button" class="pl-do" data-jgo="prompt">' + editIcon + '<span>Start writing</span></button>' +
+      '<div class="jways"><p class="fb-l">Or write your own way</p><div class="jways-r">' +
+        [['free', 'Free write', penIcon], ['quick', 'Quick line', lineIcon], ['letter', 'Letter', letterIcon]].map(function (w) {
+          return '<button type="button" class="jway" data-jgo="' + w[0] + '">' + w[2] + '<span>' + w[1] + '</span></button>';
+        }).join('') + '</div></div></section>';
+    return screenHead('Your words', 'Journal', 'A private place to write, a line or pages.') +
+      (J.saved ? '<p class="nx-ok jw-ok" role="status">' + check + 'Saved to your journal.</p>' : '') + (J.warn ? safeCard() : '') +
+      // one draft at a time: while there is one, it's the way back in
+      (hasDraft ? draftCard : start) +
+      (all.length
+        ? '<section class="jt"><div class="pb-s"><input type="search" id="jq" class="fb-t" placeholder="Search your journal" aria-label="Search your journal" autocomplete="off" value="' + esc(J.q) + '"></div>' +
+          '<div class="jf" role="group" aria-label="Show">' + FILTERS.map(function (f) { return '<button type="button" data-jf="' + f[0] + '" aria-pressed="' + (J.f === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+          (list.length ? timeline(list) : '<div class="pt-soon"><p class="pl-k">Nothing here yet</p><p class="pt-e">' + (J.f === 'plan' ? 'Your check-in notes and lines from each day show up here.' : 'What you write shows up here.') + '</p></div>') +
+          '<p class="pt-e jt-none" id="jnone" hidden>Nothing matches. Try another word.</p></section>'
+        : '<div class="pt-soon"><p class="pl-k">Your journal starts here</p><p class="pt-e">What you write shows up here, newest first. Your check-in notes and lines from each day gather here too.</p></div>') +
+      '<section class="fs jp"><p class="pl-k">Private by default</p><p class="pl-text">Only you can read your journal. No one at The Jarred Effect does. For now, it’s saved on this device only.</p>' +
+        (J.wipe ? '<div class="je-del" role="alert"><p class="fb-q">Delete everything you’ve written here?</p><p class="pt-e">Your journal entries are deleted for good. Notes in your plan stay where they are.</p>' +
+            '<div class="je-del-r"><button type="button" class="je-del-b" data-jwipe-yes>' + binIcon + 'Delete everything</button><button type="button" class="lnk" data-jwipe-no>Keep it</button></div></div>'
+          : st.journal.length ? '<button type="button" class="lnk lnk--quiet" data-jwipe>Delete everything you’ve written here</button>' : '') + '</section>';
+  }
+
+  // ---- the writer: its own page, a sheet of paper that grows with them, saved as they type
+  function jWriter() {
+    var editing = J.view === 'edit', e = editing ? jEntry() : null;
+    if (editing && !e) return jGone();
+    var d = draft(), m = editing ? e.kind : d.mode, L = letters(), li = Math.min(d.to || 0, L.length - 1);
+    var backTo = editing ? '' : J.from || 'journal';
+    var bar = '<div class="jw-bar">' +
+      (editing ? '<button type="button" class="pb-back jw-back" data-jdone><span aria-hidden="true">‹</span>Back</button>'
+        : '<a class="pb-back jw-back" href="#' + backTo + '"><span aria-hidden="true">‹</span>' + cap(backTo) + '</a>') +
+      '<div class="jw-acts">' + (SR ? talkBtn() : '') +
+        (editing ? '<button type="button" class="send-btn" data-jdone>Done</button>' : '<button type="button" class="send-btn" data-jsave>Save</button>') + '</div></div>';
+    var head;
+    if (editing) head = '<p class="pl-k">' + esc(kindLabel(e)) + ' · ' + esc(shortDate(new Date(e.at))) + '</p>' + (e.prompt ? '<h1 class="jw-q">' + esc(e.prompt) + '</h1>' : '<h1 class="sr">Edit your entry</h1>');
+    else if (m === 'prompt') head = '<p class="pl-k">Today’s prompt</p><h1 class="jw-q">' + esc(curPrompt()) + '</h1><button type="button" class="lnk jnext" data-jnext>' + againIcon + 'Another one</button>';
+    else if (m === 'letter') head = '<p class="pl-k">A letter you won’t send</p><p class="fb-l">Who is it to?</p>' + chips('data-jto', 'jw', L.map(function (x, i) { return [String(i), x.to]; }), String(li), 'ci-o--to') + '<h1 class="jw-q">' + esc(L[li].prompt) + '</h1>';
+    else if (m === 'quick') head = '<p class="pl-k">Quick line</p><h1 class="jw-q">One sentence on today.</h1><p class="fb-l">What kind of day is it?</p>' + chips('data-jday', 'jw', [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]], d.day != null ? d.day : todayCi());
+    else head = '<p class="pl-k">Free write</p><h1 class="jw-q">Whatever’s on your mind. Any length.</h1>';
+    var title = editing ? e.title : d.title, body = editing ? e.body : d.text;
+    var withTitle = m === 'free' || m === 'prompt';
+    var ph = m === 'quick' ? 'Just one line.' : m === 'letter' ? LETTER_HI[li] : 'Start with the first sentence that comes. Keep going as long as you like.';
+    var rest = editing ? 'Changes save as you write' : 'Your draft saves as you write';
+    var hint = talk && talk.note ? talk.note : SR ? '' : 'To talk instead of type, tap the mic on your keyboard.';
+    return bar + '<header class="jw-head">' + head + '</header>' +
+      '<div class="jw-paper">' + (withTitle ? '<input class="jw-title" id="jw-title" data-jw="title" type="text" maxlength="140" placeholder="Title (optional)" aria-label="Title, optional" autocomplete="off" value="' + esc(title || '') + '">' : '') +
+        '<textarea class="jw-t' + (m === 'quick' ? ' is-quick' : '') + '" id="jw-t" data-jw="body" rows="' + (m === 'quick' ? 2 : 10) + '" aria-label="Your entry" placeholder="' + esc(ph) + '">' + esc(body || '') + '</textarea></div>' +
+      '<p class="jw-foot"><span id="jw-wc">' + wcLabel(wc(body)) + '</span><span class="jw-st" id="jw-st" data-rest="' + esc(rest) + '">' + esc(rest) + '</span></p>' +
+      (hint ? '<p class="pt-e jw-hint" role="status">' + esc(hint) + '</p>' : '');
+  }
+
+  // ---- one entry, on its own page: the whole thing, easy to read, then what they can do with it
+  function jGone() { return '<a class="pb-back" href="#journal"><span aria-hidden="true">‹</span>Journal</a><div class="wait"><p><b>That entry isn’t here anymore.</b></p><a class="yu-link" href="#journal">Back to your journal<span aria-hidden="true">→</span></a></div>'; }
+  function jRead() {
+    var e = findEntry(J.id);
+    if (!e) return jGone();
+    var pin = (st.jmeta[e.id] || {}).pin, personal = isPersonal(e);
+    var date = e.src ? dayDate(e.n) : new Date(e.at);
+    var kick = e.src ? 'From your plan · Day ' + e.n : kindLabel(e) + ' · ' + clock(e.at);
+    var h1 = e.src ? e.label : e.title || longDate(date);
+    var sub = e.src || e.title ? longDate(date) : '';
+    var body = J.edit && e.src
+      ? '<section class="jw-paper jr-ed">' + words(e.kind, e.ref, e.field, 'In your words', 4) +
+        '<p class="pt-e">This is the same note as on day ' + e.n + '. Changing it here changes it there too.</p>' +
+        '<button type="button" class="send-btn" data-jedit-done>' + check + 'Done</button></section>'
+      : '<article class="jw-paper jr-body">' + paras(e.body) + '</article>';
+    var acts = J.del
+      ? '<div class="je-del" role="alert"><p class="fb-q">Delete this entry?</p><p class="pt-e">' + (e.src ? 'It’s removed from day ' + e.n + ' too. ' : '') + 'This can’t be undone.</p>' +
+        '<div class="je-del-r"><button type="button" class="je-del-b" data-jdel-yes>' + binIcon + 'Delete</button><button type="button" class="lnk" data-jdel-no>Keep it</button></div></div>'
+      : '<div class="je-acts">' +
+        '<button type="button" class="je-a" data-jedit>' + editIcon + 'Edit</button>' +
+        '<button type="button" class="je-a" data-jpin aria-pressed="' + !!pin + '">' + pinIcon + (pin ? 'Unpin' : 'Pin') + '</button>' +
+        '<button type="button" class="je-a" data-jdel>' + binIcon + 'Delete</button>' +
+        (e.src ? '<button type="button" class="je-a je-a--go" data-view-day="' + e.n + '">Day ' + e.n + '<span aria-hidden="true">→</span></button>' : '') + '</div>';
+    return '<a class="pb-back" href="#journal"><span aria-hidden="true">‹</span>Journal</a>' +
+      '<header class="td-head sc-head jr-head"><p class="pl-k">' + esc(kick) + '</p><h1 class="td-h jr-h">' + esc(h1) + '</h1>' + (sub ? '<p class="pl-note">' + esc(sub) + '</p>' : '') + '</header>' +
+      (J.warn ? safeCard() : '') +
+      (e.prompt ? '<p class="jr-p">' + esc(e.prompt) + '</p>' : '') + body +
+      '<p class="jw-foot"><span>' + wcLabel(wc(e.body)) + '</span><span class="je-tags">' + tagsFor(e) + '</span></p>' +
+      '<section class="sc jr-acts">' + acts +
+        '<button type="button" class="je-sw" role="switch" aria-checked="' + personal + '" data-jpersonal><span class="je-sw-t"><b>Keep it personal</b>' +
+          '<span>Just for you. It won’t shape your plans, steps or suggestions.</span></span><i class="je-sw-i" aria-hidden="true"></i></button></section>';
+  }
+
+  // ---- one entry in the list: a few lines of it, tap to read the whole thing
   function entryCard(e, ro) {
-    var pin = (st.jmeta[e.id] || {}).pin, personal = isPersonal(e), open = !ro && J.open === e.id;
     var when = e.src ? 'Day ' + e.n + ' · ' + shortDate(dayDate(e.n)) : shortDate(new Date(e.at)) + ' · ' + clock(e.at);
-    var inner = '<span class="je-top"><span class="je-d">' + esc(when) + '</span><span class="je-tags">' +
-        (pin ? '<span class="je-tag">' + pinIcon + 'Pinned</span>' : '') + (personal ? '<span class="je-tag">' + lock + 'Personal</span>' : '') + '</span></span>' +
-      '<span class="je-k">' + esc(kindLabel(e)) + '</span>' + (e.prompt ? '<span class="je-p">' + esc(e.prompt) + '</span>' : '') +
-      '<span class="je-x">' + esc(e.body) + '</span>';
-    var text = (kindLabel(e) + ' ' + e.prompt + ' ' + e.body).toLowerCase();
-    if (ro) return '<li data-jtext="' + esc(text) + '"><article class="je is-open is-ro"><div class="je-c">' + inner + '</div></article></li>';
-    var more = '';
-    if (open) {
-      var body;
-      if (J.edit === e.id) {
-        body = '<div class="je-ed">' + (e.src ? words(e.kind, e.ref, e.field, 'In your words', 3)
-          : '<div class="fbw"><textarea class="fb-t" data-je="' + esc(e.id) + '" rows="3" aria-label="Edit this entry">' + esc(e.body) + '</textarea><span class="fb-s" aria-hidden="true">' + check + 'Saved</span></div>') +
-          (e.src ? '<p class="pt-e">This is the same note as on day ' + e.n + '. Changing it here changes it there too.</p>' : '') +
-          '<button type="button" class="send-btn" data-jedit-done>' + check + 'Done</button></div>';
-      } else if (J.del === e.id) {
-        body = '<div class="je-del" role="alert"><p class="fb-q">Delete this entry?</p><p class="pt-e">' + (e.src ? 'It’s removed from day ' + e.n + ' too. ' : '') + 'This can’t be undone.</p>' +
-          '<div class="je-del-r"><button type="button" class="je-del-b" data-jdel-yes>' + binIcon + 'Delete</button><button type="button" class="lnk" data-jdel-no>Keep it</button></div></div>';
-      } else {
-        body = '<div class="je-acts">' +
-          '<button type="button" class="je-a" data-jedit>' + editIcon + 'Edit</button>' +
-          '<button type="button" class="je-a" data-jpin aria-pressed="' + !!pin + '">' + pinIcon + (pin ? 'Unpin' : 'Pin') + '</button>' +
-          '<button type="button" class="je-a" data-jdel>' + binIcon + 'Delete</button>' +
-          (e.src ? '<button type="button" class="je-a je-a--go" data-view-day="' + e.n + '">Day ' + e.n + '<span aria-hidden="true">→</span></button>' : '') + '</div>' +
-          '<button type="button" class="je-sw" role="switch" aria-checked="' + personal + '" data-jpersonal><span class="je-sw-t"><b>Keep it personal</b>' +
-            '<span>Just for you. It won’t shape your plans, steps or suggestions.</span></span><i class="je-sw-i" aria-hidden="true"></i></button>';
-      }
-      more = '<div class="je-more">' + body + '</div>';
-    }
-    return '<li data-jtext="' + esc(text) + '"><article class="je' + (open ? ' is-open' : '') + (J.saved === e.id ? ' is-new' : '') + '" data-jid="' + esc(e.id) + '">' +
-      '<button type="button" class="je-b" data-jopen aria-expanded="' + open + '">' + inner + '</button>' + more + '</article></li>';
+    var n = wc(e.body);
+    var text = (kindLabel(e) + ' ' + (e.title || '') + ' ' + e.prompt + ' ' + e.body).toLowerCase();
+    var top = '<span class="je-top"><span class="je-d">' + esc(when) + '</span><span class="je-tags">' + (ro ? '' : tagsFor(e)) + '</span></span>' +
+      '<span class="je-k">' + esc(kindLabel(e)) + '</span>' +
+      (e.title ? '<span class="je-t">' + esc(e.title) + '</span>' : e.prompt ? '<span class="je-p">' + esc(e.prompt) + '</span>' : '');
+    if (ro) return '<li data-jtext="' + esc(text) + '"><article class="je is-ro">' + top + '<div class="je-x je-x--all">' + paras(e.body) + '</div></article></li>';
+    // a long entry says how long it is and offers to read it all; a short one just shows it's tappable
+    var long = n >= 30;
+    if (!long) top = top.replace('<span class="je-tags">' + tagsFor(e) + '</span>', '<span class="je-tags">' + tagsFor(e) + '<span class="je-chev" aria-hidden="true">›</span></span>');
+    return '<li data-jtext="' + esc(text) + '"><a class="je' + (J.saved === e.id ? ' is-new' : '') + '" href="#journal/e/' + encodeURIComponent(e.id) + '">' + top +
+      '<span class="je-x">' + esc(oneLine(e.body)) + '</span>' +
+      (long ? '<span class="je-f"><span>' + wcLabel(n) + '</span><span class="je-go">Read it all<span aria-hidden="true">›</span></span></span>' : '') + '</a></li>';
   }
 
   // ---- by week of their plan, newest first, with anything pinned on top
@@ -830,33 +917,20 @@
   }
 
   function journalView(p) {
-    var mineG = gathered(p);
     if (!paid()) {
-      var g = mineG.sort(function (a, b) { return b.at - a.at; });
+      var g = gathered(p).sort(function (a, b) { return b.at - a.at; });
       return screenHead('Your words', 'Journal', 'Everything you write in your plan, kept in one place.') +
         '<section class="fs fs--top"><p class="pl-k">Your words so far</p>' +
           (g.length ? '<ul class="jl">' + g.map(function (e) { return entryCard(e, true); }).join('') + '</ul>'
             : '<div class="pt-soon"><p class="pl-k">Nothing here yet</p><p class="pt-e">As you check in and write a line each day, your words gather here.</p></div>') + '</section>' +
         fullApp('Write as much as you want', [
-          ['Write more', 'A blank page, a prompt for your day, a quick line or a letter you won’t send.'],
+          ['Write more', 'A page that grows with you: a prompt for your day, a blank page, a quick line or a letter you won’t send.'],
           ['Talk instead of type', 'Tap the mic and your words appear as you speak.'],
           ['Find it again', 'Search, pins, and everything sorted by week.'],
           ['Private by default', 'Only you can read it. Keep any entry just for you.']
         ]);
     }
-    var all = allEntries(p), list = all.filter(passes);
-    return screenHead('Your words', 'Journal', 'A private place to write more. Everything you write in your plan gathers here too.') +
-      composer() + (J.warn ? safeCard() : '') +
-      (all.length
-        ? '<section class="jt"><div class="pb-s"><input type="search" id="jq" class="fb-t" placeholder="Search your journal" aria-label="Search your journal" autocomplete="off" value="' + esc(J.q) + '"></div>' +
-          '<div class="jf" role="group" aria-label="Show">' + FILTERS.map(function (f) { return '<button type="button" data-jf="' + f[0] + '" aria-pressed="' + (J.f === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div>' +
-          (list.length ? timeline(list) : '<div class="pt-soon"><p class="pl-k">Nothing here yet</p><p class="pt-e">' + (J.f === 'plan' ? 'Your check-in notes and lines from each day show up here.' : 'What you write above shows up here.') + '</p></div>') +
-          '<p class="pt-e jt-none" id="jnone" hidden>Nothing matches. Try another word.</p></section>'
-        : '<div class="pt-soon"><p class="pl-k">Your journal starts here</p><p class="pt-e">Write your first entry above. Your check-in notes and lines from each day gather here too.</p></div>') +
-      '<section class="fs jp"><p class="pl-k">Private by default</p><p class="pl-text">Only you can read your journal. No one at The Jarred Effect does. For now, it’s saved on this device only.</p>' +
-        (J.wipe ? '<div class="je-del" role="alert"><p class="fb-q">Delete everything you’ve written here?</p><p class="pt-e">Your journal entries are deleted for good. Notes in your plan stay where they are.</p>' +
-            '<div class="je-del-r"><button type="button" class="je-del-b" data-jwipe-yes>' + binIcon + 'Delete everything</button><button type="button" class="lnk" data-jwipe-no>Keep it</button></div></div>'
-          : st.journal.length ? '<button type="button" class="lnk lnk--quiet" data-jwipe>Delete everything you’ve written here</button>' : '') + '</section>';
+    return J.view === 'write' || J.view === 'edit' ? jWriter() : J.view === 'read' ? jRead() : jHome(p);
   }
 
   // ---- talk instead of type: the browser's own speech-to-text, where there is one
@@ -879,12 +953,12 @@
       var heard = (fin.join(' ') + (mid.trim() ? ' ' + mid.trim() : '')).trim();
       var ta = root.querySelector('#jw-t'); if (!ta) return;
       ta.value = base + (base && heard ? ' ' : '') + heard;
-      draft().text = ta.value; save(); grow(ta);
+      putWords('body', ta.value); grow(ta);
     };
     rec.onerror = function (e) {
       var why = e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'The mic is off for this site. Turn it on in your browser settings, or tap the mic on your keyboard.'
         : e.error === 'no-speech' || e.error === 'aborted' ? '' : 'Talking isn’t working in this browser right now. Tap the mic on your keyboard instead.';
-      if (why) { talkStop(why); if (tab === 'journal') render(); }
+      if (why) { talkStop(why); if (tab === 'journal' && (J.view === 'write' || J.view === 'edit')) render(); }
     };
     // a pause ends the browser's listening; pick up again until they tap stop
     rec.onend = function () { if (talk && talk.rec === rec && talk.on) { begin(); try { rec.start(); } catch (x) { talkStop(); paintTalk(); } } };
@@ -900,8 +974,12 @@
     root.innerHTML = views[tab](plan);
     if (keepLayers) root.querySelectorAll('details[data-l]').forEach(function (x) { var v = was[x.getAttribute('data-l')]; if (v !== undefined) x.open = v; });
     keepLayers = true;
-    root.querySelectorAll('.fb-t').forEach(grow);
+    root.querySelectorAll('.fb-t, .jw-t').forEach(grow);
     if (tab === 'journal') jSearch();
+    // writing gets the whole screen: no tab bar, and room under the words so the line being written sits mid-screen
+    var writing = tab === 'journal' && (J.view === 'write' || J.view === 'edit') && !!paid();
+    root.classList.toggle('is-writing', writing);
+    nav.hidden = writing;
     nav.classList.toggle('is-full', !!paid());
     nav.querySelectorAll('[data-tab]').forEach(function (b) {
       if (b.getAttribute('data-tab') === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
@@ -913,12 +991,25 @@
     tab = TABS.indexOf(t) >= 0 ? t : 'today';
     pbId = tab === 'playbook' ? parts[1] || null : null;
     said = null; appThanks = false;
-    J.open = J.edit = J.del = J.saved = null; J.warn = J.wipe = false; J.q = '';
-    if (tab !== 'journal') talkStop();
-    var write = tab === 'journal' && J.focus;
+    // the journal's own pages: #journal, #journal/write, #journal/edit/<id>, #journal/e/<id>
+    var wasHome = J.view === 'home' && J.tab === 'journal';
+    if (wasHome) J.homeY = window.scrollY;
+    var jv = tab === 'journal' ? parts[1] || '' : '';
+    var backHome = wasHome === false && J.view === 'read' && J.tab === 'journal' && !jv;
+    J.tab = tab;
+    J.view = { write: 'write', edit: 'edit', e: 'read' }[jv] || 'home';
+    J.id = J.view === 'edit' || J.view === 'read' ? decodeURIComponent(parts[2] || '') : null;
+    var pend = J.pend || {}; J.pend = null;
+    J.saved = pend.saved || null; J.warn = !!pend.warn; J.edit = J.del = J.wipe = J.discard = false;
+    if (tab !== 'journal') J.q = '';
+    if (J.view !== 'write') J.from = null;
+    if (J.view !== 'write' && J.view !== 'edit') talkStop();
+    var write = (J.view === 'write' || J.view === 'edit') && J.focus;
     J.focus = false;
     render();
-    if (write) { var ta = root.querySelector('#jw-t'); if (ta) { window.scrollTo(0, 0); ta.focus(); return; } }
+    if (write) { var ta = root.querySelector('#jw-t'); if (ta) { window.scrollTo(0, 0); ta.focus({ preventScroll: true }); var n = ta.value.length; try { ta.setSelectionRange(n, n); } catch (x) { /* fine */ } return; } }
+    // back from reading an entry: land where they were in the list
+    if (backHome && !J.saved) { window.scrollTo(0, J.homeY || 0); return; }
     if (scroll) window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', function () { go(location.hash.slice(1), true); });
@@ -934,7 +1025,7 @@
   }
   // re-fit fields when the screen changes width (rotating a phone, resizing a window)
   var regrow;
-  window.addEventListener('resize', function () { clearTimeout(regrow); regrow = setTimeout(function () { root.querySelectorAll('.fb-t').forEach(grow); }, 120); });
+  window.addEventListener('resize', function () { clearTimeout(regrow); regrow = setTimeout(function () { root.querySelectorAll('.fb-t, .jw-t').forEach(grow); }, 120); });
   function refocus(q) { var el = root.querySelector(q); if (el) el.focus({ preventScroll: true }); }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
@@ -944,50 +1035,63 @@
     // ---- the journal
     if ((el = t.closest('[data-jgo]'))) {
       var jg = el.getAttribute('data-jgo'), dr = draft();
-      dr.mode = jg === 'free' ? 'free' : 'prompt';
-      if (jg === 'ask') dr.ask = el.getAttribute('data-jask'); else delete dr.ask;
-      if (jg === 'hard') dr.pi = 0;
-      save(); J.focus = true; location.hash = 'journal'; return;
+      if (jg !== 'draft') {
+        dr.mode = jg === 'hard' || jg === 'ask' ? 'prompt' : jg;
+        if (jg === 'ask') dr.ask = el.getAttribute('data-jask'); else if (jg !== 'prompt') delete dr.ask;
+        if (jg === 'hard') dr.pi = 0;
+      }
+      J.from = tab === 'journal' ? null : tab;
+      save(); J.focus = true; location.hash = 'journal/write'; return;
     }
-    if ((el = t.closest('[data-jmode]'))) { var dm = draft(); dm.mode = el.getAttribute('data-jmode'); if (dm.mode !== 'prompt') delete dm.ask; J.saved = null; save(); render(); refocus('[data-jmode="' + dm.mode + '"]'); return; }
     if ((el = t.closest('[data-jnext]'))) { var dn = draft(); if (dn.ask) delete dn.ask; else dn.pi = ((dn.pi || 0) + 1) % prompts().length; save(); render(); refocus('[data-jnext]'); return; }
     if ((el = t.closest('[data-jto]'))) { draft().to = +el.getAttribute('data-jto'); save(); render(); refocus('[data-jto="' + draft().to + '"]'); return; }
     if ((el = t.closest('[data-jday]'))) { var dd = draft(), dv = el.getAttribute('data-jday'), was = dd.day != null ? dd.day : todayCi(); dd.day = was === dv ? '' : dv; save(); render(); refocus('[data-jday="' + dv + '"]'); return; }
-    if ((el = t.closest('[data-jtalk]'))) { if (talk && talk.on) talkStop(); else talkStart(); render(); refocus('[data-jtalk]'); return; }
+    if ((el = t.closest('[data-jtalk]'))) {
+      if (talk && talk.on) talkStop(); else talkStart();
+      if (talk && talk.note) render(); else paintTalk();
+      refocus('[data-jtalk]'); return;
+    }
     if ((el = t.closest('[data-jsave]'))) {
-      var dj = draft(), jta = root.querySelector('#jw-t'), jb = jta ? jta.value.trim() : '';
-      if (!jb) { refocus('#jw-t'); return; }
+      var dj = draft(), jta = root.querySelector('#jw-t'), jti = root.querySelector('#jw-title');
+      var jb = jta ? jta.value.replace(/^\s*\n|\s+$/g, '') : '', jt = jti ? jti.value.trim() : '';
+      if (!jb.trim()) { refocus('#jw-t'); return; }
       if (talk && talk.on) talkStop();
       var ne = { id: 'j' + Date.now().toString(36), at: nowTs(), kind: dj.mode, body: jb };
+      if (jt) ne.title = jt;
       if (dj.mode === 'prompt') ne.prompt = curPrompt();
       if (dj.mode === 'letter') { var lt = letters()[Math.min(dj.to || 0, letters().length - 1)]; ne.to = lt.to; ne.prompt = lt.prompt; }
       if (dj.mode === 'quick') ne.day = (dj.day != null ? dj.day : todayCi()) || null;
       st.journal.push(ne);
       st.jdraft = { mode: dj.mode, pi: dj.pi, to: dj.to };
-      J.saved = ne.id; J.warn = risky(jb); J.f = 'all'; J.q = ''; J.open = null;
-      save(); render(); refocus('[data-jsave]');
-      return;
+      J.pend = { saved: ne.id, warn: risky(jt + ' ' + jb) }; J.f = 'all'; J.q = '';
+      save(); location.hash = 'journal'; return;
     }
-    if ((el = t.closest('[data-jf]'))) { J.f = el.getAttribute('data-jf'); J.open = null; render(); refocus('[data-jf="' + J.f + '"]'); return; }
+    if ((el = t.closest('[data-jdone]'))) {
+      var ed = jEntry();
+      if (ed && !ed.body.trim() && !(ed.title || '').trim()) { removeEntry(ed); location.hash = 'journal'; return; }
+      if (ed) { ed.body = ed.body.replace(/^\s*\n|\s+$/g, ''); ed.title = (ed.title || '').trim(); if (!ed.title) delete ed.title; save(); }
+      J.pend = { warn: !!(ed && risky((ed.title || '') + ' ' + ed.body)) };
+      location.hash = 'journal/e/' + encodeURIComponent(J.id); return;
+    }
+    if (t.closest('[data-jdiscard]')) { J.discard = true; render(); refocus('[data-jdiscard-no]'); return; }
+    if (t.closest('[data-jdiscard-no]')) { J.discard = false; render(); refocus('[data-jdiscard]'); return; }
+    if (t.closest('[data-jdiscard-yes]')) { st.jdraft = { mode: draft().mode, pi: draft().pi, to: draft().to }; J.discard = false; save(); render(); return; }
+    if ((el = t.closest('[data-jf]'))) { J.f = el.getAttribute('data-jf'); render(); refocus('[data-jf="' + J.f + '"]'); return; }
     if (t.closest('[data-jwipe]')) { J.wipe = true; render(); refocus('[data-jwipe-no]'); return; }
     if (t.closest('[data-jwipe-no]')) { J.wipe = false; render(); return; }
-    if (t.closest('[data-jwipe-yes]')) { st.journal.forEach(function (x) { delete st.jmeta[x.id]; }); st.journal = []; st.jdraft = {}; J.wipe = false; J.open = null; save(); render(); return; }
-    var jid = t.closest('[data-jid]'), je = jid && findEntry(jid.getAttribute('data-jid'));
+    if (t.closest('[data-jwipe-yes]')) { st.journal.forEach(function (x) { delete st.jmeta[x.id]; }); st.journal = []; st.jdraft = {}; J.wipe = false; save(); render(); return; }
+    var je = tab === 'journal' && J.view === 'read' && findEntry(J.id);
     if (je) {
-      var at = '[data-jid="' + je.id + '"] ';
-      if (t.closest('[data-jopen]')) { J.open = J.open === je.id ? null : je.id; J.edit = J.del = null; render(); refocus(at + '[data-jopen]'); return; }
-      if (t.closest('[data-jedit]')) { J.edit = je.id; render(); refocus(at + 'textarea'); return; }
-      if (t.closest('[data-jedit-done]')) {
-        var now = findEntry(je.id);
-        J.edit = null; J.warn = J.warn || !!(now && risky(now.body));
-        if (now && !now.src && !now.body.trim()) { removeEntry(now); J.open = null; }
-        render(); refocus(at + '[data-jopen]'); return;
+      if (t.closest('[data-jedit]')) {
+        if (!je.src) { J.focus = true; location.hash = 'journal/edit/' + encodeURIComponent(je.id); return; }
+        J.edit = true; render(); refocus('.jr-ed textarea'); return;
       }
-      if (t.closest('[data-jpin]')) { setMeta(je.id, 'pin', (st.jmeta[je.id] || {}).pin ? 0 : Date.now()); render(); refocus(at + '[data-jpin]'); return; }
-      if (t.closest('[data-jdel]')) { J.del = je.id; render(); refocus(at + '[data-jdel-no]'); return; }
-      if (t.closest('[data-jdel-no]')) { J.del = null; render(); refocus(at + '[data-jdel]'); return; }
-      if (t.closest('[data-jdel-yes]')) { removeEntry(je); J.open = J.del = null; render(); return; }
-      if (t.closest('[data-jpersonal]')) { setPersonal(je, !isPersonal(je)); render(); refocus(at + '[data-jpersonal]'); return; }
+      if (t.closest('[data-jedit-done]')) { var now = findEntry(je.id); J.edit = false; J.warn = J.warn || !!(now && risky(now.body)); if (!now) { location.hash = 'journal'; return; } render(); refocus('[data-jedit]'); return; }
+      if (t.closest('[data-jpin]')) { setMeta(je.id, 'pin', (st.jmeta[je.id] || {}).pin ? 0 : Date.now()); render(); refocus('[data-jpin]'); return; }
+      if (t.closest('[data-jdel]')) { J.del = true; render(); refocus('[data-jdel-no]'); return; }
+      if (t.closest('[data-jdel-no]')) { J.del = false; render(); refocus('[data-jdel]'); return; }
+      if (t.closest('[data-jdel-yes]')) { removeEntry(je); location.hash = 'journal'; return; }
+      if (t.closest('[data-jpersonal]')) { setPersonal(je, !isPersonal(je)); render(); refocus('[data-jpersonal]'); return; }
     }
     if ((el = t.closest('[data-add-ask]'))) { addOpen = !addOpen; render(); refocus(addOpen && paid() ? '#new-ask' : '[data-add-ask]'); return; }
     if ((el = t.closest('[data-ask-add]'))) {
@@ -1084,14 +1188,8 @@
     }
     if (e.target.id === 'jq') { J.q = e.target.value; jSearch(); return; }
     if (e.target.hasAttribute('data-jw')) {
-      grow(e.target); draft().text = e.target.value; save(); savedHint(e.target);
-      if (J.saved) { J.saved = null; var ok = root.querySelector('.jw-ok'); if (ok) ok.remove(); }
-      return;
-    }
-    if (e.target.hasAttribute('data-je')) {
-      grow(e.target);
-      var jx2 = st.journal.filter(function (y) { return y.id === e.target.getAttribute('data-je'); })[0];
-      if (jx2) { jx2.body = e.target.value; save(); savedHint(e.target); }
+      if (e.target.tagName === 'TEXTAREA') grow(e.target);
+      putWords(e.target.getAttribute('data-jw'), e.target.value);
       return;
     }
     if (e.target.classList && e.target.classList.contains('fb-t')) grow(e.target);
