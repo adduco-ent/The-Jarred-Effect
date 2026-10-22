@@ -705,10 +705,10 @@
           var on = (st.guide === 'walk' ? 'walk' : 'step') === o[0];
           return '<button type="button" role="radio" aria-checked="' + on + '" data-guide="' + o[0] + '"><i class="gd-r" aria-hidden="true"></i><span class="gd-b"><b>' + o[1] + '</b><span>' + o[2] + '</span></span></button>';
         }).join('') + '</div></div>' + nudgeRow() + '</section>' + installCard() +
-      '<section class="fs"><p class="pl-k">Help me make this better</p><p class="sc-q">Something confusing, missing or great? Say it plainly.</p>' +
-        '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="In your words"></textarea></div>' +
+      '<section class="fs"><p class="pl-k">Help us improve the app</p><p class="sc-q">Tell us what’s confusing, missing or great. We read every note, and it’s how we decide what to make better next.</p>' +
+        '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="What would make Other Half better for you?"></textarea></div>' +
         '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
-        (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. This helps make the app better.</p>' : '') + '</section>' +
+        (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. We read every note, and yours helps shape what we improve next.</p>' : '') + '</section>' +
       (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every play, your patterns, a new plan every week, and as many goals as you want.</p></section>'
         : fullApp('Your plan is free. There’s more.', [
           ['The whole playbook', 'All the plays, any time.'],
@@ -1224,7 +1224,15 @@
   }
   // You: put the app on the Home Screen (nothing to show on a computer that can't install it)
   function installCard() {
-    if (standalone() || (!installEvt && !IOS && !TOUCH)) return '';
+    if (standalone()) return '';
+    // on a computer: how to get it onto their phone, for iPhone and Android
+    if (!installEvt && !IOS && !TOUCH) {
+      return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put Other Half on your phone</h2>' +
+        '<p class="pl-text">It’s at its best as an app on your phone, opening with one tap, full screen, right where your day happens.</p>' +
+        '<ol class="nd-steps"><li>Open this page in your phone’s browser.</li>' +
+        '<li><b>On iPhone</b>, tap <b>•••</b> in Safari, then <b>Share</b> ' + shareIcon + ', scroll down a little and tap <b>Add to Home Screen</b>.</li>' +
+        '<li><b>On Android</b>, tap the menu ' + menuIcon + ' and choose <b>Add to Home Screen</b> or <b>Install app</b>.</li></ol></section>';
+    }
     return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put Other Half on your Home Screen</h2>' +
       '<p class="pl-text">Open it with one tap, full screen, just like your other apps.' + (IOS ? ' On iPhone, it’s also how your daily nudge reaches you.' : '') + '</p>' +
       (installEvt ? '<button type="button" class="pl-do" data-install>' + homeIcon + '<span>Add to Home Screen</span></button>'
