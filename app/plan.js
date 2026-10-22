@@ -1253,7 +1253,10 @@
   function welcomeView(p) {
     var w = cheer().welcome || {}, part = skyPart(), d = p.days[T - 1] || p.days[0];
     var many = d.kind === 'step' && d.steps.length > 1, ci = st.checkin[T];
-    var hello = { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening', night: 'Good evening' }[part] + (p.name ? ', ' + p.name : '') + '.';
+    // said the way a friend would: short and warm, with their name once we know it
+    var hello = p.name
+      ? { morning: 'Morning, ', afternoon: 'Hey, ', evening: 'Evening, ', night: 'Hey, ' }[part] + p.name + '.'
+      : { morning: 'Morning.', afternoon: 'Hey there.', evening: 'Evening.', night: 'Hey, night owl.' }[part];
     // three quotes for the day, different each day of the week; they take turns in the same panel
     var quotes = w.quotes || [], qn = quotes.length, qset = [];
     if (qn) [0, 3, 6].forEach(function (o) { var q = quotes[(T - 1 + o) % qn]; if (qset.indexOf(q) < 0) qset.push(q); });
