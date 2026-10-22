@@ -45,7 +45,7 @@
           '<div class="oh-peek-t"><p class="oh-peek-k"><span class="oh-dot"></span>Your type</p><p class="oh-peek-name">Which one are you?</p><p class="oh-peek-list">' + names + '</p></div>' +
         '</div>' +
         '<button class="oh-cta" type="button" data-go="quiz">Start the quiz' + arrow() + '</button>' +
-        '<p class="oh-facts"><span>22 quick questions</span><span>About 3 minutes</span><span>No sign-up</span></p>' +
+        '<p class="oh-facts"><span>22 questions</span><span>3 minutes</span><span>No sign-up</span></p>' +
         (REVIEW ? allQuestions() : '') +
         '</section>';
     },

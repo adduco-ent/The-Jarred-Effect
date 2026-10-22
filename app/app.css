@@ -394,3 +394,11 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 @media (prefers-reduced-motion:reduce){.oh-opt,.oh-opt-m{transition:none}}
 /* one row of segments, however many questions there are (it was set for the old 12, so 18 wrapped) */
 .oh-seg{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:3px}
+
+/* the preview on the start screen (2026-10-22): centered at a set width, taller so the dark card sits below the
+   question card's line instead of covering it; the three facts each stay on one line */
+.oh-peek{width:100%;max-width:21rem;height:17rem;margin:2.25rem auto 2rem;align-self:center;box-sizing:border-box}
+.oh-peek-q{width:84%;height:8.5rem}
+.oh-peek-t{width:78%}
+.oh-facts{flex-wrap:wrap;row-gap:.375rem}
+.oh-facts span{white-space:nowrap}
