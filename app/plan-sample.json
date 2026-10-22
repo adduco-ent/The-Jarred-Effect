@@ -16,9 +16,9 @@
           "Name it as who you’re becoming, plus one tiny action: “I’m someone who moves every day. Shoes on, ten minutes.”",
           "Shrink it until it survives a Tuesday. If it feels too small, it’s probably the right size.",
           "Anchor it to something you already do, not to a clock: after coffee, after the school run, before your phone.",
-          "Write three versions: full, half and rough-day. All three count.",
+          "Write three versions: for a good day, an okay day and a hard day. All three count.",
           "Do it most days, at whatever moment works that day.",
-          "Keep a receipt: one line a day about what you did.",
+          "Write one line a day about what you actually did.",
           "Missed a day? No catch-up. Come back the next day, and try not to miss twice in a row.",
           "Every 7 days, look back: keep it, shrink it or change its shape. Grow it one notch only when it feels easy most days."
         ],
@@ -56,7 +56,7 @@
     "Your gut has the final say. Skip or change any step, and note why."
   ],
   "cheer": {
-    "planStart": "This week is yours. Seven small steps, and every one counts, including the rough-day versions.",
+    "planStart": "This week is yours. Seven small steps, and every one counts, including the small versions.",
     "days": {
       "1": "Day one. Start small and let it be easy. Showing up is the whole win today.",
       "2": "Day two is where most people quietly stop. You’re here. That already matters.",
@@ -67,12 +67,12 @@
       "7": "Last day. Look at what you actually did. It’s probably more than you think."
     },
     "done": [
-      "Done. That’s a receipt your gut can read.",
-      "Kept. Small promises like that are how you start trusting yourself.",
+      "Done. That’s proof your gut can read.",
+      "That’s a promise kept. Small ones like that are how you start trusting yourself.",
       "That counts. Quietly, it all adds up.",
       "Marked. Notice how it feels to follow through.",
       "Another one. You’re becoming someone who does this.",
-      "Rough-day version? It counts just the same."
+      "Small version? It counts just the same."
     ],
     "missed": "Back at it. No catch-up needed. Today’s step is the only one that matters.",
     "progress": {

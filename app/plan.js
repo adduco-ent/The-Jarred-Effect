@@ -1,12 +1,12 @@
 /* The Other Half app, free layer. Everyone who takes the quiz and asks for a plan gets in.
-   Today: one day at a time. A daily check-in (full, half or rough), then one card per Ask's step, and a strip of
+   Today: one day at a time. A daily check-in (good, okay or hard), then one card per Ask's step, and a strip of
      the seven days. Days open by the calendar from the day the plan is first opened; future days show a preview.
    Progress: days done, steps, minutes, check-ins, each Ask's progress, the week at a glance, and their own words.
    Playbook, patterns over time, week 2 and adding more Asks are shown but locked until they join.
 
    Feedback, in their own words, is asked for at the moment it's true, never as a form:
-     check-in half or rough → what's going on · step done → how it felt · step doesn't fit → skip or change, and why
-     day kept → one-line receipt · day 3 → is the app easy · day 7 → look back, then shape next week · You → make it better
+     check-in okay or hard → what's going on · step done → how it felt · step doesn't fit → skip or change, and why
+     day done → one line on today · day 3 → is the app easy · day 7 → look back, then shape next week · You → make it better
    Everything is kept in this browser, and sent to /api/feedback (table plan_feedback) when the plan has an id.
    That's what next week's plan is built from. */
 (function () {
