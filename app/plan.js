@@ -100,6 +100,7 @@
 
   var check = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 10.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var skipIcon = '<svg class="sk-i" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 14c1.2-4.2 4.6-6.5 8.6-6.1M10.5 4.5l3.3 3.3-3.4 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var upIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 12.5L10 8l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var undoIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 6.5L4 10l3.5 3.5M4.5 10H12a4 4 0 010 8h-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var lock = '<svg class="lk-i" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.25" y="7" width="9.5" height="6.75" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V5.25a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.4"/></svg>';
 
@@ -224,9 +225,35 @@
     return '<button type="button" class="gut-b" data-skipopen="' + k + '">' + skipIcon + '<span>This step doesn’t fit today</span></button>';
   }
 
+  // ---- the day's progress: one slim bar under the heading. Check in, each step, one line. On an okay or hard day it
+  // asks for one step, not all of them. Tap a segment to jump there.
+  function dayBar(d) {
+    var ci = st.checkin[d.day], light = d.steps.length > 1 && (ci === 'half' || ci === 'rough');
+    var parts = [{ id: 'ci', label: 'Check in', ok: !!ci }];
+    if (light) parts.push({ id: 'steps', label: 'One step', ok: kept(d) });
+    else d.steps.forEach(function (x, i) { parts.push({ id: 'step-' + key(d, x).replace('.', '_'), label: d.steps.length > 1 ? 'Step ' + (i + 1) : 'Your step', ok: !!done[key(d, x)] }); });
+    parts.push({ id: kept(d) ? 'rc' : 'steps', label: 'One line', ok: !!((fb.receipt[d.day] || {}).text || '').trim() });
+    var n = parts.filter(function (x) { return x.ok; }).length, all = n === parts.length, cur = -1;
+    parts.forEach(function (x, i) { if (cur < 0 && !x.ok) cur = i; });
+    return '<div class="db' + (all ? ' is-all' : '') + '" role="group" aria-label="Today’s progress"><p class="db-top"><span>' + (all ? check + 'Day done' : 'Today') + '</span><span class="db-n">' + n + ' of ' + parts.length + ' done</span></p>' +
+      '<div class="db-segs">' + parts.map(function (x, i) {
+        return '<button type="button" class="db-s' + (x.ok ? ' is-done' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x.id + '"' + (i === cur ? ' aria-current="step"' : '') + ' aria-label="' + esc(x.label + (x.ok ? ', done' : '')) + '"><i aria-hidden="true"></i><span>' + esc(x.label) + '</span></button>';
+      }).join('') + '</div></div>';
+  }
+  // a finished step folds into a slim bar after a short beat; tap it to open again
+  var fresh = {}, hold = {}, openCard = {};
+  function folded(k) { return !!done[k] && !fresh[k] && !openCard[k]; }
+  function foldBar(k, title, sub, feel) {
+    return '<article class="pl-day pl-foldc" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
+      '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t">' + (sub ? '<small>' + esc(sub) + '</small>' : '') + esc(title) + '</span>' +
+      '<span class="pl-fold-f' + (feel ? '' : ' is-ask') + '">' + (feel ? esc(feel) : 'How did it feel?') + '</span><span class="pl-fold-go" aria-hidden="true">›</span></button></article>';
+  }
+  var FEELW = { easy: 'Easy', okay: 'Okay', hard: 'Hard' };
+
   // ---- one card per goal's step
   function stepCard(d, s, many) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
+    if (folded(k)) return foldBar(k, s.title, many ? plan.asks[s.ask].text : '', FEELW[(fb.step[k] || {}).feel]);
     // an okay or hard day asks for one goal: once one step is done, the rest say so instead of looking unfinished
     var light = many && (st.checkin[d.day] === 'half' || rough) && kept(d) && !isDone;
     var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
@@ -238,8 +265,8 @@
       return '<article class="pl-day pl-step-card is-skipped">' +
         '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
     }
-    return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '">' +
-      '<div class="pl-day-h">' + head + (isDone ? doneBtn(k, many ? plan.asks[s.ask].text : '') : light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
+    return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
+      '<div class="pl-day-h">' + head + (isDone ? '<span class="pl-hd-r">' + doneBtn(k, many ? plan.asks[s.ask].text : '') + (openCard[k] ? '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button>' : '') + '</span>' : light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
       (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title +
       // once it's done, the card steps back to its title: the how-to has done its job
       (isDone ? '' : rough
@@ -252,6 +279,7 @@
   // ---- the question day and the look back
   function wholeDayCard(d) {
     var k = key(d), body;
+    if (folded(k)) return foldBar(k, d.kind === 'lookback' ? 'Look back' : 'A question to sit with', '', '').replace('<span class="pl-fold-f is-ask">How did it feel?</span>', '<span class="pl-fold-f">Done</span>');
     if (d.kind === 'question') {
       body = '<h3 class="pl-day-t">' + esc(d.title) + '</h3>' +
         '<p class="pl-q">' + esc(d.ask) + '</p>' +
@@ -266,8 +294,8 @@
         '<div class="lb">' + ['did', 'changed', 'keep'].map(function (f, i) { return '<div class="nt">' + words('lookback', '1', f, 'In your words', 3, (i + 1) + '. ' + d.prompts[i]) + '</div>'; }).join('') + '</div>' +
         (paid() ? '<button type="button" class="lnk jgo" data-jgo="ask" data-jask="What else do you want to remember about this week?">Keep going in your journal<span aria-hidden="true">→</span></button>' : '');
     }
-    return '<article class="pl-day pl-day--' + d.kind + (done[k] ? ' is-done' : '') + '">' +
-      '<div class="pl-day-h"><p class="pl-day-k"><span class="pl-min">' + (d.kind === 'lookback' ? '5 min' : 'A few minutes') + '</span></p>' + (done[k] ? doneBtn(k) : '') + '</div>' +
+    return '<article class="pl-day pl-day--' + d.kind + (done[k] ? ' is-done' : '') + '" data-card="' + k + '">' +
+      '<div class="pl-day-h"><p class="pl-day-k"><span class="pl-min">' + (d.kind === 'lookback' ? '5 min' : 'A few minutes') + '</span></p>' + (done[k] ? '<span class="pl-hd-r">' + doneBtn(k) + (openCard[k] ? '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this away">' + upIcon + '</button>' : '') + '</span>' : '') + '</div>' +
       reply(k) + body + (done[k] ? '' : '<button type="button" class="pl-do" data-done="' + k + '">' + check + '<span>Mark done</span></button>') + '</article>';
   }
 
@@ -355,18 +383,7 @@
         (T <= 7 ? '<button class="fut-b" type="button" data-view-day="' + T + '"><span aria-hidden="true">‹</span>Back to today</button>' : '') + '</section>';
     }
 
-    if (d.kind === 'step' && st.guide) {
-      var steps3 = [
-        ['ci', 'Check in', !!st.checkin[sel]],
-        ['steps', many ? 'Do a step' : 'Do your step', kept(d)],
-        [kept(d) ? 'rc' : 'steps', 'Write a line', !!((fb.receipt[sel] || {}).text || '').trim()]
-      ];
-      var cur = -1; steps3.forEach(function (x, i) { if (cur < 0 && !x[2]) cur = i; });
-      html += '<ol class="fl" aria-label="Today, in three steps">' + steps3.map(function (x, i) {
-        return '<li><button type="button" class="fl-i' + (x[2] ? ' is-done' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x[0] + '"' + (i === cur ? ' aria-current="step"' : '') + '>' +
-          '<span class="fl-n">' + (x[2] ? check : i + 1) + '</span><span class="fl-l">' + x[1] + '</span></button></li>';
-      }).join('') + '</ol>';
-    }
+    if (d.kind === 'step' && st.guide) html += dayBar(d);
     if (!st.guide && d.kind === 'step') {
       html += '<section class="gd"><p class="pl-k">Welcome to your week</p><h2 class="gd-t">Here’s how this works</h2>' +
         '<p class="gd-x">Your goal is the thing you want most right now.</p>' +
@@ -1225,6 +1242,7 @@
     if (J.view !== 'write') J.from = null;
     if (J.view !== 'write' && J.view !== 'edit') talkStop();
     ND.show = null; ND.just = false;
+    fresh = {}; hold = {}; openCard = {};
     var write = (J.view === 'write' || J.view === 'edit') && J.focus;
     J.focus = false;
     render();
@@ -1362,6 +1380,8 @@
       if (tab !== 'today') { e.preventDefault(); location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       return;
     }
+    if ((el = t.closest('[data-unfold]'))) { var uk = el.getAttribute('data-unfold'); openCard[uk] = true; render(); refocus('[data-card="' + uk + '"] .pl-done'); return; }
+    if ((el = t.closest('[data-fold]'))) { var fk2 = el.getAttribute('data-fold'); delete openCard[fk2]; delete fresh[fk2]; delete hold[fk2]; render(); refocus('[data-unfold="' + fk2 + '"]'); return; }
     if ((el = t.closest('[data-jump]'))) {
       var to = root.querySelector('#j-' + el.getAttribute('data-jump'));
       if (to) { to.scrollIntoView({ behavior: 'smooth', block: 'start' }); var f = to.querySelector('button,textarea'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 450); }
@@ -1411,11 +1431,17 @@
     if (done[k]) st.at[k] = Date.now(); else delete st.at[k];
     save();
     if (done[k]) nudgeDone(day);
+    // the encouragement shows first; then the card folds away unless they're still using it
+    if (done[k]) { fresh[k] = true; delete openCard[k]; setTimeout(function () { if (fresh[k] && !hold[k] && tab === 'today') { delete fresh[k]; said = null; render(); } else if (fresh[k] && hold[k]) { /* folds next visit */ } }, 1600); }
+    else { delete fresh[k]; delete hold[k]; delete openCard[k]; }
     var list = cheer().done || [];
     // the day's first step gets the day's line; another goal's step on the same day gets a different one
     said = done[k] ? { key: k, line: wasKept ? list[(day + 2) % (list.length || 1)] || '' : doneLine(day) } : null;
     render();
     refocus('[data-done="' + k + '"]');
+  });
+  ['pointerdown', 'focusin'].forEach(function (ev) {
+    root.addEventListener(ev, function (e) { var c = e.target.closest && e.target.closest('[data-card]'); if (c && fresh[c.getAttribute('data-card')] && !e.target.closest('.pl-done')) hold[c.getAttribute('data-card')] = true; });
   });
   root.addEventListener('change', function (e) {
     if (e.target.hasAttribute('data-nd-time')) { nudgeSetTime(e.target.value); return; }
