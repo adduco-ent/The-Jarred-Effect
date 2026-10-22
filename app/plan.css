@@ -1307,3 +1307,20 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 
 /* the card comes to rest: as it lands, its shadow spreads and softens, the way a real thing settles (replaces the sheen) */
 @keyframes wl-card{0%{opacity:0;transform:perspective(900px) translateY(2.5rem) rotateX(12deg) scale(.98);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.08),0 .25rem .5rem -.25rem rgba(40,70,120,.5)}60%{opacity:1}100%{opacity:1;transform:none;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 1.25rem 2.5rem -1.25rem rgba(40,70,120,.35)}}
+
+/* the quote, third pass (2026-10-22): a slimmer panel; three quotes for the day share one space and take turns;
+   the glass materializes (from a soft blur to clear frost), then the mark settles on top and the words write in */
+.wl-q{max-width:17.5rem;padding:1.125rem 1.25rem 1rem}
+.wl-qs{display:grid}
+.wl-qi{grid-area:1/1;display:grid;align-content:center;gap:.5rem;opacity:0;filter:blur(6px);transform:translateY(.25rem);transition:opacity .7s ease,filter .7s ease,transform .7s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.wl-qi.is-on{opacity:1;filter:none;transform:none;transition-delay:.45s;transition-duration:1s,1s,1s;pointer-events:auto}
+.wl-qi figcaption{margin-top:0}
+.wl-q.wl-in{animation:wl-materialize 1.5s cubic-bezier(.22,1,.36,1) .95s both}
+@keyframes wl-materialize{0%{opacity:0;transform:scale(.94);filter:blur(14px);-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0)}55%{opacity:1}100%{opacity:1;transform:none;filter:blur(0);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}}
+.wl-q::before{animation:wl-mark .7s cubic-bezier(.22,1,.36,1) 1.75s both}
+@keyframes wl-mark{from{opacity:0;transform:translateX(-50%) translateY(.375rem) scale(.6)}to{opacity:1;transform:translateX(-50%)}}
+.wl-q blockquote{animation-delay:1.85s}
+.wl-qi:first-child figcaption{animation:wl-cap .8s ease 2.9s both}
+@keyframes wl-cap{from{opacity:0}to{opacity:1}}
+.wl.is-on .wl-q::before,.wl.is-on .wl-qi:first-child figcaption{animation:none}
+@media (prefers-reduced-motion:reduce){.wl-q.wl-in,.wl-q::before,.wl-qi:first-child figcaption{animation:none}.wl-qi{transition:none}}

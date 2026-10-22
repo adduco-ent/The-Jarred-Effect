@@ -1254,7 +1254,9 @@
     var w = cheer().welcome || {}, part = skyPart(), d = p.days[T - 1] || p.days[0];
     var many = d.kind === 'step' && d.steps.length > 1, ci = st.checkin[T];
     var hello = { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening', night: 'Good evening' }[part] + (p.name ? ', ' + p.name : '') + '.';
-    var quotes = w.quotes || [], qt = quotes.length ? quotes[(T - 1) % quotes.length] : null;
+    // three quotes for the day, different each day of the week; they take turns in the same panel
+    var quotes = w.quotes || [], qn = quotes.length, qset = [];
+    if (qn) [0, 3, 6].forEach(function (o) { var q = quotes[(T - 1 + o) % qn]; if (qset.indexOf(q) < 0) qset.push(q); });
     var ask = (w.ask || 'How’s today treating you?').replace(/\?$/, (p.name ? ', ' + p.name : '') + '?');
     var reply = ci && w.today ? w.today[ci === 'half' && many ? 'halfMany' : ci] : '';
     var date = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -1272,7 +1274,9 @@
         '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '</p>' +
         '<h1 class="wl-hi" id="wl-hi">' + hello.split(' ').map(function (x, n) { return '<span class="wl-w" style="--w:' + n + '">' + esc(x) + '</span>'; }).join(' ') + '</h1>' +
         '<p class="wl-line wl-in" style="--d:3">' + esc((w.days || [])[T - 1] || w.later || '') + '</p></header>' +
-      (qt ? '<figure class="wl-q wl-in" style="--d:4"><blockquote>' + esc(qt.q) + '</blockquote><figcaption>' + esc(qt.by) + '</figcaption></figure>' : '') +
+      (qset.length ? '<figure class="wl-q wl-in" style="--d:4"><div class="wl-qs">' + qset.map(function (q, n) {
+        return '<div class="wl-qi' + (n ? '' : ' is-on') + '"' + (n ? ' aria-hidden="true"' : '') + '><blockquote>' + esc(q.q) + '</blockquote><figcaption>' + esc(q.by) + '</figcaption></div>';
+      }).join('') + '</div></figure>' : '') +
       '<div class="wl-card wl-in" style="--d:5"><p class="wl-ask" id="wl-ask">' + esc(ask) + '</p>' +
         '<div class="wl-o" role="radiogroup" aria-labelledby="wl-ask">' + [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]].map(function (o) {
           return '<button type="button" role="radio" aria-checked="' + (ci === o[0]) + '" data-wl="' + o[0] + '"><span class="wl-ic">' + wxIcons[o[0]] + '</span><span>' + o[1] + '</span><i class="wl-ok" aria-hidden="true">' + check + '</i></button>';
@@ -1293,6 +1297,20 @@
     sec.classList.remove('is-idle'); sec.classList.add('is-on', 'is-picked');
     wlLeaving = true;
     setTimeout(function () { leaveWelcome(btn); }, calm ? 0 : 620);
+  }
+  // the day's quotes take turns: every 7 seconds one softens out and the next comes into focus
+  var wlQTimer = 0;
+  function wlQuotes() {
+    clearInterval(wlQTimer);
+    wlQTimer = setInterval(function () {
+      var sec = root.querySelector('.wl'), items = sec ? sec.querySelectorAll('.wl-qi') : [];
+      if (!sec || sec.classList.contains('is-picked') || sec.classList.contains('is-out')) { if (!sec) clearInterval(wlQTimer); return; }
+      if (items.length < 2 || document.hidden) return;
+      var cur = 0; [].forEach.call(items, function (x, n) { if (x.classList.contains('is-on')) cur = n; });
+      var next = (cur + 1) % items.length;
+      items[cur].classList.remove('is-on'); items[cur].setAttribute('aria-hidden', 'true');
+      items[next].classList.add('is-on'); items[next].removeAttribute('aria-hidden');
+    }, 7000);
   }
   function enterToday() { root.classList.add('pl-enter'); setTimeout(function () { root.classList.remove('pl-enter'); }, 1600); }
   function leaveWelcome(btn) {
@@ -1343,6 +1361,7 @@
     var wl = needWelcome();
     document.body.classList.toggle('is-welcome', wl);
     if (wl) { var firstWl = !wlPlayed; root.innerHTML = welcomeView(plan); wlPlayed = true; nav.hidden = true;
+      if (firstWl && !calm) wlQuotes();
       if (firstWl && !st.checkin[T] && !calm) setTimeout(function () { var sec = root.querySelector('.wl'); if (sec && !sec.classList.contains('is-picked')) sec.classList.add('is-idle'); }, 5200); root.classList.remove('is-writing'); return; }
     var views = { today: todayView, progress: progressView, playbook: playbookView, journal: journalView, you: youView };
     var was = {};
