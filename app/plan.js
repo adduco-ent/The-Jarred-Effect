@@ -857,7 +857,7 @@
     var rest = editing ? 'Changes save as you write' : 'Your draft saves as you write';
     var hint = talk && talk.note ? talk.note : SR ? '' : 'To talk instead of type, tap the mic on your keyboard.';
     return bar + '<header class="jw-head">' + head + '</header>' +
-      '<div class="jw-paper">' + (withTitle ? '<input class="jw-title" id="jw-title" data-jw="title" type="text" maxlength="140" placeholder="Title (optional)" aria-label="Title, optional" autocomplete="off" value="' + esc(title || '') + '">' : '') +
+      '<div class="jw-paper' + (m === 'quick' ? ' is-quick' : '') + '">' + (withTitle ? '<input class="jw-title" id="jw-title" data-jw="title" type="text" maxlength="140" placeholder="Title (optional)" aria-label="Title, optional" autocomplete="off" value="' + esc(title || '') + '">' : '') +
         '<textarea class="jw-t' + (m === 'quick' ? ' is-quick' : '') + '" id="jw-t" data-jw="body" rows="' + (m === 'quick' ? 2 : 10) + '" aria-label="Your entry" placeholder="' + esc(ph) + '">' + esc(body || '') + '</textarea></div>' +
       '<p class="jw-foot"><span id="jw-wc">' + wcLabel(wc(body)) + '</span><span class="jw-st" id="jw-st" data-rest="' + esc(rest) + '">' + esc(rest) + '</span></p>' +
       (hint ? '<p class="pt-e jw-hint" role="status">' + esc(hint) + '</p>' : '');
