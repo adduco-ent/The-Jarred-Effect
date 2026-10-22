@@ -975,7 +975,7 @@
     if (keepLayers) root.querySelectorAll('details[data-l]').forEach(function (x) { var v = was[x.getAttribute('data-l')]; if (v !== undefined) x.open = v; });
     keepLayers = true;
     root.querySelectorAll('.fb-t, .jw-t').forEach(grow);
-    if (tab === 'journal') jSearch();
+    if (tab === 'journal') { jSearch(); barStuck(); }
     // writing gets the whole screen: no tab bar, and room under the words so the line being written sits mid-screen
     var writing = tab === 'journal' && (J.view === 'write' || J.view === 'edit') && !!paid();
     root.classList.toggle('is-writing', writing);
@@ -1013,6 +1013,12 @@
     if (scroll) window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', function () { go(location.hash.slice(1), true); });
+  // the writer's bar only gets a backing once something has scrolled under it
+  function barStuck() {
+    var b = root.querySelector('.jw-bar');
+    if (b) b.classList.toggle('is-stuck', window.scrollY > 0 && b.getBoundingClientRect().top <= (parseFloat(getComputedStyle(b).top) || 0) + 1);
+  }
+  window.addEventListener('scroll', barStuck, { passive: true });
   // fields grow with their words instead of scrolling inside a box
   function grow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; }
   // a quiet "Saved" a moment after they stop typing, so there's never a save button to hunt for
