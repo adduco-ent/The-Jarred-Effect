@@ -1341,3 +1341,8 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .in-card .nd-steps{margin-top:.25rem}
 .nd-steps li{position:relative;display:block;padding-left:2.25rem;min-height:1.5rem}
 .nd-steps li::before{position:absolute;left:0;top:0}
+
+/* "This step doesn't fit today": a quiet text action floating under Mark done, centered, no outline. It keeps a
+   44px tap area and a soft press tint, so it still reads as tappable on a phone. */
+.gut-b,.gut-b:hover{justify-self:center;min-height:2.75rem;margin-top:-.25rem;padding:0 1rem;border:0;border-radius:99px;background:none;box-shadow:none;color:var(--dim)}
+.gut-b:active{background:rgba(15,28,48,.05)}
