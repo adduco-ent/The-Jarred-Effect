@@ -1459,9 +1459,8 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 
 /* folding a card into its bar, and opening it back up (2026-10-22): the height eases, the old content fades out on
    top, the new content fades in a beat later */
-.mo-el{position:relative;box-sizing:border-box;overflow:hidden;transition:height .46s cubic-bezier(.22,1,.36,1)}
-.mo-el>:not(.mo-ghost){animation:mo-in .34s ease .1s both}
-.mo-ghost{position:absolute!important;inset:-1px -1px auto!important;z-index:2;margin:0!important;pointer-events:none;animation:mo-out .24s ease forwards}
+.mo-el{position:relative;box-sizing:border-box;overflow:hidden}
+.mo-ghost{position:absolute!important;inset:-1px -1px auto!important;z-index:2;margin:0!important;pointer-events:none}
 @keyframes mo-in{from{opacity:0}to{opacity:1}}
 @keyframes mo-out{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){.mo-el{transition:none}.mo-el>*,.mo-ghost{animation:none}}
@@ -1480,7 +1479,6 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-enter--tab>*{animation-duration:.65s}
 .pl-enter--tab>:nth-child(1){animation-delay:.04s}.pl-enter--tab>:nth-child(2){animation-delay:.1s}.pl-enter--tab>:nth-child(3){animation-delay:.16s}.pl-enter--tab>:nth-child(4){animation-delay:.22s}.pl-enter--tab>:nth-child(5){animation-delay:.28s}.pl-enter--tab>:nth-child(6){animation-delay:.34s}.pl-enter--tab>:nth-child(n+7){animation-delay:.4s}
 /* plain morph: the card only grows or shrinks; nothing cross-fades (the new part brings its own gentle entrance) */
-.mo-el.mo-plain>:not(.mo-ghost){animation:none}
 
 /* calmer motion (2026-10-22): slower and softer everywhere, an iOS-like curve that starts smooth and settles long, so
    nothing feels snappy. Screens 0.45s cross-fade, parts rising 0.9s 80ms apart; cards 0.62s; sections 0.6s/0.46s */
@@ -1488,14 +1486,8 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .vt-tab::view-transition-new(root){animation-duration:.45s;animation-timing-function:cubic-bezier(.32,.72,0,1)}
 .pl-enter--tab>*{animation-duration:.9s;animation-timing-function:cubic-bezier(.32,.72,0,1)}
 .pl-enter--tab>:nth-child(1){animation-delay:.06s}.pl-enter--tab>:nth-child(2){animation-delay:.14s}.pl-enter--tab>:nth-child(3){animation-delay:.22s}.pl-enter--tab>:nth-child(4){animation-delay:.3s}.pl-enter--tab>:nth-child(5){animation-delay:.38s}.pl-enter--tab>:nth-child(6){animation-delay:.46s}.pl-enter--tab>:nth-child(n+7){animation-delay:.54s}
-.mo-el{transition:height .62s cubic-bezier(.32,.72,0,1)}
-.mo-el>:not(.mo-ghost){animation:mo-in .46s ease .14s both}
-.mo-ghost{animation:mo-out .32s ease forwards}
 .gt,.gn{animation-duration:.5s;animation-timing-function:cubic-bezier(.32,.72,0,1)}
 .ci-o button,.gn-p,.gt-r{transition-duration:.28s}
 /* a gentle ease-in-out for anything that grows or shrinks: soft start, smooth glide, soft landing (no snap) */
-.mo-el{transition:height .7s cubic-bezier(.45,0,.2,1)}
-.mo-el>:not(.mo-ghost){animation:mo-in .5s ease .16s both}
-.mo-ghost{animation:mo-out .36s ease forwards}
 .vt-tab::view-transition-old(root),.vt-tab::view-transition-new(root){animation-timing-function:ease}
 .pl-enter--tab>*{animation-timing-function:cubic-bezier(.25,.1,.25,1)}

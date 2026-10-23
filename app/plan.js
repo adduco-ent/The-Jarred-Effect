@@ -1400,7 +1400,15 @@
       items[next].classList.add('is-on'); items[next].removeAttribute('aria-hidden');
     }, 7000);
   }
-  function enterToday() { root.classList.add('pl-enter'); setTimeout(function () { root.classList.remove('pl-enter'); }, 1600); }
+  // a screen's parts rise into place one after another (check-in row only fades, so its icon can land from the welcome)
+  function riseIn(dur, base, step) {
+    if (calm || !root.animate) return;
+    [].forEach.call(root.children, function (c, i) {
+      var kf = c.id === 'j-ci' ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(1.25rem)' }, { opacity: 1, transform: 'none' }];
+      c.animate(kf, { duration: dur, delay: base + Math.min(i, 7) * step, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' });
+    });
+  }
+  function enterToday() { riseIn(800, 120, 80); }
   function leaveWelcome(btn) {
     var go = function () { st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0); };
     var sec = root.querySelector('.wl');
@@ -1507,7 +1515,7 @@
     var done = function () { document.documentElement.classList.remove('vt-tab'); };
     vt.finished.then(done, done);
   }
-  function enterScreen() { root.classList.remove('pl-enter'); root.classList.add('pl-enter', 'pl-enter--tab'); setTimeout(function () { root.classList.remove('pl-enter', 'pl-enter--tab'); }, 1700); }
+  function enterScreen() { riseIn(900, 60, 80); }
   window.addEventListener('hashchange', function () { navTo(location.hash.slice(1)); });
   // the writer's bar only gets a backing once something has scrolled under it
   function barStuck() {
@@ -1559,11 +1567,13 @@
   // a card folding into its bar (or opening back up), smoothly: its height eases from the old size to the new one so
   // everything below glides instead of jumping, the old content fades out on top while the new content fades in, and
   // the card's top edge stays where it was
-  var morphing = {};
+  // The fades run as separate animations layered on top (never by swapping CSS rules in and out), so when they end
+  // nothing underneath replays: no blink, no bump at the finish.
+  var morphing = {}, EASE = 'cubic-bezier(.45,0,.2,1)';
   function morphRender(sel, plain) {
     var old = root.querySelector(sel);
-    if (!old || calm) { render(); return; }
-    var r0 = old.getBoundingClientRect(), ghost = old.cloneNode(true);
+    if (!old || calm || !old.animate) { render(); return; }
+    var r0 = old.getBoundingClientRect(), ghost = plain ? null : old.cloneNode(true);
     render();
     var el = root.querySelector(sel);
     if (!el) return;
@@ -1571,17 +1581,20 @@
     if (Math.abs(dy) > 1) window.scrollBy(0, dy);
     var h1 = el.getBoundingClientRect().height;
     if (Math.abs(h1 - r0.height) < 2) return;
-    clearTimeout(morphing[sel]);
-    ghost.removeAttribute('id'); ghost.setAttribute('aria-hidden', 'true'); ghost.classList.add('mo-ghost');
-    [].forEach.call(ghost.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
-    ghost.style.height = r0.height + 'px';
-    el.classList.add('mo-el'); if (plain) el.classList.add('mo-plain');
-    el.style.height = r0.height + 'px';
-    if (!plain) el.appendChild(ghost);
-    void el.offsetHeight;
-    el.style.height = h1 + 'px';
-    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el', 'mo-plain'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 800);
+    if (morphing[sel]) morphing[sel].cancel();
+    el.classList.add('mo-el');
+    if (ghost) {
+      ghost.removeAttribute('id'); ghost.setAttribute('aria-hidden', 'true'); ghost.classList.add('mo-ghost');
+      [].forEach.call(ghost.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+      ghost.style.height = r0.height + 'px';
+      el.appendChild(ghost);
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: 'ease', fill: 'forwards' });
+      [].forEach.call(el.children, function (c) { if (c !== ghost) c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 160, easing: 'ease', fill: 'backwards' }); });
+    }
+    var a = morphing[sel] = el.animate([{ height: r0.height + 'px' }, { height: h1 + 'px' }], { duration: 700, easing: EASE });
+    a.onfinish = a.oncancel = function () { if (morphing[sel] === a) delete morphing[sel]; el.classList.remove('mo-el'); if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost); };
   }
+
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
   root.addEventListener('click', function (e) {
