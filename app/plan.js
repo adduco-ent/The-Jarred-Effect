@@ -217,12 +217,20 @@
         words('skip', k, 'note', skip ? 'What did your gut say?' : 'What did you change it to?') +
         '<button type="button" class="st-undo" data-unskip="' + k + '">' + undoIcon + (skip ? 'Undo skip' : 'Undo change') + '</button></div>';
     }
+    // a gut call: say what's inside before it opens, then two clear choices, each with what it means
+    var chev = '<svg class="gut-c" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     if (skipOpen[k]) {
-      return '<div class="fb fb--gut"><p class="fb-q">Your gut has the final say. What fits today?</p>' +
-        chips('data-skip', k, [['change', 'Change it'], ['skip', 'Skip it today']], null, 'ci-o--split') +
-        '<button type="button" class="lnk" data-skipopen="' + k + '">Never mind</button></div>';
+      var row = function (v, icon, title, line) {
+        return '<button type="button" class="gt-r" data-skip="' + v + '" data-ref="' + k + '"><span class="gt-ic" aria-hidden="true">' + icon + '</span>' +
+          '<span class="gt-t"><b>' + title + '</b><span>' + line + '</span></span><span class="gt-go" aria-hidden="true">›</span></button>';
+      };
+      return '<div class="gt" role="group" aria-labelledby="gt-' + k.replace('.', '_') + '">' +
+        '<div class="gt-h"><p class="gt-q" id="gt-' + k.replace('.', '_') + '">Your gut has the final say. What would fit today?</p>' +
+          '<button type="button" class="gt-x" data-skipopen="' + k + '" aria-label="Never mind, keep this step"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>' +
+        '<div class="gt-o">' + row('change', penIcon, 'Change it to fit', 'Do your own version, and it counts the same.') +
+          row('skip', skipIcon, 'Skip it today', 'A gut call is information, and tomorrow starts fresh.') + '</div></div>';
     }
-    return '<button type="button" class="gut-b" data-skipopen="' + k + '">' + skipIcon + '<span>This step doesn’t fit today</span></button>';
+    return '<button type="button" class="gut-b" data-skipopen="' + k + '" aria-expanded="false"><span>Doesn’t fit today?</span><b>Change or skip it</b>' + chev + '</button>';
   }
 
   // ---- the day's progress: one slim bar under the heading. Check in, each step, one line. On an okay or hard day it
@@ -1581,7 +1589,7 @@
       fb.step[fk] = Object.assign({}, fb.step[fk], { feel: fv }); sync('step', fk, true); render(); refocus('[data-feel="' + fv + '"][data-ref="' + fk + '"]');
       return;
     }
-    if ((el = t.closest('[data-skipopen]'))) { var so = el.getAttribute('data-skipopen'); skipOpen[so] = !skipOpen[so]; render(); return; }
+    if ((el = t.closest('[data-skipopen]'))) { var so = el.getAttribute('data-skipopen'); skipOpen[so] = !skipOpen[so]; render(); refocus(skipOpen[so] ? '[data-skip][data-ref="' + so + '"]' : '[data-skipopen="' + so + '"]'); return; }
     if ((el = t.closest('[data-skip]'))) {
       var sk = el.getAttribute('data-ref');
       fb.skip[sk] = Object.assign({}, fb.skip[sk], { action: el.getAttribute('data-skip') }); skipOpen[sk] = false; sync('skip', sk, true); render();

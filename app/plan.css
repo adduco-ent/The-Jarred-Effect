@@ -170,7 +170,7 @@
 .fb-t{box-sizing:border-box;display:block;width:100%;min-height:2.875rem;padding:.6875rem .875rem;border-radius:.9375rem;border:1.5px solid transparent;background:var(--sky-field) padding-box,var(--edge-in) border-box;box-shadow:var(--sink);font-family:var(--sans);font-size:.9375rem;line-height:1.5;color:var(--ink);resize:none;overflow:hidden;transition:box-shadow .2s ease}
 .fb-t::placeholder{color:#8f8678}
 .fb-t:hover{background:var(--sky-field) padding-box,linear-gradient(180deg,rgba(98,130,188,.38),rgba(255,255,255,.95)) border-box}
-.fb-t:focus{outline:none;background:#fff padding-box,linear-gradient(180deg,#5b89c6,#9dbbe6) border-box;box-shadow:0 0 0 3px var(--accent-soft)}
+.fb-t:focus{outline:none;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(180deg,#5b89c6,#9dbbe6) border-box;box-shadow:0 0 0 3px var(--accent-soft)}
 .fbw{position:relative;display:grid;gap:.375rem}
 .fb-s{position:absolute;right:.125rem;top:100%;display:flex;align-items:center;gap:.25rem;margin-top:.1875rem;font-size:.6875rem;font-weight:600;line-height:1;color:var(--accent-ink);opacity:0;pointer-events:none;transition:opacity .3s ease}
 .fb-s.on{opacity:1}
@@ -208,7 +208,7 @@
 .st-t{display:flex;align-items:center;gap:.5rem;margin:0;font-size:.9375rem;font-weight:600;color:var(--ink)}
 .st-t svg{color:var(--accent-ink)}
 .st-x{margin:-.25rem 0 .125rem;font-size:.875rem;line-height:1.5;color:var(--dim)}
-.st-box .fb-t{background:#fff padding-box,var(--edge-in) border-box}
+.st-box .fb-t{background:linear-gradient(#fff,#fff) padding-box,var(--edge-in) border-box}
 .st-undo{justify-self:start;display:inline-flex;align-items:center;gap:.375rem;min-height:2.25rem;margin-top:.125rem;padding:0 .875rem 0 .625rem;border-radius:99px;border:1.5px solid transparent;background:var(--sheen) padding-box,linear-gradient(#fff,#fff) padding-box,var(--edge-up) border-box;box-shadow:0 1px 2px rgba(14,26,44,.06);font:inherit;font-size:.8125rem;font-weight:600;color:var(--dim);cursor:pointer;transition:color .2s ease,transform .2s ease}
 .st-undo svg{width:.9375rem;height:.9375rem}
 .st-undo:hover{color:var(--accent-ink);transform:translateY(-1px)}
@@ -416,7 +416,7 @@ body[data-screen="plan"] .oh::after{position:fixed;width:58rem;height:46rem;left
 .fl-i:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fl-n{display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--sky-track);box-shadow:var(--sink);font-size:.75rem;color:var(--faint)}
 .fl-n svg{width:.875rem;height:.875rem}
-.fl-i.is-now{color:var(--ink);background:#fff padding-box,linear-gradient(180deg,#fff,rgba(143,179,227,.6)) border-box;box-shadow:0 0 0 3px var(--accent-soft),var(--card)}
+.fl-i.is-now{color:var(--ink);background:linear-gradient(#fff,#fff) padding-box,linear-gradient(180deg,#fff,rgba(143,179,227,.6)) border-box;box-shadow:0 0 0 3px var(--accent-soft),var(--card)}
 .fl-i.is-now .fl-n{background:var(--sky-btn);color:#fff;box-shadow:0 .1875rem .5rem -.3125rem rgba(20,34,58,0.35)}
 .fl-i.is-done{color:var(--accent-ink)}
 .fl-i.is-done .fl-n{background:var(--sheen),var(--sky);color:var(--accent-ink);box-shadow:inset 0 0 0 1px rgba(143,179,227,.5)}
@@ -1346,3 +1346,30 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
    44px tap area and a soft press tint, so it still reads as tappable on a phone. */
 .gut-b,.gut-b:hover{justify-self:center;min-height:2.75rem;margin-top:-.25rem;padding:0 1rem;border:0;border-radius:99px;background:none;box-shadow:none;color:var(--dim)}
 .gut-b:active{background:rgba(15,28,48,.05)}
+
+/* the gut call (2026-10-22): the trigger says what's inside ("Doesn't fit today? Change or skip it"); it opens a small
+   card that eases in, with your gut line, a close ×, and two rows that each say what they mean */
+.gut-b,.gut-b:hover{gap:.375rem;font-weight:500;color:var(--faint)}
+.gut-b b{font-weight:600;color:var(--accent-ink)}
+.gut-c{width:1rem;height:1rem;color:var(--accent-ink)}
+.gt{display:grid;gap:.75rem;padding:1rem;border-radius:1.25rem;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.35);animation:gt-in .35s cubic-bezier(.22,1,.36,1) both}
+@keyframes gt-in{from{opacity:0;transform:translateY(-.375rem) scale(.985)}to{opacity:1;transform:none}}
+.gt-h{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:.75rem}
+.gt-q{margin:.25rem 0 0 .125rem;font-family:var(--serif);font-size:1.0625rem;line-height:1.35;color:var(--ink);text-wrap:balance}
+.gt-x{display:grid;place-items:center;width:2.25rem;height:2.25rem;margin:-.25rem -.25rem 0 0;border:0;border-radius:50%;background:rgba(255,255,255,.75);color:var(--accent-ink);cursor:pointer}
+.gt-x svg{width:1rem;height:1rem}
+.gt-x:active{transform:scale(.94)}
+.gt-o{display:grid;border-radius:1rem;background:#fff;box-shadow:0 1px 2px rgba(14,26,44,.05),0 .5rem 1rem -.75rem rgba(20,34,58,.25);overflow:hidden}
+.gt-r{position:relative;display:grid;grid-template-columns:2.25rem minmax(0,1fr) auto;align-items:center;gap:.75rem;min-height:4rem;padding:.75rem .875rem;border:0;background:none;font:inherit;text-align:left;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gt-r+.gt-r::before{content:"";position:absolute;left:3.875rem;right:0;top:0;height:1px;background:rgba(15,28,48,.07)}
+.gt-r:active{background:rgba(15,28,48,.04)}
+.gt-r:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.gt-ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--sky);color:var(--accent-ink)}
+.gt-ic svg{width:1.0625rem;height:1.0625rem}
+.gt-t{display:grid;gap:.125rem;min-width:0}
+.gt-t b{font-size:.9375rem;font-weight:600}
+.gt-t span{font-size:.8125rem;line-height:1.4;color:var(--dim);text-wrap:pretty}
+.gt-go{font-size:1.25rem;line-height:1;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){.gt{animation:none}}
+/* the note box inside the skipped/changed card: a solid white field (a plain color can't sit mid-layer) */
+.st-box .fb-t{background:linear-gradient(#fff,#fff) padding-box,var(--edge-in) border-box}
