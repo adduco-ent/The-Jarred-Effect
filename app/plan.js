@@ -265,10 +265,37 @@
   }
   // a finished step folds into a slim bar after a short beat; tap it to open again
   var fresh = {}, hold = {}, openCard = {};
-  function folded(k) { return !!done[k] && !fresh[k] && !openCard[k]; }
+  // a step folds to a bar once it's settled: done, or skipped with the gut call answered
+  function skipSettled(k) { var x = fb.skip[k]; return !done[k] && !!x && x.action === 'skip' && !!x.settled; }
+  function folded(k) { return (!!done[k] || skipSettled(k)) && !fresh[k] && !openCard[k]; }
+  // skipped, folded: the skip icon, the title, and why in a few words
+  function skipBar(k, s, many) {
+    var note = ((fb.skip[k] || {}).note || '').trim(), bits = [];
+    if (many) bits.push('Goal ' + (s.ask + 1));
+    bits.push('Skipped today');
+    if (note) bits.push(note.length > 30 ? note.slice(0, 29).trim() + '…' : note);
+    return '<article class="pl-day pl-foldc pl-foldc--skip" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
+      '<span class="pl-sk" aria-hidden="true">' + skipIcon + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' + bits.map(esc).join('<i class="pl-fold-dot" aria-hidden="true">·</i>') + '</small></span>' +
+      '<span class="pl-fold-go" aria-hidden="true">' + upIcon + '</span></button></article>';
+  }
+  // once the gut call is answered (a quick answer tapped, or their own words written and left), the card settles
+  // into its bar after a beat, unless they're still writing or tapping
+  var settleT = {};
+  function settleSkip(k, ms) {
+    clearTimeout(settleT[k]);
+    settleT[k] = setTimeout(function () {
+      var c = root.querySelector(cardSel(k)), x = fb.skip[k];
+      if (!c || !x || x.action !== 'skip' || tab !== 'today') return;
+      var a = document.activeElement;
+      if (a && c.contains(a) && a.tagName === 'TEXTAREA') return;
+      fb.skip[k] = Object.assign({}, x, { settled: true }); delete openCard[k]; save();
+      var y = c.getBoundingClientRect().top; render();
+      var bar = root.querySelector(cardSel(k)); if (bar) { var dy = bar.getBoundingClientRect().top - y; if (Math.abs(dy) > 1) window.scrollBy(0, dy); }
+    }, ms);
+  }
   // a finished step, folded: the check, the title, and one quiet status line (which goal, and how it felt or an ask)
-  function foldBar(k, title, sub, feel, noAsk) {
-    var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
+  function foldBar(k, title, sub, feel, noAsk, mine) {
+    var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (mine ? 'Your version<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
     return '<article class="pl-day pl-foldc" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
       '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(title) + '</b><small>' + status + '</small></span>' +
       '<span class="pl-fold-go" aria-hidden="true">' + upIcon + '</span></button></article>';
@@ -288,7 +315,7 @@
   }
   function stepCard(d, s, many, idx) {
     var k = key(d, s), isDone = !!done[k], rough = st.checkin[d.day] === 'rough';
-    if (folded(k)) return foldBar(k, s.title, many ? 'Goal ' + (s.ask + 1) : '', FEELW[(fb.step[k] || {}).feel]);
+    if (folded(k)) return done[k] ? foldBar(k, s.title, many ? 'Goal ' + (s.ask + 1) : '', FEELW[(fb.step[k] || {}).feel], false, (fb.skip[k] || {}).action === 'change') : skipBar(k, s, many);
     // an okay or hard day asks for one goal: once one step is done, the rest say so instead of looking unfinished
     var light = many && (st.checkin[d.day] === 'half' || rough) && !isDone && (kept(d) || idx > 0);
     var sk = fb.skip[k], skipped = !isDone && sk && sk.action === 'skip', changed = !isDone && sk && sk.action === 'change';
@@ -300,7 +327,8 @@
     if (skipped) {
       return '<article class="pl-day pl-step-card is-skipped" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
         '<div class="pl-dh pl-dh--skip"><span class="pl-sk" aria-hidden="true">' + skipIcon + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' +
-          (many ? 'Goal ' + (s.ask + 1) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + 'Skipped today, on purpose</small></span></div>' +
+          (many ? 'Goal ' + (s.ask + 1) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + 'Skipped today, on purpose</small></span>' +
+          (sk.settled ? '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button>' : '') + '</div>' +
         gutNote(k, 'skip') +
         '<button type="button" class="lnk pl-undo" data-unskip="' + k + '">Not skipping after all? Undo</button></article>';
     }
@@ -1653,6 +1681,7 @@
       gta.value = parts.join(', '); grow(gta);
       gta.dispatchEvent(new Event('input', { bubbles: true }));
       el.setAttribute('aria-pressed', String(gat < 0));
+      if ((fb.skip[gk] || {}).action === 'skip' && parts.length) settleSkip(gk, 1400); else clearTimeout(settleT[gk]);
       return;
     }
     if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '', noteFor: (fb.skip[us] || {}).noteFor || (fb.skip[us] || {}).action }; sync('skip', us, true); anchorRender(el, cardSel(us) + ' .gut-b'); refocus('[data-skipopen="' + us + '"]'); return; }
@@ -1689,6 +1718,13 @@
     // keep your place: Mark done lands on "How did it feel?", Undo lands back on Mark done
     anchorRender(b.closest('.pl-do, .pl-undo, .pl-done') || b, cardSel(k) + (done[k] ? ' .fb' : ' .pl-do'));
     refocus('[data-done="' + k + '"]');
+  });
+  // writing their own words pauses the fold; leaving the box with words in it settles the skip
+  root.addEventListener('focusin', function (e) { var t = e.target; if (t.matches && t.matches('textarea[data-fb="skip"]')) clearTimeout(settleT[t.getAttribute('data-ref')]); });
+  root.addEventListener('focusout', function (e) {
+    var t = e.target; if (!(t.matches && t.matches('textarea[data-fb="skip"]'))) return;
+    var sk2 = t.getAttribute('data-ref');
+    if ((fb.skip[sk2] || {}).action === 'skip' && t.value.trim()) settleSkip(sk2, 900);
   });
   ['pointerdown', 'focusin'].forEach(function (ev) {
     root.addEventListener(ev, function (e) { var c = e.target.closest && e.target.closest('[data-card]'); if (c && fresh[c.getAttribute('data-card')] && !e.target.closest('.pl-done,.pl-undo')) hold[c.getAttribute('data-card')] = true; });

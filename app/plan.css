@@ -1381,7 +1381,7 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 
 /* the gut call's next layer (2026-10-22): skipped wears the finished step's header; both skip and change ask one
    question in the same soft sky panel as the choice, with quick answers to tap and room for their own words */
-.pl-dh--skip{grid-template-columns:auto minmax(0,1fr);margin-right:0}
+.pl-dh--skip{grid-template-columns:auto minmax(0,1fr) auto}
 .pl-sk{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.4);color:var(--accent-ink)}
 .pl-sk svg{width:1.0625rem;height:1.0625rem}
 .pl-step-card.is-skipped .pl-dh .pl-fold-t b{opacity:1}
