@@ -296,8 +296,7 @@
       var a = document.activeElement;
       if (a && c.contains(a) && a.tagName === 'TEXTAREA') return;
       fb.skip[k] = Object.assign({}, x, { settled: true }); delete openCard[k]; save();
-      var y = c.getBoundingClientRect().top; render();
-      var bar = root.querySelector(cardSel(k)); if (bar) { var dy = bar.getBoundingClientRect().top - y; if (Math.abs(dy) > 1) window.scrollBy(0, dy); }
+      morphRender(cardSel(k));
     }, ms);
   }
   // a finished step, folded: the check, the title, and one quiet status line (which goal, and how it felt or an ask)
@@ -1546,6 +1545,32 @@
     if (Math.abs(dy) > 1) window.scrollBy(0, dy);
   }
   function cardSel(k) { return '#j-step-' + String(k).replace('.', '_'); }
+  // a card folding into its bar (or opening back up), smoothly: its height eases from the old size to the new one so
+  // everything below glides instead of jumping, the old content fades out on top while the new content fades in, and
+  // the card's top edge stays where it was
+  var morphing = {};
+  function morphRender(sel) {
+    var old = root.querySelector(sel);
+    if (!old || calm) { render(); return; }
+    var r0 = old.getBoundingClientRect(), ghost = old.cloneNode(true);
+    render();
+    var el = root.querySelector(sel);
+    if (!el) return;
+    var dy = el.getBoundingClientRect().top - r0.top;
+    if (Math.abs(dy) > 1) window.scrollBy(0, dy);
+    var h1 = el.getBoundingClientRect().height;
+    if (Math.abs(h1 - r0.height) < 2) return;
+    clearTimeout(morphing[sel]);
+    ghost.removeAttribute('id'); ghost.setAttribute('aria-hidden', 'true'); ghost.classList.add('mo-ghost');
+    [].forEach.call(ghost.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+    ghost.style.height = r0.height + 'px';
+    el.classList.add('mo-el');
+    el.style.height = r0.height + 'px';
+    el.appendChild(ghost);
+    void el.offsetHeight;
+    el.style.height = h1 + 'px';
+    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 520);
+  }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
   root.addEventListener('click', function (e) {
@@ -1641,8 +1666,8 @@
     }
     if ((el = t.closest('[data-wl]'))) { pickWelcome(el.getAttribute('data-wl'), el); return; }
     if (t.closest('[data-wl-go]') || t.closest('[data-wl-skip]')) { leaveWelcome(root.querySelector('[data-wl][aria-checked="true"]')); return; }
-    if ((el = t.closest('[data-unfold]'))) { var uk = el.getAttribute('data-unfold'); openCard[uk] = true; render(); refocus('[data-card="' + uk + '"] .pl-done'); return; }
-    if ((el = t.closest('[data-fold]'))) { var fk2 = el.getAttribute('data-fold'); delete openCard[fk2]; delete fresh[fk2]; delete hold[fk2]; render(); refocus('[data-unfold="' + fk2 + '"]'); return; }
+    if ((el = t.closest('[data-unfold]'))) { var uk = el.getAttribute('data-unfold'); openCard[uk] = true; morphRender(cardSel(uk)); refocus('[data-card="' + uk + '"] .pl-done'); return; }
+    if ((el = t.closest('[data-fold]'))) { var fk2 = el.getAttribute('data-fold'); delete openCard[fk2]; delete fresh[fk2]; delete hold[fk2]; morphRender(cardSel(fk2)); refocus('[data-unfold="' + fk2 + '"]'); return; }
     if ((el = t.closest('[data-jump]'))) {
       var to = root.querySelector('#j-' + el.getAttribute('data-jump'));
       if (to) { to.scrollIntoView({ behavior: 'smooth', block: 'start' }); var f = to.querySelector('button,textarea'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 450); }
@@ -1657,7 +1682,7 @@
       sync('checkin', sel, true); said = null; render(); refocus('[data-checkin="' + o + '"]');
       // the pick shows for a beat, then settles into the row with Update
       var cd = sel; clearTimeout(ciTimer);
-      if (st.checkin[cd]) ciTimer = setTimeout(function () { if (st.checkin[cd] && sel === cd && tab === 'today' && !root.contains(document.activeElement && document.activeElement.tagName === 'TEXTAREA' ? document.activeElement : null)) { delete ciOpen[cd]; render(); refocus('[data-ci-up]'); } }, 700);
+      if (st.checkin[cd]) ciTimer = setTimeout(function () { if (st.checkin[cd] && sel === cd && tab === 'today' && !root.contains(document.activeElement && document.activeElement.tagName === 'TEXTAREA' ? document.activeElement : null)) { delete ciOpen[cd]; morphRender('#j-ci'); refocus('[data-ci-up]'); } }, 700);
       return;
     }
     if ((el = t.closest('[data-feel]'))) {
@@ -1719,7 +1744,7 @@
     save();
     if (done[k]) nudgeDone(day);
     // the encouragement shows first; then the card folds away unless they're still using it
-    if (done[k]) { fresh[k] = true; delete openCard[k]; setTimeout(function () { if (fresh[k] && !hold[k] && tab === 'today') { delete fresh[k]; said = null; render(); } else if (fresh[k] && hold[k]) { /* folds next visit */ } }, 1600); }
+    if (done[k]) { fresh[k] = true; delete openCard[k]; setTimeout(function () { if (fresh[k] && !hold[k] && tab === 'today') { delete fresh[k]; said = null; morphRender(cardSel(k)); } else if (fresh[k] && hold[k]) { /* folds next visit */ } }, 1600); }
     else { delete fresh[k]; delete hold[k]; delete openCard[k]; }
     var list = cheer().done || [];
     // the day's first step gets the day's line; another goal's step on the same day gets a different one
