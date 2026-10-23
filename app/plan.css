@@ -1533,3 +1533,12 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pw-btn:focus-visible{outline:2px solid #a9c3e6;outline-offset:3px}
 .pw-card .lk-soon{margin:.875rem .25rem 0;font-size:.8125rem;line-height:1.5;text-align:center;color:rgba(239,231,218,.78)}
 .pw-more{justify-self:center}
+
+/* folded bars: one short status line that never wraps; a long reason trims with an ellipsis */
+.pl-fold-t small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* the day's sign-off sits on the page, not in a card: a small moon, Rest easy., one line */
+.tm.tm--rest{margin-top:1.75rem;padding:.5rem 1rem 1.25rem;border:0;border-radius:0;background:none;box-shadow:none}
+.tm--rest .tm-moon{background:rgba(143,179,227,.12);box-shadow:none}
+/* the day tracker: a step skipped on purpose is settled, shown in a soft lavender rather than navy */
+.db-s.is-skip i{background:linear-gradient(90deg,rgba(169,195,230,.75),rgba(184,168,222,.75));box-shadow:none}
+.db-s.is-skip span{color:var(--dim)}

@@ -247,7 +247,7 @@
     change: ['Do a smaller part of it', 'Do it later today', 'Do it a different way'] };
   function gutNote(k, kind) {
     var skip = kind === 'skip', note = (fb.skip[k] || {}).note || '';
-    var picked = note.split(/,\s*/);
+    var picked = [note.trim()];
     return '<div class="gn"><p class="gn-q">' + (skip ? 'What did your gut say?' : 'What will you do instead?') + '</p>' +
       '<div class="gn-c" role="group" aria-label="Quick answers">' + GUT_PICKS[kind].map(function (p) {
         return '<button type="button" class="gn-p" data-gnpick="' + k + '" data-v="' + esc(p) + '" aria-pressed="' + (picked.indexOf(p) >= 0) + '"><span>' + esc(p) + '</span><i class="gn-m" aria-hidden="true">' + check + '</i></button>';
@@ -264,13 +264,15 @@
     var ci = st.checkin[d.day], light = d.steps.length > 1 && (ci === 'half' || ci === 'rough');
     var parts = [{ id: 'ci', label: 'Check in', ok: !!ci }];
     if (light) parts.push({ id: 'steps', label: 'One step', ok: kept(d) });
-    else d.steps.forEach(function (x, i) { parts.push({ id: 'step-' + key(d, x).replace('.', '_'), label: d.steps.length > 1 ? 'Step ' + (i + 1) : 'Your step', ok: !!done[key(d, x)] }); });
+    // a step skipped on purpose is settled too (a gut call counts): soft fill, never pointed at as next
+    else d.steps.forEach(function (x, i) { var kk = key(d, x), sk = !done[kk] && (fb.skip[kk] || {}).action === 'skip';
+      parts.push({ id: 'step-' + kk.replace('.', '_'), label: d.steps.length > 1 ? 'Step ' + (i + 1) : 'Your step', ok: !!done[kk] || sk, skip: sk }); });
     parts.push({ id: kept(d) ? 'rc' : 'steps', label: 'One line', ok: !!((fb.receipt[d.day] || {}).text || '').trim() });
     var n = parts.filter(function (x) { return x.ok; }).length, all = n === parts.length, cur = -1;
     parts.forEach(function (x, i) { if (cur < 0 && !x.ok) cur = i; });
     return '<div class="db' + (all ? ' is-all' : '') + '" role="group" aria-label="Today’s progress"><p class="db-top"><span>' + (all ? check + 'Day done' : 'Today') + '</span><span class="db-n">' + n + ' of ' + parts.length + ' done</span></p>' +
       '<div class="db-segs">' + parts.map(function (x, i) {
-        return '<button type="button" class="db-s' + (x.ok ? ' is-done' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x.id + '"' + (i === cur ? ' aria-current="step"' : '') + ' aria-label="' + esc(x.label + (x.ok ? ', done' : '')) + '"><i aria-hidden="true"></i><span>' + esc(x.label) + '</span></button>';
+        return '<button type="button" class="db-s' + (x.ok ? ' is-done' : '') + (x.skip ? ' is-skip' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x.id + '"' + (i === cur ? ' aria-current="step"' : '') + ' aria-label="' + esc(x.label + (x.skip ? ', skipped on purpose' : x.ok ? ', done' : '')) + '"><i aria-hidden="true"></i><span>' + esc(x.label) + '</span></button>';
       }).join('') + '</div></div>';
   }
   // a finished step folds into a slim bar after a short beat; tap it to open again
@@ -282,8 +284,7 @@
   function skipBar(k, s, many) {
     var note = ((fb.skip[k] || {}).note || '').trim(), bits = [];
     if (many) bits.push('Goal ' + (s.ask + 1));
-    bits.push('Skipped today');
-    if (note) bits.push(note.length > 30 ? note.slice(0, 29).trim() + '…' : note);
+    bits.push(note || 'Skipped today');
     return '<article class="pl-day pl-foldc pl-foldc--skip" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
       '<span class="pl-sk" aria-hidden="true">' + skipIcon + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' + bits.map(esc).join('<i class="pl-fold-dot" aria-hidden="true">·</i>') + '</small></span>' +
       '<span class="pl-fold-go" aria-hidden="true">' + upIcon + '</span></button></article>';
@@ -309,9 +310,9 @@
   }
   // a finished step, folded: the check, the title, and one quiet status line (which goal, and how it felt or an ask)
   function foldBar(k, title, sub, feel, noAsk, mine) {
-    var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (mine ? 'Your version<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
+    var status = (sub ? esc(sub) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + (noAsk ? 'Done' : feel ? 'Felt ' + esc(feel.toLowerCase()) : '<em>How did it feel?</em>');
     return '<article class="pl-day pl-foldc" id="j-step-' + k.replace('.', '_') + '"><button type="button" class="pl-fold" data-unfold="' + k + '" aria-expanded="false">' +
-      '<span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(title) + '</b><small>' + status + '</small></span>' +
+      '<span class="pl-fold-ck" aria-hidden="true">' + (mine ? anchorIcon : check) + '</span><span class="pl-fold-t"><b>' + esc(title) + '</b><small>' + status + '</small></span>' +
       '<span class="pl-fold-go" aria-hidden="true">' + upIcon + '</span></button></article>';
   }
   var FEELW = { easy: 'Easy', okay: 'Okay', hard: 'Hard' };
@@ -358,7 +359,7 @@
     }
     // done and open: the header mirrors the folded bar (check, title, one status line, round arrow), so it reads as
     // the same thing opened up
-    var doneHead = '<div class="pl-dh"><span class="pl-fold-ck" aria-hidden="true">' + check + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' +
+    var doneHead = '<div class="pl-dh"><span class="pl-fold-ck" aria-hidden="true">' + ((fb.skip[k] || {}).action === 'change' ? anchorIcon : check) + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' +
       (many ? 'Goal ' + (s.ask + 1) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + 'Done</small></span>' +
       '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button></div>';
     return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
@@ -1785,12 +1786,11 @@
       var gk = el.getAttribute('data-gnpick'), gv = el.getAttribute('data-v');
       var gta = root.querySelector('textarea[data-fb="skip"][data-ref="' + gk + '"]');
       if (!gta) return;
-      var parts = gta.value.split(/,\s*/).map(function (x) { return x.trim(); }).filter(Boolean), gat = parts.indexOf(gv);
-      if (gat >= 0) parts.splice(gat, 1); else parts.push(gv);
-      gta.value = parts.join(', '); grow(gta);
+      // one answer: tapping another replaces it, tapping the same one again clears it
+      var same = gta.value.trim() === gv;
+      gta.value = same ? '' : gv; grow(gta);
       gta.dispatchEvent(new Event('input', { bubbles: true }));
-      el.setAttribute('aria-pressed', String(gat < 0));
-      if ((fb.skip[gk] || {}).action === 'skip' && parts.length) settleSkip(gk, 1400); else clearTimeout(settleT[gk]);
+      if ((fb.skip[gk] || {}).action === 'skip' && !same) settleSkip(gk, 1400); else clearTimeout(settleT[gk]);
       return;
     }
     if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '', noteFor: (fb.skip[us] || {}).noteFor || (fb.skip[us] || {}).action }; sync('skip', us, true); anchorRender(el, cardSel(us) + ' .gut-b'); refocus('[data-skipopen="' + us + '"]'); return; }
@@ -1902,7 +1902,7 @@
     o[field] = t.value;
     sync(kind, ref);
     // the quick answers stay true to what's in the box, whether tapped or typed
-    if (kind === 'skip') { var have = t.value.split(/,\s*/).map(function (x) { return x.trim(); });
+    if (kind === 'skip') { var have = [t.value.trim()];
       root.querySelectorAll('[data-gnpick="' + ref + '"]').forEach(function (p) { p.setAttribute('aria-pressed', String(have.indexOf(p.getAttribute('data-v')) >= 0)); }); }
   });
 
