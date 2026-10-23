@@ -1497,7 +1497,18 @@
     if (backHome && !J.saved) { window.scrollTo(0, J.homeY || 0); return; }
     if (scroll) window.scrollTo(0, 0);
   }
-  window.addEventListener('hashchange', function () { go(location.hash.slice(1), true); });
+  // moving between screens feels like the welcome opening into Today: the old screen fades as the new one fades in
+  // (header and tab bar stay still), then the new screen's parts rise into place one after another
+  function navTo(h) {
+    var run = function () { go(h, true); if (!document.body.classList.contains('is-welcome')) enterScreen(); };
+    if (calm || !plan || document.body.classList.contains('is-welcome') || !document.startViewTransition || document.hidden) return run();
+    document.documentElement.classList.add('vt-tab');
+    var vt = document.startViewTransition(run);
+    var done = function () { document.documentElement.classList.remove('vt-tab'); };
+    vt.finished.then(done, done);
+  }
+  function enterScreen() { root.classList.remove('pl-enter'); root.classList.add('pl-enter', 'pl-enter--tab'); setTimeout(function () { root.classList.remove('pl-enter', 'pl-enter--tab'); }, 1200); }
+  window.addEventListener('hashchange', function () { navTo(location.hash.slice(1)); });
   // the writer's bar only gets a backing once something has scrolled under it
   function barStuck() {
     var b = root.querySelector('.jw-bar');
@@ -1549,7 +1560,7 @@
   // everything below glides instead of jumping, the old content fades out on top while the new content fades in, and
   // the card's top edge stays where it was
   var morphing = {};
-  function morphRender(sel) {
+  function morphRender(sel, plain) {
     var old = root.querySelector(sel);
     if (!old || calm) { render(); return; }
     var r0 = old.getBoundingClientRect(), ghost = old.cloneNode(true);
@@ -1564,12 +1575,12 @@
     ghost.removeAttribute('id'); ghost.setAttribute('aria-hidden', 'true'); ghost.classList.add('mo-ghost');
     [].forEach.call(ghost.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
     ghost.style.height = r0.height + 'px';
-    el.classList.add('mo-el');
+    el.classList.add('mo-el'); if (plain) el.classList.add('mo-plain');
     el.style.height = r0.height + 'px';
-    el.appendChild(ghost);
+    if (!plain) el.appendChild(ghost);
     void el.offsetHeight;
     el.style.height = h1 + 'px';
-    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 520);
+    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el', 'mo-plain'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 520);
   }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
@@ -1674,7 +1685,7 @@
       return;
     }
     if ((el = t.closest('[data-guide]'))) { st.guide = el.getAttribute('data-guide'); save(); keepLayers = false; render(); return; }
-    if ((el = t.closest('[data-ci-up]'))) { ciOpen[sel] = true; render(); refocus('[data-checkin][aria-pressed="true"]'); return; }
+    if ((el = t.closest('[data-ci-up]'))) { ciOpen[sel] = true; morphRender('#j-ci'); refocus('[data-checkin][aria-pressed="true"]'); return; }
     if ((el = t.closest('[data-checkin]'))) {
       ciOpen[sel] = true;
       var o = el.getAttribute('data-checkin');
@@ -1693,7 +1704,7 @@
     if ((el = t.closest('[data-skipopen]'))) {
       var so = el.getAttribute('data-skipopen'), sFrom = el.closest('.gt') || el;
       skipOpen[so] = !skipOpen[so];
-      anchorRender(sFrom, cardSel(so) + (skipOpen[so] ? ' .gt' : ' .gut-b'));
+      if (calm) anchorRender(sFrom, cardSel(so) + (skipOpen[so] ? ' .gt' : ' .gut-b')); else morphRender(cardSel(so), true);
       refocus(skipOpen[so] ? '[data-skip][data-ref="' + so + '"]' : '[data-skipopen="' + so + '"]'); return;
     }
     if ((el = t.closest('[data-skip]'))) {
@@ -1752,6 +1763,23 @@
     // keep your place: Mark done lands on "How did it feel?", Undo lands back on Mark done
     anchorRender(b.closest('.pl-do, .pl-undo, .pl-done') || b, cardSel(k) + (done[k] ? ' .fb' : ' .pl-do'));
     refocus('[data-done="' + k + '"]');
+  });
+  // sections that open (the + layers, See the original step): ease open with the content fading in, ease closed
+  root.addEventListener('click', function (e) {
+    var sm = e.target.closest && e.target.closest('details > summary');
+    if (!sm || calm) return;
+    var d = sm.parentNode;
+    if (!d.animate) return;
+    e.preventDefault();
+    if (d.getAttribute('data-anim')) return;
+    var from = d.getBoundingClientRect().height, opening = !d.open, to;
+    if (opening) { d.open = true; to = d.getBoundingClientRect().height; }
+    else { d.open = false; to = d.getBoundingClientRect().height; d.open = true; }
+    d.setAttribute('data-anim', '1'); d.style.overflow = 'hidden';
+    var a = d.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: opening ? 420 : 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+    var body = [].filter.call(d.children, function (c) { return c.tagName !== 'SUMMARY'; });
+    body.forEach(function (b) { b.animate(opening ? [{ opacity: 0, transform: 'translateY(-.25rem)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 340 : 180, delay: opening ? 60 : 0, easing: 'ease', fill: opening ? 'backwards' : 'forwards' }); });
+    a.onfinish = a.oncancel = function () { if (!opening) { d.open = false; body.forEach(function (b) { b.getAnimations().forEach(function (x) { x.cancel(); }); }); } d.style.overflow = ''; d.removeAttribute('data-anim'); };
   });
   // return in a gut-call note finishes it (shift+return still makes a new line)
   root.addEventListener('keydown', function (e) {

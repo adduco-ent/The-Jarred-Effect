@@ -1465,3 +1465,19 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 @keyframes mo-in{from{opacity:0}to{opacity:1}}
 @keyframes mo-out{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){.mo-el{transition:none}.mo-el>*,.mo-ghost{animation:none}}
+
+/* between screens (2026-10-22): the same feel as the welcome opening into Today. The old screen fades out as the new
+   fades in (same timing, so the shared background never dips), the header and tab bar hold still, and the new
+   screen's parts rise into place one after another, a little quicker than the welcome */
+.vt-tab::view-transition-old(root){animation:vt-tab-out .3s cubic-bezier(.4,0,.2,1) both}
+.vt-tab::view-transition-new(root){animation:vt-tab-in .3s cubic-bezier(.4,0,.2,1) both}
+@keyframes vt-tab-out{to{opacity:0}}
+@keyframes vt-tab-in{from{opacity:0}}
+.vt-tab .tb{view-transition-name:oh-tb}
+.vt-tab::view-transition-group(oh-tb){animation:none}
+.vt-tab::view-transition-old(oh-tb){display:none}
+.vt-tab::view-transition-new(oh-tb){animation:none}
+.pl-enter--tab>*{animation-duration:.65s}
+.pl-enter--tab>:nth-child(1){animation-delay:.04s}.pl-enter--tab>:nth-child(2){animation-delay:.1s}.pl-enter--tab>:nth-child(3){animation-delay:.16s}.pl-enter--tab>:nth-child(4){animation-delay:.22s}.pl-enter--tab>:nth-child(5){animation-delay:.28s}.pl-enter--tab>:nth-child(6){animation-delay:.34s}.pl-enter--tab>:nth-child(n+7){animation-delay:.4s}
+/* plain morph: the card only grows or shrinks; nothing cross-fades (the new part brings its own gentle entrance) */
+.mo-el.mo-plain>:not(.mo-ghost){animation:none}
