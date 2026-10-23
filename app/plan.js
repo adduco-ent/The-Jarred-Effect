@@ -128,8 +128,12 @@
     return d.day === T ? d.steps.every(sk) : d.steps.some(sk);
   }
   function dayState(d) { return kept(d) ? 'kept' : skippedOnly(d) && d.day <= T ? 'gut' : d.day < T ? 'missed' : d.day === T ? 'today' : 'future'; }
-  // done with their own version of a step (changed to fit, then marked done): it counts the same, and shows an anchor
-  function mineDay(d) { return d.kind === 'step' && kept(d) && d.steps.some(function (s) { var k = key(d, s); return done[k] && (fb.skip[k] || {}).action === 'change'; }); }
+  // done their own way: every step they did was their own version (changed to fit, then marked done). It counts the
+  // same and shows an anchor. If even one step went as planned, the day shows the plain check; skips never mark a done day.
+  function mineDay(d) {
+    if (d.kind !== 'step' || !kept(d)) return false;
+    return d.steps.filter(function (s) { return done[key(d, s)]; }).every(function (s) { return (fb.skip[key(d, s)] || {}).action === 'change'; });
+  }
   var anchorIcon = '<svg class="an-i" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="4.75" r="1.75" stroke="currentColor" stroke-width="1.6"/><path d="M10 6.5V17M6.75 9.5h6.5M4.25 12.25c.55 2.75 2.95 4.75 5.75 4.75s5.2-2 5.75-4.75M4.25 12.25l-1 1.5M4.25 12.25l1.75.25M15.75 12.25l1 1.5M15.75 12.25l-1.75.25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function titles(d) { return d.kind === 'step' ? d.steps.map(function (s) { return s.title; }) : [d.title]; }
 
