@@ -715,34 +715,106 @@
   }
 
   // ---- Progress
+  // ---- Progress (rebuilt 2026-10-23): one clear order, from the big picture to the detail. A navy hero with a ring for
+  // the week and three stats floating over its edge, each with context; what their own week shows ("What I'm
+  // noticing"); the week as a grid of how each day was and whether it was done; how steps felt; each goal's ring; then
+  // day by day, their words, and the full app.
+  function ringSvg(frac, size, stroke, cls) {
+    var r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c * (1 - Math.max(0, Math.min(1, frac)));
+    return '<svg class="' + cls + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true"><circle class="t" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" stroke-width="' + stroke + '"/>' +
+      '<circle class="a" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" stroke-width="' + stroke + '" style="--c:' + c.toFixed(1) + ';stroke-dasharray:' + c.toFixed(1) + ';stroke-dashoffset:' + off.toFixed(1) + '"/></svg>';
+  }
+  var sparkIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3.5l1.6 4.9L16.5 10l-4.9 1.6L10 16.5l-1.6-4.9L3.5 10l4.9-1.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  // a goal said inside a sentence: no closing full stop, but keep the one in "a.m." or "p.m."
+  function goalName(t) { t = end(t); return /\b[ap]\.m\.$/i.test(t) ? t : t.replace(/[.!]$/, ''); }
+  // "2 good days and 1 okay day"
+  function countList(items) {
+    var w = items.filter(function (x) { return x[0]; }).map(function (x) { return x[0] + ' ' + x[1] + (x[0] === 1 ? ' day' : ' days'); });
+    return w.length > 1 ? w.slice(0, -1).join(', ') + ' and ' + w[w.length - 1] : w[0] || '';
+  }
+  function noticing(p, s) {
+    var N = cheer().notice || {}, out = [];
+    var hours = Object.keys(st.at).map(function (k) { return new Date(st.at[k]).getHours(); });
+    if (hours.length >= 3) {
+      var am = hours.filter(function (h) { return h < 12; }).length, pm = hours.filter(function (h) { return h >= 17; }).length;
+      if (am / hours.length >= .7) out.push(fill(N.mornings, { x: am, y: hours.length }));
+      else if (pm / hours.length >= .7) out.push(fill(N.evenings, { x: pm, y: hours.length }));
+    }
+    if (s.upto >= 2 && s.cis >= s.upto) out.push(N.checkins);
+    if (s.hardDays && s.hardDone) out.push(s.hardDays === 1 ? N.hardDoneOne : fill(N.hardDone, { x: s.hardDone, y: s.hardDays }));
+    var best = null;
+    p.asks.forEach(function (a, i) { var g = s.goals[i]; if (g.felt >= 2 && g.easy * 2 > g.felt && (!best || g.easy > best.easy)) best = { goal: goalName(a.text), easy: g.easy, felt: g.felt }; });
+    if (best) out.push(fill(N.easyGoal, { goal: best.goal, x: best.easy, y: best.felt }));
+    if (s.more >= 2) out.push(fill(N.bigger, { x: s.more })); else if (s.less >= 2) out.push(fill(N.lighter, { x: s.less }));
+    if (s.guts) out.push(fill(N.gut, { x: s.guts === 1 ? 'one' : s.guts }));
+    out = out.filter(Boolean).slice(0, 3);
+    return out.length ? out : [N.early];
+  }
   function progressView(p) {
-    var c = cheer();
-    var n = keptCount(p);
-    var steps = 0, mins = 0, feel = { easy: 0, okay: 0, hard: 0 }, guts = 0;
+    var c = cheer(), n = keptCount(p), upto = Math.min(T, 7);
+    var s = { steps: 0, mins: 0, due: 0, guts: 0, more: 0, less: 0, cis: 0, upto: upto, hardDays: 0, hardDone: 0, goals: p.asks.map(function () { return { total: 0, got: 0, felt: 0, easy: 0 }; }) };
+    var feel = { easy: 0, okay: 0, hard: 0 }, moods = { full: 0, half: 0, rough: 0 };
     p.days.forEach(function (d) {
-      if (d.kind === 'step') d.steps.forEach(function (s) {
-        var k = key(d, s);
-        if (done[k]) { steps++; mins += s.minutes; }
-        var f = (fb.step[k] || {}).feel; if (f) feel[f]++;
-        if ((fb.skip[k] || {}).action) guts++;
+      var ci = st.checkin[d.day];
+      if (d.day <= upto && ci) { s.cis++; moods[ci]++; if (ci === 'rough') { s.hardDays++; if (kept(d)) s.hardDone++; } }
+      if (d.kind === 'step') d.steps.forEach(function (x) {
+        var k = key(d, x), g = s.goals[x.ask], f = fb.step[k] || {};
+        if (g) g.total++;
+        if (d.day <= upto) s.due++;
+        if (done[k] && d.day <= upto) { s.steps++; s.mins += x.minutes; if (g) g.got++; }
+        if (f.feel) { feel[f.feel]++; if (g) { g.felt++; if (f.feel === 'easy') g.easy++; } }
+        if (f.size === 'more') s.more++; if (f.size === 'less') s.less++;
+        if ((fb.skip[k] || {}).action) s.guts++;
       });
-      else if (done[key(d)]) mins += d.minutes || 0;
+      else if (done[key(d)] && d.day <= upto) s.mins += d.minutes || 0;
     });
-    var cis = Object.keys(st.checkin).length;
-    var bar = p.days.map(function (d) { return '<i class="' + (kept(d) ? 'on' : '') + '"></i>'; }).join('');
-    var asks = p.asks.map(function (a, i) {
-      var total = 0, got = 0;
-      p.days.forEach(function (d) { if (d.kind === 'step') d.steps.forEach(function (s) { if (s.ask === i) { total++; if (done[key(d, s)]) got++; } }); });
-      return '<li><p class="pg-ask"><i>' + (i + 1) + '</i>' + esc(end(a.text)) + '</p>' +
-        '<div class="pg-meter" role="img" aria-label="' + got + ' of ' + total + ' steps"><i style="width:' + (total ? Math.round(got / total * 100) : 0) + '%"></i></div>' +
-        '<p class="pg-sub">' + got + ' of ' + total + ' steps' + (a.otherHalf ? ' · Building ' + esc(a.otherHalf.toLowerCase()) : '') + '</p></li>';
-    }).join('');
+    var keptSoFar = p.days.filter(function (d) { return d.day <= upto && kept(d); }).length;
+    n = keptSoFar;
+    var left = 7 - upto, daysIn = Math.max(1, keptSoFar);
+
+    // the hero: the week as a ring, and the line for where they are
+    var hero = '<section class="pl-card pl-card--app pg2-hero"><div class="pg2-ringwrap">' + ringSvg(n / 7, 120, 10, 'pg2-ring') +
+        '<p class="pg2-num"><b>' + n + '</b><small>of 7 days</small></p></div>' +
+      '<div class="pg2-ht"><p class="pl-card-k">' + (T > 7 ? 'Week one' : 'This week') + '</p><p class="pg2-line">' + esc((c.progress || {})[n] || '') + '</p>' +
+        '<p class="pg2-left">' + (T > 7 ? 'Every day is open to look back on' : left ? left + (left === 1 ? ' day' : ' days') + ' to go' : 'The last day of the week') + '</p></div></section>';
+    // three stats floating over the hero's edge, each with context
+    var chips = '<div class="pg2-chips">' +
+      '<div><b>' + s.steps + '</b><span>steps done</span><small>of ' + s.due + ' so far</small></div>' +
+      '<div><b>' + s.mins + '</b><span>minutes</span><small>' + (s.mins ? 'about ' + Math.round(s.mins / daysIn) + ' a day' : 'a few a day') + '</small></div>' +
+      '<div><b>' + s.cis + '</b><span>check-ins</span><small>' + (s.cis >= upto ? 'every day so far' : 'of ' + upto + (upto === 1 ? ' day' : ' days')) + '</small></div></div>';
+    // what their week shows
+    var notes = '<section class="sc pg2-notice"><p class="pl-k">What I’m noticing</p><ul>' + noticing(p, s).map(function (x) { return '<li><span class="pg2-ni" aria-hidden="true">' + sparkIcon + '</span><span>' + esc(x) + '</span></li>'; }).join('') + '</ul></section>';
+    // the week: how each day was, and whether it was done
+    var MOOD = { full: 'good', half: 'okay', rough: 'hard' };
+    var grid = '<section class="sc pg2-week"><p class="pl-k">Your week</p><div class="pg2-grid">' + p.days.map(function (d) {
+      var st8 = dayState(d), ci = st.checkin[d.day];
+      var label = 'Day ' + d.day + ', ' + weekday(d.day) + ': ' + (ci ? 'a ' + MOOD[ci] + ' day, ' : '') + ({ kept: 'done', gut: 'skipped on purpose', missed: 'nothing marked', today: 'today', future: 'still to come' }[st8] || st8);
+      return '<button type="button" class="pg2-col is-' + st8 + (d.day === T ? ' is-now' : '') + '" data-view-day="' + d.day + '" aria-label="' + esc(label) + '">' +
+        '<span class="pg2-mood' + (ci ? ' is-' + ci : ' is-none') + '">' + (ci ? wxIcons[ci] : '') + '</span>' +
+        '<span class="pg2-done">' + (st8 === 'kept' ? (mineDay(d) ? anchorIcon : check) : st8 === 'gut' ? skipIcon : '') + '</span>' +
+        '<span class="pg2-wd">' + esc(weekday(d.day, true)) + '</span></button>';
+    }).join('') + '</div>' +
+      '<p class="pg2-cap">' + (s.cis ? countList([[moods.full, 'good'], [moods.half, 'okay'], [moods.rough, 'hard']]) + ' so far' : 'How each day was shows up here as you check in') + '</p></section>';
+    // how the steps felt, as one bar
+    var felt = feel.easy + feel.okay + feel.hard + s.guts, F = c.felt || {};
+    var feltCard = !felt ? '' : '<section class="sc pg2-felt"><p class="pl-k">How it felt</p><div class="pg2-stack" role="img" aria-label="' + feel.easy + ' easy, ' + feel.okay + ' okay, ' + feel.hard + ' hard, ' + s.guts + ' skipped or changed">' +
+      [['easy', feel.easy], ['okay', feel.okay], ['hard', feel.hard], ['gut', s.guts]].filter(function (x) { return x[1]; }).map(function (x) { return '<i class="is-' + x[0] + '" style="flex:' + x[1] + '"></i>'; }).join('') + '</div>' +
+      '<ul class="pg2-legend">' + [['easy', 'Easy', feel.easy], ['okay', 'Okay', feel.okay], ['hard', 'Hard', feel.hard], ['gut', 'Skipped or changed', s.guts]].map(function (x) {
+        return '<li><i class="is-' + x[0] + '" aria-hidden="true"></i><b>' + x[2] + '</b>' + x[1] + '</li>'; }).join('') + '</ul>' +
+      '<p class="pg2-take">' + esc(feel.easy * 2 >= felt ? F.easy : (feel.hard + s.guts) * 2 >= felt ? F.hard : feel.hard && feel.easy ? F.mixed : F.steady || F.mixed || '') + '</p></section>';
+    // each goal, with its own ring
+    var goals = '<section class="sc pg2-goalc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your goals' : 'Your goal') + '</p><ul class="pg2-goals">' + p.asks.map(function (a, i) {
+      var g = s.goals[i];
+      return '<li><span class="pg2-gring">' + ringSvg(g.total ? g.got / g.total : 0, 44, 4, 'pg2-gr') + '<i>' + (i + 1) + '</i></span>' +
+        '<span class="pg2-gt"><b>' + esc(end(a.text)) + '</b><small>' + g.got + ' of ' + g.total + ' steps' + (a.otherHalf ? ' · Building ' + esc(a.otherHalf.toLowerCase()) : '') + '</small></span></li>';
+    }).join('') + '</ul></section>';
+    // day by day, as before
     var rows = p.days.map(function (d) {
-      var s = dayState(d), ci = st.checkin[d.day];
-      return '<li><button type="button" class="pg-row is-' + s + '" data-view-day="' + d.day + '">' +
-        '<span class="pg-dot">' + (s === 'kept' ? (mineDay(d) ? anchorIcon : check) : s === 'gut' ? skipIcon : d.day) + '</span>' +
+      var ds = dayState(d), ci = st.checkin[d.day];
+      return '<li><button type="button" class="pg-row is-' + ds + '" data-view-day="' + d.day + '">' +
+        '<span class="pg-dot">' + (ds === 'kept' ? (mineDay(d) ? anchorIcon : check) : ds === 'gut' ? skipIcon : d.day) + '</span>' +
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
-        (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '<span class="pg-go" aria-hidden="true">›</span></button></li>';
+        (ds === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '<span class="pg-go" aria-hidden="true">›</span></button></li>';
     }).join('');
     var theirs = p.days.map(function (d) {
       var bits = [];
@@ -751,15 +823,9 @@
       if (d.kind === 'lookback') { var lb = fb.lookback['1'] || {}; ['did', 'changed', 'keep'].forEach(function (f) { if (lb[f] && lb[f].trim()) bits.push(lb[f]); }); }
       return bits.length ? '<li><p class="pg-nk">Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</p>' + bits.map(function (b) { return '<p class="pg-nt">' + esc(b) + '</p>'; }).join('') + '</li>' : '';
     }).join('');
-    var felt = feel.easy + feel.okay + feel.hard + guts;
-    return screenHead('Week one', 'Progress', T <= 7 ? 'Day ' + Math.min(T, 7) + ' of 7 · ' + weekday(Math.min(T, 7)) : 'All seven days are open to look back on.') +
-      '<section class="sc pg-hero"><p class="pg-n"><b>' + n + '</b> of 7 days done</p>' +
-        '<div class="pg-bar" aria-hidden="true">' + bar + '</div>' + (c.progress && c.progress[n] ? '<p class="pl-note">' + esc(c.progress[n]) + '</p>' : '') + '</section>' +
-      '<section class="pg-stats"><div><b>' + steps + '</b><span>steps done</span></div><div><b>' + mins + '</b><span>minutes spent</span></div><div><b>' + cis + '</b><span>check-ins</span></div></section>' +
-      (felt ? '<section class="sc"><p class="pl-k">How it felt</p><div class="pg-feel">' +
-        [['Easy', feel.easy], ['Okay', feel.okay], ['Hard', feel.hard], ['Skipped or changed', guts]].map(function (x) { return '<span' + (x[1] ? '' : ' class="is-zero"') + '><b>' + x[1] + '</b>' + x[0] + '</span>'; }).join('') + '</div></section>' : '') +
-      '<section class="sc"><p class="pl-k">' + (p.asks.length > 1 ? 'Your goals' : 'Your goal') + '</p><ul class="pg-asks">' + asks + '</ul></section>' +
-      '<section class="sc-plain"><p class="pl-k">The week at a glance</p><ol class="pg-week">' + rows + '</ol></section>' +
+    return screenHead('Week one', 'Progress', T <= 7 ? 'Day ' + upto + ' of 7 · ' + weekday(upto) : 'All seven days are open to look back on.') +
+      hero + chips + notes + grid + feltCard + goals +
+      '<section class="sc-plain"><p class="pl-k">Day by day</p><ol class="pg-week">' + rows + '</ol></section>' +
       (theirs ? '<section class="sc"><p class="pl-k">In your words</p><ul class="pg-notes">' + theirs + '</ul></section>' : '') +
       (paid() ? patterns(p) + nextCard() : fullApp('Keep going past week one', [
         ['Your patterns', 'Which days go best and which steps stick, week over week, with a look back every month.'],

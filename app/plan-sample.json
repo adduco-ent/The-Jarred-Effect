@@ -76,14 +76,32 @@
     ],
     "missed": "Back at it. No catch-up needed. Today’s step is the only one that matters.",
     "progress": {
-      "0": "Day one is waiting. Start with the smallest version.",
-      "1": "One down. That’s how every change starts.",
-      "2": "Two days. You’re building something.",
-      "3": "Three days of proof. Keep it small and keep going.",
-      "4": "Four days. More than half the week, done.",
-      "5": "Five days. Your gut has real evidence now.",
-      "6": "Six days. One look back to go.",
-      "7": "All seven. Take that in. You did this."
+      "0": "Day one is waiting, so start with the smallest version.",
+      "1": "One day down, and that’s how every change starts.",
+      "2": "Two days in, and you’re already building something.",
+      "3": "Three days of proof, so keep it small and keep going.",
+      "4": "Four days done, which is more than half the week.",
+      "5": "Five days in, and your gut has real evidence now.",
+      "6": "Six days done, with one look back to go.",
+      "7": "All seven days. Take that in, because you did this."
+    },
+    "notice": {
+      "early": "Give it a couple more days, and I’ll start pointing out what’s working for you.",
+      "mornings": "You’ve done {x} of your {y} steps before noon. Mornings seem to suit you.",
+      "evenings": "You’ve done {x} of your {y} steps after 5 p.m. Evenings seem to be your time.",
+      "checkins": "You’ve checked in every day so far, and that honesty is what makes this work.",
+      "hardDone": "Even on your hard days you still did a step, {x} of {y} times.",
+      "hardDoneOne": "Your hard day still got a step done, and in my book that counts double.",
+      "easyGoal": "Your steps for “{goal}” have felt easiest so far: {x} of {y} easy.",
+      "bigger": "You’ve asked for bigger steps {x} times. You’ve got more room than you think.",
+      "lighter": "You’ve asked for smaller steps {x} times, so I’m keeping the next ones lighter.",
+      "gut": "You made {x} gut calls this week, and each one tells me more about what fits your life."
+    },
+    "felt": {
+      "easy": "Most of your steps felt easy. Tap “Bring it on” whenever you want bigger ones.",
+      "hard": "A lot of this week felt hard, so I’m keeping the next steps lighter.",
+      "mixed": "A good mix of easy and hard, and that’s what steady progress looks like.",
+      "steady": "Mostly okay, with some easy ones, which is right where steady progress lives."
     },
     "checkin": {
       "full": "Love that. Go for the whole step, and enjoy it.",
