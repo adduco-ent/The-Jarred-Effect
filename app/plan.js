@@ -28,7 +28,7 @@
       if (lastId && /^[A-Za-z0-9_-]{8,64}$/.test(lastId)) { location.replace(location.pathname + '?id=' + encodeURIComponent(lastId) + location.hash); return; }
     }
   } catch (e) { /* storage blocked: the sample opens */ }
-  var FB_KINDS = ['step', 'skip', 'checkin', 'receipt', 'note', 'lookback', 'next', 'app', 'ask'];
+  var FB_KINDS = ['done', 'step', 'skip', 'checkin', 'receipt', 'note', 'lookback', 'next', 'app', 'ask'];
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function ymd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -43,6 +43,7 @@
     // the journal (full app): their entries, pins and Keep it personal, and an unsaved draft
     s.journal = Array.isArray(s.journal) ? s.journal : []; s.jmeta = s.jmeta || {}; s.jdraft = s.jdraft || {};
     s.nudge = s.nudge || {}; // the daily nudge: { on, time, via: push | calendar, dismissed, lastDone }
+    s.opened = Array.isArray(s.opened) ? s.opened : []; // the days they opened the app (last 30), so the welcome can get familiar
     FB_KINDS.forEach(function (k) { s.fb[k] = s.fb[k] || {}; });
     // notes from the earlier version move into feedback
     if (s.notes) { Object.keys(s.notes).forEach(function (d) { if (s.notes[d]) s.fb.note[d] = { text: s.notes[d] }; }); delete s.notes; }
@@ -127,6 +128,15 @@
     var sk = function (s) { return (fb.skip[key(d, s)] || {}).action === 'skip'; };
     return d.day === T ? d.steps.every(sk) : d.steps.some(sk);
   }
+  // the day is closed out once its steps are settled (every step done or skipped on purpose; on an okay or hard day one
+  // done step is the day) and today's line is sent, or they chose "No line today". Then the sign-off shows.
+  function dayClosed(d) {
+    if (d.kind !== 'step') return kept(d);
+    if (!kept(d)) return false;
+    var ci = st.checkin[d.day], settled = ci === 'half' || ci === 'rough' || d.steps.every(function (s) { var k = key(d, s); return done[k] || (fb.skip[k] || {}).action === 'skip'; });
+    var r = fb.receipt[d.day] || {};
+    return settled && ((!!r.sent && !!(r.text || '').trim()) || !!r.skipped);
+  }
   function dayState(d) { return kept(d) ? 'kept' : skippedOnly(d) && d.day <= T ? 'gut' : d.day < T ? 'missed' : d.day === T ? 'today' : 'future'; }
   // done their own way: every step they did was their own version (changed to fit, then marked done). It counts the
   // same and shows an anchor. If even one step went as planned, the day shows the plain check; skips never mark a done day.
@@ -172,6 +182,39 @@
       '<p class="fb-s" role="status">' + (v ? savedLine() : '') + '</p></div>';
   }
 
+  // the day's sign-off, said for the time they finished and how the day went (playbook encouragement.signoff).
+  // Review: ?sky= picks the time of day.
+  function signOff(d) {
+    var c = cheer(), S = c.signoff || {}, K = S.lines || {}, L = S.limits || {}, part = skyPart();
+    var rest = { morning: 'the rest of your day', afternoon: 'the rest of your day', evening: 'your evening', night: 'your night' }[part];
+    var run = 0; for (var n = d.day; n >= 1 && kept(plan.days[n - 1]); n--) run++;
+    var steps = d.kind === 'step' ? d.steps : [];
+    var all = steps.length > 1 && steps.every(function (x) { return done[key(d, x)]; });
+    var gut = steps.some(function (x) { return (fb.skip[key(d, x)] || {}).action === 'skip'; });
+    var line = st.checkin[d.day] === 'rough' ? K.hard : recent(d.day).back ? K.back : run >= 3 ? fill(K.run, { n: numWord(run) })
+      : gut ? K.gut : all ? K.allDone : K.base;
+    line = fill(line || c.tomorrow || '', { rest: rest });
+    if (L.line && line.length > L.line) line = c.tomorrow || line;
+    var title = (S.titles || {})[part] || 'Rest easy.';
+    var icon = part === 'evening' || part === 'night' ? moonIcon : wxIcons.full;
+    return '<section class="tm tm--rest tm--' + part + '" role="status"><span class="tm-moon" aria-hidden="true">' + icon + '</span>' +
+      '<h2 class="tm-t">' + esc(title) + '</h2><p class="tm-x">' + esc(line) + '</p>' +
+      (st.nudge.on ? '<p class="tm-n">' + bellIcon + end('Your nudge comes at ' + timeLabel(nudgeTime())) + '</p>' : '') + '</section>';
+  }
+  // send today's line: it settles into its row, and if that closes out the day, the sign-off eases in below
+  function sendLine(day, none) {
+    var r = fb.receipt[day] || {};
+    if (none) fb.receipt[day] = { text: '', skipped: true };
+    else if (!(r.text || '').trim()) return;
+    else fb.receipt[day] = Object.assign({}, r, { sent: true, skipped: false });
+    delete rcOpen[day];
+    var a = document.activeElement; if (a && a.blur) a.blur();
+    sync('receipt', day, true);
+    var had = !!root.querySelector('.tm--rest'), from = root.querySelector('#j-rc');
+    anchorRender(from, '#j-rc');
+    var rest = !had && root.querySelector('.tm--rest');
+    if (rest && !calm && rest.animate) rest.animate([{ opacity: 0, transform: 'translateY(1rem)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 150, easing: EASE, fill: 'backwards' });
+  }
   function doneBtn(k, label) {
     var isDone = !!done[k];
     return '<button class="pl-done" type="button" data-done="' + k + '" aria-pressed="' + isDone + '"' + (label ? ' aria-label="' + esc((isDone ? 'Done: ' : 'Mark done: ') + label) + '"' : '') + '>' + check + '<span>' + (isDone ? 'Done · Undo' : 'Mark done') + '</span></button>';
@@ -211,11 +254,16 @@
 
   // ---- after a step: how it felt (done), or a gut call (not done)
   var FEEL = [['easy', 'Easy'], ['okay', 'Okay'], ['hard', 'Hard']];
+  // the size check (2026-10-23): when a step felt easy or hard, one more tap says whether they want the next one bigger,
+  // smaller or the same, so plans fit how much room each person really has (okay needs no follow-up: that's the right size)
+  var SIZE = { easy: ['Want a bigger one next time?', [['more', 'Bring it on'], ['same', 'Keep this size']]],
+    hard: ['Smaller next time?', [['less', 'Yes, smaller'], ['same', 'Keep the stretch']]] };
   function afterStep(k, isDone) {
     if (isDone) {
-      var f = fb.step[k] || {};
+      var f = fb.step[k] || {}, z = SIZE[f.feel];
       return '<div class="fb"><p class="fb-q">How did it feel?</p>' + chips('data-feel', k, FEEL, f.feel) +
-        (f.feel ? words('step', k, 'note', f.feel === 'hard' ? 'What made it hard? In your words, if you want.' : 'Anything to add? In your words, if you want.') : '') + '</div>';
+        (z ? '<div class="fb-size"><p class="fb-q fb-q--sub">' + z[0] + '</p>' + chips('data-size', k, z[1], f.size) + '</div>' : '') +
+        (f.feel ? words('step', k, 'note', f.feel === 'hard' ? 'What made it hard? In your words, if you want.' : 'Anything to add? In your words, if you want.').replace('<textarea ', '<textarea enterkeyhint="done" data-step-enter ') : '') + '</div>';
     }
     var sk = fb.skip[k];
     if (sk && sk.action && !isDone) return '';
@@ -267,7 +315,9 @@
     // a step skipped on purpose is settled too (a gut call counts): soft fill, never pointed at as next
     else d.steps.forEach(function (x, i) { var kk = key(d, x), sk = !done[kk] && (fb.skip[kk] || {}).action === 'skip';
       parts.push({ id: 'step-' + kk.replace('.', '_'), label: d.steps.length > 1 ? 'Step ' + (i + 1) : 'Your step', ok: !!done[kk] || sk, skip: sk }); });
-    parts.push({ id: kept(d) ? 'rc' : 'steps', label: 'One line', ok: !!((fb.receipt[d.day] || {}).text || '').trim() });
+    var rcd = fb.receipt[d.day] || {};
+    // today's line counts once it's written, or once they chose "No line today"
+    parts.push({ id: kept(d) ? 'rc' : 'steps', label: 'One line', ok: !!(rcd.text || '').trim() || !!rcd.skipped });
     var n = parts.filter(function (x) { return x.ok; }).length, all = n === parts.length, cur = -1;
     parts.forEach(function (x, i) { if (cur < 0 && !x.ok) cur = i; });
     return '<div class="db' + (all ? ' is-all' : '') + '" role="group" aria-label="Today’s progress"><p class="db-top"><span>' + (all ? check + 'Day done' : 'Today') + '</span><span class="db-n">' + n + ' of ' + parts.length + ' done</span></p>' +
@@ -275,8 +325,8 @@
         return '<button type="button" class="db-s' + (x.ok ? ' is-done' : '') + (x.skip ? ' is-skip' : '') + (i === cur ? ' is-now' : '') + '" data-jump="' + x.id + '"' + (i === cur ? ' aria-current="step"' : '') + ' aria-label="' + esc(x.label + (x.skip ? ', skipped on purpose' : x.ok ? ', done' : '')) + '"><i aria-hidden="true"></i><span>' + esc(x.label) + '</span></button>';
       }).join('') + '</div></div>';
   }
-  // a finished step folds into a slim bar after a short beat; tap it to open again
-  var fresh = {}, hold = {}, openCard = {};
+  // a finished step stays open until they fold it (or come back later), then rests as a slim bar; tap it to open again
+  var fresh = {}, hold = {}, openCard = {}, rcOpen = {};
   // a step folds to a bar once it's settled: done, or skipped with the gut call answered
   function skipSettled(k) { var x = fb.skip[k]; return !done[k] && !!x && x.action === 'skip' && !!x.settled; }
   function folded(k) { return (!!done[k] || skipSettled(k)) && !fresh[k] && !openCard[k]; }
@@ -296,6 +346,21 @@
   function finishGut(k) {
     var a = document.activeElement; if (a && a.blur) a.blur();
     if ((fb.skip[k] || {}).action === 'skip') settleSkip(k, 150);
+  }
+  // a done step folds into its bar once its questions are answered (how it felt, plus the size check when it asks),
+  // after a beat to see the answer land. Never while a layer is open or they're writing a note (2026-10-23)
+  var stepT = {};
+  function stepAnswered(k) { var f = fb.step[k] || {}; return f.feel === 'okay' || ((f.feel === 'easy' || f.feel === 'hard') && !!f.size); }
+  function settleStep(k, ms) {
+    clearTimeout(stepT[k]);
+    stepT[k] = setTimeout(function () {
+      var c = root.querySelector(cardSel(k));
+      if (!c || !done[k] || tab !== 'today' || folded(k) || !stepAnswered(k)) return;
+      if (c.querySelector('details[open]')) return;
+      var a = document.activeElement; if (a && c.contains(a) && a.tagName === 'TEXTAREA') return;
+      delete fresh[k]; delete hold[k]; delete openCard[k]; if (said && said.key === k) said = null;
+      morphRender(cardSel(k));
+    }, ms);
   }
   function settleSkip(k, ms) {
     clearTimeout(settleT[k]);
@@ -321,7 +386,7 @@
   // how they said the day is shapes Today: the heading line, and on an okay or hard day the smallest step comes first
   function todayLine(d, many) {
     var w = cheer().welcome, ci = st.checkin[d.day];
-    return w && w.today && ci && d.kind === 'step' ? w.today[ci === 'half' && many ? 'halfMany' : ci] : '';
+    return w && w.today && ci && d.kind === 'step' ? replyFor(d.day, ci, many) : '';
   }
   function orderedSteps(d) {
     var ci = st.checkin[d.day];
@@ -537,10 +602,18 @@
       html += wholeDayCard(d);
     }
 
-    // the day kept: their receipt, in one line
+    // the day kept: one line on today. A check button sends it (so does return), and it settles into a row with Edit
     if (kept(d) && d.kind === 'step') {
-      html += '<section class="rc" id="j-rc"><p class="fb-q">One line on today</p>' + words('receipt', d.day, 'text', 'One line on what you actually did today.', 2) +
-        (paid() ? '<button type="button" class="lnk jgo" data-jgo="free">Write more<span aria-hidden="true">→</span></button>' : '') + '</section>';
+      var rc = fb.receipt[d.day] || {};
+      var rcText = (rc.text || '').trim(), rcSet = !rcOpen[d.day] && ((rc.sent && rcText) || (rc.skipped && !rcText));
+      html += rcSet
+        ? '<section class="rc rc--set' + (rcText ? '' : ' rc--none') + '" id="j-rc"><div class="rc-set"><span class="rc-ic" aria-hidden="true">' + check + '</span><div class="rc-b"><p class="rc-k">One line on today</p><p class="rc-line">' + esc(rcText || 'No line today') + '</p></div>' +
+          '<button type="button" class="ci-up" data-rc-up="' + d.day + '" aria-label="' + (rcText ? 'Edit your line on today' : 'Add a line on today') + '">' + (rcText ? 'Edit' : 'Add') + '</button></div></section>'
+        : '<section class="rc" id="j-rc"><p class="fb-q">One line on today</p>' +
+          words('receipt', d.day, 'text', 'One line on what you actually did today.', 2).replace('<textarea ', '<textarea enterkeyhint="done" data-rc-enter ')
+            .replace('</textarea>', '</textarea><button type="button" class="gn-go" data-rc-go="' + d.day + '" aria-label="Send your line on today">' + check + '</button>') +
+          (rcText ? '' : '<button type="button" class="lnk rc-skip" data-rc-skip="' + d.day + '">No line today</button>') +
+          (paid() ? '<button type="button" class="lnk jgo" data-jgo="free">Write more<span aria-hidden="true">→</span></button>' : '') + '</section>';
     }
     // once, on day 3: is the app easy to use?
     if (sel === 3 && kept(d)) {
@@ -551,12 +624,9 @@
     }
     if (d.kind === 'lookback') html += nextWeek(p);
 
-    if (kept(d) && sel === T && T < 7) {
+    if (dayClosed(d) && sel === T && T < 7) {
       // the day's sign-off: a breath, not a to-do list (tomorrow's steps are one tap away in the days above)
-      html += '<section class="tm tm--rest" role="status"><span class="tm-moon" aria-hidden="true">' + moonIcon + '</span>' +
-        '<h2 class="tm-t">Rest easy.</h2><p class="tm-x">' + esc(c.tomorrow || 'Today is done, so go enjoy the rest of it. See you tomorrow.') + '</p>' +
-        (st.nudge.on ? '<p class="tm-n">' + bellIcon + end('Your nudge comes at ' + timeLabel(nudgeTime())) + '</p>' : '') + '</section>';
-      html += nudgeOffer();
+      html += signOff(d) + nudgeOffer();
     }
     if (sel === 7 && kept(d)) html += '<section class="pl-end is-all"><p>' + esc(c.allDone || '') + '</p><img src="/assets/img/signature-jarred.png" width="104" height="50" alt="Jarred"></section>';
     if (T > 7) html += week2();
@@ -777,7 +847,8 @@
       (x.signals.length ? '<section class="fs fs--tight"><p class="pl-k">Signs it fits you</p>' + lst(x.signals) + '</section>' : '') +
       (stops.length ? '<section class="sc pb-how"><p class="pl-k">How it goes</p><ol class="pb-tl">' + stops.map(function (s) { return '<li><b>' + s[0] + '</b><p>' + esc(s[1]) + '</p></li>'; }).join('') + '</ol></section>' : '') +
       (x.working.length ? '<section class="fs fs--tight"><p class="pl-k">Signs it’s working</p>' + lst(x.working) + '</section>' : '') +
-      (x.safety ? '<section class="pb-safe"><p class="pl-k">Take care</p><p class="pl-text">' + esc(x.safety) + '</p></section>' : '') +
+      // the safety note starts closed, as a calm row, so it's there for anyone who needs it without alarming anyone who doesn't
+      (x.safety ? '<section class="sc safe-c"><details class="pl-more safe-n"><summary><span class="safe-l">' + heartIcon + 'A note on getting support</span><i aria-hidden="true"></i></summary><div class="pl-more-b"><p class="safe-t">' + esc(x.safety) + '</p></div></details></section>' : '') +
       (x.next.length ? '<section class="fs"><p class="pl-k">Where to go next</p><ul class="pb-card">' + x.next.map(function (n) { var y = byId[n]; return y ? playRow(y, mine(p).indexOf(n) >= 0) : ''; }).join('') + '</ul></section>' : '');
   }
 
@@ -809,8 +880,10 @@
           var on = (st.guide === 'walk' ? 'walk' : 'step') === o[0];
           return '<button type="button" role="radio" aria-checked="' + on + '" data-guide="' + o[0] + '"><i class="gd-r" aria-hidden="true"></i><span class="gd-b"><b>' + o[1] + '</b><span>' + o[2] + '</span></span></button>';
         }).join('') + '</div></div>' + nudgeRow() + '</section>' + installCard() +
+      // in Jarred's own words (2026-10-23): why the app exists, signed
+      '<section class="fs yu-why"><p class="pl-k">Why I built this</p><blockquote class="yu-read">Nobody hands you a mentor. For years I wished I had one: someone who had my back, kept an eye out for me, and called me on it, kindly, when I drifted. So I built the one I never had. The Other Half is the accountable friend in your corner every day, cheering your small wins and keeping you honest about what you really want.</blockquote><p class="yu-sign">Jarred</p></section>' +
       '<section class="fs"><p class="pl-k">Help us improve the app</p><p class="sc-q">Tell us what’s confusing, missing or great. We read every note, and it’s how we decide what to make better next.</p>' +
-        '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="What would make Other Half better for you?"></textarea></div>' +
+        '<div class="nt"><textarea class="fb-t" id="app-note" rows="3" aria-label="Your feedback on the app" placeholder="What would make the Other Half better for you?"></textarea></div>' +
         '<button type="button" class="send-btn sc-send" data-app-send>Send<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
         (appThanks ? '<p class="nx-ok" role="status">' + check + 'Thank you. We read every note, and yours helps shape what we improve next.</p>' : '') + '</section>' +
       (full ? '<section class="fs"><p class="pl-k">Your access</p><p class="pl-text"><b>Full app.</b> Every play, your patterns, a new plan every week, and as many goals as you want.</p></section>'
@@ -866,9 +939,11 @@
   // safety: if an entry suggests crisis or danger, gently show crisis resources. Never a diagnosis.
   var CRISIS = /\b(kill(ing)? myself|suicid\w*|end(ing)? (it all|my life)|take my (own )?life|want(ed)? to die|wish i (was|were) dead|better off (dead|without me)|don'?t want to (be here|live|wake up)|no reason to (live|go on)|can'?t go on|hurt(ing)? myself|self[- ]?harm\w*|cut(ting)? myself|overdos\w*|not safe at home|afraid for my life)\b/i;
   function risky(text) { return CRISIS.test(String(text || '').replace(/[’‘]/g, "'")); }
+  var heartIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 16.25s-6.25-3.75-6.25-8.4A3.35 3.35 0 0 1 10 6.1a3.35 3.35 0 0 1 6.25 1.75c0 4.65-6.25 8.4-6.25 8.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   function safeCard() {
     var s = jx().safety || {};
-    return '<section class="pb-safe jsafe" role="alert"><p class="pl-k">Take care</p>' +
+    // shown only when an entry suggests danger, so it stays open (help can't hide behind a tap), but calm: no alarm colors
+    return '<section class="jsafe" role="alert"><span class="safe-ic" aria-hidden="true">' + heartIcon + '</span>' +
       '<h2 class="lk-t">' + esc(s.title || 'You don’t have to carry this alone') + '</h2>' +
       '<p class="pl-text">' + esc(s.text || 'If you’re thinking about hurting yourself, or you’re not safe right now, please reach out now. Call your local emergency number or a crisis line. In the US and Canada, you can call or text 988, any time.') + '</p>' +
       '<a class="yu-link" href="https://findahelpline.com" target="_blank" rel="noopener">' + esc(s.link || 'Find a crisis line where you are') + '<span aria-hidden="true">→</span></a>' +
@@ -1286,14 +1361,14 @@
     // sheet, a short scroll down. Older iPhones have Share right in the toolbar.
     return '<ol class="nd-steps"><li>In Safari, tap <b>•••</b> and then <b>Share</b> ' + shareIcon + ', or tap Share right in the toolbar if you see it there.</li>' +
       '<li>Scroll down a little and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>' +
-      '<li>Open Other Half from your Home Screen' + (forNudges ? ' and turn on your nudge in You.' : ', and it opens full screen like any app.') + '</li></ol>';
+      '<li>Open the Other Half from your Home Screen' + (forNudges ? ' and turn on your nudge in You.' : ', and it opens full screen like any app.') + '</li></ol>';
   }
   function nudgeHelp(where) {
     if (ND.where !== where || !ND.show) return '';
     var cal = '<a class="pl-do nd-cal" href="' + esc(calUrl()) + '" data-nd-cal>' + calIcon + '<span>Add it to my calendar</span></a>';
     var t = timeLabel(nudgeTime());
-    if (ND.show === 'cal-off') return '<div class="nd-help" role="status"><p class="pt-e">To stop the reminder, delete “Your Other Half step” in your calendar.</p></div>';
-    if (ND.show === 'cal-again') return '<div class="nd-help"><p class="fb-q">Move your reminder to ' + t + '</p><p class="pt-e">Add the new time, then delete the old “Your Other Half step” in your calendar.</p>' + cal + '</div>';
+    if (ND.show === 'cal-off') return '<div class="nd-help" role="status"><p class="pt-e">To stop the reminder, delete “The Other Half: today’s step” in your calendar.</p></div>';
+    if (ND.show === 'cal-again') return '<div class="nd-help"><p class="fb-q">Move your reminder to ' + t + '</p><p class="pt-e">Add the new time, then delete the old “The Other Half: today’s step” in your calendar.</p>' + cal + '</div>';
     if (ND.show === 'home') return '<div class="nd-help"><p class="fb-q">On iPhone, nudges come from the app on your Home Screen.</p>' + homeSteps(true) +
       '<p class="pt-e nd-or">Or let your calendar do the nudging instead.</p>' + cal + '</div>';
     if (ND.show === 'denied') return '<div class="nd-help"><p class="fb-q">Notifications are off for this app.</p><p class="pt-e">Turn them on in your phone’s Settings and try again, or let your calendar do the nudging.</p>' + cal + '</div>';
@@ -1331,13 +1406,13 @@
     if (standalone()) return '';
     // on a computer: how to get it onto their phone, for iPhone and Android
     if (!installEvt && !IOS && !TOUCH) {
-      return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put Other Half on your phone</h2>' +
+      return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put the Other Half on your phone</h2>' +
         '<p class="pl-text">It’s at its best as an app on your phone, opening with one tap, full screen, right where your day happens.</p>' +
         '<ol class="nd-steps"><li>Open this page in your phone’s browser.</li>' +
         '<li><b>On iPhone</b>, tap <b>•••</b> in Safari, then <b>Share</b> ' + shareIcon + ', scroll down a little and tap <b>Add to Home Screen</b>.</li>' +
         '<li><b>On Android</b>, tap the menu ' + menuIcon + ' and choose <b>Add to Home Screen</b> or <b>Install app</b>.</li></ol></section>';
     }
-    return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put Other Half on your Home Screen</h2>' +
+    return '<section class="sc in-card"><p class="pl-k">On your phone</p><h2 class="lk-t">Put the Other Half on your Home Screen</h2>' +
       '<p class="pl-text">Open it with one tap, full screen, just like your other apps.' + (IOS ? ' On iPhone, it’s also how your daily nudge reaches you.' : '') + '</p>' +
       (installEvt ? '<button type="button" class="pl-do" data-install>' + homeIcon + '<span>Add to Home Screen</span></button>'
         : IOS ? homeSteps(false)
@@ -1368,42 +1443,125 @@
     half: '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5v2M3.5 12h2M6 6l1.4 1.4M18 6l-1.4 1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11 25.5h12.5a4.5 4.5 0 00.3-9 6 6 0 00-11.5 1.6A3.75 3.75 0 0011 25.5z" fill="var(--wx-fill,#fff)" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
     rough: '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M9.5 20h14a4.75 4.75 0 00.3-9.5 6.25 6.25 0 00-12 1.75A3.9 3.9 0 009.5 20z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 23.5l-1.25 3M17 23.5l-1.25 3M22 23.5l-1.25 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
   };
+  // how many days in a row they've opened the app, counting today, and whether they're back after a gap.
+  // Review: ?streak=N pretends N days in a row, ?streak=back pretends a return after a gap.
+  function openRun() {
+    var force = REVIEW && params.get('streak');
+    if (force === 'back') return { n: 1, back: true };
+    if (force && /^\d+$/.test(force)) return { n: +force, back: false };
+    var list = st.opened || [], d = new Date(), n = 0;
+    while (list.indexOf(ymd(d)) >= 0) { n++; d.setDate(d.getDate() - 1); }
+    return { n: n, back: n <= 1 && list.some(function (x) { return x < ymd(d); }) };
+  }
+  // ---- reading their last few days, so the welcome's words fit how things are actually going
+  var NUMW = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  function numWord(n) { return n >= 0 && n <= 10 ? NUMW[n] : String(n); }
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function fill(s, v) { return String(s || '').replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }); }
+  // the days before `day`: runs of good or hard check-ins, yesterday's steps and skips, when they usually do their
+  // steps (from when they marked them done), and whether they're on a run of opening the app or back after a gap.
+  // Review: ?pattern=back|hard|showedup|tired|good|alldone|mornings|evenings pretends that story.
+  function recent(day) {
+    var r = { hard: 0, good: 0, yCi: st.checkin[day - 1] || null, yDone: 0, ySteps: 0, yTired: false, when: null, x: 0, y: 0 }, d;
+    for (d = day - 1; d >= 1 && st.checkin[d] === 'rough'; d--) r.hard++;
+    for (d = day - 1; d >= 1 && st.checkin[d] === 'full'; d--) r.good++;
+    var prev = plan && plan.days[day - 2];
+    if (prev && prev.kind === 'step') {
+      r.ySteps = prev.steps.length; r.yDone = stepsDone(prev);
+      r.yTired = !r.yDone && prev.steps.some(function (s) { var g = fb.skip[key(prev, s)] || {}; return g.action === 'skip' && /tired/i.test(g.note || ''); });
+    }
+    var hours = Object.keys(st.at).map(function (k) { return new Date(st.at[k]).getHours(); });
+    if (hours.length >= 3) {
+      var am = hours.filter(function (h) { return h < 12; }).length, pm = hours.filter(function (h) { return h >= 17; }).length;
+      if (am / hours.length >= .7) { r.when = 'morning'; r.x = am; } else if (pm / hours.length >= .7) { r.when = 'evening'; r.x = pm; }
+      r.y = hours.length;
+    }
+    var run = openRun(); r.back = run.back; r.streak = run.n;
+    var f = REVIEW && params.get('pattern');
+    // a preview starts from a blank slate, so only the story asked for shows
+    if (f) Object.assign(r, { hard: 0, good: 0, yCi: null, yDone: 0, ySteps: 0, yTired: false, when: null, back: false, streak: 1 }, { back: { back: true }, hard: { yCi: 'rough', hard: 2, yDone: 1, ySteps: 2 }, showedup: { yCi: 'rough', hard: 1, yDone: 1, ySteps: 2 },
+      tired: { yTired: true, yDone: 0, yCi: 'half' }, good: { yCi: 'full', good: 3 }, alldone: { yDone: 2, ySteps: 2, yCi: 'half' },
+      mornings: { when: 'morning', x: 4, y: 5 }, evenings: { when: 'evening', x: 4, y: 5 } }[f] || {});
+    return r;
+  }
+  // the line under the greeting: the first pattern that fits, or the plan's line for the day. Days 1, 4 and 7 keep
+  // their own line, since it tells them what the day holds (the start, the honest question, the look back).
+  function dayLine(r) {
+    var w = cheer().welcome || {}, P = w.patterns || {}, base = (w.days || [])[T - 1] || w.later || '', part = skyPart();
+    if (T === 1 || T === 4 || T === 7) return base;
+    var line = (r.back ? P.back
+      : r.hard >= 2 ? fill(P.hardRun, { n: numWord(r.hard) })
+      : r.yCi === 'rough' && r.yDone ? P.showedUp
+      : r.yTired ? P.tired
+      : r.good >= 3 ? fill(P.goodRun, { n: numWord(r.good) })
+      : r.ySteps > 1 && r.yDone === r.ySteps ? P.allDone
+      : r.when === 'morning' && part === 'morning' ? fill(P.mornings, { x: r.x, y: r.y })
+      : r.when === 'evening' && (part === 'evening' || part === 'night') ? fill(P.evenings, { x: r.x, y: r.y })
+      : null);
+    var L = w.limits || {};
+    return line && (!L.line || line.length <= L.line) ? line : base;
+  }
+  // the reply to their answer, which says something about the day before when it can (also the line under Today's heading)
+  function replyFor(day, ci, many) {
+    var w = cheer().welcome || {}, R = w.replies || {}, y = recent(day).yCi, L = w.limits || {};
+    var base = w.today ? w.today[ci === 'half' && many ? 'halfMany' : ci] || '' : '';
+    var said = ci === 'full' && y === 'rough' ? R.goodAfterHard : ci === 'rough' && y === 'rough' ? R.hardAgain : ci === 'full' && y === 'full' ? R.goodAgain : '';
+    return said && (!L.reply || said.length <= L.reply) ? said : base;
+  }
+  var WL_ARROW = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // after they answer: the reply, and Let's go in the navy of the app's main buttons
+  function wlAfter(p, ci) {
+    var w = cheer().welcome || {}, d = p.days[T - 1] || p.days[0], many = d.kind === 'step' && d.steps.length > 1;
+    return '<div class="wl-after"><p class="wl-reply" role="status">' + esc(replyFor(T, ci, many)) + '</p>' +
+      '<button type="button" class="lk-btn wl-go" data-wl-go><span>' + esc(w.go || 'Let’s go') + '</span>' + WL_ARROW + '</button></div>';
+  }
   function welcomeView(p) {
     var w = cheer().welcome || {}, part = skyPart(), d = p.days[T - 1] || p.days[0];
     var many = d.kind === 'step' && d.steps.length > 1, ci = st.checkin[T];
     // said the way a friend would: short and warm, with their name once we know it
-    var hello = p.name
-      ? { morning: 'Morning, ', afternoon: 'Hey, ', evening: 'Evening, ', night: 'Hey, ' }[part] + p.name + '.'
-      : { morning: 'Morning.', afternoon: 'Hey there.', evening: 'Evening.', night: 'Hey, night owl.' }[part];
+    var L = w.limits || {}, plain = { morning: 'Morning.', afternoon: 'Hey there.', evening: 'Evening.', night: 'Hey, night owl.' }[part];
+    var hello = p.name ? { morning: 'Morning, ', afternoon: 'Hey, ', evening: 'Evening, ', night: 'Hey, ' }[part] + p.name + '.' : plain;
+    // a long name would wrap the greeting: try the shorter "Hey, name.", then no name
+    if (L.hello && hello.length > L.hello) hello = ('Hey, ' + p.name + '.').length <= L.hello ? 'Hey, ' + p.name + '.' : plain;
     // three quotes for the day, different each day of the week; they take turns in the same panel
-    var quotes = w.quotes || [], qn = quotes.length, qset = [];
-    if (qn) [0, 3, 6].forEach(function (o) { var q = quotes[(T - 1 + o) % qn]; if (qset.indexOf(q) < 0) qset.push(q); });
-    var ask = (w.ask || 'How’s today treating you?').replace(/\?$/, (p.name ? ', ' + p.name : '') + '?');
-    var reply = ci && w.today ? w.today[ci === 'half' && many ? 'halfMany' : ci] : '';
+    var r = recent(T);
+    // the first quote fits the moment: staying power after hard days, enjoying it on a good run, starting again after a
+    // gap, the look back on day 7, the start on day 1. The other two take turns from the full set.
+    var quotes = (w.quotes || []).filter(function (q) { return (!L.quote || q.q.length <= L.quote) && (!L.by || q.by.length <= L.by); }), qn = quotes.length, qset = [];
+    var theme = r.back ? 'back' : r.yCi === 'rough' || r.hard ? 'hard' : r.good >= 2 ? 'enjoy' : T === 7 ? 'reflect' : T === 1 ? 'start' : null;
+    var fits = theme ? quotes.filter(function (q) { return (q.for || []).indexOf(theme) >= 0; }) : [];
+    if (fits.length) qset.push(fits[(T - 1) % fits.length]);
+    if (qn) [0, 3, 6].forEach(function (o) { var q = quotes[(T - 1 + o) % qn]; if (qset.length < 3 && qset.indexOf(q) < 0) qset.push(q); });
+    // the question: after a hard day it says so; it gets familiar once they've shown up three days in a row, and says
+    // welcome back after a gap
+    var asks = r.back ? w.askBack : r.streak >= 3 ? w.askAgain : null;
+    var ask = T > 1 && r.yCi === 'rough' && w.askAfterHard ? w.askAfterHard
+      : asks && asks.length ? asks[r.streak % asks.length].replace('{n}', cap(numWord(r.streak))) : w.ask || 'How’s today treating you?';
+    if (L.ask && ask.length > L.ask) ask = w.ask || 'How’s today treating you?';
+    var named = p.name ? ask.replace(/\?$/, ', ' + p.name + '?') : ask;
+    ask = !L.ask || named.length <= L.ask ? named : ask;
     var date = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    var arrowIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     // the week so far: a dot per day, filled when it's done, ringed for today
     var week = p.days.map(function (x, n) { var s = dayState(x); return '<i class="' + (s === 'kept' ? 'is-done' : x.day === T ? 'is-now' : '') + '" style="--i:' + n + '"></i>'; }).join('');
     // a few motes of light drifting up through the sky (fixed, not random, so every visit feels the same)
     var motes = '';
     for (var m = 0; m < 9; m++) motes += '<i class="wl-mote" style="--x:' + ((m * 37 + 11) % 92 + 4) + '%;--s:' + (2 + (m * 7) % 3) + 'px;--t:' + (13 + (m * 5) % 9) + 's;--dl:-' + ((m * 3.7) % 13).toFixed(1) + 's"></i>';
     // the entrance plays once; picking an answer re-renders without replaying it
-    return '<section class="wl wl--' + part + (wlPlayed ? ' is-on' : '') + '" aria-labelledby="wl-hi">' +
+    return '<section class="wl wl--' + part + (wlPlayed ? ' is-on' : '') + (ci ? ' is-answered' : '') + '" aria-labelledby="wl-hi">' +
       '<div class="wl-sky" aria-hidden="true"><i class="wl-glow"></i><i class="wl-rays"></i><i class="wl-sun"></i>' + (part === 'night' ? '<i class="wl-stars"></i><i class="wl-stars wl-stars--b"></i>' : '') +
         '<i class="wl-cloud wl-c1"></i><i class="wl-cloud wl-c2"></i><i class="wl-cloud wl-c3"></i><i class="wl-hz"></i>' + motes + '</div>' +
       '<header class="wl-top"><p class="wl-date wl-in" style="--d:0">' + esc(date) + '</p>' +
         '<p class="wl-week wl-in" style="--d:1" role="img" aria-label="Day ' + T + ' of 7">' + week + '</p>' +
         '<h1 class="wl-hi" id="wl-hi">' + hello.split(' ').map(function (x, n) { return '<span class="wl-w" style="--w:' + n + '">' + esc(x) + '</span>'; }).join(' ') + '</h1>' +
-        '<p class="wl-line wl-in" style="--d:3">' + esc((w.days || [])[T - 1] || w.later || '') + '</p></header>' +
-      (qset.length ? '<figure class="wl-q wl-in" style="--d:4"><div class="wl-qs">' + qset.map(function (q, n) {
+        '<p class="wl-line wl-in" style="--d:3">' + esc(dayLine(r)) + '</p></header>' +
+      (qset.length ? '<figure class="wl-q wl-in" style="--d:4"><p class="wl-qk">A thought for today</p><div class="wl-qs">' + qset.map(function (q, n) {
         return '<div class="wl-qi' + (n ? '' : ' is-on') + '"' + (n ? ' aria-hidden="true"' : '') + '><blockquote>' + esc(q.q) + '</blockquote><figcaption>' + esc(q.by) + '</figcaption></div>';
       }).join('') + '</div></figure>' : '') +
       '<div class="wl-card wl-in" style="--d:5"><p class="wl-ask" id="wl-ask">' + esc(ask) + '</p>' +
         '<div class="wl-o" role="radiogroup" aria-labelledby="wl-ask">' + [['full', STEAM.full], ['half', STEAM.half], ['rough', STEAM.rough]].map(function (o) {
           return '<button type="button" role="radio" aria-checked="' + (ci === o[0]) + '" data-wl="' + o[0] + '"><span class="wl-ic">' + wxIcons[o[0]] + '</span><span>' + o[1] + '</span><i class="wl-ok" aria-hidden="true">' + check + '</i></button>';
         }).join('') + '</div>' +
-        (ci ? '<p class="wl-reply" role="status">' + esc(reply) + '</p><button type="button" class="pl-do wl-go" data-wl-go><span>' + esc(w.go || 'Let’s go') + '</span>' + arrowIcon + '</button>'
-          : '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button>') +
+        (ci ? wlAfter(p, ci) : '<button type="button" class="lnk wl-skip" data-wl-skip>Straight to today</button>') +
       '</div></section>';
   }
   // answering is the way in: the pick lands (it lifts, the others recede), then the welcome gives way to Today. Where
@@ -1415,9 +1573,20 @@
     var sec = root.querySelector('.wl');
     if (!sec) { render(); return; }
     [].forEach.call(sec.querySelectorAll('[data-wl]'), function (b) { b.setAttribute('aria-checked', String(b === btn)); b.classList.remove('is-press'); });
-    sec.classList.remove('is-idle'); sec.classList.add('is-on', 'is-picked');
-    wlLeaving = true;
-    setTimeout(function () { leaveWelcome(btn); }, calm ? 0 : 620);
+    sec.classList.remove('is-idle'); sec.classList.add('is-on', 'is-answered');
+    // the reply and Let's go take the place of "Straight to today"; what's above eases up to make room
+    var card = sec.querySelector('.wl-card'), old = card && card.querySelector('.wl-after, .wl-skip');
+    if (!card) return;
+    var parts = [].slice.call(sec.querySelectorAll('.wl-top, .wl-q, .wl-card')), tops = parts.map(function (x) { return x.getBoundingClientRect().top; });
+    var box = document.createElement('div'); box.innerHTML = wlAfter(plan, o);
+    var after = box.firstChild;
+    if (old) old.parentNode.replaceChild(after, old); else card.appendChild(after);
+    if (!calm && sec.animate) parts.forEach(function (x, i) {
+      var dy = tops[i] - x.getBoundingClientRect().top;
+      if (Math.abs(dy) > 1) x.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 520, easing: EASE });
+    });
+    // keyboard users land on Let's go; a tap leaves focus where it was, so no ring appears
+    var goBtn = after.querySelector('.wl-go'); if (goBtn && btn.matches(':focus-visible')) goBtn.focus({ preventScroll: true });
   }
   // the day's quotes take turns: every 7 seconds one softens out and the next comes into focus
   var wlQTimer = 0;
@@ -1474,6 +1643,7 @@
         if (to && to.getBoundingClientRect().top < window.innerHeight - 48) to.style.viewTransitionName = 'wl-mood'; else to = null;
       });
       var done = function () { document.documentElement.classList.remove('vt-welcome'); if (to) to.style.viewTransitionName = ''; wlLeaving = false; };
+      vt.ready.catch(function () { /* interrupted: the screen still changes */ });
       vt.finished.then(done, done);
       return;
     }
@@ -1508,7 +1678,7 @@
     document.body.classList.toggle('is-welcome', wl);
     if (wl) { var firstWl = !wlPlayed; root.innerHTML = welcomeView(plan); wlPlayed = true; nav.hidden = true;
       if (firstWl && !calm) wlQuotes();
-      if (firstWl && !st.checkin[T] && !calm) setTimeout(function () { var sec = root.querySelector('.wl'); if (sec && !sec.classList.contains('is-picked')) sec.classList.add('is-idle'); }, 5200); root.classList.remove('is-writing'); return; }
+      if (firstWl && !st.checkin[T] && !calm) setTimeout(function () { var sec = root.querySelector('.wl'); if (sec && !sec.classList.contains('is-picked') && !sec.classList.contains('is-answered')) sec.classList.add('is-idle'); }, 5200); root.classList.remove('is-writing'); return; }
     var views = { today: todayView, progress: progressView, playbook: playbookView, journal: journalView, you: youView };
     var was = {};
     root.querySelectorAll('details[data-l]').forEach(function (x) { was[x.getAttribute('data-l')] = x.open; });
@@ -1761,9 +1931,21 @@
       if (st.checkin[cd]) ciTimer = setTimeout(function () { if (st.checkin[cd] && sel === cd && tab === 'today' && !root.contains(document.activeElement && document.activeElement.tagName === 'TEXTAREA' ? document.activeElement : null)) { delete ciOpen[cd]; morphRender('#j-ci'); refocus('[data-ci-up]'); } }, 700);
       return;
     }
+    if ((el = t.closest('[data-rc-go]'))) { sendLine(el.getAttribute('data-rc-go')); return; }
+    if ((el = t.closest('[data-rc-skip]'))) { sendLine(el.getAttribute('data-rc-skip'), true); return; }
+    if ((el = t.closest('[data-rc-up]'))) { var ru = el.getAttribute('data-rc-up'); rcOpen[ru] = true; morphRender('#j-rc'); refocus('textarea[data-rc-enter]'); return; }
+    if ((el = t.closest('[data-size]'))) {
+      var zk = el.getAttribute('data-ref'), zv = el.getAttribute('data-size');
+      fb.step[zk] = Object.assign({}, fb.step[zk], { size: zv }); sync('step', zk, true); render(); refocus('[data-size="' + zv + '"][data-ref="' + zk + '"]');
+      settleStep(zk, 1400);
+      return;
+    }
     if ((el = t.closest('[data-feel]'))) {
       var fk = el.getAttribute('data-ref'), fv = el.getAttribute('data-feel');
-      fb.step[fk] = Object.assign({}, fb.step[fk], { feel: fv }); sync('step', fk, true); render(); refocus('[data-feel="' + fv + '"][data-ref="' + fk + '"]');
+      var was = (fb.step[fk] || {}).feel;
+      fb.step[fk] = Object.assign({}, fb.step[fk], { feel: fv }); if (was !== fv) delete fb.step[fk].size; // a new feel asks the size again
+      sync('step', fk, true); render(); refocus('[data-feel="' + fv + '"][data-ref="' + fk + '"]');
+      if (stepAnswered(fk)) settleStep(fk, 1400); else clearTimeout(stepT[fk]);
       return;
     }
     if ((el = t.closest('[data-skipopen]'))) {
@@ -1816,10 +1998,13 @@
     var wasKept = kept(plan.days[day - 1]);
     done[k] = !done[k];
     if (done[k]) st.at[k] = Date.now(); else delete st.at[k];
-    save();
+    // the plan engine learns from this: done or undone, and whether it was their own version of the step
+    fb.done[k] = { done: !!done[k], mine: !!(fb.skip[k] && fb.skip[k].action === 'change') };
+    sync('done', k, true);
     if (done[k]) nudgeDone(day);
-    // the encouragement shows first; then the card folds away unless they're still using it
-    if (done[k]) { fresh[k] = true; delete openCard[k]; setTimeout(function () { if (fresh[k] && !hold[k] && tab === 'today') { delete fresh[k]; said = null; morphRender(cardSel(k)); } else if (fresh[k] && hold[k]) { /* folds next visit */ } }, 1600); }
+    // a done step stays open, so they can say how it felt and finish any layers; it folds when they tap the arrow, or
+    // the next time they open the app (2026-10-23: folding on a timer cut people off mid-layer)
+    if (done[k]) { fresh[k] = true; delete openCard[k]; }
     else { delete fresh[k]; delete hold[k]; delete openCard[k]; }
     var list = cheer().done || [];
     // the day's first step gets the day's line; another goal's step on the same day gets a different one
@@ -1845,15 +2030,23 @@
     body.forEach(function (b) { b.animate(opening ? [{ opacity: 0, transform: 'translateY(-.25rem)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 460 : 260, delay: opening ? 100 : 0, easing: 'ease', fill: opening ? 'backwards' : 'forwards' }); });
     a.onfinish = a.oncancel = function () { if (!opening) { d.open = false; body.forEach(function (b) { b.getAnimations().forEach(function (x) { x.cancel(); }); }); } d.style.overflow = ''; d.removeAttribute('data-anim'); };
   });
-  // return in a gut-call note finishes it (shift+return still makes a new line)
+  // return in a gut-call note finishes it (shift+return still makes a new line); so does return in a step's note, and
+  // in today's line, which sends it
   root.addEventListener('keydown', function (e) {
     var t = e.target;
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && t.matches && t.matches('textarea[data-step-enter]')) {
+      e.preventDefault(); var sr = t.getAttribute('data-ref'); t.blur(); if (stepAnswered(sr)) settleStep(sr, 300); return;
+    }
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && t.matches && t.matches('textarea[data-rc-enter]')) {
+      e.preventDefault(); if (t.value.trim()) sendLine(t.getAttribute('data-ref')); else t.blur(); return;
+    }
     if (e.key !== 'Enter' || e.shiftKey || e.isComposing || !(t.matches && t.matches('textarea[data-gn-enter]'))) return;
     e.preventDefault();
     if (t.value.trim()) finishGut(t.getAttribute('data-ref')); else t.blur();
   });
   // writing their own words pauses the fold; leaving the box with words in it settles the skip
-  root.addEventListener('focusin', function (e) { var t = e.target; if (t.matches && t.matches('textarea[data-fb="skip"]')) clearTimeout(settleT[t.getAttribute('data-ref')]); });
+  root.addEventListener('focusin', function (e) { var t = e.target; if (t.matches && t.matches('textarea[data-fb="skip"]')) clearTimeout(settleT[t.getAttribute('data-ref')]); if (t.matches && t.matches('textarea[data-fb="step"]')) clearTimeout(stepT[t.getAttribute('data-ref')]); });
+  root.addEventListener('focusout', function (e) { var t = e.target; if (t.matches && t.matches('textarea[data-fb="step"]') && stepAnswered(t.getAttribute('data-ref'))) settleStep(t.getAttribute('data-ref'), 1200); });
   root.addEventListener('focusout', function (e) {
     var t = e.target; if (!(t.matches && t.matches('textarea[data-fb="skip"]'))) return;
     var sk2 = t.getAttribute('data-ref');
@@ -1912,6 +2105,9 @@
       plan = p.plan || p;
       // ticks saved before Done went per-step (a step day keyed by the day alone) carry over as every step done
       plan.days.forEach(function (d) { if (d.kind === 'step' && done[d.day]) { d.steps.forEach(function (s) { done[key(d, s)] = true; }); delete done[d.day]; } });
+      // today counts as a day they showed up
+      var openedToday = ymd(new Date());
+      if (st.opened[st.opened.length - 1] !== openedToday) st.opened = st.opened.concat(openedToday).slice(-30);
       save();
       T = todayNum();
       sel = Math.min(T, 7);

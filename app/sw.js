@@ -28,7 +28,7 @@ self.addEventListener('fetch', function (e) {
 self.addEventListener('push', function (e) {
   var d = {};
   try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data && e.data.text() }; }
-  e.waitUntil(self.registration.showNotification(d.title || 'Other Half', {
+  e.waitUntil(self.registration.showNotification(d.title || 'The Other Half', {
     body: d.body || 'Today’s step is ready.',
     icon: '/app/icons/icon-192.png',
     badge: '/app/icons/badge-96.png',

@@ -1,14 +1,16 @@
 // POST /api/feedback: the app saves what people tell it, in their own words, as they work through a plan.
-// One row per plan + kind + ref, updated in place, so changing an answer just overwrites it.
-// Table: plan_feedback (docs/supabase/plan_feedback.sql). This is what next week's plan is built from.
+// Two places: plan_feedback keeps each latest answer (one row per plan + kind + ref, overwritten when they change it),
+// and the events log (docs/supabase/engine.sql) keeps every answer in order, never overwritten. The plan engine
+// learns from the log. Until engine.sql has run, the log write fails quietly and the latest answer still saves.
 //
 // Body: { plan: plan id, kind, ref, data }. Kinds and their data are listed in the SQL file.
 // Environment variables: SUPABASE_URL and SUPABASE_SECRET_KEY.
-// Once the plans table exists, also check that the plan id is real before saving.
 const { reply } = require('../lib/resend');
+const store = require('../lib/store');
 
 const KINDS = {
-  step: { feel: ['easy', 'okay', 'hard'], note: 'text' },
+  done: { done: [true, false], mine: [true, false] },   // marked done (or undone); mine: their own version of the step
+  step: { feel: ['easy', 'okay', 'hard'], size: ['more', 'same', 'less'], note: 'text' },   // size: bigger, same or smaller next time
   skip: { action: ['skip', 'change'], note: 'text' },
   checkin: { day: ['full', 'half', 'rough'], note: 'text' },
   receipt: { text: 'text' },
@@ -53,12 +55,17 @@ module.exports = async function feedback(req, res) {
   const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) { console.error('feedback: Supabase not configured'); return reply(res, 503, { ok: false, error: 'not_configured' }); }
 
-  const row = { plan_id: plan, kind, ref, data: clean(kind, body.data), updated_at: new Date().toISOString() };
-  const r = await fetch(url.replace(/\/+$/, '') + '/rest/v1/plan_feedback?on_conflict=plan_id,kind,ref', {
-    method: 'POST',
-    headers: { apikey: key, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify(row)
-  });
-  if (!r.ok) { console.error('feedback: not saved', r.status, await r.text().catch(() => '')); return reply(res, 502, { ok: false, error: 'not_saved' }); }
+  const data = clean(kind, body.data);
+  const row = { plan_id: plan, kind, ref, data, updated_at: new Date().toISOString() };
+  const [latest, logged] = await Promise.all([
+    fetch(url.replace(/\/+$/, '') + '/rest/v1/plan_feedback?on_conflict=plan_id,kind,ref', {
+      method: 'POST',
+      headers: { apikey: key, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(row)
+    }),
+    store.addEvent({ link: plan, kind, ref, data }).then(() => true, (e) => { console.error('feedback: not logged', e.status || '', e.message); return false; })
+  ]);
+  if (!latest.ok && !logged) { console.error('feedback: not saved', latest.status, await latest.text().catch(() => '')); return reply(res, 502, { ok: false, error: 'not_saved' }); }
+  if (!latest.ok) console.error('feedback: latest answer not saved', latest.status);
   return reply(res, 200, { ok: true });
 };

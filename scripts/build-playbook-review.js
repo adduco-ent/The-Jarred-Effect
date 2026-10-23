@@ -123,7 +123,7 @@ const tools = group('tools', 'side-tools', 'From the guide, and for each stage',
 
 const ids = ['shape', 'voice', 'hard', 'flow', 'loose', 'mirror'].concat(P.protocols.map((x) => 'pr-' + x.id), P.protocols.filter((x) => P.layers[x.id]).map((x) => 'ly-' + x.id), P.areas.map((a) => 'area-' + a.id), P.pathways.map((w) => 'path-' + w.id), P.reps.map((r) => r.id), P.shadowQuestions.map((q) => 'sq-' + q.id), ['going-deep']);
 
-const html = `<title>Other Half Playbook</title>
+const html = `<title>The Other Half Playbook</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">

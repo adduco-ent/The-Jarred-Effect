@@ -51,7 +51,7 @@ module.exports = async function nudgeSend(req, res) {
     const day = row.start_date ? dayOf(row.start_date, now.date) : 0;
     if (late < 0 || late >= WINDOW || row.last_sent === now.date || row.last_done === now.date) { skipped++; return; }
     if (row.tier !== 'paid' && row.start_date && (day < 1 || day > 7)) { skipped++; return; }
-    const payload = JSON.stringify({ title: 'Other Half', body: line(day), url: SITE + '/app/plan.html?id=' + encodeURIComponent(row.plan_id) + '#today' });
+    const payload = JSON.stringify({ title: 'The Other Half', body: line(day), url: SITE + '/app/plan.html?id=' + encodeURIComponent(row.plan_id) + '#today' });
     const where = base + '?endpoint=eq.' + encodeURIComponent(row.endpoint);
     try {
       await webpush.sendNotification({ endpoint: row.endpoint, keys: { p256dh: row.p256dh, auth: row.auth } }, payload, { TTL: 4 * 3600, urgency: 'normal' });

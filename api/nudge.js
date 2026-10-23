@@ -28,7 +28,7 @@ function calendar(q) {
   const url = SITE + '/app/plan.html' + (okPlan(q.plan) ? '?id=' + q.plan : '') + '#today';
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
   const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The Jarred Effect//Other Half//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The Jarred Effect//The Other Half//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT',
     'UID:other-half-nudge-' + (okPlan(q.plan) ? q.plan : 'plan') + '-' + time.replace(':', '') + '@thejarredeffect.com',
     'DTSTAMP:' + stamp,
@@ -36,10 +36,10 @@ function calendar(q) {
     'DTSTART:' + from.replace(/-/g, '') + 'T' + time.replace(':', '') + '00',
     'DURATION:PT10M',
     'RRULE:FREQ=DAILY' + (days ? ';COUNT=' + days : ''),
-    'SUMMARY:' + icsText('Your Other Half step'),
+    'SUMMARY:' + icsText('The Other Half: today’s step'),
     'DESCRIPTION:' + icsText('A few minutes is enough. Open your plan: ' + url),
     'URL:' + url,
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsText('Your Other Half step'), 'TRIGGER:PT0M', 'END:VALARM',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsText('The Other Half: today’s step'), 'TRIGGER:PT0M', 'END:VALARM',
     'END:VEVENT', 'END:VCALENDAR'
   ];
   return lines.join('\r\n') + '\r\n';

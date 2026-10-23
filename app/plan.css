@@ -521,8 +521,8 @@ body[data-screen="plan"] .oh-badge{border:1px solid transparent;background:linea
 .pb-steps{margin:0;padding:0;list-style:none;display:grid;gap:.875rem;counter-reset:s}
 .pb-steps li{position:relative;padding-left:2.125rem;font-size:.9375rem;line-height:1.55;color:var(--ink);counter-increment:s}
 .pb-steps li::before{content:counter(s);position:absolute;left:0;top:0;display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--sheen),var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.5);font-size:.75rem;font-weight:600;color:var(--accent-ink)}
-.pb-safe{margin-top:1.75rem;padding:1rem 1.125rem;border-radius:1rem;background:rgba(232,116,58,.06);box-shadow:inset 0 0 0 1px rgba(232,116,58,.18)}
-.pb-safe .pl-k{margin:0 0 .375rem;color:#a8471c}
+.pb-safe{margin-top:1.75rem;padding:1rem 1.125rem;border-radius:1rem;background:rgba(180,35,24,.06);box-shadow:inset 0 0 0 1px rgba(180,35,24,.18)}
+.pb-safe .pl-k{margin:0 0 .375rem;color:#b42318}
 @media (prefers-reduced-motion:reduce){.send-btn{transition:none}}
 .tb.is-full .tb-lock{display:none}
 
@@ -731,12 +731,12 @@ a.je:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .je-sw-i::after{content:"";position:absolute;top:.1875rem;left:.1875rem;width:1.375rem;height:1.375rem;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(14,26,44,.22),0 .125rem .375rem -.125rem rgba(14,26,44,.2);transition:transform .2s ease}
 .je-sw[aria-checked="true"] .je-sw-i{background:var(--sky-btn)}
 .je-sw[aria-checked="true"] .je-sw-i::after{transform:translateX(1.125rem)}
-.je-del{display:grid;gap:.5rem;padding:1rem 1.125rem;border-radius:1rem;background:rgba(232,116,58,.06);box-shadow:inset 0 0 0 1px rgba(232,116,58,.18)}
+.je-del{display:grid;gap:.5rem;padding:1rem 1.125rem;border-radius:1rem;background:rgba(180,35,24,.06);box-shadow:inset 0 0 0 1px rgba(180,35,24,.18)}
 .je-del-r{display:flex;align-items:center;gap:1rem;margin-top:.25rem}
-.je-del-b{display:inline-flex;align-items:center;gap:.375rem;min-height:2.5rem;padding:0 1rem 0 .875rem;border-radius:99px;border:1px solid rgba(168,71,28,.3);background:#fff;box-shadow:0 1px 2px rgba(14,26,44,.05);font:inherit;font-size:.875rem;font-weight:600;color:#a8471c;cursor:pointer;transition:border-color .2s ease,transform .15s ease}
+.je-del-b{display:inline-flex;align-items:center;gap:.375rem;min-height:2.5rem;padding:0 1rem 0 .875rem;border-radius:99px;border:1px solid rgba(180,35,24,.3);background:#fff;box-shadow:0 1px 2px rgba(14,26,44,.05);font:inherit;font-size:.875rem;font-weight:600;color:#b42318;cursor:pointer;transition:border-color .2s ease,transform .15s ease}
 .je-del-b svg{width:1rem;height:1rem}
-.je-del-b:hover{border-color:#a8471c}
-.je-del-b:focus-visible{outline:2px solid #a8471c;outline-offset:2px}
+.je-del-b:hover{border-color:#b42318}
+.je-del-b:focus-visible{outline:2px solid #b42318;outline-offset:2px}
 
 /* ways in from Today */
 .jgo{gap:.3125rem;min-height:2.5rem;padding:0;color:var(--accent-ink)}
@@ -939,8 +939,8 @@ a.pb-r:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-r
 .jr-ot span{font-size:.8125rem;line-height:1.45;color:var(--dim)}
 .jr-o[aria-checked="true"] .je-sw-i{background:var(--sky-btn)}
 .jr-o[aria-checked="true"] .je-sw-i::after{transform:translateX(1.125rem)}
-.jr-o.is-del{color:#a8471c}
-.jr-o.is-del .jr-oi{background:rgba(232,116,58,.08);box-shadow:inset 0 0 0 1px rgba(232,116,58,.2);color:#a8471c}
+.jr-o.is-del{color:#b42318}
+.jr-o.is-del .jr-oi{background:rgba(180,35,24,.08);box-shadow:inset 0 0 0 1px rgba(180,35,24,.2);color:#b42318}
 @media (prefers-reduced-motion:reduce){.jw-bar .jw-mic.is-on,.jw-st.is-live::before{animation:none}.jw-to button,.jr-o{transition:none}}
 
 /* ---- saving you can see (2026-10-22): a quiet line under each field. "Saving…" while typing, then a check and
@@ -1542,3 +1542,130 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 /* the day tracker: a step skipped on purpose is settled, shown in a soft lavender rather than navy */
 .db-s.is-skip i{background:linear-gradient(90deg,rgba(169,195,230,.75),rgba(184,168,222,.75));box-shadow:none}
 .db-s.is-skip span{color:var(--dim)}
+
+/* You: "Why I built this", a short note in Jarred's words, signed */
+.yu-sign{margin:.625rem 0 0 1.125rem;font-family:var(--serif);font-style:italic;font-size:.9375rem;color:var(--dim)}
+.yu-sign::before{content:"— "}
+
+/* the quote card, refined (2026-10-23): the badge bubble goes; a large, quiet quote mark sits in the glass instead.
+   The quote reads a touch larger, the author is set after an em dash in small serif italic (a name, never a sentence),
+   and the glass gets a lit top edge and a softer, deeper shadow so it floats instead of sitting flat */
+.wl-q{padding:2.375rem 1.5rem 1.25rem;border-radius:1.5rem;border-color:rgba(255,255,255,.72);background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.3));box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 1.5rem 2.75rem -2rem rgba(20,34,58,.45)}
+.wl-q::before{top:.5rem;left:50%;transform:translateX(-50%);width:auto;height:auto;padding:0;border-radius:0;background:none;box-shadow:none;font-family:var(--display);font-size:3rem;line-height:1;color:var(--accent);opacity:.22;pointer-events:none}
+.wl-q blockquote{font-size:1.0625rem;line-height:1.5;letter-spacing:-.003em;color:rgba(28,24,18,.9)}
+.wl-q figcaption{gap:.375rem;margin-top:.25rem;font-family:var(--serif);font-style:italic;font-size:.875rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--dim)}
+.wl-q figcaption::before{content:"—";width:auto;height:auto;background:none;opacity:.6}
+.wl-q figcaption::after{display:none}
+.wl--night .wl-q{border-color:rgba(239,231,218,.2);background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 1.5rem 2.75rem -2rem rgba(0,0,0,.6)}
+.wl--night .wl-q::before{color:#f4eee4;opacity:.3}
+.wl--night .wl-q blockquote{color:#f4eee4}
+.wl--night .wl-q figcaption{color:rgba(239,231,218,.7)}
+@keyframes wl-mark{from{opacity:0;transform:translateX(-50%) translateY(.375rem) scale(.6)}to{transform:translateX(-50%)}}
+@media (max-height:720px){.wl-q{padding:2.125rem 1.25rem 1.125rem}.wl-q::before{font-size:2.625rem}.wl-q blockquote{font-size:1rem}}
+
+/* answering (2026-10-23): the pick stays, the other two step back a little (still tappable, to change the answer), and
+   the reply and Let's go (navy, like Unlock) take the place of "Straight to today" */
+.wl.is-answered .wl-o button{transition:opacity .45s ease,transform .45s cubic-bezier(.22,1,.36,1),filter .45s ease}
+.wl.is-answered .wl-o button:not([aria-checked="true"]){opacity:.55;filter:saturate(.6)}
+.wl-after{display:grid;justify-items:center;gap:.5rem;text-align:center}
+.wl-after .wl-go{width:100%;min-height:3rem;margin-top:.25rem;animation-delay:.12s}
+.wl-after .wl-go svg{width:1rem;height:1rem}
+.wl-after .wl-go:active{transform:scale(.98)}
+/* legibility (2026-10-23): reading surfaces are solid white, so text sits on a clean, calm ground with no visual strain.
+   Cards go from a faint blue-tinted glass to white; the plain sections that sat right on the sky (You, the journal's
+   words) become the same white card; anything shown as "later" keeps readable text (a softer color, not see-through).
+   Every text color meets at least 4.5:1 against what's behind it. */
+.pl{--card-bg:linear-gradient(180deg,#ffffff 0%,#fdfdff 100%)}
+.fs{margin-top:1rem;padding:1.375rem;border-radius:1.5rem;border:1px solid transparent;background:var(--card-bg) padding-box,var(--card-rim) border-box;box-shadow:var(--card)}
+.fs--top{margin-top:1.25rem}
+.fs:has(.pb-mine){margin-top:2.25rem;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+.pg-row.is-future,.pg-week .pg-row.is-future{opacity:1}
+.pg-row.is-future .pg-t{color:var(--dim)}
+.pg-row.is-future .pg-dot{opacity:.6}
+.pg-feel .is-zero{opacity:.75}
+.ds-d.is-future{color:rgba(239,231,218,.62)}
+.lk-more{color:var(--dim)}
+.wl.is-answered .wl-o button:not([aria-checked="true"]){opacity:.72}
+.wl-q{background:linear-gradient(180deg,rgba(255,255,255,.74),rgba(255,255,255,.5))}
+
+/* the quote card, reworked (2026-10-23): the same width, radius and white as the question card, so the two line up as
+   one calm set; a small label instead of the floating quote mark; the author as a clean line under the quote. White on
+   every sky (night included), for legibility */
+.wl-q{align-self:stretch;max-width:none;margin-left:0;margin-right:0;padding:1.125rem 1.375rem 1.25rem;border-radius:1.75rem;border:1px solid rgba(255,255,255,.9);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(250,251,255,.86));box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(14,26,44,.05),0 1.25rem 2.5rem -1.5rem rgba(40,70,120,.3);text-align:center}
+.wl-q::before{display:none}
+.wl-qk{margin:0 0 .625rem;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.wl-q blockquote{font-size:1.125rem;line-height:1.45;color:var(--ink)}
+.wl-q figcaption{margin-top:.375rem;font-family:var(--sans);font-style:normal;font-size:.8125rem;font-weight:500;letter-spacing:.01em;color:var(--dim)}
+.wl--night .wl-q{border-color:rgba(255,255,255,.9);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(250,251,255,.86));box-shadow:inset 0 1px 0 #fff,0 1.25rem 2.5rem -1.5rem rgba(0,0,0,.5)}
+.wl--night .wl-q blockquote{color:var(--ink)}
+.wl--night .wl-q figcaption{color:var(--dim)}
+@media (max-height:720px){.wl-q{padding:1rem 1.25rem 1.125rem}.wl-q blockquote{font-size:1.0625rem}.wl-qk{margin-bottom:.5rem}}
+/* the bottom card, smaller (2026-10-23): tighter padding, a touch smaller question, shorter tiles with smaller icons */
+.wl-card{gap:.75rem;padding:1.125rem 1rem 1rem;border-radius:1.5rem}
+.wl-ask{font-size:1.0625rem}
+.wl-o{gap:.5rem}
+.wl-o button{min-height:4.75rem;gap:.375rem;padding:.625rem .25rem .5625rem;border-radius:1.0625rem;font-size:.875rem}
+.wl-ic{width:2.25rem;height:2.25rem}
+.wl-ic svg{width:1.375rem;height:1.375rem}
+.wl-skip{min-height:2.25rem;font-size:.875rem}
+.wl-reply{font-size:.875rem}
+.wl-after .wl-go{min-height:2.75rem}
+@media (prefers-reduced-motion:reduce){.wl.is-answered .wl-o button{transition:none}}
+
+/* calmer motion pass (2026-10-23, his ask: nothing snappy). Anything that appears, opens or moves content takes at least
+   half a second on the app's gentle ease-in-out; icons that turn as a section opens keep pace with it. Taps stay instant
+   (the .15s press-down), so buttons still feel responsive. */
+.nd-help,.pl-more[open] .pl-more-b,.pw-s{animation-duration:.6s;animation-timing-function:cubic-bezier(.45,0,.2,1)}
+.gn,.gt{animation-duration:.55s;animation-timing-function:cubic-bezier(.45,0,.2,1)}
+.pl-said,.pl-fold,.jw-ok{animation-duration:.55s;animation-timing-function:cubic-bezier(.45,0,.2,1)}
+.vt-tab::view-transition-old(root),.vt-tab::view-transition-new(root){animation-duration:.45s}
+.pl-fold-go svg,.pl-fold-x svg,.pl-more summary i::after,.pw summary i::after,.pl-orig summary::after{transition-duration:.5s;transition-timing-function:cubic-bezier(.45,0,.2,1)}
+.gd-r::after,.wl-ok{transition-duration:.35s}
+.ci-o button,.gn-p,.gt-r{transition-duration:.35s}
+.fb-s{transition-duration:.45s}
+.wl-reply{animation-duration:.7s}
+
+/* the size check under "How did it feel?" (2026-10-23): a quieter second question, two short choices */
+.fb-size{display:grid;gap:.5rem;margin-top:.875rem;animation:pl-open .6s cubic-bezier(.45,0,.2,1) both}
+.fb-q--sub{font-size:.9375rem}
+@media (prefers-reduced-motion:reduce){.fb-size{animation:none}}
+
+/* one line on today (2026-10-23): a round check sends it (it appears once there's something typed), then it settles
+   into a quiet row with Edit, the same way the check-in does */
+.rc .fbw{position:relative}
+.rc .fb-t[data-rc-enter]{padding-right:3rem}
+.rc .fb-t:placeholder-shown+.gn-go{opacity:0;transform:scale(.8);pointer-events:none}
+.rc--set{padding:1rem 1.125rem}
+.rc-set{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.75rem}
+.rc-ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--sky-btn);color:#fff;box-shadow:0 .1875rem .5rem -.3125rem rgba(20,34,58,.35)}
+.rc-ic svg{width:1rem;height:1rem}
+.rc-k{margin:0;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.rc-line{margin:.1875rem 0 0;font-family:var(--serif);font-size:1rem;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+.rc-skip{justify-self:center;min-height:2.25rem;font-size:.875rem;font-weight:500;color:var(--dim)}
+.rc--none .rc-line{font-family:var(--sans);font-size:.9375rem;color:var(--dim)}
+.rc .fbw:has(.fb-t:not(:placeholder-shown))~.rc-skip{display:none}
+.rc-skip{justify-self:start;padding-left:0}
+/* one line on today, spacing (2026-10-23): no empty status line under the box, and "No line today" keeps a full-size
+   tap area that sits inside the card's spacing, so the words rest evenly between the box and the card's edge */
+.rc .fb-s:empty{display:none}
+.rc-skip{min-height:2.75rem;margin:-.625rem 0 -.875rem;padding:0}
+.rc-skip{color:#b42318}
+.rc-skip:hover{color:#912018}
+/* one red (2026-10-23): every red in the app is the true red #b42318: delete, safety notes and No line today */
+
+/* safety notes, calmer (2026-10-23): a closed, quiet row (a small heart, "A note on getting support"), and when opened,
+   dark, easy text on white. No red or warning colors, so nothing reads as an alarm. The journal's crisis card stays open
+   (help can't hide behind a tap) but is a calm white card too. */
+.safe-c{padding:.25rem 1.375rem}
+.safe-n summary{padding-block:.875rem}
+.safe-l{display:inline-flex;align-items:center;gap:.625rem;font-weight:600;color:var(--ink)}
+.safe-l svg,.safe-ic svg{width:1.125rem;height:1.125rem;color:var(--accent)}
+.safe-t{margin:0;font-size:.9375rem;line-height:1.65;color:var(--ink)}
+.safe-n .pl-more-b{padding-bottom:1rem}
+.pl-more-b .pl-safe{padding:.75rem .875rem;border-radius:.75rem;background:#f5f7fc;font-size:.9375rem;line-height:1.6;color:var(--ink)}
+.jsafe{display:grid;gap:.625rem;margin-top:1rem;padding:1.375rem;border-radius:1.5rem;border:1px solid transparent;background:var(--card-bg) padding-box,var(--card-rim) border-box;box-shadow:var(--card)}
+.jsafe .safe-ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent-soft)}
+.jsafe .lk-t{font-size:1.25rem;color:var(--ink)}
+.jsafe .pl-text{font-size:.9375rem;line-height:1.65;color:var(--ink)}
+.safe-n .pl-more-b .safe-t{color:var(--ink)}
+.safe-c .safe-n{border-top:0;margin-top:0}

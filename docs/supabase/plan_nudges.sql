@@ -21,3 +21,5 @@ create index if not exists plan_nudges_plan_idx on public.plan_nudges (plan_id);
 
 -- Only the server (with the secret key) reads or writes this table. No public policies on purpose.
 alter table public.plan_nudges enable row level security;
+-- New tables start locked in this project, even to the server, so let the server's secret key in.
+grant select, insert, update, delete on table public.plan_nudges to service_role;

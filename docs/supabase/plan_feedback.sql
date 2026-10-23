@@ -4,7 +4,8 @@
 -- Only the server (with the secret key) can read or write it: row level security is on, with no public policies.
 --
 -- kind (ref) → data:
---   step     (day.ask, e.g. "3.1") → { feel: easy | okay | hard, note }
+--   done     (day.ask, e.g. "3.1") → { done: true | false, mine: true | false }   marked done or undone (added 2026-10-22)
+--   step     (day.ask, e.g. "3.1") → { feel: easy | okay | hard, size: more | same | less, note }   size asked after easy or hard
 --   skip     (day.ask)             → { action: skip | change, note }   their gut call, and why
 --   checkin  (day)                 → { day: full | half | rough, note }
 --   receipt  (day)                 → { text }                          one line on what they did
