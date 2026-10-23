@@ -1504,3 +1504,32 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .ds-d.is-sel.is-gliding{background:transparent;border-color:transparent;box-shadow:none}
 .pg-row.is-gut .pg-dot{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(143,179,227,.6)}
 .pg-dot .an-i{width:1rem;height:1rem}
+
+/* the day's sign-off (2026-10-22): a calm, centered breath, no dashed border and no list of tomorrow's steps */
+.tm.tm--rest{display:grid;justify-items:center;gap:.5rem;margin-top:1rem;padding:1.5rem 1.375rem 1.375rem;border:1px solid transparent;border-radius:1.5rem;text-align:center;
+  background:radial-gradient(90% 80% at 50% 0%,rgba(198,182,238,.18),rgba(198,182,238,0) 70%) padding-box,linear-gradient(180deg,#f7f8fd,#f1f3fa) padding-box,linear-gradient(180deg,#fff,rgba(214,220,238,.8)) border-box;box-shadow:0 1px 2px rgba(14,26,44,.04),0 1rem 2rem -1.5rem rgba(20,34,58,.22)}
+.tm-moon{display:grid;place-items:center;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--sky);box-shadow:inset 0 0 0 1px rgba(143,179,227,.4);color:var(--accent-ink)}
+.tm-moon svg{width:1.125rem;height:1.125rem}
+.tm-t{margin:.25rem 0 0;font-family:var(--display);font-weight:400;font-size:1.5rem;line-height:1.15;color:var(--ink)}
+.tm-x{max-width:17rem;margin:0;font-size:.9375rem;line-height:1.55;color:var(--dim);text-wrap:balance}
+.tm--rest .tm-n{margin-top:.25rem}
+
+/* the paywall, once the free week is done: their week in numbers, then the full app on navy, one clear button */
+.pw-wall{display:grid;gap:1rem}
+.pw-card{position:relative;overflow:hidden;padding:1.5rem 1.375rem 1.375rem;border-radius:1.75rem;border:1.5px solid transparent;color:var(--cream);
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 40%) padding-box,radial-gradient(110% 90% at 100% 100%,rgba(86,132,204,.55),rgba(86,132,204,0) 62%) padding-box,radial-gradient(80% 70% at 0% 110%,rgba(150,128,212,.3),rgba(150,128,212,0) 60%) padding-box,linear-gradient(180deg,#0f1c30,#0d1829) padding-box,linear-gradient(170deg,rgba(255,255,255,.34),rgba(255,255,255,.06) 38%,rgba(143,179,227,.38)) border-box;box-shadow:var(--card-dark)}
+.pw-k{display:flex;align-items:center;gap:.625rem;margin:0 0 .875rem;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(239,231,218,.7)}
+.pw-k .oh-dot{box-shadow:0 0 0 1.5px rgba(239,231,218,.7)}
+.pw-t{margin:0 0 1.125rem;font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.12;color:#f4eee4}
+.pw-rows{list-style:none;margin:0 0 1.375rem;padding:0;display:grid;gap:.875rem}
+.pw-rows li{display:grid;grid-template-columns:1.375rem minmax(0,1fr);gap:.75rem;align-items:start}
+.pw-ck{display:grid;place-items:center;width:1.375rem;height:1.375rem;margin-top:.0625rem;border-radius:50%;background:linear-gradient(180deg,#c3d6f2,#8fb3e3);color:var(--shadow)}
+.pw-ck svg{width:.8125rem;height:.8125rem}
+.pw-rows b{display:block;font-size:.9375rem;font-weight:600;line-height:1.35;color:#f4eee4}
+.pw-rows small{display:block;margin-top:.125rem;font-size:.8125rem;line-height:1.45;color:rgba(239,231,218,.7)}
+.pw-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;min-height:3.25rem;border:0;border-radius:99px;background:linear-gradient(180deg,#fff,#eef3fb);box-shadow:inset 0 1px 0 #fff,0 .5rem 1.25rem -.625rem rgba(0,0,0,.5);font:inherit;font-size:1rem;font-weight:600;color:var(--accent-ink);cursor:pointer;transition:transform .2s ease}
+.pw-btn svg{width:1.125rem;height:1.125rem}
+.pw-btn:active{transform:scale(.98)}
+.pw-btn:focus-visible{outline:2px solid #a9c3e6;outline-offset:3px}
+.pw-card .lk-soon{margin:.875rem .25rem 0;font-size:.8125rem;line-height:1.5;text-align:center;color:rgba(239,231,218,.78)}
+.pw-more{justify-self:center}

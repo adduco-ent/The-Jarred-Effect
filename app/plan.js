@@ -134,6 +134,7 @@
     if (d.kind !== 'step' || !kept(d)) return false;
     return d.steps.filter(function (s) { return done[key(d, s)]; }).every(function (s) { return (fb.skip[key(d, s)] || {}).action === 'change'; });
   }
+  var moonIcon = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15.5 12.6A6.25 6.25 0 017.4 4.5a6.25 6.25 0 108.1 8.1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   var anchorIcon = '<svg class="an-i" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="4.75" r="1.75" stroke="currentColor" stroke-width="1.6"/><path d="M10 6.5V17M6.75 9.5h6.5M4.25 12.25c.55 2.75 2.95 4.75 5.75 4.75s5.2-2 5.75-4.75M4.25 12.25l-1 1.5M4.25 12.25l1.75.25M15.75 12.25l1 1.5M15.75 12.25l-1.75.25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function titles(d) { return d.kind === 'step' ? d.steps.map(function (s) { return s.title; }) : [d.title]; }
 
@@ -451,6 +452,26 @@
     return '<section class="lk"><p class="lk-k">' + lock + esc(kicker) + '</p><h2 class="lk-t">' + esc(title) + '</h2><p class="lk-x">' + esc(text) + '</p>' +
       (preview ? '<div class="lk-peek" aria-hidden="true">' + preview + '</div>' : '') + unlock(what) + '</section>';
   }
+  // ---- the paywall, once the free week is done: their week in real numbers, then the full app and one button
+  function paywall(p) {
+    var n = keptCount(p), steps = 0, mins = 0;
+    p.days.forEach(function (d) { if (d.kind === 'step') d.steps.forEach(function (x) { if (done[key(d, x)]) { steps++; mins += x.minutes; } }); else if (done[key(d)]) mins += d.minutes || 0; });
+    var nums = n + ' of 7 days' + (steps ? ', ' + steps + ' step' + (steps === 1 ? '' : 's') : '') + (mins ? ', ' + mins + ' minutes' : '');
+    var rows = [['Week 2, built from your words', 'What worked stays and what didn’t gets changed, shaped by how this week actually went.'],
+      ['The whole playbook', 'Every play, open any time you need it.'], ['Your journal', 'Write it out, or just talk it through.'],
+      ['Your patterns', 'What works for you, week over week.'], ['As many goals as you want', 'One focus or several, at your pace.']];
+    return '<section class="pw-wall">' +
+      '<header class="td-head"><p class="pl-k">Week one</p><h1 class="td-h">Week one, done.</h1>' +
+        '<p class="pl-note">' + esc(nums) + '. ' + (n === 7 ? 'All seven, done your way. ' : 'Every one of them counts. ') + 'Not perfect, just real, and that’s exactly how this works.</p></header>' +
+      '<div class="pw-card"><p class="pw-k"><span class="oh-dot" aria-hidden="true"></span>The full app</p>' +
+        '<h2 class="pw-t">Keep the momentum going.</h2>' +
+        '<ul class="pw-rows">' + rows.map(function (r) { return '<li><span class="pw-ck" aria-hidden="true">' + check + '</span><span><b>' + esc(r[0]) + '</b><small>' + esc(r[1]) + '</small></span></li>'; }).join('') + '</ul>' +
+        '<div class="lk-cta"><button class="pw-btn" type="button" data-unlock><span>Unlock the full app</span>' +
+          '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+          '<p class="lk-soon" hidden>The full app opens soon. Founding members get in first, at the best price it will ever be. You’ll hear from me first, at the email your plan went to.</p></div>' +
+      '</div>' +
+      '<a class="yu-link pw-more" href="#progress">See how your week went<span aria-hidden="true">→</span></a></section>';
+  }
   function week2() {
     if (paid()) return nextCard();
     return lockedCard('Week 2', 'Your next week, built from this one', 'What worked stays. What didn’t gets changed. Your second week is shaped by how this one actually went, in your own words.', '', 'week 2');
@@ -463,12 +484,14 @@
     var s = dayState(d);
     var many = d.kind === 'step' && d.steps.length > 1;
     var html = '';
-    if (T > 7) {
+    if (T > 7 && paid()) {
       html += '<section class="td-over"><p class="pl-k">Week one</p><h1 class="td-h">Your week is done.</h1>' +
         '<p class="td-x">' + esc(keptCount(p) === 7 || !c.weekDone ? c.allDone || '' : c.weekDone.replace('{n}', keptCount(p))) + '</p>' +
         (fb.next['1'] && fb.next['1'].sent ? '<a class="yu-link" href="#progress">See your progress<span aria-hidden="true">→</span></a>' : '<button type="button" class="lnk" data-view-day="7">Shape next week →</button>') + '</section>';
     }
     html += planCard(p);
+    // the free week is finished (day 7 done, or the week has run out): Today becomes the way into the full app
+    if (!paid() && (kept(p.days[6]) || T > 7) && sel >= Math.min(T, 7)) return html + paywall(p);
     html += '<header class="td-head"><p class="pl-k">Day ' + sel + ' of 7' + (sel === T ? ' · ' + esc(weekday(sel)) : '') + '</p>' +
       '<h1 class="td-h">' + (sel === T ? 'Today' : esc(weekday(sel))) + '</h1>' +
       (many ? '<p class="pl-sum">' + (st.checkin[sel] === 'half' || st.checkin[sel] === 'rough' ? 'One step today. The smallest comes first.' : d.steps.length + ' steps, one for each goal · ' + d.minutes + ' min in all') + '</p>' : '') +
@@ -528,9 +551,9 @@
     if (d.kind === 'lookback') html += nextWeek(p);
 
     if (kept(d) && sel === T && T < 7) {
-      var nx = p.days[T];
-      html += '<section class="tm"><p class="pl-note">' + esc(c.tomorrow || '') + '</p>' +
-        '<p class="tm-k">Tomorrow · ' + esc(weekday(T + 1)) + '</p><ul class="fut-l">' + titles(nx).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      // the day's sign-off: a breath, not a to-do list (tomorrow's steps are one tap away in the days above)
+      html += '<section class="tm tm--rest" role="status"><span class="tm-moon" aria-hidden="true">' + moonIcon + '</span>' +
+        '<h2 class="tm-t">Rest easy.</h2><p class="tm-x">' + esc(c.tomorrow || 'Today is done, so go enjoy the rest of it. See you tomorrow.') + '</p>' +
         (st.nudge.on ? '<p class="tm-n">' + bellIcon + end('Your nudge comes at ' + timeLabel(nudgeTime())) + '</p>' : '') + '</section>';
       html += nudgeOffer();
     }
