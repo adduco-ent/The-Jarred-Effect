@@ -236,15 +236,15 @@
 
   // ---- a gut call, the next layer: one question, quick answers to tap, room for their own words, a reassuring line
   var GUT_PICKS = { skip: ['Too tired', 'No time today', 'It didn’t feel right', 'Something came up'],
-    change: ['A smaller version', 'A different time', 'My own way to move it forward'] };
+    change: ['A smaller version', 'A different time', 'Another way forward'] };
   function gutNote(k, kind) {
     var skip = kind === 'skip', note = (fb.skip[k] || {}).note || '';
     var picked = note.split(/,\s*/);
     return '<div class="gn"><p class="gn-q">' + (skip ? 'What did your gut say?' : 'What will you do instead?') + '</p>' +
       '<div class="gn-c" role="group" aria-label="Quick answers">' + GUT_PICKS[kind].map(function (p) {
-        return '<button type="button" class="gn-p" data-gnpick="' + k + '" data-v="' + esc(p) + '" aria-pressed="' + (picked.indexOf(p) >= 0) + '">' + esc(p) + '</button>';
+        return '<button type="button" class="gn-p" data-gnpick="' + k + '" data-v="' + esc(p) + '" aria-pressed="' + (picked.indexOf(p) >= 0) + '"><span>' + esc(p) + '</span><i class="gn-m" aria-hidden="true">' + check + '</i></button>';
       }).join('') + '</div>' +
-      words('skip', k, 'note', skip ? 'Or say it in your own words' : 'Or describe your version in your own words') +
+      words('skip', k, 'note', 'Or in your own words') +
       '<p class="gn-x">' + (skip ? 'A gut call counts as information, and tomorrow starts fresh.' : 'Do your version, then mark it done. It counts the same as the original.') + '</p></div>';
   }
 
