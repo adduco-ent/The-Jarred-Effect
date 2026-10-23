@@ -216,6 +216,7 @@
     }
   },
   "r": "bbaoobaooaoa",
+  "life": null,
   "library": [
     "Building a new habit",
     "Unlearning an old habit",
@@ -388,7 +389,7 @@
       "kind": "question",
       "title": "One honest question",
       "name": "The Payoff",
-      "ask": "Is there a hidden upside to not having it yet?",
+      "ask": "Is there a hidden upside to not having what you want yet?",
       "help": "Be honest. Maybe it’s easier, or safer, or nobody can judge you for trying. Most of us have one, and naming yours loosens its grip.",
       "hint": "Sometimes staying busy feels safer than getting there.",
       "followUps": [
