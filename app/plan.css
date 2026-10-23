@@ -1419,3 +1419,17 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .gn{padding:.875rem;gap:.625rem}
 .gn-p,.gn-p[aria-pressed="true"]{padding:.5rem .75rem .5rem .875rem}
 .gn-p+.gn-p::before{left:.875rem}
+/* quick answers, back to pills (2026-10-22): a centered composition (question, pills, closing line) so the pills sit
+   balanced at any width, never breaking mid-label; a picked pill fills navy with a small check in front */
+.gn{justify-items:stretch}
+.gn-q,.gn-x{text-align:center;text-wrap:balance}
+.gn-c{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;border-radius:0;background:none;box-shadow:none;overflow:visible}
+.gn-p,.gn-p[aria-pressed="true"]{display:inline-flex;align-items:center;justify-content:center;gap:.375rem;min-height:2.5rem;padding:0 1rem;border:1px solid rgba(15,28,48,.1);border-radius:99px;background:#fff;box-shadow:0 1px 2px rgba(14,26,44,.05),0 .25rem .625rem -.5rem rgba(20,34,58,.25);font-size:.9063rem;font-weight:500;white-space:nowrap;text-align:center;color:var(--ink)}
+.gn-p+.gn-p::before{content:none}
+.gn-p:active{transform:scale(.96);background:#fff}
+.gn-m{display:none}
+.gn-p[aria-pressed="true"]{border-color:transparent;background:var(--sky-btn);box-shadow:0 .25rem .75rem -.375rem rgba(20,34,58,.45);font-weight:600;color:#fff}
+.gn-p[aria-pressed="true"] .gn-m{display:grid;width:auto;height:auto;border-radius:0;background:none;box-shadow:none;color:#fff;order:-1}
+.gn-p[aria-pressed="true"] .gn-m svg{width:.875rem;height:.875rem}
+.gn-p:focus-visible{outline-offset:2px}
+.gn .fb-s{text-align:center}
