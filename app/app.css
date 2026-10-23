@@ -496,3 +496,6 @@ body[data-screen="result"] .oh::after{position:fixed;width:58rem;height:46rem;le
 .oh-moment{font-style:normal}
 .oh-result .oh-say-k span,.oh-result .oh-say[data-side="a"] .oh-say-k span,.oh-result .oh-say[data-side="b"] .oh-say-k span{font-size:.8125rem}
 .oh-result .oh-half i{padding:0 .0625em;background:linear-gradient(180deg,transparent 62%,rgba(143,179,227,.5) 62%,rgba(143,179,227,.5) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* short phrases (one to three words) may stay italic; only whole sentences read upright. Your other half's two words
+   are italic again, in the serif, without the highlight */
+.oh-result .oh-half i{font-family:var(--serif);font-style:italic;color:var(--ink);padding:0;background:none}
