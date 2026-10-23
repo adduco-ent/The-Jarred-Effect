@@ -236,7 +236,7 @@
 
   // ---- a gut call, the next layer: one question, quick answers to tap, room for their own words, a reassuring line
   var GUT_PICKS = { skip: ['Too tired', 'No time today', 'It didn’t feel right', 'Something came up'],
-    change: ['A smaller version', 'A different time', 'Another way forward'] };
+    change: ['Do a smaller part of it', 'Do it later today', 'Do it a different way'] };
   function gutNote(k, kind) {
     var skip = kind === 'skip', note = (fb.skip[k] || {}).note || '';
     var picked = note.split(/,\s*/);
@@ -336,10 +336,11 @@
     if (changed) {
       return '<article class="pl-day pl-step-card is-changed" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
         '<div class="pl-day-h">' + head + '<span class="pl-opt pl-opt--mine">' + penIcon + 'Your version</span></div>' + title +
+        // the original, one tap away right under the title, for a look before deciding your version
+        '<details class="pl-orig"><summary>See the original step</summary><p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div></details>' +
         gutNote(k, 'change') +
         '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark my version done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>Mark my version done</span></button>' +
-        '<details class="pl-orig"><summary>See the original step</summary><p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div></details>' +
-        '<button type="button" class="lnk pl-undo" data-unskip="' + k + '">Go back to the original step</button></article>';
+        '<button type="button" class="lnk pl-back" data-unskip="' + k + '">Go back to the original step</button></article>';
     }
     // done and open: the header mirrors the folded bar (check, title, one status line, round arrow), so it reads as
     // the same thing opened up
