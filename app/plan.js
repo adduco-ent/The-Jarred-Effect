@@ -210,6 +210,7 @@
         (f.feel ? words('step', k, 'note', f.feel === 'hard' ? 'What made it hard? In your words, if you want.' : 'Anything to add? In your words, if you want.') : '') + '</div>';
     }
     var sk = fb.skip[k];
+    if (sk && sk.action && !isDone) return '';
     if (sk && sk.action) {
       var skip = sk.action === 'skip';
       return '<div class="st-box" role="status"><p class="st-t">' + (skip ? skipIcon + 'Skipped today, on purpose' : check + 'Your version') + '</p>' +
@@ -231,6 +232,20 @@
           row('skip', skipIcon, 'Skip it today', 'A gut call is information, and tomorrow starts fresh.') + '</div></div>';
     }
     return '<button type="button" class="gut-b" data-skipopen="' + k + '" aria-expanded="false"><span>Doesn’t fit today?</span><b>Change or skip it</b>' + chev + '</button>';
+  }
+
+  // ---- a gut call, the next layer: one question, quick answers to tap, room for their own words, a reassuring line
+  var GUT_PICKS = { skip: ['Too tired', 'No time today', 'It didn’t feel right', 'Something came up'],
+    change: ['A smaller version', 'A different time', 'My own way to move it forward'] };
+  function gutNote(k, kind) {
+    var skip = kind === 'skip', note = (fb.skip[k] || {}).note || '';
+    var picked = note.split(/,\s*/);
+    return '<div class="gn"><p class="gn-q">' + (skip ? 'What did your gut say?' : 'What will you do instead?') + '</p>' +
+      '<div class="gn-c" role="group" aria-label="Quick answers">' + GUT_PICKS[kind].map(function (p) {
+        return '<button type="button" class="gn-p" data-gnpick="' + k + '" data-v="' + esc(p) + '" aria-pressed="' + (picked.indexOf(p) >= 0) + '">' + esc(p) + '</button>';
+      }).join('') + '</div>' +
+      words('skip', k, 'note', skip ? 'Or say it in your own words' : 'Or describe your version in your own words') +
+      '<p class="gn-x">' + (skip ? 'A gut call counts as information, and tomorrow starts fresh.' : 'Do your version, then mark it done. It counts the same as the original.') + '</p></div>';
   }
 
   // ---- the day's progress: one slim bar under the heading. Check in, each step, one line. On an okay or hard day it
@@ -281,9 +296,22 @@
       ? '<p class="pl-step-ask"><i>' + (s.ask + 1) + '</i><span>' + esc(plan.asks[s.ask].text) + '</span></p>'
       : '<p class="pl-day-k"><span class="pl-min">' + s.minutes + ' min</span></p>';
     var title = '<h3 class="pl-day-t">' + esc(s.title) + (many ? ' <span class="pl-t-min">' + s.minutes + ' min</span>' : '') + '</h3>';
+    // skipped: the same clean header as a finished step, then one question with quick answers, then a quiet undo
     if (skipped) {
       return '<article class="pl-day pl-step-card is-skipped" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
-        '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
+        '<div class="pl-dh pl-dh--skip"><span class="pl-sk" aria-hidden="true">' + skipIcon + '</span><span class="pl-fold-t"><b>' + esc(s.title) + '</b><small>' +
+          (many ? 'Goal ' + (s.ask + 1) + '<i class="pl-fold-dot" aria-hidden="true">·</i>' : '') + 'Skipped today, on purpose</small></span></div>' +
+        gutNote(k, 'skip') +
+        '<button type="button" class="lnk pl-undo" data-unskip="' + k + '">Not skipping after all? Undo</button></article>';
+    }
+    // your version, in order: say what you'll do instead, do it, mark it done; the original folds away
+    if (changed) {
+      return '<article class="pl-day pl-step-card is-changed" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
+        '<div class="pl-day-h">' + head + '<span class="pl-opt pl-opt--mine">' + penIcon + 'Your version</span></div>' + title +
+        gutNote(k, 'change') +
+        '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark my version done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>Mark my version done</span></button>' +
+        '<details class="pl-orig"><summary>See the original step</summary><p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div></details>' +
+        '<button type="button" class="lnk pl-undo" data-unskip="' + k + '">Go back to the original step</button></article>';
     }
     // done and open: the header mirrors the folded bar (check, title, one status line, round arrow), so it reads as
     // the same thing opened up
@@ -292,12 +320,12 @@
       '<button type="button" class="pl-fold-x" data-fold="' + k + '" aria-label="Fold this step away">' + upIcon + '</button></div>';
     return '<article class="pl-day pl-step-card' + (isDone ? ' is-done' : '') + (changed ? ' is-changed' : '') + '" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
       (isDone ? doneHead : '<div class="pl-day-h">' + head + (light ? '<span class="pl-opt">Optional</span>' : '') + '</div>' +
-      (changed ? '<span class="st-tag">' + check + 'Changed to fit</span>' : '') + title) +
+      title) +
       // once it's done, the card steps back to its title: the how-to has done its job
       (isDone ? '' : rough
         ? '<div class="pl-v"><span>Your small version</span><p>' + esc(s.rough) + '</p></div><p class="pl-full"><b>The full step, for another day:</b> ' + esc(s.what) + '</p>'
         : '<p class="pl-text">' + esc(s.what) + '</p><div class="pl-sub"><span>For example</span><p>' + esc(s.example) + '</p></div><p class="pl-rough"><b>Hard day?</b> ' + esc(s.rough) + '</p>') +
-      (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>' + (changed ? 'Mark my version done' : 'Mark done') + '</span></button>') +
+      (isDone ? '' : '<button type="button" class="pl-do" data-done="' + k + '"' + (many ? ' aria-label="Mark done: ' + esc(plan.asks[s.ask].text) + '"' : '') + '>' + check + '<span>Mark done</span></button>') +
       reply(k) + afterStep(k, isDone) + layers(d, s) +
       (isDone ? '<button type="button" class="lnk pl-undo" data-done="' + k + '" aria-label="Undo: mark ' + esc(s.title) + ' not done">Not done yet? Undo</button>' : '') + '</article>';
   }
@@ -1609,12 +1637,25 @@
     }
     if ((el = t.closest('[data-skip]'))) {
       var sk = el.getAttribute('data-ref');
-      fb.skip[sk] = Object.assign({}, fb.skip[sk], { action: el.getAttribute('data-skip') }); skipOpen[sk] = false; sync('skip', sk, true);
-      anchorRender(el.closest('.gt') || el, cardSel(sk) + ' .st-box');
-      refocus('[data-fb="skip"][data-ref="' + sk + '"]');
+      // a note belongs to the choice it was written for: switching from skip to change (or back) starts it fresh
+      var sAct = el.getAttribute('data-skip'), sPrev = fb.skip[sk] || {};
+      fb.skip[sk] = { action: sAct, note: sPrev.noteFor && sPrev.noteFor !== sAct ? '' : sPrev.note || '', noteFor: sAct }; skipOpen[sk] = false; sync('skip', sk, true);
+      anchorRender(el.closest('.gt') || el, cardSel(sk) + ' .gn');
+      refocus('[data-gnpick="' + sk + '"]');
       return;
     }
-    if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '' }; sync('skip', us, true); anchorRender(el.closest('.st-box') || el, cardSel(us) + ' .gut-b'); refocus('[data-skipopen="' + us + '"]'); return; }
+    if ((el = t.closest('[data-gnpick]'))) {
+      var gk = el.getAttribute('data-gnpick'), gv = el.getAttribute('data-v');
+      var gta = root.querySelector('textarea[data-fb="skip"][data-ref="' + gk + '"]');
+      if (!gta) return;
+      var parts = gta.value.split(/,\s*/).map(function (x) { return x.trim(); }).filter(Boolean), gat = parts.indexOf(gv);
+      if (gat >= 0) parts.splice(gat, 1); else parts.push(gv);
+      gta.value = parts.join(', '); grow(gta);
+      gta.dispatchEvent(new Event('input', { bubbles: true }));
+      el.setAttribute('aria-pressed', String(gat < 0));
+      return;
+    }
+    if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '', noteFor: (fb.skip[us] || {}).noteFor || (fb.skip[us] || {}).action }; sync('skip', us, true); anchorRender(el, cardSel(us) + ' .gut-b'); refocus('[data-skipopen="' + us + '"]'); return; }
     if ((el = t.closest('[data-next]'))) {
       var ni = +el.getAttribute('data-ref'), nv = el.getAttribute('data-next');
       setNext(function (n) { n.asks[ni] = Object.assign({}, n.asks[ni], { choice: nv }); }); render(); refocus('[data-next="' + nv + '"][data-ref="' + ni + '"]');
