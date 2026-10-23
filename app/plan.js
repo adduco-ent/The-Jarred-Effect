@@ -282,7 +282,7 @@
       : '<p class="pl-day-k"><span class="pl-min">' + s.minutes + ' min</span></p>';
     var title = '<h3 class="pl-day-t">' + esc(s.title) + (many ? ' <span class="pl-t-min">' + s.minutes + ' min</span>' : '') + '</h3>';
     if (skipped) {
-      return '<article class="pl-day pl-step-card is-skipped">' +
+      return '<article class="pl-day pl-step-card is-skipped" id="j-step-' + k.replace('.', '_') + '" data-card="' + k + '">' +
         '<div class="pl-day-h">' + head + '<span class="st-chip">' + skipIcon + 'Skipped</span></div>' + title + afterStep(k, false) + '</article>';
     }
     // done and open: the header mirrors the folded bar (check, title, one status line, round arrow), so it reads as
@@ -1470,6 +1470,18 @@
   var regrow;
   window.addEventListener('resize', function () { clearTimeout(regrow); regrow = setTimeout(function () { root.querySelectorAll('.fb-t, .jw-t').forEach(grow); }, 120); });
   function refocus(q) { var el = root.querySelector(q); if (el) el.focus({ preventScroll: true }); }
+  // keep your place: re-render, then scroll so the new version of what you tapped sits exactly where the old one was.
+  // A card that grows or shrinks above your finger never pulls the page out from under you.
+  function anchorRender(from, toSel) {
+    var y = from && from.getBoundingClientRect ? from.getBoundingClientRect().top : null;
+    render();
+    if (y == null) return;
+    var to = root.querySelector(toSel);
+    if (!to) return;
+    var dy = to.getBoundingClientRect().top - y;
+    if (Math.abs(dy) > 1) window.scrollBy(0, dy);
+  }
+  function cardSel(k) { return '#j-step-' + String(k).replace('.', '_'); }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
   root.addEventListener('click', function (e) {
@@ -1589,14 +1601,20 @@
       fb.step[fk] = Object.assign({}, fb.step[fk], { feel: fv }); sync('step', fk, true); render(); refocus('[data-feel="' + fv + '"][data-ref="' + fk + '"]');
       return;
     }
-    if ((el = t.closest('[data-skipopen]'))) { var so = el.getAttribute('data-skipopen'); skipOpen[so] = !skipOpen[so]; render(); refocus(skipOpen[so] ? '[data-skip][data-ref="' + so + '"]' : '[data-skipopen="' + so + '"]'); return; }
+    if ((el = t.closest('[data-skipopen]'))) {
+      var so = el.getAttribute('data-skipopen'), sFrom = el.closest('.gt') || el;
+      skipOpen[so] = !skipOpen[so];
+      anchorRender(sFrom, cardSel(so) + (skipOpen[so] ? ' .gt' : ' .gut-b'));
+      refocus(skipOpen[so] ? '[data-skip][data-ref="' + so + '"]' : '[data-skipopen="' + so + '"]'); return;
+    }
     if ((el = t.closest('[data-skip]'))) {
       var sk = el.getAttribute('data-ref');
-      fb.skip[sk] = Object.assign({}, fb.skip[sk], { action: el.getAttribute('data-skip') }); skipOpen[sk] = false; sync('skip', sk, true); render();
+      fb.skip[sk] = Object.assign({}, fb.skip[sk], { action: el.getAttribute('data-skip') }); skipOpen[sk] = false; sync('skip', sk, true);
+      anchorRender(el.closest('.gt') || el, cardSel(sk) + ' .st-box');
       refocus('[data-fb="skip"][data-ref="' + sk + '"]');
       return;
     }
-    if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '' }; sync('skip', us, true); render(); return; }
+    if ((el = t.closest('[data-unskip]'))) { var us = el.getAttribute('data-unskip'); fb.skip[us] = { note: (fb.skip[us] || {}).note || '' }; sync('skip', us, true); anchorRender(el.closest('.st-box') || el, cardSel(us) + ' .gut-b'); refocus('[data-skipopen="' + us + '"]'); return; }
     if ((el = t.closest('[data-next]'))) {
       var ni = +el.getAttribute('data-ref'), nv = el.getAttribute('data-next');
       setNext(function (n) { n.asks[ni] = Object.assign({}, n.asks[ni], { choice: nv }); }); render(); refocus('[data-next="' + nv + '"][data-ref="' + ni + '"]');
@@ -1627,7 +1645,8 @@
     var list = cheer().done || [];
     // the day's first step gets the day's line; another goal's step on the same day gets a different one
     said = done[k] ? { key: k, line: wasKept ? list[(day + 2) % (list.length || 1)] || '' : doneLine(day) } : null;
-    render();
+    // keep your place: Mark done lands on "How did it feel?", Undo lands back on Mark done
+    anchorRender(b.closest('.pl-do, .pl-undo, .pl-done') || b, cardSel(k) + (done[k] ? ' .fb' : ' .pl-do'));
     refocus('[data-done="' + k + '"]');
   });
   ['pointerdown', 'focusin'].forEach(function (ev) {
