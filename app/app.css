@@ -477,3 +477,22 @@ body[data-screen="result"] .oh::after{position:fixed;width:58rem;height:46rem;le
 .oh-result .oh-sec--bal .oh-sub{margin-top:1.75rem;margin-bottom:1rem}
 .oh-result .oh-sec.oh-sec--half{border:1px solid transparent;background:radial-gradient(110% 95% at 100% 100%,rgba(86,132,204,.2),rgba(86,132,204,0) 62%) padding-box,radial-gradient(80% 75% at 0% 110%,rgba(150,128,212,.14),rgba(150,128,212,0) 60%) padding-box,linear-gradient(170deg,#f4f6fb,#eaeef8) padding-box,linear-gradient(170deg,#fff,rgba(15,28,48,.08) 45%,rgba(86,132,204,.28)) border-box}
 .oh-result .oh-sec--half .oh-fine{color:rgba(26,42,68,.7)}
+
+/* ---- the result's type scale (2026-10-22): one size per role, the same all the way down, and no italic on full
+   sentences (it strains more than it helps). 45 your type · 24 statements · 19 lead lines · 16 body · 14–15 support · 11 labels */
+.oh-result .oh-type-line{font-style:normal;font-size:1.1875rem;line-height:1.45}
+.oh-result .oh-sec--read .oh-read{font-size:1.1875rem;line-height:1.55}
+.oh-result .oh-why .oh-read{font-size:1rem;line-height:1.6}
+.oh-result .oh-sub{margin:1.5rem 0 .5rem;font-family:var(--sans);font-style:normal;font-size:.8125rem;font-weight:600;letter-spacing:.01em;color:rgba(26,42,68,.72)}
+.oh-result .oh-signs li p{font-family:var(--sans);font-size:1rem;line-height:1.5}
+.oh-result .oh-ev li,.oh-result .oh-body,.oh-result .oh-rep-w,.oh-result .oh-say>p:not(.oh-say-k){font-size:1rem;line-height:1.6}
+.oh-result .oh-words,.oh-result .oh-rep-r,.oh-result .oh-next-d,.oh-result .oh-mix li{font-size:.9375rem}
+.oh-result .oh-fine{font-size:.875rem;line-height:1.55}
+.oh-result .oh-half,.oh-result .oh-sec--half .oh-half{font-size:1.5rem;line-height:1.25}
+.oh-result .oh-half i{font-family:inherit;font-style:normal;color:var(--navy)}
+.oh-result .oh-rep-t,.oh-result .oh-next-t{font-size:1.5rem;line-height:1.2}
+.oh-result .oh-shadow{font-style:normal;font-size:1.1875rem;line-height:1.45}
+/* between quiz questions: the little lines read upright too */
+.oh-moment{font-style:normal}
+.oh-result .oh-say-k span,.oh-result .oh-say[data-side="a"] .oh-say-k span,.oh-result .oh-say[data-side="b"] .oh-say-k span{font-size:.8125rem}
+.oh-result .oh-half i{padding:0 .0625em;background:linear-gradient(180deg,transparent 62%,rgba(143,179,227,.5) 62%,rgba(143,179,227,.5) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone}

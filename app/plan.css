@@ -1373,3 +1373,8 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 @media (prefers-reduced-motion:reduce){.gt{animation:none}}
 /* the note box inside the skipped/changed card: a solid white field (a plain color can't sit mid-layer) */
 .st-box .fb-t{background:linear-gradient(#fff,#fff) padding-box,var(--edge-in) border-box}
+/* the gut-call trigger flows as one line of text and wraps cleanly: "Doesn't fit today?" / "Change or skip it ⌄" */
+.gut-b,.gut-b:hover{display:block;justify-self:center;max-width:100%;padding:.5rem 1rem;text-align:center;line-height:1.5;text-wrap:balance}
+.gut-b span,.gut-b b{white-space:nowrap}
+.gut-b span{margin-right:.3125rem}
+.gut-c{display:inline-block;margin-left:.125rem;vertical-align:-.1875rem}
