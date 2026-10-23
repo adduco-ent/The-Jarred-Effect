@@ -89,21 +89,22 @@
           '<p class="oh-type-line">' + esc(t.line) + '</p>' +
           (r.streak && type === r.type ? '<p class="oh-type-blend">Mostly ' + esc(short(type)) + ', with a ' + esc(short(r.streak)) + ' streak.</p>' : '') +
         '</div>' +
-        '<div class="oh-share-row"><button class="oh-share" type="button" data-share>' + shareIcon() + '<span>Share your type</span></button><span class="oh-share-note" role="status"></span></div>' +
-        why(r, type) + mix(r, type) + confirm(r, type) +
-        '<div class="oh-sec">' +
-          '<p class="oh-sec-k">Your balance</p>' +
-          '<ul class="oh-map" aria-label="Your balance map">' + map + '</ul>' +
-          '<p class="oh-fine oh-map-note">The center line is balance. The dot is where you lean.</p>' +
-        '</div>' +
+        // the journey down the page: who you are, the read (does it know me?), why we think so, your mix, does it
+        // sound like you (then share), your balance and what each lean means, strength and cost, your other half,
+        // one thing to try, one honest question, then the next step
         '<div class="oh-sec oh-sec--open oh-sec--read">' +
           '<p class="oh-sec-k">The read</p>' +
           '<p class="oh-read">' + esc(t.read) + '</p>' +
           '<p class="oh-sub">You might recognize this</p>' +
-          '<ol class="oh-signs">' + t.signs.map(function (s, k) { return '<li><span aria-hidden="true">' + pad(k + 1) + '</span><p>' + esc(s) + '</p></li>'; }).join('') + '</ol>' +
+          '<ol class="oh-signs">' + t.signs.map(function (s, k) { return '<li><span aria-hidden="true">' + (k + 1) + '</span><p>' + esc(s) + '</p></li>'; }).join('') + '</ol>' +
         '</div>' +
-        '<div class="oh-sec">' +
-          '<p class="oh-sec-k">What your answers say</p>' +
+        why(r, type) + mix(r, type) + confirm(r, type) +
+        '<div class="oh-share-row"><button class="oh-share" type="button" data-share>' + shareIcon() + '<span>Share your type</span></button><span class="oh-share-note" role="status"></span></div>' +
+        '<div class="oh-sec oh-sec--bal">' +
+          '<p class="oh-sec-k">Your balance</p>' +
+          '<ul class="oh-map" aria-label="Your balance map">' + map + '</ul>' +
+          '<p class="oh-fine oh-map-note">The center line is balance. The dot is where you lean.</p>' +
+          '<p class="oh-sub">What each lean means for you</p>' +
           '<div class="oh-says">' + says(r) + '</div>' +
         '</div>' +
         '<div class="oh-sec oh-two">' +

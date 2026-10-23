@@ -445,3 +445,35 @@ body[data-screen="quiz"] .oh-main{padding-top:max(.75rem,env(safe-area-inset-top
 .oh-result .oh-next-k::before{content:"";flex:none;width:.5rem;height:.5rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--shadow) 50% 100%)}
 .oh-result .oh-words{background:rgba(15,28,48,.04)}
 .oh-result .oh-say-k span{word-spacing:.18em}
+
+/* ---- the result in the app's own colors (2026-10-22): the same cool page and soft sky-and-lavender light as the
+   app's screens, cards with the app's white-to-sky rim, sky fills where there was grey, navy where there was black or
+   brand-split dots. No half-dots on labels or bullets; the one in the type card stays, like the app's goals card. */
+body[data-screen="result"] .oh{background:linear-gradient(180deg,#fbfcfe 0%,#f7f8fc 50%,#f6f5fb 100%)}
+body[data-screen="result"] .oh::before{position:fixed;width:64rem;height:52rem;right:-30rem;top:-28rem;background:radial-gradient(closest-side,rgba(140,182,236,.26),rgba(140,182,236,0))}
+body[data-screen="result"] .oh::after{position:fixed;width:58rem;height:46rem;left:-28rem;bottom:-24rem;background:radial-gradient(closest-side,rgba(198,182,238,.24),rgba(198,182,238,0))}
+.oh-result{--sky:linear-gradient(135deg,#ebf2fc 0%,#f0f2fb 48%,#f4f0fa 100%);--sky-track:linear-gradient(100deg,#e6eef9 0%,#ebebf8 100%);--sky-btn:linear-gradient(180deg,#24385a 0%,#0f1c30 100%);--navy:#1a2a44}
+.oh-result .oh-sec-k::before,.oh-result .oh-next-k::before{content:none}
+.oh-result .oh-sec-k,.oh-result .oh-next-k{display:block}
+/* cards like the app's */
+.oh-result .oh-sec:not(.oh-sec--open),.oh-result .oh-next{border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(251,252,255,.9) 100%) padding-box,linear-gradient(180deg,#fff 0%,rgba(226,232,244,.85) 60%,rgba(214,220,238,.8) 100%) border-box;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(14,26,44,.04),0 .5rem 1.25rem -.75rem rgba(40,70,120,.18),0 1.25rem 2.25rem -1.75rem rgba(20,34,58,.16)}
+.oh-result .oh-sec--half{border:1px solid transparent;background:radial-gradient(110% 95% at 100% 100%,rgba(86,132,204,.16),rgba(86,132,204,0) 62%) padding-box,radial-gradient(80% 75% at 0% 110%,rgba(150,128,212,.12),rgba(150,128,212,0) 60%) padding-box,linear-gradient(170deg,#f6f7fb,#eef1f8) padding-box,linear-gradient(170deg,#fff,rgba(15,28,48,.08) 45%,rgba(86,132,204,.24)) border-box}
+.oh-result .oh-sec--read{margin-top:1.75rem;padding-top:.5rem}
+/* sky fills instead of grey */
+.oh-result .oh-words,.oh-result .oh-rep-r{background:var(--sky);color:var(--dim)}
+.oh-result .oh-words b{color:var(--navy)}
+.oh-result .oh-signs li span,.oh-result .oh-say-k span,.oh-result .oh-say[data-side="a"] .oh-say-k span,.oh-result .oh-say[data-side="b"] .oh-say-k span{background:var(--sky);color:var(--navy);box-shadow:inset 0 0 0 1px rgba(143,179,227,.35)}
+.oh-result .oh-sub{color:rgba(26,42,68,.72)}
+/* bullets: small navy dots, no brand split */
+.oh-result .oh-ev li::before{top:.68em;width:.3125rem;height:.3125rem;background:var(--navy);opacity:.6}
+/* your mix: sky tracks, soft blue bars, navy for you */
+.oh-result .oh-mix-b{background:var(--sky-track)}
+.oh-result .oh-mix-b i{background:rgba(86,132,204,.38)}
+.oh-result .oh-mix li.is-you .oh-mix-b i{background:var(--sky-btn)}
+/* your balance: a soft blue line, a navy dot */
+.oh-result .oh-track{background:linear-gradient(90deg,rgba(143,179,227,.55),rgba(184,168,222,.55))}
+.oh-result .oh-track::after{background:rgba(26,42,68,.28)}
+.oh-result .oh-track i,.oh-result .oh-bal[data-side="a"] .oh-track i,.oh-result .oh-bal[data-side="b"] .oh-track i{background:var(--sky-btn);box-shadow:0 0 0 .25rem #fff,0 .25rem .75rem rgba(20,34,58,.25)}
+.oh-result .oh-sec--bal .oh-sub{margin-top:1.75rem;margin-bottom:1rem}
+.oh-result .oh-sec.oh-sec--half{border:1px solid transparent;background:radial-gradient(110% 95% at 100% 100%,rgba(86,132,204,.2),rgba(86,132,204,0) 62%) padding-box,radial-gradient(80% 75% at 0% 110%,rgba(150,128,212,.14),rgba(150,128,212,0) 60%) padding-box,linear-gradient(170deg,#f4f6fb,#eaeef8) padding-box,linear-gradient(170deg,#fff,rgba(15,28,48,.08) 45%,rgba(86,132,204,.28)) border-box}
+.oh-result .oh-sec--half .oh-fine{color:rgba(26,42,68,.7)}
