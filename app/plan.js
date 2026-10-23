@@ -244,7 +244,9 @@
       '<div class="gn-c" role="group" aria-label="Quick answers">' + GUT_PICKS[kind].map(function (p) {
         return '<button type="button" class="gn-p" data-gnpick="' + k + '" data-v="' + esc(p) + '" aria-pressed="' + (picked.indexOf(p) >= 0) + '"><span>' + esc(p) + '</span><i class="gn-m" aria-hidden="true">' + check + '</i></button>';
       }).join('') + '</div>' +
-      words('skip', k, 'note', 'Or in your own words') +
+      // their own words: return finishes (the keyboard key reads "done"); a skip also gets a check button once typed
+      words('skip', k, 'note', 'Or in your own words').replace('<textarea ', '<textarea enterkeyhint="done" data-gn-enter ')
+        .replace('</textarea>', '</textarea>' + (skip ? '<button type="button" class="gn-go" data-gngo="' + k + '" aria-label="Done, skip with this note">' + check + '</button>' : '')) +
       '<p class="gn-x">' + (skip ? 'A gut call counts as information, and tomorrow starts fresh.' : 'Do your version, then mark it done. It counts the same as the original.') + '</p></div>';
   }
 
@@ -281,6 +283,11 @@
   // once the gut call is answered (a quick answer tapped, or their own words written and left), the card settles
   // into its bar after a beat, unless they're still writing or tapping
   var settleT = {};
+  // their own words are in: put the keyboard away, and a skip folds into its bar right away
+  function finishGut(k) {
+    var a = document.activeElement; if (a && a.blur) a.blur();
+    if ((fb.skip[k] || {}).action === 'skip') settleSkip(k, 150);
+  }
   function settleSkip(k, ms) {
     clearTimeout(settleT[k]);
     settleT[k] = setTimeout(function () {
@@ -1673,6 +1680,7 @@
       refocus('[data-gnpick="' + sk + '"]');
       return;
     }
+    if ((el = t.closest('[data-gngo]'))) { finishGut(el.getAttribute('data-gngo')); return; }
     if ((el = t.closest('[data-gnpick]'))) {
       var gk = el.getAttribute('data-gnpick'), gv = el.getAttribute('data-v');
       var gta = root.querySelector('textarea[data-fb="skip"][data-ref="' + gk + '"]');
@@ -1719,6 +1727,13 @@
     // keep your place: Mark done lands on "How did it feel?", Undo lands back on Mark done
     anchorRender(b.closest('.pl-do, .pl-undo, .pl-done') || b, cardSel(k) + (done[k] ? ' .fb' : ' .pl-do'));
     refocus('[data-done="' + k + '"]');
+  });
+  // return in a gut-call note finishes it (shift+return still makes a new line)
+  root.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing || !(t.matches && t.matches('textarea[data-gn-enter]'))) return;
+    e.preventDefault();
+    if (t.value.trim()) finishGut(t.getAttribute('data-ref')); else t.blur();
   });
   // writing their own words pauses the fold; leaving the box with words in it settles the skip
   root.addEventListener('focusin', function (e) { var t = e.target; if (t.matches && t.matches('textarea[data-fb="skip"]')) clearTimeout(settleT[t.getAttribute('data-ref')]); });
@@ -1769,6 +1784,9 @@
     var o = fb[kind][ref] = Object.assign({}, fb[kind][ref]);
     o[field] = t.value;
     sync(kind, ref);
+    // the quick answers stay true to what's in the box, whether tapped or typed
+    if (kind === 'skip') { var have = t.value.split(/,\s*/).map(function (x) { return x.trim(); });
+      root.querySelectorAll('[data-gnpick="' + ref + '"]').forEach(function (p) { p.setAttribute('aria-pressed', String(have.indexOf(p.getAttribute('data-v')) >= 0)); }); }
   });
 
   fetch(source, { headers: { Accept: 'application/json' } })

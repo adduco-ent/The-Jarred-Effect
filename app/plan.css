@@ -1448,3 +1448,11 @@ body.is-welcome .pl{padding-top:0;padding-bottom:0}
 .pl-orig[open] summary{margin-bottom:.125rem}
 .pl-back{justify-self:center;min-height:2.75rem;margin:-.25rem 0 -.5rem;padding:0 1rem;font-size:.875rem;font-weight:500;color:var(--dim);text-decoration:none}
 .pl-back:active{background:rgba(15,28,48,.05);border-radius:99px}
+/* the gut-call note: a round check sits inside the field once there's text (return does the same) */
+.gn .fbw{position:relative}
+.gn .fbw .fb-t[data-gn-enter]{padding-right:3rem}
+.gn-go{position:absolute;right:.4375rem;top:.4375rem;display:grid;place-items:center;width:2.125rem;height:2.125rem;border:0;border-radius:50%;background:var(--sky-btn);color:#fff;box-shadow:0 .25rem .625rem -.375rem rgba(20,34,58,.5);cursor:pointer;transition:opacity .2s ease,transform .2s ease}
+.gn-go svg{width:1rem;height:1rem}
+.gn-go:active{transform:scale(.92)}
+.gn .fb-t:placeholder-shown+.gn-go{opacity:0;transform:scale(.8);pointer-events:none}
+@media (prefers-reduced-motion:reduce){.gn-go{transition:none}}
