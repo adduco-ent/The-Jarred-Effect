@@ -128,6 +128,9 @@
     return d.day === T ? d.steps.every(sk) : d.steps.some(sk);
   }
   function dayState(d) { return kept(d) ? 'kept' : skippedOnly(d) && d.day <= T ? 'gut' : d.day < T ? 'missed' : d.day === T ? 'today' : 'future'; }
+  // done with their own version of a step (changed to fit, then marked done): it counts the same, and shows an anchor
+  function mineDay(d) { return d.kind === 'step' && kept(d) && d.steps.some(function (s) { var k = key(d, s); return done[k] && (fb.skip[k] || {}).action === 'change'; }); }
+  var anchorIcon = '<svg class="an-i" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="4.75" r="1.75" stroke="currentColor" stroke-width="1.6"/><path d="M10 6.5V17M6.75 9.5h6.5M4.25 12.25c.55 2.75 2.95 4.75 5.75 4.75s5.2-2 5.75-4.75M4.25 12.25l-1 1.5M4.25 12.25l1.75.25M15.75 12.25l1 1.5M15.75 12.25l-1.75.25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function titles(d) { return d.kind === 'step' ? d.steps.map(function (s) { return s.title; }) : [d.title]; }
 
   // ---- Jarred's encouragement (plan.cheer, from the playbook): answers real moments, never hype
@@ -411,12 +414,14 @@
 
   // ---- the plan card: their goal(s) and the seven days, on navy
   function strip() {
-    var LABEL = { kept: 'kept', gut: 'gut call', missed: 'not marked', today: 'today', future: 'coming up' };
+    // each circle says how the day went: ✓ done, an anchor for done your own way, the skip arrow for skipped on purpose,
+    // a dashed ring for a past day with nothing marked
+    var LABEL = { kept: 'done', gut: 'skipped on purpose', missed: 'nothing marked', today: 'today', future: 'coming up' };
     return '<div class="ds" role="group" aria-label="Your seven days">' + plan.days.map(function (d) {
-      var s = dayState(d);
-      return '<button type="button" class="ds-d is-' + s + (d.day === sel ? ' is-sel' : '') + '" data-view-day="' + d.day + '"' +
-        ' aria-label="Day ' + d.day + ', ' + weekday(d.day) + ', ' + LABEL[s] + '"' + (d.day === sel ? ' aria-current="true"' : '') + '>' +
-        '<small>' + weekday(d.day, true) + '</small><b>' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</b></button>';
+      var s = dayState(d), mine = s === 'kept' && mineDay(d);
+      return '<button type="button" class="ds-d is-' + s + (mine ? ' is-mine' : '') + (d.day === sel ? ' is-sel' : '') + '" data-view-day="' + d.day + '"' +
+        ' aria-label="Day ' + d.day + ', ' + weekday(d.day) + ', ' + (mine ? 'done, your own version' : LABEL[s]) + '"' + (d.day === sel ? ' aria-current="true"' : '') + '>' +
+        '<small>' + weekday(d.day, true) + '</small><b>' + (s === 'kept' ? (mine ? anchorIcon : check) : s === 'gut' ? skipIcon : d.day) + '</b></button>';
     }).join('') + '</div>';
   }
   function legend(p) {
@@ -430,7 +435,7 @@
       (p.asks.length === 1
         ? '<p class="pl-ask">“' + esc(end(p.asks[0].text)) + '”</p>'
         : '<ol class="pl-asks">' + p.asks.map(function (a, i) { return '<li><i>' + (i + 1) + '</i><span>' + esc(end(a.text)) + '</span></li>'; }).join('') + '</ol>') +
-      strip() + legend(p) + '</section>';
+      strip() + '</section>';
   }
 
   // ---- what joining opens, said plainly. Membership isn't open yet, so the button says what happens.
@@ -637,7 +642,7 @@
     var rows = p.days.map(function (d) {
       var s = dayState(d), ci = st.checkin[d.day];
       return '<li><button type="button" class="pg-row is-' + s + '" data-view-day="' + d.day + '">' +
-        '<span class="pg-dot">' + (s === 'kept' ? check : s === 'gut' ? skipIcon : d.day) + '</span>' +
+        '<span class="pg-dot">' + (s === 'kept' ? (mineDay(d) ? anchorIcon : check) : s === 'gut' ? skipIcon : d.day) + '</span>' +
         '<span class="pg-t"><small>Day ' + d.day + ' · ' + esc(weekday(d.day)) + '</small>' + esc(titles(d).join(' · ')) + '</span>' +
         (s === 'gut' ? '<span class="pg-ci">Gut call</span>' : ci ? '<span class="pg-ci">' + STEAM[ci] + '</span>' : '<span></span>') + '<span class="pg-go" aria-hidden="true">›</span></button></li>';
     }).join('');
@@ -1409,6 +1414,23 @@
     });
   }
   function enterToday() { riseIn(800, 120, 80); }
+  // changing days: the hero card holds still, its highlight glides to the new day, and the day's content slides in from
+  // the side you moved toward (a later day from the right, an earlier one from the left)
+  function dayGlide(r0, prevSel) {
+    if (calm || !r0 || prevSel === sel || !root.animate) return;
+    var ns = root.querySelector('.ds-d.is-sel'); if (!ns) return;
+    var ds = ns.parentNode, r1 = ns.getBoundingClientRect(), rp = ds.getBoundingClientRect();
+    var pill = document.createElement('i'); pill.className = 'ds-glide'; pill.setAttribute('aria-hidden', 'true');
+    pill.style.cssText = 'left:' + (r1.left - rp.left) + 'px;top:' + (r1.top - rp.top) + 'px;width:' + r1.width + 'px;height:' + r1.height + 'px';
+    ds.appendChild(pill); ns.classList.add('is-gliding');
+    var g = pill.animate([{ transform: 'translateX(' + (r0.left - r1.left) + 'px)' }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.45,0,.2,1)' });
+    g.onfinish = g.oncancel = function () { ns.classList.remove('is-gliding'); if (pill.parentNode) pill.parentNode.removeChild(pill); };
+    var dir = sel > prevSel ? 1 : -1, i = 0;
+    [].forEach.call(root.children, function (c) {
+      if (c.classList.contains('pl-card')) return;
+      c.animate([{ opacity: 0, transform: 'translateX(' + dir * 1.5 + 'rem)' }, { opacity: 1, transform: 'none' }], { duration: 560, delay: Math.min(i++, 6) * 40, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'backwards' });
+    });
+  }
   function leaveWelcome(btn) {
     var go = function () { st.welcomed = welcomeKey(); welcomeSeen = true; save(); sel = T; render(); window.scrollTo(0, 0); };
     var sec = root.querySelector('.wl');
@@ -1684,8 +1706,10 @@
       return;
     }
     if ((el = t.closest('[data-view-day]'))) {
+      var prevSel = sel, oldPill = root.querySelector('.ds-d.is-sel'), r0 = oldPill ? oldPill.getBoundingClientRect() : null;
       sel = parseInt(el.getAttribute('data-view-day'), 10); said = null;
-      if (tab !== 'today') { e.preventDefault(); location.hash = 'today'; } else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      if (tab !== 'today') { e.preventDefault(); location.hash = 'today'; }
+      else { render(); dayGlide(r0, prevSel); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       return;
     }
     if ((el = t.closest('[data-wl]'))) { pickWelcome(el.getAttribute('data-wl'), el); return; }
