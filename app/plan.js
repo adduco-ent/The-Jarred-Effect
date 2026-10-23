@@ -1507,7 +1507,7 @@
     var done = function () { document.documentElement.classList.remove('vt-tab'); };
     vt.finished.then(done, done);
   }
-  function enterScreen() { root.classList.remove('pl-enter'); root.classList.add('pl-enter', 'pl-enter--tab'); setTimeout(function () { root.classList.remove('pl-enter', 'pl-enter--tab'); }, 1200); }
+  function enterScreen() { root.classList.remove('pl-enter'); root.classList.add('pl-enter', 'pl-enter--tab'); setTimeout(function () { root.classList.remove('pl-enter', 'pl-enter--tab'); }, 1700); }
   window.addEventListener('hashchange', function () { navTo(location.hash.slice(1)); });
   // the writer's bar only gets a backing once something has scrolled under it
   function barStuck() {
@@ -1580,7 +1580,7 @@
     if (!plain) el.appendChild(ghost);
     void el.offsetHeight;
     el.style.height = h1 + 'px';
-    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el', 'mo-plain'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 520);
+    morphing[sel] = setTimeout(function () { el.classList.remove('mo-el', 'mo-plain'); el.style.height = ''; if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, 800);
   }
   function setNext(fn) { var n = fb.next['1'] = fb.next['1'] || { asks: [] }; n.asks = n.asks || []; fn(n); sync('next', '1'); }
 
@@ -1776,9 +1776,9 @@
     if (opening) { d.open = true; to = d.getBoundingClientRect().height; }
     else { d.open = false; to = d.getBoundingClientRect().height; d.open = true; }
     d.setAttribute('data-anim', '1'); d.style.overflow = 'hidden';
-    var a = d.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: opening ? 420 : 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+    var a = d.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: opening ? 650 : 500, easing: 'cubic-bezier(.45,0,.2,1)' });
     var body = [].filter.call(d.children, function (c) { return c.tagName !== 'SUMMARY'; });
-    body.forEach(function (b) { b.animate(opening ? [{ opacity: 0, transform: 'translateY(-.25rem)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 340 : 180, delay: opening ? 60 : 0, easing: 'ease', fill: opening ? 'backwards' : 'forwards' }); });
+    body.forEach(function (b) { b.animate(opening ? [{ opacity: 0, transform: 'translateY(-.25rem)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 460 : 260, delay: opening ? 100 : 0, easing: 'ease', fill: opening ? 'backwards' : 'forwards' }); });
     a.onfinish = a.oncancel = function () { if (!opening) { d.open = false; body.forEach(function (b) { b.getAnimations().forEach(function (x) { x.cancel(); }); }); } d.style.overflow = ''; d.removeAttribute('data-anim'); };
   });
   // return in a gut-call note finishes it (shift+return still makes a new line)
