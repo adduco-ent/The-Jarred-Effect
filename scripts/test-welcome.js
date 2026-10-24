@@ -24,6 +24,9 @@ Object.values(SO.titles).forEach((t) => add('sign-off title', t, SO.limits.title
 Object.entries(SO.lines).forEach(([k, t]) => add('sign-off (' + k + ')', fill(t, { rest: 'the rest of your day', n: 'seven' }), SO.limits.line));
 
 const over = checks.filter((c) => c.len > c.limit);
+// every line also keeps to the voice's banned words (lib/knowledge.js), religious words included
+const banned = require('../lib/knowledge').banned;
+checks.forEach((c) => banned.forEach((b) => { if (b.test(c.text)) over.push(Object.assign({}, c, { spot: c.spot + ' uses a banned word ' + b })); }));
 const tightest = checks.slice().sort((a, b) => b.len / b.limit - a.len / a.limit).slice(0, 3);
 console.log(checks.length + ' welcome lines checked against limits ' + JSON.stringify(L));
 console.log('Closest to the limit: ' + tightest.map((c) => c.spot + ' ' + c.len + '/' + c.limit).join(', '));

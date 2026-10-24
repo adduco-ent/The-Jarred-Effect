@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fresh A · Night to dawn</title><base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/fresh/base.css">
+<style>
+/* Direction A, night to dawn: one long cinematic scroll. The page starts in the app's night sky and the light rises
+   section by section until it ends in morning. The feeling: the dark before the shift, then the other half arriving. */
+body{background:#0b1424;color:#efe7da}
+.nav .logo img{filter:brightness(0) invert(.93) sepia(.1)}
+.nav-r a{color:rgba(239,231,218,.85)}
+.nav-r a.btn-light{color:#0f1c30}
+.night{position:relative;overflow:hidden;background:radial-gradient(60rem 36rem at 50% 78%,rgba(143,179,227,.22),rgba(143,179,227,0) 70%),linear-gradient(180deg,#0b1424 0%,#122038 60%,#18263f 100%)}
+.stars{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 26% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 22%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 58% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 26%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 88% 16%,#fff,transparent),radial-gradient(1px 1px at 6% 42%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 94% 40%,rgba(255,255,255,.75),transparent),radial-gradient(1px 1px at 36% 4%,#fff,transparent),radial-gradient(1px 1px at 80% 6%,#fff,transparent),radial-gradient(1px 1px at 18% 30%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 64% 36%,rgba(255,255,255,.6),transparent)}
+.hero{position:relative;display:flex;flex-direction:column;align-items:center;gap:1.375rem;padding:3.5rem 1.25rem 0;text-align:center}
+.eye{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#b9c9ea}
+.hero .h1{font-size:5rem;max-width:58rem;color:#f4eee4}
+.hero .h1 em{color:#f6c9a8}
+.hero .sub{max-width:36rem;color:rgba(239,231,218,.78)}
+.hero .trust{color:rgba(239,231,218,.7)}.hero .trust svg{color:#f6c9a8}
+.moon{position:relative;width:19rem;margin-top:3rem;height:30rem;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.moon .phone{width:19rem;box-shadow:0 0 0 1px rgba(185,201,234,.18),0 0 6rem 1rem rgba(143,179,227,.25),0 3rem 6rem -2rem rgba(0,0,0,.8)}
+.shift{position:relative;padding:7rem var(--pad) 7rem;text-align:center;background:linear-gradient(180deg,#18263f 0%,#262f52 100%)}
+.shift p{margin:0;font-family:var(--display);font-size:3.25rem;line-height:1.15;letter-spacing:-.01em;color:rgba(239,231,218,.32)}
+.shift p.lit{color:#f4eee4}.shift p.lit em{font-family:var(--serif);font-style:italic;color:#f6c9a8}
+.shift .small{margin-top:2rem;font-family:var(--sans);font-size:1.125rem;line-height:1.6;color:rgba(239,231,218,.72)}
+.dusk{position:relative;padding:7rem var(--pad);background:linear-gradient(180deg,#262f52 0%,#4a4672 45%,#9d8fb3 100%)}
+.lab{margin:0 0 .875rem;font-size:.75rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#d4dcf2;text-align:center}
+.dusk .h2{text-align:center;color:#f4eee4}.dusk .h2 em{color:#f6c9a8}
+.glass{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;max-width:72rem;margin:3.5rem auto 0}
+.gc{overflow:hidden;border-radius:1.75rem;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.gc .shot{height:17rem;display:flex;justify-content:center;padding-top:2rem;overflow:hidden}
+.gc .shot .phone{width:12.5rem}
+.gc .tx{padding:1.5rem 1.625rem 1.75rem}
+.gc b{display:block;font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#d4dcf2}
+.gc h3{margin:.5rem 0;font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.1;color:#fff}
+.gc p{margin:0;line-height:1.55;color:rgba(255,255,255,.8)}
+.dawn{position:relative;padding:7rem var(--pad) 6rem;color:var(--ink);background:linear-gradient(180deg,#9d8fb3 0%,#dccbe4 26%,#f6d0bd 60%,#fcf3ee 100%)}
+.dawn::before{content:"";position:absolute;left:50%;top:44%;width:44rem;height:30rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,236,214,.95),rgba(255,214,186,.4) 45%,rgba(255,214,186,0))}
+.dawn .lab{color:#3f3a5c}.dawn .h2{position:relative;text-align:center}
+.line{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem;max-width:66rem;margin:4rem auto 0;padding-top:2.5rem;border-top:1px solid rgba(28,24,18,.18)}
+.line li{list-style:none;position:relative}
+.line li::before{content:"";position:absolute;top:-2.95rem;left:0;width:.875rem;height:.875rem;border-radius:50%;background:#fff;box-shadow:0 0 0 .3rem rgba(255,255,255,.5),0 0 1.25rem rgba(255,200,160,.9)}
+.line b{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+.line p{margin:.625rem 0 0;font-family:var(--serif);font-size:1.3125rem;line-height:1.45}
+.morning{padding:6rem var(--pad) 7rem;background:#fdfcf9;color:var(--ink);text-align:center}
+.who{display:flex;align-items:center;justify-content:center;gap:1.25rem;max-width:44rem;margin:0 auto 5rem;text-align:left}
+.who img{width:4.5rem;height:4.5rem;border-radius:50%;object-fit:cover}
+.who q{display:block;font-family:var(--serif);font-style:italic;font-size:1.25rem;line-height:1.4;quotes:none}
+.who small{display:block;margin-top:.25rem;font-size:.875rem;color:var(--faint)}
+.morning .h2{font-size:3.75rem}
+.morning .sub{margin:1rem auto 2rem;max-width:30rem}
+.morning .trust{margin-top:1rem}
+.foot{background:#fdfcf9}
+@media (max-width:767px){
+  .hero .h1{font-size:2.75rem}.hero .sub{font-size:1.0625rem}.hero .btn{width:100%}.moon{width:15rem;height:22rem}.moon .phone{width:15rem}
+  .shift p{font-size:2rem}.glass,.line{grid-template-columns:minmax(0,1fr)}.morning .h2{font-size:2.5rem}.who{flex-direction:column;text-align:center}
+}
+</style></head><body>
+<section class="night"><div class="stars"></div>
+<header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a href="#">Free guide</a><a class="btn btn-sm btn-light" href="#">Take the free quiz</a></div></header>
+<div class="hero">
+  <p class="eye">For people sick of spiritual platitudes</p>
+  <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+  <p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+  <a class="btn btn-xl btn-light" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul>
+  <div class="moon"><div class="phone"><img src="assets/img/app-welcome.jpg" alt=""></div></div>
+</div></section>
+<section class="shift">
+  <p>Vision boards. Affirmations. Raising your vibration.</p>
+  <p class="lit">That’s one half. <em>Here’s the other.</em></p>
+  <p class="small">Most methods teach you to want it. The Other Half helps you live it: small steps on ordinary days, so the wanting finally has something to hold on to.</p>
+</section>
+<section class="dusk">
+  <p class="lab">How it works</p>
+  <h2 class="h2">Three steps, <em>a few minutes a day.</em></h2>
+  <div class="glass">
+    <article class="gc"><div class="shot"><div class="phone"><img src="assets/img/app-quiz.jpg" alt=""></div></div><div class="tx"><b>Step 1</b><h3>Find your half</h3><p>Eighteen quick questions show which half you lean on and which one you skip.</p></div></article>
+    <article class="gc"><div class="shot"><div class="phone"><img src="assets/img/app-today.jpg" alt=""></div></div><div class="tx"><b>Step 2</b><h3>One small step a day</h3><p>Written for your goal and your life, with a smaller version for hard days.</p></div></article>
+    <article class="gc"><div class="shot"><div class="phone"><img src="assets/img/app-progress.jpg" alt=""></div></div><div class="tx"><b>Step 3</b><h3>See your patterns</h3><p>Tell me how each step felt. Week by week, you see when you’re at your best.</p></div></article>
+  </div>
+</section>
+<section class="dawn">
+  <p class="lab">Where this goes</p>
+  <h2 class="h2">Not a new you. <em>The whole you.</em></h2>
+  <ol class="line">
+    <li><b>Day 3</b><p>A Tuesday goes sideways. You do the small version in four minutes, and it still counts.</p></li>
+    <li><b>Week 2</b><p>You notice your money steps get done before noon, so you stop fighting your own rhythm.</p></li>
+    <li><b>Week 4</b><p>Someone asks what changed. You say you keep your word to yourself now.</p></li>
+  </ol>
+</section>
+<section class="morning">
+  <div class="who"><img src="assets/img/jarred-face.jpg" alt=""><div><q>“Nobody hands you a mentor, so I built the one I wish I’d had.”</q><small>Jarred, who built the Other Half · <a href="#">Read my story</a></small></div></div>
+  <h2 class="h2">Find your <em>other half.</em></h2>
+  <p class="sub">One question at a time, three minutes, and your first week is free.</p>
+  <a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</section>
+<footer class="foot"><img src="assets/img/logo-lockup.png" alt=""><span>How it works · About · Free guide · Privacy</span></footer>
+</body></html>

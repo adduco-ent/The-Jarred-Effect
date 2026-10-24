@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept A · Quiz first</title>
+<base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/concepts/base.css">
+<style>
+/* Concept A: the classic high-converting app hero. Promise and the first question on the left, the product on the right. */
+.hero{position:relative;overflow:hidden;min-height:calc(100vh - 6rem)}
+.hero::before{content:"";position:absolute;right:-12rem;top:-6rem;width:58rem;height:58rem;border-radius:50%;background:radial-gradient(closest-side,rgba(191,189,229,.55),rgba(230,205,211,.42) 45%,rgba(243,207,185,.22) 70%,rgba(243,207,185,0));pointer-events:none}
+.grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:3rem;align-items:center;padding:1.5rem var(--pad) 4rem}
+.copy{display:flex;flex-direction:column;gap:1.25rem;max-width:35rem}
+.h1{font-size:3.5rem}
+.card{margin-top:.75rem;padding:1.375rem 1.5rem 1.25rem;background:#fff;border:1px solid rgba(28,24,18,.08);border-radius:1.5rem;box-shadow:0 1.75rem 3.5rem -2.25rem rgba(6,12,24,.45)}
+.card-top{display:flex;align-items:center;justify-content:space-between;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.dots{display:flex;gap:.25rem}.dots i{width:.875rem;height:.25rem;border-radius:1rem;background:rgba(28,24,18,.12)}.dots i:first-child{background:var(--orange)}
+.q{margin:.75rem 0 1rem;font-family:"Libre Caslon Display",Georgia,serif;font-size:1.75rem;line-height:1.15}
+.opt{display:flex;align-items:center;gap:.875rem;width:100%;min-height:3.75rem;margin-top:.5rem;padding:.75rem 1rem;border:1.5px solid rgba(28,24,18,.14);border-radius:1rem;background:#fff;font-family:"Libre Caslon Text",Georgia,serif;font-size:1.125rem;text-decoration:none;color:var(--ink)}
+.opt i{flex:none;width:1.375rem;height:1.375rem;border-radius:50%;border:1.5px solid rgba(28,24,18,.28)}
+.opt b{flex:none;width:1.75rem;height:1.75rem;display:grid;place-items:center;border-radius:.5rem;background:#f5efe5;font-family:"Instrument Sans",sans-serif;font-size:.8125rem;color:var(--orange-deep)}
+.opt span{flex:1}
+.opt svg{flex:none;width:1.125rem;height:1.125rem;color:rgba(28,24,18,.35)}
+.opt.is-hover{border-color:var(--orange);background:#fff8f2}
+.opt.is-hover svg{color:var(--orange-deep)}
+.both{display:block;margin:.75rem auto 0;text-align:center;font-family:"Libre Caslon Text",Georgia,serif;font-style:italic;font-size:.9375rem;color:var(--faint);text-decoration:underline;text-underline-offset:.2rem;text-decoration-color:rgba(28,24,18,.25)}
+.stage{position:relative;height:40rem}
+.stage .phone{position:absolute}
+.p-back{width:14.5rem;right:1.5rem;top:4rem;transform:rotate(7deg)}
+.p-front{width:16.5rem;left:3rem;top:1.5rem;transform:rotate(-4deg);z-index:2}
+.chip{position:absolute;z-index:3;display:flex;align-items:center;gap:.625rem;padding:.75rem 1rem;background:rgba(255,255,255,.92);border-radius:1rem;box-shadow:0 1.25rem 2.5rem -1.25rem rgba(6,12,24,.45);font-size:.875rem;font-weight:600;color:var(--ink)}
+.chip small{display:block;font-size:.75rem;font-weight:500;color:var(--faint)}
+.chip .ck{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;background:var(--navy);color:#fff}
+.chip-1{left:-1rem;bottom:.5rem}
+.stage .note{position:absolute;right:-1rem;top:-1.75rem;transform:rotate(-4deg)}
+@media (max-width:767px){
+  .grid{grid-template-columns:minmax(0,1fr);gap:1rem;padding:.5rem 1.25rem 3rem}
+  .h1{font-size:2.5rem}.sub{font-size:1.0625rem}
+  .stage{height:28rem}.p-front{width:12.5rem;left:1rem}.p-back{width:11rem;right:.5rem;top:2.5rem}.chip-1{bottom:3rem}.stage .note{display:none}
+}
+</style></head><body>
+<header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+<section class="hero"><div class="grid">
+  <div class="copy">
+    <p class="eyebrow">For people sick of spiritual platitudes</p>
+    <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+    <p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+    <div class="card">
+      <div class="card-top"><span>Question 1 of 18</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      <p class="q">When I want something…</p>
+      <a class="opt" href="#"><b>A</b><span>I picture it and feel it.</span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="opt is-hover" href="#"><b>B</b><span>I make a plan and get to work.</span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="both" href="#">Honestly, a bit of both</a>
+    </div>
+    <ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul>
+  </div>
+  <div class="stage">
+    <div class="phone p-back"><img src="assets/img/app-today.jpg" alt=""></div>
+    <div class="phone p-front"><img src="assets/img/app-welcome.jpg" alt=""></div>
+    <div class="chip chip-1"><span class="ck"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Day 6 · Day done<small>15 minutes, two goals</small></span></div>
+    <p class="note">a few minutes a day</p>
+  </div>
+</div></section>
+</body></html>

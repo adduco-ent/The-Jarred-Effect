@@ -1,0 +1,236 @@
+[
+ {
+  "id": "q-price",
+  "where": "Day 4 / quiz: The Price",
+  "before": "{ id: 'price', name: 'The Price', ask: 'What will this really cost me, and will I still pay it on a bad day?', followUps: ['What would I have to give up, even for a while?', 'Which part of the price am I pretending isn’t there?'] }",
+  "after": "{ id: 'price', name: 'The Price', ask: 'What will this actually cost you, and would you still pay it on a hard day?', help: 'Think time, money, sleep, comfort, the things you’d have to say no to. Wanting it is free. Knowing the price is what gets you ready to pay it.', followUps: ['What would you have to give up, even for a little while?', 'Which part of the price are you hoping you can skip?'] }"
+ },
+ {
+  "id": "q-payoff",
+  "where": "Day 4 / quiz: The Payoff",
+  "before": "{ id: 'payoff', name: 'The Payoff', ask: 'What am I getting out of not having it yet?', followUps: ['What does staying here protect me from?', 'Who would I have to become to let that go?'] }",
+  "after": "{ id: 'payoff', name: 'The Payoff', ask: 'Is there a hidden upside to not having it yet?', help: 'Be honest. Maybe it’s easier, or safer, or nobody can judge you for trying. Most of us have one, and naming yours loosens its grip.', followUps: ['What would you have to face if you really went for it?', 'What would you do with that time and energy if the excuse were gone?'] }"
+ },
+ {
+  "id": "q-fear",
+  "where": "Day 4 / quiz: The Fear on the far side",
+  "before": "{ id: 'fear', name: 'The Fear on the far side', ask: 'If I got it tomorrow, what would I be afraid of?', followUps: ['What would people expect of me then?', 'What would I lose that I’m used to?'] }",
+  "after": "{ id: 'fear', name: 'The Fear on the far side', ask: 'If you got it tomorrow, what would scare you a little?', help: 'Getting what you want changes things. People expect more, an old excuse disappears, life looks different. Notice the part that makes you flinch.', followUps: ['What would people expect from you then?', 'What would you miss about how things are now?'] }"
+ },
+ {
+  "id": "quiz-q-dreamer",
+  "where": "Quiz result, dreamer: the question",
+  "before": "ask: 'What will this really cost me, and will I still pay it on a bad day?', hint: 'Wanting is free. Knowing the price is what makes you ready to pay it.' }",
+  "after": "ask: 'What will this actually cost you, and would you still pay it on a hard day?', hint: 'Think time, money, sleep, comfort. Wanting it is free. Knowing the price is what gets you ready to pay it.' }"
+ },
+ {
+  "id": "quiz-q-achiever",
+  "where": "Quiz result, achiever: the question",
+  "before": "ask: 'What am I getting out of not having it yet?', hint: 'Sometimes staying busy feels safer than getting there.' }",
+  "after": "ask: 'Is there a hidden upside to not having it yet?', hint: 'Be honest. Staying busy can feel safer than actually getting there. Most of us have a hidden upside, and naming yours loosens its grip.' }"
+ },
+ {
+  "id": "quiz-q-excavator",
+  "where": "Quiz result, excavator: the question",
+  "before": "ask: 'If I got it tomorrow, what would I be afraid of?', hint: 'Sometimes the thinking is a way to stay safe.' }",
+  "after": "ask: 'If you got it tomorrow, what would scare you a little?', hint: 'Getting what you want changes things. Sometimes all the thinking is a way of not finding out.' }"
+ },
+ {
+  "id": "quiz-q-pendulum",
+  "where": "Quiz result, pendulum: the question",
+  "before": "ask: 'What will this really cost me, and will I still pay it on a bad day?', hint: 'Your good weeks can pay it. Plan for the bad ones.' }",
+  "after": "ask: 'What will this actually cost you, and would you still pay it on a hard day?', hint: 'Your great weeks can pay it easily. The real question is whether your hard weeks can too.' }"
+ },
+ {
+  "id": "quiz-q-calibrated",
+  "where": "Quiz result, calibrated: the question",
+  "before": "ask: 'If I got it tomorrow, what would I be afraid of?', hint: 'Balanced people still flinch at the finish line. Notice where you would.' }",
+  "after": "ask: 'If you got it tomorrow, what would scare you a little?', hint: 'Even really balanced people flinch right before the finish line. Notice where you would.' }"
+ },
+ {
+  "id": "pb-133",
+  "where": "Playbook step: the Price again",
+  "before": "'Answer the Price question again: what will this really cost me, and will I still pay it on a bad day?'",
+  "after": "'Ask yourself the Price question again: what will this actually cost you, and would you still pay it on a hard day?'"
+ },
+ {
+  "id": "pb-261",
+  "where": "Playbook step: a yes and its price",
+  "before": "'Ask the price: what will this yes really cost me, and what will I have to say no to because of it?'",
+  "after": "'Ask the price: what will this yes actually cost you, and what will you have to say no to because of it?'"
+ },
+ {
+  "id": "pb-422",
+  "where": "Playbook step: the question that fits",
+  "before": "'Ask the shadow question that fits: the Price, the Payoff, or the Fear on the far side.'",
+  "after": "'Ask yourself the question that fits: what it’ll really cost you, whether there’s a hidden upside to not having it yet, or what would scare you about getting it.'"
+ },
+ {
+  "id": "pb-fri4",
+  "where": "Playbook step: The price check",
+  "before": "what: 'Answer in writing: What will this really cost me, and will I still pay it on a bad day?'",
+  "after": "what: 'Answer in writing: what will this actually cost you, and would you still pay it on a hard day?'"
+ },
+ {
+  "id": "lbl-plan",
+  "where": "Day 4 card title",
+  "before": "title: 'A question to sit with'",
+  "after": "title: 'One honest question'"
+ },
+ {
+  "id": "lbl-quiz",
+  "where": "Quiz result: question label",
+  "before": "'<p class=\"oh-sec-k\">A question to sit with</p>' +",
+  "after": "'<p class=\"oh-sec-k\">One honest question</p>' +"
+ },
+ {
+  "id": "lbl-quiz-name",
+  "where": "Quiz result: drop the tool name under the question",
+  "before": "'<p class=\"oh-shadow-by\">— ' + esc(t.question.name) + '</p>' +",
+  "after": ""
+ },
+ {
+  "id": "lbl-fold",
+  "where": "Folded day 4 bar",
+  "before": "'A question to sit with', '', '')",
+  "after": "'One honest question', '', '')"
+ },
+ {
+  "id": "lbl-email",
+  "where": "Results email: question label",
+  "before": "kick('A question to sit with')",
+  "after": "kick('One honest question')"
+ },
+ {
+  "id": "lbl-email-txt",
+  "where": "Results email (plain text): question label",
+  "before": "'A question to sit with'",
+  "after": "'One honest question'"
+ },
+ {
+  "id": "dreamer-read",
+  "where": "Quiz: the Dreamer, the read",
+  "before": "read: 'You’ve got the wanting part down: the vision, the belief, the feeling of it. What’s missing is the doing part. Small daily steps that still happen on a bad day.'",
+  "after": "read: 'Honestly? You’ve already got the part most people never get: you can see it, believe it and feel it. What slips is the everyday doing, the small steps that still happen on a day you don’t feel like it. That’s the half we’re going to build.'"
+ },
+ {
+  "id": "dreamer-strength",
+  "where": "Quiz: the Dreamer, strength",
+  "before": "strength: 'You can feel a future before it exists. That’s real fuel, and most people don’t have it.'",
+  "after": "strength: 'You can feel a future before it exists. That’s real fuel, and most people never get it. Don’t lose that.'"
+ },
+ {
+  "id": "dreamer-cost",
+  "where": "Quiz: the Dreamer, cost",
+  "before": "cost: 'Feeling it isn’t the same as living it. Without small daily actions, your gut never gets proof, so the good feeling fades instead of sticking.'",
+  "after": "cost: 'Here’s the catch: feeling it isn’t living it. Without small daily actions, your gut never gets proof, so the good feeling fades instead of sticking around.'"
+ },
+ {
+  "id": "achiever-read",
+  "where": "Quiz: the Achiever, the read",
+  "before": "read: 'You can outwork almost anyone. What’s missing is the reason underneath the work, and letting someone else carry part of it.'",
+  "after": "read: 'You can outwork almost anyone, and people know they can count on you. What’s missing is the why underneath all that work, and letting someone else carry some of it for once.'"
+ },
+ {
+  "id": "achiever-cost",
+  "where": "Quiz: the Achiever, cost",
+  "before": "cost: 'Effort without a reason wears you down. The want behind the work goes quiet, and no one else gets to help carry it.'",
+  "after": "cost: 'But effort without a reason wears you down. The want behind the work goes quiet, and you end up carrying it all alone.'"
+ },
+ {
+  "id": "excavator-read",
+  "where": "Quiz: the Excavator, the read",
+  "before": "read: 'You understand your patterns better than most people ever will. What’s missing is action: one small step that proves the insight changed something.'",
+  "after": "read: 'You understand yourself better than most people ever will. What’s missing is the next step: one small action that proves all that insight actually changed something.'"
+ },
+ {
+  "id": "excavator-cost",
+  "where": "Quiz: the Excavator, cost",
+  "before": "cost: 'Understanding a pattern doesn’t change it. Your gut believes what you do, not what you know.'",
+  "after": "cost: 'The tricky part: understanding a pattern doesn’t change it. Your gut believes what you do, not what you know.'"
+ },
+ {
+  "id": "pendulum-read",
+  "where": "Quiz: the Pendulum, the read",
+  "before": "read: 'Your good weeks are really good, and then the crash comes. What’s missing is a plan for the crash, so it stops costing you the next good week.'",
+  "after": "read: 'When you’re on, you’re really on. Then the crash comes, and you spend a week climbing back out. What’s missing isn’t more fire. It’s a plan for the crash, so it stops stealing your next good week.'"
+ },
+ {
+  "id": "pendulum-cost",
+  "where": "Quiz: the Pendulum, cost",
+  "before": "cost: 'A high doesn’t last on its own. Every big week borrows energy from the next one, so the crash isn’t random. It’s the other half of the pattern.'",
+  "after": "cost: 'A high doesn’t last on its own. Every big week borrows energy from the next one, so the crash isn’t bad luck. It’s the other half of the same pattern.'"
+ },
+ {
+  "id": "calibrated-read",
+  "where": "Quiz: the Calibrated, the read",
+  "before": "read: 'You balance both sides better than most people. Your work now is keeping that balance when life gets harder.'",
+  "after": "read: 'You hold both sides better than most people, and that’s worth saying out loud. Your work now is keeping that balance when life gets loud.'"
+ },
+ {
+  "id": "quiz-lead",
+  "where": "Quiz start: the lead",
+  "before": "Eighteen quick choices. You’ll see your balance, your type, and the half you’ve been missing.",
+  "after": "Eighteen quick choices, about two minutes. You’ll see your balance, your type, and the half you’ve been missing."
+ },
+ {
+  "id": "ci-full",
+  "where": "App: good day reply",
+  "before": "full: 'Good day. Do the whole step, and enjoy it.'",
+  "after": "full: 'Love that. Go for the whole step, and enjoy it.'"
+ },
+ {
+  "id": "ci-half",
+  "where": "App: okay day reply",
+  "before": "half: 'Okay day. Do a shorter version. It still counts.'",
+  "after": "half: 'Okay day? That’s real life. Do a shorter version, it still counts.'"
+ },
+ {
+  "id": "ci-halfmany",
+  "where": "App: okay day reply, several goals",
+  "before": "halfMany: 'Okay day. Pick one goal and do its step. That counts as the day.'",
+  "after": "halfMany: 'Okay day? Pick one goal and do its step. That’s the whole day, done.'"
+ },
+ {
+  "id": "ci-rough",
+  "where": "App: hard day reply",
+  "before": "rough: 'Hard day. Just the small version today. It counts the same.'\n    },\n    tomorrow:",
+  "after": "rough: 'Hard day? Be easy on yourself. Just the small version today. It counts the same.'\n    },\n    tomorrow:"
+ },
+ {
+  "id": "tomorrow",
+  "where": "App: after the day is done",
+  "before": "tomorrow: 'That’s today, done. Rest easy.'",
+  "after": "tomorrow: 'That’s today, done. Go enjoy the rest of it.'"
+ },
+ {
+  "id": "future",
+  "where": "App: a future day",
+  "before": "future: 'Today’s step is the only one that matters.'",
+  "after": "future: 'No need to look ahead. Today’s step is the only one that matters.'"
+ },
+ {
+  "id": "missed",
+  "where": "App: a missed day",
+  "before": "missedDay: 'This one slipped by. That’s okay. No catch-up, just today.'",
+  "after": "missedDay: 'This one slipped by, and that’s okay. No catch-up. Just today.'"
+ },
+ {
+  "id": "ci-sub",
+  "where": "App: check-in line",
+  "before": "<p class=\"ci-s\">Your steps adjust to fit.</p>",
+  "after": "<p class=\"ci-s\">Be honest. Your steps adjust to fit.</p>"
+ },
+ {
+  "id": "ci-note",
+  "where": "App: check-in note",
+  "before": "'What’s going on today? Optional, and it helps shape your next week.'",
+  "after": "'Want to tell me what’s going on? It helps shape next week.'"
+ },
+ {
+  "id": "lookback",
+  "where": "App: the look back",
+  "before": "Five minutes to see your week clearly, before the next one.",
+  "after": "Grab five minutes. Let’s look at your week clearly before the next one."
+ }
+]

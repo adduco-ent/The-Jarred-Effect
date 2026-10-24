@@ -163,7 +163,7 @@
               <ol class="tgd-next" aria-label="What happens next">
                 <li><span>Check your inbox — then come tell me it landed.</span></li>
                 <li><span>Not there in a few minutes? Check spam or Promotions.</span></li>
-                <li><span>While it lands, <a href="about.html">read the story behind it</a>.</span></li>
+                <li><span>While it lands, <a href="/app/?start">find your other half in three minutes</a>.</span></li>
               </ol>
               <div class="tgd-done-actions">
                 <x-if data-if="hasInbox" hidden>
@@ -284,7 +284,7 @@
             <ol class="tgd-next" aria-label="What happens next">
               <li><span>Check your inbox — then come tell me it landed.</span></li>
               <li><span>Not there in a few minutes? Check spam or Promotions.</span></li>
-              <li><span>While it lands, <a href="about.html">read the story behind it</a>.</span></li>
+              <li><span>While it lands, <a href="/app/?start">find your other half in three minutes</a>.</span></li>
             </ol>
             <div class="tgd-done-actions">
               <x-if data-if="hasInbox" hidden>
@@ -295,6 +295,19 @@
           </div>
         </x-if>
       </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE APP: for anyone who would rather live it than read it ===================== -->
+  <section class="tgd-app" aria-labelledby="app-title">
+    <div class="tgd-app-in tje-sky tje-sky--evening tje-reveal">
+      <div class="tgd-app-copy">
+        <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>The Other Half</p>
+        <h2 class="tje-h2" id="app-title">Rather live it than <span class="tje-it">read about it?</span></h2>
+        <p class="tje-lead">The Other Half turns this guide into one small step a day, built around your life. It starts with a free 3-minute quiz.</p>
+        <a class="tje-cta" href="/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+      <div class="tgd-app-phone"><div class="tje-phone"><img src="assets/img/app-welcome.jpg" alt="The Other Half’s evening welcome screen" width="624" height="1351" loading="lazy" decoding="async"></div></div>
     </div>
   </section>
   </main>

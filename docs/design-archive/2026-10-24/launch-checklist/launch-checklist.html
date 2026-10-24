@@ -1,0 +1,431 @@
+<title>Jarred Effect Launch Checklist</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<style>
+/* Layout: a working checklist. A sticky progress strip on top, then stages as numbered bands; each step is a row you tick, with who / how long chips and its instructions always visible */
+:root{
+  --bg:#fdfdfc; --fg:#1c1812; --dim:#574f43; --faint:#857b6d; --line:rgba(28,24,18,.12); --panel:#f6f1e8; --card:#ffffff;
+  --accent:#a8471c; --accent-fill:#e8743a; --on-accent:#241904; --blue:#3e6cab; --done:#3f7a55;
+  --pole:#0e1a2c; --pole-fg:#efe7da; --pole-dim:#c4bcaf;
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;
+  --serif:"Libre Caslon Text",Georgia,serif;
+  --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --hand:Caveat,"Segoe Script",cursive;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1524; --fg:#efe7da; --dim:#c4bcaf; --faint:#9b9386; --line:rgba(239,231,218,.14); --panel:#13213a; --card:#16243a;
+  --accent:#f3a378; --blue:#8fb0de; --done:#7cc49a; --pole:#fdfdfc; --pole-fg:#1c1812; --pole-dim:#574f43; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1524; --fg:#efe7da; --dim:#c4bcaf; --faint:#9b9386; --line:rgba(239,231,218,.14); --panel:#13213a; --card:#16243a;
+  --accent:#f3a378; --blue:#8fb0de; --done:#7cc49a; --pole:#fdfdfc; --pole-fg:#1c1812; --pole-dim:#574f43; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:.18em}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{max-width:60rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.012em;text-wrap:balance;margin:0}
+p{margin:0}
+.it{font-family:var(--serif);font-style:italic;font-size:.88em;color:var(--accent)}
+code,kbd{font-family:var(--mono);font-size:.86em;background:var(--panel);padding:.08rem .38rem;border-radius:.35rem;color:var(--fg);overflow-wrap:anywhere}
+
+.hero{padding-block:4rem 2rem}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 2rem;margin-bottom:2.25rem;font-size:.85rem;color:var(--faint)}
+.meta b{color:var(--fg);font-weight:600}
+.hero h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1}
+.lead{max-width:40rem;margin-top:1.1rem;font-size:1.12rem;color:var(--dim);text-wrap:pretty}
+.warn{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.9rem;align-items:start;margin-top:2rem;padding:1.1rem 1.25rem;border-radius:1.1rem;background:var(--pole);color:var(--pole-fg)}
+.warn b{font-family:var(--display);font-weight:400;font-size:1.25rem;color:var(--accent-fill)}
+.warn p{font-size:.95rem;color:var(--pole-dim)}
+.warn p strong{color:var(--pole-fg)}
+
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.progress .wrap{display:flex;align-items:center;gap:1rem;padding-block:.8rem}
+.bar{flex:1;height:.45rem;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent-fill);border-radius:99px;transition:width .4s ease}
+.count{font-size:.85rem;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.reset{font:inherit;font-size:.8rem;color:var(--faint);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em;padding:.25rem}
+
+.nextup{margin-top:2rem;padding:1.4rem 1.5rem;border-radius:1.25rem;background:var(--panel)}
+.nextup h2{font-size:1.4rem;margin-bottom:.4rem}
+.nextup p{font-size:.95rem;color:var(--dim)}
+.nextup p+p{margin-top:.6rem}
+.nextup ol{margin:.75rem 0 0;padding-left:1.2rem;display:grid;gap:.35rem;font-size:.95rem;color:var(--dim)}
+.nextup b{color:var(--fg);font-weight:600}
+.parallel{margin-top:2rem;padding:1.4rem 1.5rem;border-radius:1.25rem;border:1.5px dashed var(--accent-fill)}
+.parallel h2{font-size:1.4rem;margin-bottom:.4rem}
+.parallel p{font-size:.95rem;color:var(--dim)}
+.parallel ol{margin:.75rem 0 0;padding-left:1.2rem;display:grid;gap:.3rem;font-size:.95rem;color:var(--dim)}
+
+.stage{padding-block:3.5rem 1rem}
+.stage + .stage{border-top:1px solid var(--line)}
+.stage-h{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:1rem 1.25rem;align-items:baseline}
+.stage-n{font-family:var(--display);font-size:2.6rem;line-height:1;color:var(--accent)}
+.stage-h h2{font-size:clamp(1.6rem,3.2vw,2.2rem);line-height:1.1}
+.stage-h p{grid-column:2/-1;font-size:1rem;color:var(--dim);max-width:40rem}
+.stage-c{font-size:.8rem;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:600px){.stage-h{grid-template-columns:auto minmax(0,1fr)}.stage-c{grid-column:2}.stage-h p{grid-column:1/-1}}
+
+.steps{list-style:none;margin:1.75rem 0 0;padding:0;display:grid;gap:.85rem}
+.step{display:grid;grid-template-columns:2.25rem minmax(0,1fr);gap:.4rem .9rem;padding:1.25rem 1.3rem;border-radius:1.25rem;border:1px solid var(--line);background:var(--card);transition:opacity .25s ease,border-color .25s ease}
+.step input{appearance:none;-webkit-appearance:none;width:1.6rem;height:1.6rem;margin:.15rem 0 0;border-radius:50%;border:1.5px solid var(--faint);background:var(--bg);cursor:pointer;display:grid;place-items:center;transition:background .2s ease,border-color .2s ease}
+.step input::after{content:"";width:.45rem;height:.8rem;border:solid transparent;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.step input:checked{background:var(--done);border-color:var(--done)}
+.step input:checked::after{border-color:#ffffff}
+/* finished steps stay crisp: a compact row with the check and the title; details tuck away until asked for */
+.step.is-done{padding-block:.85rem;background:transparent;border-style:dashed}
+.step.is-done .s-title{color:var(--dim)}
+.step.is-done .s-main>:not(.s-head){display:none}
+.step.is-done.show-more .s-main>:not(.s-head){display:revert}
+.step.is-done .s-head .chip{display:none}
+.more{display:none;font:inherit;font-size:.8rem;color:var(--faint);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}
+.step.is-done .more{display:inline}
+.s-main{min-width:0;display:grid;gap:.55rem}
+.s-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .75rem}
+.s-title{font-size:1.08rem;font-weight:600;cursor:pointer}
+.chip{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .55rem;border-radius:99px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+.chip.you{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent)}
+.chip.me{border-color:var(--blue);color:var(--blue)}
+.chip.both{border-color:var(--accent);color:var(--accent)}
+.s-main ol,.s-main ul{margin:0;padding-left:1.15rem;display:grid;gap:.3rem;font-size:.95rem;color:var(--dim)}
+.s-main li b{color:var(--fg);font-weight:600}
+.s-main p{font-size:.95rem;color:var(--dim)}
+.send{font-size:.9rem;padding:.6rem .85rem;border-radius:.8rem;background:var(--panel);color:var(--fg)}
+.send::before{content:"Send me: ";font-weight:600;color:var(--accent)}
+.cmd{position:relative;display:flex;align-items:center;gap:.75rem;padding:.6rem .7rem .6rem .9rem;border-radius:.8rem;background:var(--pole);color:var(--pole-fg);font-family:var(--mono);font-size:.85rem;overflow-x:auto}
+.cmd span{flex:1;white-space:nowrap}
+.cmd button{flex:none;font:inherit;font-family:var(--sans);font-size:.75rem;font-weight:600;padding:.3rem .65rem;border-radius:99px;border:1px solid var(--pole-dim);background:none;color:var(--pole-fg);cursor:pointer}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+td{color:var(--dim)}
+td code{font-size:.8rem}
+.done-when{font-size:.9rem;color:var(--fg)}
+.done-when::before{content:"Done when: ";font-weight:600;color:var(--done)}
+footer{padding-block:3rem;font-size:.85rem;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){.bar i,.step{transition:none}}
+</style>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="meta"><span><b>The Jarred Effect</b> · Website and Other Half app</span><span>October 2026 · Private</span></div>
+    <h1>From here to live. <span class="it">Everything, in order.</span></h1>
+    <p class="lead">Every step to launch the website for real and build the Other Half app end to end. Each step says who does it, roughly how long it takes, and what to send me when it’s done. Steps we’ve finished are ticked already; tick the rest off as you go (ticks are saved in this browser).</p>
+    <div class="warn"><b>Keys</b><p><strong>Never paste a secret key into our chat.</strong> API keys and passwords go only into Vercel’s environment variables, your local <code>.env.local</code> file, or a password manager. When a step says “send me”, it means a link, a name or a yes, never a key.</p></div>
+  </div>
+</section>
+
+<div class="progress" aria-label="Overall progress"><div class="wrap"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 of 0 done</span><button class="reset" type="button" id="reset">Clear ticks</button></div></div>
+
+<div class="wrap">
+  <div class="nextup">
+    <h2>Where we are <span class="it">· October 20</span></h2>
+    <p><b>Done so far:</b> every account and the domain (stage 1); the guide, the 12 quiz questions and Playbook version 1, approved in full (stage 2); sign-ups working for real (stage 3); and the quiz, live and unlisted at <code>thejarredeffect.com/app</code>, with results by email, share cards and a saved Ask (stage 4).</p>
+    <p><b>Also built along the way:</b> one email design for every email, with dark-mode-safe images; unlimited test sends for you; a preview tool that emails you every email; the six branded sign-in emails, ready to paste; and the 7-day plan template (page and email), waiting for your approval.</p>
+    <p>Next, in order:</p>
+    <ol>
+      <li><b>Approve the plan template</b>, then I build the plan generator (stage 4).</li>
+      <li><b>Privacy policy and terms</b> (stage 2): needed before you share the quiz.</li>
+      <li><b>Paste the branded sign-in emails into Supabase</b> (stage 1 extra, 5 min).</li>
+      <li><b>Google Search Console</b> and <b>proof slots</b> (stage 3).</li>
+      <li><b>Your story for the About page</b> (stage 2): the interview.</li>
+    </ol>
+  </div>
+  <div class="parallel">
+    <h2>While you do stage 1, I start building</h2>
+    <p>The app’s screens don’t need any accounts to begin, so we work in parallel from day one:</p>
+    <ol><li>You set up the accounts in stage 1.</li><li>I build the app’s screens on a separate branch with sample data, so your live site is untouched.</li><li>When your accounts are ready, I connect the real database, sign-in and AI.</li></ol>
+  </div>
+</div>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">1</span><h2>Accounts and the domain</h2><span class="stage-c" data-count></span><p>You, about 2 hours. Everything else waits on these, so they come first.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-vercel" aria-labelledby="t-vercel"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-vercel" for="s-vercel">Put the site on Vercel</label><span class="chip you">You</span><span class="chip">15 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Go to <b>vercel.com</b> and sign up with your GitHub account.</li><li>Choose <b>Add New → Project</b> and import <code>adduco-ent/The-Jarred-Effect</code>. If it isn’t listed, click <b>Adjust GitHub App Permissions</b> and give Vercel access to the <code>adduco-ent</code> organization.</li><li>Framework preset: <b>Other</b>. Leave the build command empty and the root directory as it is.</li><li>Click <b>Deploy</b>. You get a link ending in <code>.vercel.app</code>.</li></ol>
+        <p class="send">the <code>.vercel.app</code> link.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-domain" aria-labelledby="t-domain"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-domain" for="s-domain">Buy and connect the domain</label><span class="chip you">You</span><span class="chip">15 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>In your Vercel project: <b>Settings → Domains → Add</b>, then buy <code>thejarredeffect.com</code> there. Buying inside Vercel keeps the domain and its settings in one place.</li><li>Make <code>thejarredeffect.com</code> the main domain, and set <code>www.thejarredeffect.com</code> to <b>redirect</b> to it. The site’s search setup uses the version without www.</li><li>Optional: also buy <code>jarredeffect.com</code> and <code>thejaredeffect.com</code> (the common misspelling) and redirect both.</li><li>Turn on auto-renew.</li></ol>
+        <p class="send">the domain you bought. If it isn’t thejarredeffect.com, I’ll update every page.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-resend" aria-labelledby="t-resend"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-resend" for="s-resend">Set up Resend for email</label><span class="chip you">You</span><span class="chip">20 min, plus waiting</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Sign up at <b>resend.com</b>. Go to <b>Domains → Add domain</b> and enter <code>thejarredeffect.com</code>.</li><li>Resend shows a few DNS records. Your domain’s DNS lives at <b>GoDaddy</b>, so use Resend’s <b>Auto configure</b>, or add each record in GoDaddy: <b>My Products → thejarredeffect.com → DNS</b>.</li><li>Don’t add a DMARC record. GoDaddy already created one, and a domain must have only one.</li><li>Wait until Resend shows <b>Verified</b>. Usually minutes, sometimes a few hours. The ▶ button makes it check again.</li><li>Create an API key with <b>Full access</b>. Copy it straight into Vercel in the “environment variables” step below.</li><li>Skip warm-up services. Resend advises against them; a verified domain and a real opt-in list are what matter.</li></ol>
+        <p class="send">“Resend verified”.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-supabase" aria-labelledby="t-supabase"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-supabase" for="s-supabase">Create the Supabase project</label><span class="chip you">You</span><span class="chip">15 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Sign up at <b>supabase.com</b> and create a project named <code>the-jarred-effect</code> in your <code>adduco-ent</code> organization. Region: <b>East US (North Virginia)</b>, the same as Vercel. Save the database password in a password manager.</li><li>Under <b>Security</b>: leave <b>Enable Data API</b> checked, <b>uncheck</b> “Automatically expose new tables”, and <b>check</b> “Enable automatic RLS”, so every new table starts locked.</li><li>Click <b>Create new project</b> and wait a minute or two.</li><li>Open <b>Authentication → URL Configuration</b>. Set the Site URL to <code>https://thejarredeffect.com/app</code></li><li>Add these three Redirect URLs, one at a time: <code>https://thejarredeffect.com/app/**</code>, then <code>https://thejarredeffect-*-jarred-letofskys-projects.vercel.app/**</code> (Vercel’s private preview links), then <code>http://localhost:3000/**</code> (testing on your Mac).</li><li>Check <b>Authentication → Sign In / Providers → Email</b> is on. This powers sign-in by emailed link.</li><li>Open <b>Project Settings → API Keys</b>. You’ll need the project URL, the publishable key and the secret key for the environment variables step.</li></ol>
+        <p class="send">“Supabase ready” and the project URL (the URL isn’t secret; the keys are).</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-smtp" aria-labelledby="t-smtp"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-smtp" for="s-smtp">Send Supabase sign-in emails through Resend</label><span class="chip you">You</span><span class="chip">10 min, after Resend is Verified</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Supabase’s built-in email only reaches members of your own Supabase team, a few times an hour. Testers can’t sign in until this is done.</p>
+        <ol><li>In Supabase: <b>Authentication → Emails → SMTP Settings</b>, and turn on <b>custom SMTP</b>.</li><li>Sender email: <code>jarred@thejarredeffect.com</code>. Sender name: <code>Jarred at The Jarred Effect</code>.</li><li>Host <code>smtp.resend.com</code>, port <code>465</code>, username <code>resend</code>, password: a Resend API key. Create a separate key in Resend named <code>supabase-smtp</code> with <b>Sending access</b> and paste it straight in.</li><li>Save. In <b>Authentication → Rate Limits</b>, raise the email limit to about 30 an hour.</li></ol>
+        <p class="send">“SMTP done”. I’ll send a test sign-in email to confirm.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-authmail" aria-labelledby="t-authmail"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-authmail" for="s-authmail">Paste the branded sign-in emails into Supabase</label><span class="chip you">You</span><span class="chip">5 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Supabase still sends its plain default sign-in emails. The six branded ones are ready in the website folder, in <code>emails/supabase/</code>.</p>
+        <ol><li>In Supabase: <b>Authentication → Emails → Templates</b>.</li><li>For each template, set the <b>Subject</b>, then select everything in the <b>Body</b> box, delete it, and paste the matching file. The subjects and file names are in the table in <code>docs/email-design.md</code>.</li><li>Click <b>Save</b> under each one.</li></ol>
+        <p class="send">“Templates in”. I’ll send a test sign-in email to confirm.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-workspace" aria-labelledby="t-workspace"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-workspace" for="s-workspace">Google Workspace inbox for jarred@thejarredeffect.com</label><span class="chip you">You</span><span class="chip">45 min, plus waiting</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Gives your sending address a real inbox, so readers can reply to your emails and you can send from your own domain in Gmail. Your domain has no mail records yet, so nothing conflicts, and Resend keeps sending through its own <code>send</code> subdomain.</p>
+        <p><b>How to add a DNS record in GoDaddy</b> (you’ll do this a few times below): go to <b>godaddy.com → My Products</b>, click <b>DNS</b> next to <code>thejarredeffect.com</code>, then <b>Add New Record</b>. Pick the Type, fill in Name and Value exactly as given, leave TTL at its default, and click <b>Save</b>.</p>
+
+        <p><b>Part A · Sign up</b></p>
+        <ol><li>Go to <b>workspace.google.com</b> and click <b>Get started</b>.</li><li>Business name: <code>The Jarred Effect</code>. Number of employees: <b>Just you</b>. Region: <b>United States</b>. Click <b>Next</b>.</li><li>Enter your name and your current email (Google sends setup notices there).</li><li>“Does your business have a domain?” → <b>Yes, I have one I can use</b> → enter <code>thejarredeffect.com</code> → <b>Next</b>.</li><li>Create your sign-in: username <code>jarred</code>, so the address becomes <code>jarred@thejarredeffect.com</code>. Pick a strong password and save it in your password manager.</li><li>Choose <b>Business Starter</b>. Monthly (flexible) billing is fine. It usually starts with a free trial.</li></ol>
+
+        <p><b>Part B · Prove you own the domain</b></p>
+        <ol><li>Google opens the Admin console setup at <b>admin.google.com</b>. At <b>Verify your domain</b>, if it offers <b>Sign in to GoDaddy</b>, choose it, sign in, and click <b>Connect</b> or <b>Authorize</b>. Google adds the record itself. That’s the easy path.</li><li>If it shows a code instead: copy the <b>TXT</b> value that starts with <code>google-site-verification=</code>. In GoDaddy add a record: Type <b>TXT</b>, Name <code>@</code>, Value = that code. Save, go back to Google and click <b>Verify</b>. It can take a few minutes to an hour.</li></ol>
+
+        <p><b>Part C · Turn on Gmail</b></p>
+        <ol><li>In the setup steps, click <b>Activate Gmail</b>. If you used the GoDaddy sign-in, Google may already have added this record. Check GoDaddy’s DNS list for an <b>MX</b> record pointing to <code>smtp.google.com</code>.</li><li>If it isn’t there, add it in GoDaddy: Type <b>MX</b>, Name <code>@</code>, Value <code>smtp.google.com</code>, Priority <code>1</code>.</li><li>Back in Google, click <b>Activate Gmail</b>. It can take up to an hour before mail arrives.</li></ol>
+
+        <p><b>Part D · Let Gmail send for your domain</b></p>
+        <ol><li>In GoDaddy’s DNS list, look for a <b>TXT</b> record at <code>@</code> whose value starts with <code>v=spf1</code>. A domain can have only one.</li><li>If there isn’t one, add it: Type <b>TXT</b>, Name <code>@</code>, Value <code>v=spf1 include:_spf.google.com ~all</code>.</li><li>If there already is one, tell me what it says instead of adding a second.</li></ol>
+
+        <p><b>Part E · Sign your Gmail (DKIM)</b></p>
+        <ol><li>In <b>admin.google.com</b>, open the menu ☰ → <b>Apps → Google Workspace → Gmail → Authenticate email</b>.</li><li>Pick <code>thejarredeffect.com</code> and click <b>Generate new record</b>. Keep <b>2048</b> bits and the prefix <code>google</code>, then click <b>Generate</b>.</li><li>Google shows a <b>DNS Host name</b> (<code>google._domainkey</code>) and a long <b>TXT record value</b>. In GoDaddy add a record: Type <b>TXT</b>, Name <code>google._domainkey</code>, Value = paste the whole long value.</li><li>Wait about an hour, come back to <b>Authenticate email</b>, and click <b>Start authentication</b>. The status should change to “Authenticating email with DKIM”.</li></ol>
+
+        <p><b>Part F · Add two free aliases</b></p>
+        <ol><li>Aliases are extra addresses that land in the same inbox, at no extra cost. In <b>admin.google.com</b>, go to <b>Directory → Users</b> and click your name.</li><li>Open <b>User information</b>, find <b>Alternate email addresses (email alias)</b>, and add <code>hello</code>. Click <b>Save</b>.</li><li>Do the same for <code>support</code>. Aliases can take up to an hour to start receiving.</li><li>Optional: to reply from an alias, in Gmail go to <b>Settings → See all settings → Accounts → Send mail as → Add another email address</b>.</li></ol>
+
+        <p><b>Part G · Test it</b></p>
+        <ol><li>Open Gmail at <b>mail.google.com</b>, signed in as <code>jarred@thejarredeffect.com</code>.</li><li>From your personal email, send a message to <code>jarred@thejarredeffect.com</code>. It should arrive within a few minutes.</li><li>Reply to it from your new inbox, and check the reply lands in your personal email, not spam.</li></ol>
+        <p>Leave the existing <code>_dmarc</code> record and the three Resend records alone the whole way through.</p>
+        <p class="send">“Workspace done”. I’ll check every record from here, then we redo the Supabase invitation test.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-anthropic" aria-labelledby="t-anthropic"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-anthropic" for="s-anthropic">Get an Anthropic API key</label><span class="chip you">You</span><span class="chip">10 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Sign up at <b>console.anthropic.com</b> and add billing credits.</li><li>Set a monthly spend limit in the console’s limits settings, so testing can never run up a surprise bill.</li><li>Create an API key named <code>the-jarred-effect</code>.</li></ol>
+        <p class="send">“Anthropic ready”.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-env" aria-labelledby="t-env"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-env" for="s-env">Add the environment variables in Vercel</label><span class="chip you">You</span><span class="chip">15 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>In your Vercel project: <b>Settings → Environment Variables → Add</b>. Vercel asks for a <b>Type</b> first: <b>Secret</b> hides the value forever after saving (for keys and passwords); <b>Config</b> stays readable (for addresses and settings).</p>
+        <ol><li>The Type applies to everything in one window. Add all the <b>Secret</b> ones together with <b>Add new variable</b>, save, then open it again for the <b>Config</b> ones.</li><li><b>Environments:</b> choose <b>Production</b> and <b>Preview</b>. Preview lets me test the app branch on a private Vercel link before it goes live.</li><li>Add each variable when you have its value. Supabase and Anthropic ones wait until those accounts exist; <code>GUIDE_URL</code> waits for stage 2.</li><li>After adding or changing any, go to <b>Deployments</b> and redeploy the latest one so the site picks them up.</li></ol>
+        <div class="tbl"><table>
+          <thead><tr><th>Name</th><th>Type</th><th>Value</th><th>For</th></tr></thead>
+          <tbody>
+            <tr><td><code>RESEND_API_KEY</code></td><td><b>Secret</b></td><td>Your Resend key (Full access)</td><td>Site</td></tr>
+            <tr><td><code>UNSUBSCRIBE_SECRET</code></td><td><b>Secret</b></td><td>A long random string, made with the command below</td><td>Site</td></tr>
+            <tr><td><code>SUPABASE_SECRET_KEY</code></td><td><b>Secret</b></td><td>Supabase secret key</td><td>App</td></tr>
+            <tr><td><code>ANTHROPIC_API_KEY</code></td><td><b>Secret</b></td><td>Your Anthropic key</td><td>App</td></tr>
+            <tr><td><code>CRON_SECRET</code></td><td><b>Secret</b></td><td>Another long random string</td><td>App</td></tr>
+            <tr><td><code>RESEND_FROM</code></td><td>Config</td><td><code>Jarred &lt;jarred@thejarredeffect.com&gt;</code></td><td>Site</td></tr>
+            <tr><td><code>SITE_URL</code></td><td>Config</td><td><code>https://thejarredeffect.com</code></td><td>Site</td></tr>
+            <tr><td><code>RESEND_REPLY_TO</code></td><td>Config</td><td>Optional: where replies go</td><td>Site</td></tr>
+            <tr><td><code>GUIDE_URL</code></td><td>Config</td><td>The link to the guide (stage 2)</td><td>Site</td></tr>
+            <tr><td><code>SUPABASE_URL</code></td><td>Config</td><td>Your Supabase project URL</td><td>App</td></tr>
+            <tr><td><code>TEST_EMAILS</code></td><td>Config</td><td><code>letofsky11@gmail.com,jarred@thejarredeffect.com</code> (already added)</td><td>Site</td></tr>
+            <tr><td><code>SUPABASE_PUBLISHABLE_KEY</code></td><td>Config</td><td>Supabase publishable key (designed to be public)</td><td>App</td></tr>
+          </tbody>
+        </table></div>
+        <p>To make a random string, run this in Terminal and copy the result:</p>
+        <div class="cmd"><span>openssl rand -hex 32</span><button type="button" data-copy="openssl rand -hex 32">Copy</button></div>
+        <p class="send">“Env vars added”, plus which ones are still waiting.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-cli" aria-labelledby="t-cli"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-cli" for="s-cli">Connect this Mac to Vercel</label><span class="chip you">You</span><span class="chip">10 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Lets me run the site and app with their real server functions on your computer. In Terminal, run these one at a time:</p>
+        <div class="cmd"><span>npm i -g vercel</span><button type="button" data-copy="npm i -g vercel">Copy</button></div>
+        <div class="cmd"><span>vercel login</span><button type="button" data-copy="vercel login">Copy</button></div>
+        <div class="cmd"><span>cd "/Users/jarredletofsky/The Jarred Effect/redesign" &amp;&amp; vercel link</span><button type="button" data-copy='cd "/Users/jarredletofsky/The Jarred Effect/redesign" && vercel link'>Copy</button></div>
+        <div class="cmd"><span>vercel env pull .env.local</span><button type="button" data-copy="vercel env pull .env.local">Copy</button></div>
+        <p>For <code>vercel link</code>, pick the project you created in the first step. The last command copies your <b>Config</b> variables into a private local file, <code>.env.local</code>, that never goes to GitHub. Vercel never sends <b>Secret</b> values to a computer, so open <code>.env.local</code> and paste those values in yourself. I’ll leave the names ready for you.</p>
+        <p class="send">“Linked”.</p>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">2</span><h2>Your content</h2><span class="stage-c" data-count></span><p>You and me together. The app and site are only as good as what’s in them, and some of it only you can supply.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-guide" aria-labelledby="t-guide"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-guide" for="s-guide">The free guide itself</label><span class="chip both">Together</span><span class="chip">Depends</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>The sign-up email links to the guide, but the guide isn’t in the website code. Is it written? Send me the file or text. I’ll host it on the site and set <code>GUIDE_URL</code>. Include its three shadow questions; the app needs them too.</p>
+        <p class="send">the guide, or tell me it still needs writing and I’ll help you draft it.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-quiz" aria-labelledby="t-quiz"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-quiz" for="s-quiz">Approve the 12 quiz questions</label><span class="chip you">You</span><span class="chip">15 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>They’re in our chat. Approve them as they are or mark changes.</p>
+        <p class="send">“Approved” or your edits.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-playbook" aria-labelledby="t-playbook"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-playbook" for="s-playbook">Playbook version 1</label><span class="chip both">Approved Oct 20</span><span class="chip both">Together</span><span class="chip">I draft · you review 1 hr</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>I draft the rep library (40–60 steps, each with a rough-day version), the shadow question deck, the five type descriptions and the hard rules, all in your voice. You correct anything that isn’t you. The AI plans can’t go live without it.</p>
+        <p class="done-when">you’d sign your name to every rep.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-about" aria-labelledby="t-about"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-about" for="s-about">Your story, for the About page</label><span class="chip both">Together</span><span class="chip">About 1 hr of interview</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>I interview you chapter by chapter, then shape your answers into immersive scenes in your voice: where you started, what broke, where manifestation let you down, what you found, and why this exists now. Bring any photos from those chapters. Your real stories also feed the app’s “lead by example” rule.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-legal" aria-labelledby="t-legal"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-legal" for="s-legal">Privacy policy and terms</label><span class="chip both">Together</span><span class="chip">I draft · you review</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>I update the privacy policy for Resend, Supabase, Anthropic and the app’s data, and draft simple terms that say the app is coaching and reflection, not therapy, with crisis resources. Have a lawyer read both before you charge money. This isn’t legal advice.</p>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">3</span><h2>The website goes live</h2><span class="stage-c" data-count></span><p>Mostly me, about half a day once stages 1 and the guide are done.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-signup" aria-labelledby="t-signup"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-signup" for="s-signup">Sign-ups working for real</label><span class="chip me">Me</span><span class="chip">2 hrs</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>I test every form on every page, the guide email, and the unsubscribe link, locally and on the live site, and fix anything that breaks. I also rewrite the guide email in your voice.</p>
+        <p class="done-when">you sign up with your own email and the guide lands in your inbox, not spam.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-proof" aria-labelledby="t-proof"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-proof" for="s-proof">Fill or hide the proof slots</label><span class="chip both">Together</span><span class="chip">30 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Real quotes go in if you have any. Otherwise I hide the dashed placeholders until you do. Never a made-up quote.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-search" aria-labelledby="t-search"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-search" for="s-search">Google Search Console and Bing</label><span class="chip you">You</span><span class="chip">20 min</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Add the site at <b>search.google.com/search-console</b> as a Domain property. It gives you a TXT record; add it in GoDaddy’s DNS, where your domain’s records live.</li><li>Submit <code>https://thejarredeffect.com/sitemap.xml</code>.</li><li>In <b>Bing Webmaster Tools</b>, choose import from Google Search Console.</li></ol>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">4</span><h2>The app, test build</h2><span class="stage-c" data-count></span><p>Me, about 2–3 focused days of building, on its own branch. This is a working version of the whole loop for you and a few testers, not yet ready for paying strangers.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-a1" aria-labelledby="t-a1"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-a1" for="s-a1">Foundation</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>The app at <code>/app</code>, in your brand, installable to a phone’s home screen</li><li>Database tables, with each person’s data visible only to them</li><li>Sign-in by emailed link</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-a2" aria-labelledby="t-a2"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-a2" for="s-a2">Quiz, result and Your Ask</label><span class="chip both">Live, unlisted</span><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>The Polarity Profile, balance map, type and shareable result card</li><li>Creating an Ask (Build or Try) with the word check</li><li>The “specific thing” intake</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-a3" aria-labelledby="t-a3"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-a3" for="s-a3">The plan generator</label><span class="chip both">Template ready</span><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>Personal plans from your playbook, in the simple step format</li><li>The safety check on every intake</li><li>A review screen where you approve plans before they send</li><li>Every output tagged, for the learning loop later</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-a4" aria-labelledby="t-a4"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-a4" for="s-a4">Daily use</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>The Today screen, check-ins, the rough-day switch and the effort log</li><li>Gut calls, Tries and data debriefs</li><li>The Price check, comfort check and your field</li><li>The weekly plan that adapts to their week</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-desktop" aria-labelledby="t-desktop"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-desktop" for="s-desktop">Desktop and tablet layout</label><span class="chip both">Before beta</span><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>A side navigation rail on laptops instead of the phone’s bottom tab bar</li><li>Today in two columns: the day on the left, the plan card, week strip and day guide in a panel that stays on screen</li><li>Progress as a dashboard grid, the Playbook as a list with the protocol open beside it, and You in two columns</li><li>Tablets: a roomier single column, two columns when turned sideways</li><li>Same cards, colors, depth and spacing: a layout pass, not a redesign</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-a5" aria-labelledby="t-a5"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-a5" for="s-a5">Email notifications</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>Progress-based emails in your voice, one a day at most</li><li>A daily scheduled job that decides what to send</li><li>Preferences and quiet hours</li></ul>
+        <p class="done-when">you can run the whole loop on your own phone, from quiz to a second, adapted week.</p>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">5</span><h2>Test with real people</h2><span class="stage-c" data-count></span><p>You, 1–2 weeks. The cheapest way to find out what’s confusing.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-testers" aria-labelledby="t-testers"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-testers" for="s-testers">Invite 5–10 trusted testers</label><span class="chip you">You</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>People who fit your audience and will be honest. Ask them to use it most days for two weeks.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-review" aria-labelledby="t-review"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-review" for="s-review">Review every plan</label><span class="chip you">You</span><button type="button" class="more" data-more>Show details</button></div>
+        <p>Approve or fix each plan in the review screen. Your fixes become playbook updates.</p>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-fix" aria-labelledby="t-fix"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-fix" for="s-fix">Fix what testers find</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <p class="done-when">testers come back most days without being chased, and you’d sign your name to the plans.</p>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">6</span><h2>Ready to charge</h2><span class="stage-c" data-count></span><p>Together. Everything that has to be true before strangers pay you and trust you with personal data.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-stripe" aria-labelledby="t-stripe"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-stripe" for="s-stripe">Stripe account</label><span class="chip you">You</span><span class="chip">30 min, plus verification</span><button type="button" class="more" data-more>Show details</button></div>
+        <ol><li>Sign up at <b>stripe.com</b> and complete business verification.</li><li>Add <code>STRIPE_SECRET_KEY</code> to Vercel. I’ll tell you the other two values once the webhook is built.</li></ol>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-pay" aria-labelledby="t-pay"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-pay" for="s-pay">Membership and payments</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>Checkout, a billing page, and free-versus-member access</li><li>Price set to test, $9–15 a month</li></ul>
+      </div></li>
+      <li class="step"><input type="checkbox" id="s-sec" aria-labelledby="t-sec"><div class="s-main">
+        <div class="s-head"><label class="s-title" id="t-sec" for="s-sec">Security and data rights</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div>
+        <ul><li>A full security review of the app</li><li>Delete my account, and download my data</li><li>Final privacy policy and terms, after your lawyer reads them</li></ul>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="stage" data-stage>
+  <div class="wrap">
+    <div class="stage-h"><span class="stage-n">7</span><h2>After launch</h2><span class="stage-c" data-count></span><p>Me, ongoing, in the order the numbers say.</p></div>
+    <ol class="steps">
+      <li class="step"><input type="checkbox" id="s-push" aria-labelledby="t-push"><div class="s-main"><div class="s-head"><label class="s-title" id="t-push" for="s-push">Phone notifications</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div><p>For people who install the app to their home screen.</p></div></li>
+      <li class="step"><input type="checkbox" id="s-loop" aria-labelledby="t-loop"><div class="s-main"><div class="s-head"><label class="s-title" id="t-loop" for="s-loop">The shared learning loop and your insights view</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div><p>Once a few hundred people make the numbers meaningful.</p></div></li>
+      <li class="step"><input type="checkbox" id="s-levels" aria-labelledby="t-levels"><div class="s-main"><div class="s-head"><label class="s-title" id="t-levels" for="s-levels">Levels, Receive and Hold</label><span class="chip me">Me</span><button type="button" class="more" data-more>Show details</button></div><p>Once members start reaching their Asks.</p></div></li>
+      <li class="step"><input type="checkbox" id="s-ads" aria-labelledby="t-ads"><div class="s-main"><div class="s-head"><label class="s-title" id="t-ads" for="s-ads">Google ads test and tracking</label><span class="chip both">Together</span><button type="button" class="more" data-more>Show details</button></div><p>Conversion tracking on sign-ups, then $10–20 a day on search ads for the burned-out manifestor.</p></div></li>
+      <li class="step"><input type="checkbox" id="s-etsy" aria-labelledby="t-etsy"><div class="s-main"><div class="s-head"><label class="s-title" id="t-etsy" for="s-etsy">The Other Half Workbook and Etsy shop</label><span class="chip both">Together</span><button type="button" class="more" data-more>Show details</button></div><p>Built from the playbook and the guide.</p></div></li>
+    </ol>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">The Jarred Effect · Manifestation has two sides.</div></footer>
+
+<script>
+(function(){
+  var KEY='tje-launch-checklist';
+  var saved={};
+  try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ saved={}; }
+  var boxes=[].slice.call(document.querySelectorAll('.step input[type=checkbox]'));
+  var DONE=['s-vercel','s-domain','s-resend','s-supabase','s-smtp','s-workspace','s-anthropic','s-env','s-cli','s-guide','s-signup','s-quiz','s-a2','s-playbook'];
+  function paint(){
+    var done=0;
+    boxes.forEach(function(b){ var li=b.closest('.step'); li.classList.toggle('is-done',b.checked); if(b.checked) done++; });
+    document.getElementById('count').textContent=done+' of '+boxes.length+' done';
+    document.getElementById('bar').style.width=(boxes.length?Math.round(done/boxes.length*100):0)+'%';
+    [].forEach.call(document.querySelectorAll('[data-stage]'),function(st){
+      var b=st.querySelectorAll('.step input'), d=st.querySelectorAll('.step input:checked');
+      st.querySelector('[data-count]').textContent=d.length+' / '+b.length;
+    });
+  }
+  boxes.forEach(function(b){
+    b.checked=(b.id in saved)?!!saved[b.id]:DONE.indexOf(b.id)>-1;
+    b.addEventListener('change',function(){ saved[b.id]=b.checked; try{ localStorage.setItem(KEY,JSON.stringify(saved)); }catch(e){} paint(); });
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    boxes.forEach(function(b){ b.checked=false; }); saved={}; try{ localStorage.removeItem(KEY); }catch(e){} paint();
+  });
+  document.addEventListener('click',function(e){
+    var m=e.target.closest('[data-more]'); if(!m) return;
+    var st=m.closest('.step'); var open=st.classList.toggle('show-more'); m.textContent=open?'Hide details':'Show details';
+  });
+  [].forEach.call(document.querySelectorAll('[data-copy]'),function(btn){
+    btn.addEventListener('click',function(){
+      var text=btn.getAttribute('data-copy');
+      var done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Copy'; },1600); };
+      var fallback=function(){ var r=document.createRange(); r.selectNodeContents(btn.previousElementSibling); var s=getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Selected'; };
+      try{ navigator.clipboard.writeText(text).then(done,fallback); }catch(e){ fallback(); }
+    });
+  });
+  paint();
+})();
+</script>

@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Style · Editorial</title><base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/styles/base.css"><style>
+body{background:#fdfcf9}
+.grain{position:absolute;inset:0;background:url(assets/img/grain.png) repeat;background-size:11rem;opacity:.3;mix-blend-mode:soft-light;pointer-events:none}
+.e-hero{padding:2.5rem var(--pad) 0;text-align:center}
+.e-hero .eye{margin:0 0 1.5rem;font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#3e6cab}
+.e-hero .h1{position:relative;display:inline-block;font-size:5.5rem;max-width:62rem}
+.note{font-family:Caveat,cursive;font-weight:600;font-size:1.875rem;line-height:.95;color:var(--rust)}
+.e-hero .note{position:absolute;right:-9rem;top:-.5rem;transform:rotate(-5deg);text-align:left}
+.e-hero .sub{max-width:34rem;margin:1.75rem auto 0}
+.e-hero .go{display:flex;flex-direction:column;align-items:center;gap:1rem;margin-top:2.25rem}
+.kick{display:flex;align-items:center;gap:.75rem;margin:0 0 1.375rem;font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#3e6cab}
+.kick b{font-family:var(--display);font-weight:400;font-size:.95rem;letter-spacing:0;color:var(--rust)}
+.kick i{width:2rem;height:1px;background:currentColor;opacity:.4}
+.esec{padding:8rem var(--pad) 0}
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:5rem;align-items:start}
+.list{margin:0;padding:0;list-style:none;border-top:1px solid rgba(28,24,18,.12)}
+.list li{display:grid;grid-template-columns:3rem minmax(0,1fr);gap:1rem;padding:1.5rem 0;border-bottom:1px solid rgba(28,24,18,.12);font-family:var(--serif);font-size:1.375rem;line-height:1.4}
+.list li b{font-family:var(--display);font-weight:400;color:var(--rust)}
+.mech{text-align:center}
+.panel{position:relative;max-width:72rem;height:30rem;margin:3.5rem auto 0;border-radius:2.5rem;overflow:hidden;background:linear-gradient(90deg,#f5efe5 50%,#0e1a2c 50%)}
+.panel img{position:absolute;left:50%;top:50%;width:36rem;transform:translate(-50%,-50%)}
+.panel .ink{clip-path:inset(0 50% 0 0)}.panel .crm{clip-path:inset(0 0 0 50%)}
+.cap{max-width:40rem;margin:-3rem auto 0;position:relative;padding:2rem 2.5rem;background:#fff;border-radius:1.75rem;box-shadow:0 3rem 5rem -3rem rgba(6,12,24,.45);font-family:var(--serif);font-style:italic;font-size:1.375rem;line-height:1.5}
+.spread{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:72rem;margin:0 auto;border-radius:2.5rem;overflow:hidden}
+.spread .l{padding:4.5rem 4rem;background:#f5efe5}
+.spread .r{position:relative;display:flex;justify-content:center;align-items:flex-end;padding-top:4rem;background:#0e1a2c;overflow:hidden}
+.spread .r .phone{width:16rem;margin-bottom:-7rem}
+.spread .r .note{position:absolute;left:2.25rem;top:3rem;color:#f3a378;transform:rotate(-6deg)}
+.steps2{margin:2rem 0 0;padding:0;list-style:none;display:grid;gap:1.25rem}
+.steps2 li{display:grid;grid-template-columns:2.5rem minmax(0,1fr);gap:.75rem}
+.steps2 b{font-family:var(--display);font-weight:400;font-size:1.5rem;color:var(--rust)}
+.steps2 h3{margin:0;font-family:var(--display);font-weight:400;font-size:1.5rem}
+.steps2 p{margin:.25rem 0 0;color:var(--dim);line-height:1.55}
+.who{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:5rem;align-items:center}
+.who .ph{position:relative}
+.who .ph img{width:100%;aspect-ratio:5/6;object-fit:cover;border-radius:2.75rem 2.75rem .5rem 2.75rem;box-shadow:0 2.5rem 5rem -2.25rem rgba(28,24,18,.45)}
+.who .orb{position:absolute;right:-1.5rem;top:2.5rem;width:4.75rem;height:4.75rem;border-radius:50%;background:linear-gradient(90deg,#e8743a 50%,#0e1a2c 50%);box-shadow:0 0 0 .4375rem #fdfcf9}
+.who .pq{margin:1.75rem 0 0;font-family:var(--serif);font-style:italic;font-size:1.5rem;line-height:1.45}
+.who .sig{margin:.75rem 0 0;font-family:Caveat,cursive;font-weight:600;font-size:2rem;color:#3e6cab;transform:rotate(-3deg);transform-origin:left}
+.two{display:grid;grid-template-columns:1fr 1fr;max-width:72rem;margin:8rem auto 0;border-radius:2.5rem;overflow:hidden}
+.two>div{padding:4.5rem 3.5rem}
+.two .a{background:#f5efe5;text-align:right}.two .b{position:relative;background:#0e1a2c;color:#efe7da}
+.two .h2{font-size:2.75rem}.two .b .h2 em{color:#f3a378}
+.two .b .btn{margin-top:2rem}
+.lead{margin:1.25rem 0 0;font-size:1.1875rem;line-height:1.6;color:var(--dim)}
+@media (max-width:767px){
+  .e-hero .h1{font-size:2.875rem}.e-hero .note{display:none}.e-hero .sub{font-size:1.0625rem}.e-hero .go{align-self:stretch}.e-hero .go .btn{width:100%}
+  .esec{padding-top:5rem}.split,.who,.spread,.two{grid-template-columns:minmax(0,1fr);gap:2rem}.panel{height:18rem}.panel img{width:22rem}
+  .spread .l{padding:2.5rem 1.5rem}.spread .r{min-height:22rem}.two .a{text-align:left}.two>div{padding:2.5rem 1.5rem}
+}
+</style></head><body><header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a href="#">Free guide</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+<section class="e-hero"><p class="eye">For people sick of spiritual platitudes</p><h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em><span class="note">the half nobody<br>sells you</span></h1><p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p><div class="go"><a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul></div></section>
+<section class="esec"><div class="split"><div><p class="kick"><b>01</b><i></i>The problem</p><h2 class="h2">You’ve done the vision boards. <em>Here’s why nothing changed.</em></h2></div><ol class="list"><li><b>01</b><span>You journal gratitude every morning and still feel stuck by noon.</span></li><li><b>02</b><span>You’ve read the books, and you’re the same person with a better vocabulary.</span></li><li><b>03</b><span>You keep hearing “raise your vibration”, and nobody says what it costs.</span></li><li><b>04</b><span>You get the good week, then the crash nobody planned for.</span></li></ol></div></section>
+<section class="esec mech"><p class="kick" style="justify-content:center"><b>02</b><i></i>The real mechanism</p><h2 class="h2">It’s not what you say. Not what you think. <em>It’s what you feel.</em></h2><div class="panel"><img class="ink" src="assets/img/vitruvian-ink.png" alt=""><img class="crm" src="assets/img/vitruvian-cream.png" alt=""><div class="grain"></div></div><p class="cap">Whatever’s held in your gut and heart is the signal your life responds to.</p></section>
+<section class="esec"><div class="spread"><div class="l"><p class="kick"><b>03</b><i></i>The practice</p><h2 class="h2">Knowing it is half. <em>Living it is the other half.</em></h2><ol class="steps2"><li><b>1</b><div><h3>Find your half</h3><p>Eighteen quick questions show which half you lean on and which one you skip.</p></div></li><li><b>2</b><div><h3>One small step a day</h3><p>Written for your goal and your life, with a smaller version for hard days.</p></div></li><li><b>3</b><div><h3>See your patterns</h3><p>Tell me how each step felt. Week by week, you see when you’re at your best.</p></div></li></ol><div style="margin-top:2.25rem"><a class="btn" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div><div class="r"><div class="grain"></div><span class="note">where you’ll<br>live it</span><div class="phone"><img src="assets/img/app-welcome.jpg" alt=""></div></div></div></section>
+<section class="esec"><div class="who"><div class="ph"><img src="assets/img/jarred-sunrise.jpg" alt=""><span class="orb"></span></div><div><p class="kick"><b>04</b><i></i>Who’s behind this</p><h2 class="h2">I’m not a guru. Just someone who got it wrong enough times to find <em>the other half.</em></h2><p class="lead">I paid “gurus” thousands of dollars for manifestation coaching. It worked, but none of them taught me the other half.</p><p class="pq">“Nobody hands you a mentor, so I built the one I wish I’d had.”</p><p class="sig">— Jarred</p></div></div></section>
+<section style="padding:0 var(--pad)"><div class="two"><div class="a"><p class="kick" style="justify-content:flex-end">If nothing changes</p><h2 class="h2">Stay on one side.</h2></div><div class="b"><div class="grain"></div><p class="kick" style="color:#f3a378">If you take the quiz</p><h2 class="h2">Get <em>the other half.</em></h2><a class="btn btn-light" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></section>
+<footer class="foot" style="margin-top:6rem"><img src="assets/img/logo-lockup.png" alt=""><span>How it works · About · Free guide · Privacy</span></footer></body></html>

@@ -189,3 +189,41 @@
     .is-motion .tgd-page:nth-child(even){animation-range:entry 24% entry 100%}
   }
 }
+
+/* ===== The guide as a white paper, in the app's colors (2026-10-23) =====
+   The guide is the site's second path now: its own page, presented like a white paper. A clean white document on
+   the app's morning sky replaces the book on navy, the cards turn white, the button is the app's navy, and the page
+   ends by pointing to the app for anyone who would rather live it than read it. */
+.tgd-hero-b{background:linear-gradient(180deg,#d6e4f7 0%,#e9e6f3 38%,#fbe3d0 72%,#fdf3ea 100%)}
+.tgd-hero-b .tje-grain{display:none}
+.tgd-hero-b .tje-cover-glow{background:radial-gradient(closest-side,rgba(255,255,255,.9),rgba(255,247,238,.45) 45%,rgba(255,247,238,0))}
+.tje-nav .tje-link{color:var(--ink)}
+.tje-nav .tje-link:hover{color:var(--navy)}
+.tgd-hero-b a:focus-visible{outline-color:var(--navy)}
+/* the paper: a crisp white sheet on a short stack, instead of a bound book */
+.tgd-hero-b .tje-cover,.tgd-final .tje-cover{transform:perspective(87.5rem) rotateY(-8deg) rotateX(3deg) rotateZ(1.5deg)}
+.tgd-hero-b .tje-cover-pages{background:#ffffff;border-radius:.375rem;box-shadow:.4375rem .4375rem 0 -.0625rem #ffffff,.4375rem .4375rem 0 0 rgba(26,42,68,.1),.875rem .875rem 0 -.0625rem #ffffff,.875rem .875rem 0 0 rgba(26,42,68,.08),0 2.75rem 4rem -1.75rem rgba(20,34,58,.45)}
+.tgd-hero-b .tje-cover-face{background:#ffffff;border-radius:.375rem;box-shadow:inset 0 0 0 1px rgba(26,42,68,.08)}
+.tgd-hero-b .tje-cover-spine{display:none}
+.tgd-hero-b .tje-cover-kicker{color:var(--navy)}
+.tje-sticker{background:var(--btn-navy);color:#f4eee4}
+/* inside: white pages with the app's soft shadow */
+.tgd-page{background:#ffffff;box-shadow:var(--app-card),inset 0 0 0 1px rgba(26,42,68,.06)}
+/* the end of the page: the app, for anyone who would rather live it than read it */
+.tgd-app{padding:4.5rem var(--pad) 6rem}
+.tgd-app-in{display:grid;grid-template-columns:minmax(0,1fr) 17rem;gap:3rem;align-items:center;max-width:68rem;margin:0 auto;padding:3.5rem clamp(2rem,5vw,4.5rem) 0;border-radius:2.75rem;box-shadow:0 2rem 4rem -3rem rgba(40,60,110,.5)}
+.tgd-app-copy{padding-bottom:3.5rem}
+.tgd-app-copy .tje-kick{color:var(--navy)}
+.tgd-app-copy .tje-h2{font-size:clamp(2rem,3.6vw,3rem)}
+.tgd-app-copy .tje-lead{max-width:32rem;margin:1rem 0 1.75rem;color:#3f382f}
+.tgd-app-phone{align-self:end;height:22rem;overflow:hidden}
+.tgd-app-phone .tje-phone{width:16.5rem}
+@media (max-width:767px){
+  .tgd-app{padding:3rem .75rem 4rem}
+  .tgd-app-in{grid-template-columns:minmax(0,1fr);gap:1.5rem;padding:2.5rem 1.25rem 0;border-radius:2rem;text-align:center}
+  .tgd-app-copy{padding-bottom:0}
+  .tgd-app-copy .tje-kick{justify-content:center}
+  .tgd-app-copy .tje-cta{width:100%}
+  .tgd-app-phone{justify-self:center;height:17rem}
+  .tgd-app-phone .tje-phone{width:13.5rem}
+}

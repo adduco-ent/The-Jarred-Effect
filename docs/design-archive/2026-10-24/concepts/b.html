@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept B · Product stage</title>
+<base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/concepts/base.css">
+<style>
+/* Concept B: your headline and one big button, then the app itself on a stage in its own evening sky, rising from below the fold. */
+.top{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding:1.75rem 1.25rem 0;text-align:center}
+.h1{font-size:4.5rem;max-width:56rem}
+.sub{max-width:36rem}
+.go{display:flex;flex-direction:column;align-items:center;gap:1rem;margin-top:.5rem}
+.btn-xl{height:4rem;padding:0 2.25rem;font-size:1.0625rem}
+.stage{position:relative;max-width:72rem;height:31rem;margin:3.5rem auto 0;border-radius:2.75rem 2.75rem 0 0;overflow:hidden;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 38%,var(--sky3) 64%,var(--sky4) 100%)}
+.stage::before{content:"";position:absolute;left:50%;bottom:-9rem;width:30rem;height:30rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,244,230,.95),rgba(255,226,200,.5) 40%,rgba(255,226,200,0))}
+.stage::after{content:"";position:absolute;inset:0;background:radial-gradient(40rem 6rem at 20% 30%,rgba(255,255,255,.35),transparent 70%),radial-gradient(30rem 5rem at 85% 55%,rgba(255,255,255,.28),transparent 70%)}
+.stage .phone{position:absolute;z-index:1;left:50%;top:3rem}
+.p-mid{width:17rem;transform:translateX(-50%);z-index:2!important}
+.p-l{width:15rem;transform:translateX(calc(-50% - 17rem)) translateY(4rem) rotate(-7deg)}
+.p-r{width:15rem;transform:translateX(calc(-50% + 17rem)) translateY(4rem) rotate(7deg)}
+.cap{position:absolute;z-index:3;top:2rem;display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;border-radius:999px;background:rgba(255,255,255,.75);font-size:.8125rem;font-weight:600;color:var(--ink);box-shadow:0 .75rem 1.5rem -1rem rgba(6,12,24,.4)}
+.cap b{display:grid;place-items:center;width:1.375rem;height:1.375rem;border-radius:50%;background:var(--orange);font-size:.75rem;color:#241904}
+.cap-1{left:calc(50% - 30rem)}.cap-2{left:50%;transform:translateX(-50%);top:.875rem;display:none}.cap-3{right:calc(50% - 30rem)}
+@media (max-width:767px){
+  .h1{font-size:2.625rem}.sub{font-size:1.0625rem}.btn-xl{width:100%}
+  .go{align-self:stretch}
+  .stage{height:24rem;margin:2.5rem .75rem 0;border-radius:2rem 2rem 0 0}
+  .p-mid{width:13rem}.p-l,.p-r{width:11rem}
+  .p-l{transform:translateX(calc(-50% - 9.5rem)) translateY(3rem) rotate(-7deg)}.p-r{transform:translateX(calc(-50% + 9.5rem)) translateY(3rem) rotate(7deg)}
+  .cap{display:none}
+}
+</style></head><body>
+<header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+<section class="top">
+  <p class="eyebrow">For people sick of spiritual platitudes</p>
+  <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+  <p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+  <div class="go">
+    <a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul>
+  </div>
+</section>
+<section class="stage" aria-label="The Other Half on three phones">
+  <span class="cap cap-1"><b>1</b>Find your half</span><span class="cap cap-3"><b>3</b>See your patterns</span>
+  <div class="phone p-l"><img src="assets/img/app-quiz.jpg" alt=""></div>
+  <div class="phone p-r"><img src="assets/img/app-progress.jpg" alt=""></div>
+  <div class="phone p-mid"><img src="assets/img/app-welcome.jpg" alt=""></div>
+</section>
+</body></html>

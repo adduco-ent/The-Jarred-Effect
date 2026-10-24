@@ -14,6 +14,17 @@
     var m = /[?&]r=([a-z]+)/i.exec(location.search);
     var answers = m && window.OH_SCORE.decode(m[1], C.questions.length);
     if (answers) { state = { answers: answers, step: C.questions.length - 1, done: true }; save(); if (location.hash !== '#result') location.hash = 'result'; }
+    // the homepage asks the first question itself: /app/?q1=a|both|b starts the quiz with that answer and opens question 2
+    var q1 = !answers && /[?&]q1=(a|both|b)\b/.exec(location.search);
+    if (q1) {
+      state = { answers: [{ a: -2, both: 0, b: 2 }[q1[1]]], step: 1, life: {}, done: false }; save();
+      try { history.replaceState(null, '', location.pathname + '#quiz'); } catch (e) { location.hash = 'quiz'; }
+    }
+    // the homepage's button: /app/?start opens question 1 (or picks up where they left off); after the quiz, their result
+    if (!answers && !q1 && /[?&]start\b/.test(location.search)) {
+      var to = state.done ? 'result' : 'quiz';
+      try { history.replaceState(null, '', location.pathname + '#' + to); } catch (e) { location.hash = to; }
+    }
   })();
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY)) || { answers: [] }; } catch (e) { return { answers: [] }; }

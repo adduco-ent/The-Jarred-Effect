@@ -1,0 +1,503 @@
+{
+  "playbook": 1,
+  "tier": "free",
+  "type": "achiever",
+  "typeName": "The Achiever",
+  "asks": [
+    {
+      "protocol": "new-habit",
+      "text": "Run a 5K by spring.",
+      "otherHalf": "Desire",
+      "focus": "Building a new habit",
+      "deeper": {
+        "name": "Building a new habit",
+        "when": "When their goal is something they want to do regularly: move, write, save, wake earlier.",
+        "steps": [
+          "Name it as who you’re becoming, plus one tiny action: “I’m someone who moves every day. Shoes on, ten minutes.”",
+          "Shrink it until it survives a Tuesday. If it feels too small, it’s probably the right size.",
+          "Anchor it to something you already do, not to a clock: after coffee, after the school run, before your phone.",
+          "Write three versions: for a good day, an okay day and a hard day. All three count.",
+          "Do it most days, at whatever moment works that day.",
+          "Write one line a day about what you actually did.",
+          "Missed a day? No catch-up. Come back the next day, and try not to miss twice in a row.",
+          "Every 7 days, look back: keep it, shrink it or change its shape. Grow it one notch only when it feels easy most days."
+        ],
+        "safety": null
+      }
+    },
+    {
+      "protocol": "unlearn",
+      "text": "Stop working past 7 p.m.",
+      "otherHalf": "Trust",
+      "focus": "Unlearning an old habit",
+      "deeper": {
+        "name": "Unlearning an old habit",
+        "when": "When their goal is about stopping something that’s costing them: scrolling, snacking, procrastinating, overworking.",
+        "steps": [
+          "Notice without judging. For three days, write down when it happens: what set it off, how you felt, what you got from it.",
+          "Find the payoff. Ask: what am I getting out of this? Relief, comfort, a break, a sense of control.",
+          "Make the old way a little harder. Move it, log out, put it in another room, add a step between you and it.",
+          "Choose a swap that gives you the same payoff in a better way: a walk for the break, a text to a friend for the comfort.",
+          "When the urge shows up, pause for two minutes and feel it before you choose. Urges rise, and they pass.",
+          "A slip is information. Write what set it off and what would help next time, then carry on.",
+          "Tell one person in your circle what you’re changing, and ask them to check in.",
+          "Count the days you chose differently, not the days you didn’t."
+        ],
+        "safety": "If the habit involves alcohol, drugs, gambling, food, self-harm or anything that puts you in danger, this doesn’t replace real help. Talk to a doctor or counselor. If you’re in crisis, call your local emergency number or a crisis line now."
+      }
+    }
+  ],
+  "read": "You already know how to put the work in. This week isn’t about more effort. It’s about remembering why you want to cross that finish line, and letting the workday end, so both the running and your evenings start to feel like yours.",
+  "how": [
+    "Any moment today counts. There’s no set time.",
+    "Each day, check in on what kind of day it is: good, okay or hard. Do the version that fits. All three count.",
+    "Missed a day? No catch-up. Just pick up today’s step.",
+    "On an okay or hard day, pick one goal and do its step. That counts as the day.",
+    "Your gut has the final say. Skip or change any step, and note why."
+  ],
+  "cheer": {
+    "planStart": "This week is yours. Seven small steps, and every one counts, including the small versions.",
+    "days": {
+      "1": "Day one. Start small and let it be easy. Showing up is the whole win today.",
+      "2": "Day two is where most people quietly stop. You’re here. That already matters.",
+      "3": "Three days in, you’re building proof, and your gut is starting to notice.",
+      "4": "Halfway. Today is for honesty, not effort. Sit with the question, even if it’s uncomfortable.",
+      "5": "You’re past the middle. Whatever this week has looked like so far, today counts.",
+      "6": "One more step before the look back. Keep it light, and enjoy it if you can.",
+      "7": "Last day. Look at what you actually did. It’s probably more than you think."
+    },
+    "done": [
+      "Done. That’s proof your gut can read.",
+      "That’s a promise kept. Small ones like that are how you start trusting yourself.",
+      "That counts. Quietly, it all adds up.",
+      "Marked. Notice how it feels to follow through.",
+      "Another one. You’re becoming someone who does this.",
+      "Small version? It counts just the same."
+    ],
+    "missed": "Back at it. No catch-up needed. Today’s step is the only one that matters.",
+    "progress": {
+      "0": "Day one is waiting. Start with the smallest version.",
+      "1": "One down. That’s how every change starts.",
+      "2": "Two days. You’re building something.",
+      "3": "Three days of proof. Keep it small and keep going.",
+      "4": "Four days. More than half the week, done.",
+      "5": "Five days. Your gut has real evidence now.",
+      "6": "Six days. One look back to go.",
+      "7": "All seven. Take that in. You did this."
+    },
+    "checkin": {
+      "full": "Love that. Go for the whole step, and enjoy it.",
+      "half": "Okay days are real life. Ease into a lighter version, and let it count.",
+      "halfMany": "Okay days are real life. Choose the one goal that feels lightest, take its step, and let that be the day.",
+      "rough": "Hard days happen. Go gently with yourself, take the smallest version, and know it counts the same."
+    },
+    "tomorrow": "Today is done, so go enjoy the rest of it. See you tomorrow.",
+    "future": "Here’s a look ahead, so you can see where the week is going. It opens on its day, and until then, today’s step is the one that counts.",
+    "missedDay": "This one slipped by, and that’s okay. No catch-up. Just today.",
+    "weekDone": "Seven days, {n} done. That’s real information, not a verdict. Take your look back, then shape next week.",
+    "allDone": "All seven days. Not perfect, just real, and that’s exactly how this works. Take your look back, then we’ll build next week.",
+    "nudge": [
+      "Day {day}. Today’s step is ready, and a few minutes is enough.",
+      "Your goal is still waiting for you. One small step today.",
+      "Hard day? The small version counts the same.",
+      "Check in, do your step, write a line. That’s the whole loop.",
+      "A few minutes for the thing you want most. Today’s step is ready."
+    ],
+    "nudgeLast": "Day 7. Take five minutes to look back and shape next week.",
+    "welcome": {
+      "ask": "How’s today treating you?",
+      "days": [
+        "It’s day one, with nothing to prove yet. Begin small, and let it be easy.",
+        "It’s day two, and yesterday counted. Today you get to build on it, quietly.",
+        "It’s day three, right where most people drift, and you’re still here.",
+        "It’s day four, the halfway point, and today asks for honesty more than effort.",
+        "It’s day five, and the new way is starting to feel like your own.",
+        "It’s day six, so take a moment to see how far a few minutes a day has carried you.",
+        "It’s day seven, with one more step to take before a look back at all you’ve built."
+      ],
+      "later": "It’s a new day, and you’re the same you, just a little further along.",
+      "quotes": [
+        {
+          "q": "First say to yourself what you would be; and then do what you have to do.",
+          "by": "Epictetus"
+        },
+        {
+          "q": "Knowing is not enough; we must apply. Willing is not enough; we must do.",
+          "by": "Johann Wolfgang von Goethe"
+        },
+        {
+          "q": "He who has a why to live can bear almost any how.",
+          "by": "Friedrich Nietzsche"
+        },
+        {
+          "q": "The impediment to action advances action. What stands in the way becomes the way.",
+          "by": "Marcus Aurelius"
+        },
+        {
+          "q": "We suffer more often in imagination than in reality.",
+          "by": "Seneca"
+        },
+        {
+          "q": "Trust in God, but tie your camel.",
+          "by": "Arab proverb"
+        },
+        {
+          "q": "Life can only be understood backwards; but it must be lived forwards.",
+          "by": "Søren Kierkegaard"
+        },
+        {
+          "q": "Do what you can, with what you have, where you are.",
+          "by": "Theodore Roosevelt"
+        },
+        {
+          "q": "A journey of a thousand miles begins with a single step.",
+          "by": "Lao Tzu"
+        }
+      ],
+      "today": {
+        "full": "You’ve got room today. Go for the full version, and enjoy it.",
+        "half": "An honest, ordinary day. Today’s step, at whatever size fits.",
+        "halfMany": "One goal, one step. That’s a real day, and it counts.",
+        "rough": "Hard days are part of it. One small thing today, and it counts the same."
+      },
+      "go": "Let’s go"
+    }
+  },
+  "focus": "Add as many goals as you want. Fewer at once works better, though: with one to three, you’ll see the progress you’re after sooner.",
+  "journal": {
+    "general": [
+      "What’s on your mind right now? Start with the first sentence that comes.",
+      "What went better than you expected this week?",
+      "What are you avoiding, and what would the smallest first step be?",
+      "What do you want more of next week? Less of?",
+      "When did you feel most like yourself lately?",
+      "What would you tell a friend in your exact situation?",
+      "What’s one thing you did this week you’re quietly proud of?",
+      "What’s draining you right now, and what’s one kind boundary that would help?"
+    ],
+    "day": {
+      "full": [
+        "What made today a good day? How could you get more of that?",
+        "What did you do today that future you will thank you for?"
+      ],
+      "half": [
+        "What got in the way today, and what still went right?",
+        "What would make tomorrow a little easier?"
+      ],
+      "rough": [
+        "What happened today? Write it plainly, without judging it.",
+        "What do you need right now that you’re not getting?",
+        "What’s one small thing that would help, even a little?"
+      ]
+    },
+    "plays": [
+      "Who are you becoming with this habit? Describe them on an ordinary Tuesday.",
+      "What did the old habit give you today that you still need? Where else could you get it?"
+    ],
+    "letters": [
+      {
+        "to": "Future you",
+        "prompt": "Write to yourself a year from now. What do you hope is true?"
+      },
+      {
+        "to": "Past you",
+        "prompt": "What do you wish you’d known back then?"
+      },
+      {
+        "to": "Someone you’re carrying",
+        "prompt": "Say what happened, how it felt, and what you’re putting down. You won’t send it."
+      }
+    ],
+    "safety": {
+      "title": "You don’t have to carry this alone",
+      "text": "If you’re thinking about hurting yourself, or you’re not safe right now, please reach out now. Call your local emergency number or a crisis line. In the US and Canada, you can call or text 988, any time.",
+      "link": "Find a crisis line where you are",
+      "note": "Your words are saved. This app is for reflection, and it can’t replace real help."
+    }
+  },
+  "r": "bbaoobaooaoa",
+  "life": null,
+  "library": [
+    "Building a new habit",
+    "Unlearning an old habit",
+    "Clearing your field",
+    "The Price check: when it gets hard",
+    "Tries and the data debrief",
+    "Gut calls",
+    "Receiving it",
+    "Holding the new level",
+    "Be precise: the word check",
+    "When you feel alone",
+    "When it’s too much",
+    "Opening doors: new people, new opportunities",
+    "Reading flow and resistance",
+    "The pause before yes",
+    "Your own agency",
+    "Learning to say no",
+    "Speaking up for yourself",
+    "Your worth, held",
+    "Catching error thoughts",
+    "Your five: the family you’re building",
+    "Four ways to stay clear",
+    "The comeback",
+    "Body basics: fuel your steam",
+    "Big life changes",
+    "What you actually value",
+    "Your signal: feel it, hold it, live it",
+    "Navigating your emotions",
+    "Keeping your power",
+    "Making room: letting go of the old to let the new in"
+  ],
+  "days": [
+    {
+      "day": 1,
+      "kind": "step",
+      "minutes": 10,
+      "steps": [
+        {
+          "ask": 0,
+          "id": "des-1",
+          "title": "Why, three times",
+          "minutes": 5,
+          "what": "Write why you want your goal. Then ask “why?” about your answer, twice more.",
+          "example": "Run a 5K → feel strong in my body again → keep up with my kids on Saturdays.",
+          "rough": "Just the first why.",
+          "help": {
+            "why": "Wants that sit on the surface fade fast. The deeper why is what pulls you through the low days, because it’s about how you want to feel, not only what you want to get.",
+            "how": [
+              "Write your goal at the top of a page or a note.",
+              "Under it, write why you want it, in one honest line.",
+              "Ask “why does that matter?” about that line, and write the answer. Do it once more."
+            ],
+            "stuck": "If the answers sound like what you’re supposed to say, ask: what would I want here if no one would ever know?",
+            "story": "Sam wanted to run a 5K. First why: “to get in shape.” Second: “because I’m out of breath chasing my kids.” Third: “because I want to be the dad who’s in the game, not on the bench.” That third one went on a sticky note on his running shoes. On days he didn’t feel like it, he didn’t read “get in shape.” He read the bench line, and he went."
+          }
+        },
+        {
+          "ask": 1,
+          "id": "hab-4",
+          "title": "Track the trigger",
+          "minutes": 5,
+          "what": "Each time the old habit shows up today, note what set it off and how you felt.",
+          "example": "7:20 p.m., one more email “so tomorrow’s easier”. Felt: anxious, behind.",
+          "rough": "Tally marks only.",
+          "help": {
+            "why": "Habits run on autopilot, and you can’t change what you can’t see. Writing down the moment it shows up turns a blur into a pattern you can work with.",
+            "how": [
+              "Keep a note on your phone called “Triggers”.",
+              "Each time the old habit shows up, write the time, what just happened, and how you felt.",
+              "No judging and no fixing yet. Just notice."
+            ],
+            "stuck": "If you forget in the moment, write it down afterward. Even a few entries a day show the pattern.",
+            "story": "Mia wanted to stop late-night snacking. She tracked the trigger for three days. Every entry looked the same: after 9 p.m., after a hard work message, feeling wired and alone. It wasn’t about hunger at all. That changed what she worked on next."
+          }
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "kind": "step",
+      "minutes": 15,
+      "steps": [
+        {
+          "ask": 0,
+          "id": "dis-1",
+          "title": "One tiny step",
+          "minutes": 10,
+          "what": "Do the smallest daily step toward your goal, whenever today allows.",
+          "example": "Walk-run for ten minutes: one minute jogging, two minutes walking.",
+          "rough": "Two minutes. Open it, start it, stop.",
+          "help": {
+            "why": "Small steps you actually take teach your gut that this is real. A big plan you skip teaches it the opposite.",
+            "how": [
+              "Pick the smallest action that still moves your goal forward.",
+              "Do it whenever today allows, wherever it fits.",
+              "Stop when the time’s up, even if you want to keep going. Leave yourself wanting more."
+            ],
+            "stuck": "If it feels too big to start, cut it in half, then in half again. Two minutes is still a step.",
+            "story": "Maya wanted to write a book and had been “about to start” for two years. Her tiny step: one page before she opened her phone in the morning. Some pages were bad. A few were good. After three weeks she had twenty-one pages, and for the first time the book felt like something she was doing instead of something she was waiting on."
+          }
+        },
+        {
+          "ask": 1,
+          "id": "fld-2",
+          "title": "One kind boundary",
+          "minutes": 5,
+          "what": "Pick one drain and set a clear, kind boundary around it. Say it once, simply.",
+          "example": "Tell the team: “I’m offline after 7. I’ll pick it up first thing.”",
+          "rough": "Write the boundary down. Say it this week.",
+          "help": {
+            "why": "Drains rarely stop on their own. A clear, kind boundary protects your energy without making anyone the bad guy.",
+            "how": [
+              "Pick one drain that keeps costing you.",
+              "Write the boundary in one sentence: what you will or won’t do, and when.",
+              "Say it once, calmly, without a long explanation."
+            ],
+            "stuck": "If saying it feels too hard, start by living it quietly, and say it out loud when it comes up.",
+            "story": "Mateo’s boss called at all hours. He wrote one sentence: “I’m not taking work calls after 7 anymore, but I’ll reply first thing.” He said it once, on a Monday. His boss said, “Sure, fair.” Mateo had spent months dreading a conversation that took fifteen seconds."
+          }
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "kind": "step",
+      "minutes": 13,
+      "steps": [
+        {
+          "ask": 0,
+          "id": "hab-2",
+          "title": "Anchor it",
+          "minutes": 3,
+          "what": "Attach your step to something you already do every day, instead of a set time.",
+          "example": "Right after school drop-off, I walk-run before I go home.",
+          "rough": "Pick any anchor for today. Try a better one tomorrow.",
+          "help": {
+            "why": "Clock times break the moment your day changes. Anchoring your step to something you already do every day lets the old habit carry the new one.",
+            "how": [
+              "List three things you do every day without thinking: coffee, brushing your teeth, the school run.",
+              "Pick the one that comes right before a good moment for your step.",
+              "Finish this line: “After I ___, I ___.”"
+            ],
+            "stuck": "If the anchor keeps slipping, try a different one tomorrow. The right anchor feels easy.",
+            "story": "Zoe kept forgetting her evening stretches. Her anchor: after she brushes her teeth at night, she stretches on the bathroom floor for five minutes. Brushing her teeth never gets skipped, so the stretching stopped getting skipped too."
+          }
+        },
+        {
+          "ask": 1,
+          "id": "hab-5",
+          "title": "Make the old way harder",
+          "minutes": 10,
+          "what": "Add one step between you and the old habit.",
+          "example": "Laptop goes in the hall closet at 7. Email off my phone’s home screen.",
+          "rough": "Move it out of sight.",
+          "help": {
+            "why": "Willpower runs out. Friction doesn’t. One extra step between you and the old habit gives you a moment to choose.",
+            "how": [
+              "Look at how the old habit happens: where, with what, and how fast.",
+              "Add one step in the way: move it, log out, put it in another room.",
+              "At the same time, make the better option easier, if you can."
+            ],
+            "stuck": "If you push straight through the barrier, make it a little bigger, or pair it with a swap.",
+            "story": "Carlos scrolled for an hour every night in bed. He started charging his phone in the kitchen and put a book on his nightstand. A couple of nights he walked to the kitchen anyway. Most nights he didn’t bother. The extra twenty steps were enough."
+          }
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "kind": "question",
+      "title": "One honest question",
+      "name": "The Payoff",
+      "ask": "Is there a hidden upside to not having what you want yet?",
+      "help": "Be honest. Maybe it’s easier, or safer, or nobody can judge you for trying. Most of us have one, and naming yours loosens its grip.",
+      "hint": "Sometimes staying busy feels safer than getting there.",
+      "followUps": [
+        "What would you have to face if you really went for it?",
+        "What would you do with that time and energy if the excuse were gone?"
+      ],
+      "forMany": true
+    },
+    {
+      "day": 5,
+      "kind": "step",
+      "minutes": 7,
+      "steps": [
+        {
+          "ask": 0,
+          "id": "sig-1",
+          "title": "Live it for two minutes",
+          "minutes": 2,
+          "what": "Close your eyes and picture an ordinary moment after your goal is real, in first person. Notice how it feels in your body.",
+          "example": "Crossing the finish line in April, legs heavy, someone handing me water, smiling for no reason.",
+          "rough": "Thirty seconds is enough.",
+          "help": {
+            "why": "Your body responds to what you picture as if it’s partly real. Practicing the feeling of your future makes it familiar instead of far away.",
+            "how": [
+              "Sit somewhere quiet and close your eyes.",
+              "Picture an ordinary moment after your goal is real. Not the big finish: a normal Tuesday.",
+              "Notice where you feel it in your body, and stay with it for two minutes."
+            ],
+            "stuck": "If doubt crashes in, that’s normal. Notice it, write it down afterward, and come back to the picture.",
+            "story": "Tara pictured walking into her own studio on a Tuesday morning. Keys in hand, light through the window, shoulders loose. She stayed with it for two minutes. She opened her eyes feeling like the studio was somewhere she was going, not just something she wanted."
+          }
+        },
+        {
+          "ask": 1,
+          "id": "hab-6",
+          "title": "The swap",
+          "minutes": 5,
+          "what": "Pick something that gives you the same payoff in a better way, and use it the next time the urge shows up.",
+          "example": "When the urge to check email hits after 7: ten minutes outside with the dog instead.",
+          "rough": "Name the swap. Use it tomorrow.",
+          "help": {
+            "why": "Every habit gives you something. Take it away without replacing it and the need comes back louder. A swap meets the same need in a better way.",
+            "how": [
+              "Name what the old habit gives you: relief, comfort, a break, a sense of control.",
+              "Pick something that gives you the same thing in a better way.",
+              "Decide ahead of time: “When the urge hits, I’ll ___ instead.”"
+            ],
+            "stuck": "If the swap doesn’t satisfy, it may be meeting the wrong need. Look again at what the old habit really gives you.",
+            "story": "Ama’s afternoon vending-machine trip wasn’t about food. It was a break from her desk. Her swap: a five-minute walk to the end of the hall and back, with water. Same break, no crash. Some days she still got the snack, and that was fine."
+          }
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "kind": "step",
+      "minutes": 15,
+      "steps": [
+        {
+          "ask": 0,
+          "id": "lse-2",
+          "title": "Ten minutes of play",
+          "minutes": 10,
+          "what": "Do something just for fun, with no goal and no score.",
+          "example": "A goofy race with the kids around the block. No watch, no pace.",
+          "rough": "Two minutes of something silly.",
+          "help": {
+            "why": "Play isn’t a break from growing; it’s fuel for it. It drops stress, brings back ideas, and reminds you that life is for enjoying.",
+            "how": [
+              "Pick something you do only because it’s fun.",
+              "Set ten minutes aside, with no goal and no score.",
+              "Let yourself be a little silly."
+            ],
+            "stuck": "If nothing comes to mind, think of what you loved doing at ten years old, and try a grown-up version of it.",
+            "story": "Tom used to love building things as a kid. He bought a cheap Lego set and gave it ten minutes after dinner. No goal, just building. His teenage daughter wandered over and joined him. They didn’t talk about anything serious. It was the most relaxed he’d felt all week."
+          }
+        },
+        {
+          "ask": 1,
+          "id": "hab-7",
+          "title": "The slip debrief",
+          "minutes": 5,
+          "what": "If the old habit won today, write what set it off and what would help next time. Then let it go.",
+          "example": "Worked till 8 on Thursday. What set it off: a late client email. Next time: reply at 8 a.m.",
+          "rough": "One line.",
+          "help": {
+            "why": "A slip is information, not a verdict. Looking at it calmly shows you exactly what to change next time.",
+            "how": [
+              "Write what happened, in one line.",
+              "Write what set it off: the time, the place, the feeling.",
+              "Write one thing that would help next time. Then let it go."
+            ],
+            "stuck": "If guilt takes over, remember that you’re learning the pattern. That is the work.",
+            "story": "Owen skipped the gym after a meeting ran late. His debrief: “Late meeting, tired, gym bag was at home.” What would help: pack the bag the night before and keep it in the car. He did it that night. He noticed he felt like someone solving a problem, not someone who blew it."
+          }
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "kind": "lookback",
+      "title": "Look back",
+      "minutes": 5,
+      "prompts": [
+        "What did I actually do this week?",
+        "What changed, even a little?",
+        "What do I keep for next week, and what do I change?"
+      ]
+    }
+  ]
+}

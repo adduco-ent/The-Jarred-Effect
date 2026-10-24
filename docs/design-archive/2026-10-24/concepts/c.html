@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept C · Step into the app</title>
+<base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/concepts/base.css">
+<style>
+/* Concept C: the site opens inside the app's own world. The evening sky is the hero, and the first question is asked
+   in the app's own card and tiles, so the quiz feels like a continuation, not a new page. */
+.hero{position:relative;overflow:hidden;min-height:100vh;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 34%,var(--sky3) 60%,var(--sky4) 86%,#f7dccb 100%)}
+.hero::before{content:"";position:absolute;left:50%;bottom:-14rem;width:42rem;height:42rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,246,234,1),rgba(255,226,198,.55) 38%,rgba(255,226,198,0));pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(46rem 7rem at 18% 26%,rgba(255,255,255,.38),transparent 70%),radial-gradient(36rem 6rem at 86% 46%,rgba(255,255,255,.3),transparent 70%)}
+.in{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1.125rem;padding:1.5rem 1.25rem 4rem;text-align:center}
+.eyebrow{color:rgba(28,24,18,.62)}
+.h1{font-size:4.25rem;max-width:54rem}
+.h1 em{color:#9a3f17}
+.sub{max-width:36rem;color:#3f382f}
+.card{width:min(44rem,100%);margin-top:1.25rem;padding:1.5rem 1.5rem 1.375rem;border-radius:2rem;background:rgba(255,255,255,.74);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 2.5rem 4.5rem -2.5rem rgba(52,40,80,.45),inset 0 0 0 1px rgba(255,255,255,.6)}
+.k{margin:0;font-size:.6875rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.q{margin:.5rem 0 1.125rem;font-family:"Libre Caslon Display",Georgia,serif;font-size:2rem;line-height:1.1}
+.tiles{display:grid;grid-template-columns:1fr .78fr 1fr;gap:.75rem}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.75rem;padding:1.125rem .875rem 1.125rem;border-radius:1.375rem;background:rgba(255,255,255,.88);box-shadow:inset 0 0 0 1px rgba(28,24,18,.07),0 .75rem 1.5rem -1.25rem rgba(6,12,24,.35);text-decoration:none;color:var(--ink)}
+.ic{display:grid;place-items:center;width:3rem;height:3rem;border-radius:50%;background:#f2eef0;font-family:"Libre Caslon Display",Georgia,serif;font-size:1.375rem;color:var(--ink)}
+.tile span{font-family:"Libre Caslon Text",Georgia,serif;font-size:1.0625rem;line-height:1.3;text-wrap:balance}
+.tile.is-hover{box-shadow:inset 0 0 0 1.5px rgba(14,26,44,.55),0 1rem 2rem -1.25rem rgba(6,12,24,.45)}
+.tile.is-hover .ic{background:var(--navy);color:#fff}
+.orb{width:3rem;height:3rem;border-radius:50%;background:linear-gradient(90deg,var(--orange) 0 50%,var(--navy) 50% 100%);box-shadow:inset 0 0 0 .1875rem rgba(255,255,255,.5)}
+.tile--both span{font-style:italic;color:var(--dim)}
+.foot{display:flex;justify-content:center;margin-top:1.125rem}
+.trust{justify-content:center;color:#4f473c}
+@media (max-width:767px){
+  .h1{font-size:2.625rem}.sub{font-size:1.0625rem}
+  .card{padding:1.125rem;border-radius:1.5rem}
+  .q{font-size:1.625rem}
+  .tiles{grid-template-columns:1fr;gap:.5rem}
+  .tile{flex-direction:row;padding:.75rem .875rem;gap:.875rem;text-align:left}
+  .tile--both{order:3}
+  .ic,.orb{width:2.5rem;height:2.5rem;flex:none}
+}
+</style></head><body>
+<section class="hero">
+  <header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+  <div class="in">
+    <p class="eyebrow">For people sick of spiritual platitudes</p>
+    <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+    <p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+    <div class="card">
+      <p class="k">The Polarity Profile · Question 1 of 18</p>
+      <p class="q">When I want something…</p>
+      <div class="tiles">
+        <a class="tile" href="#"><span class="ic">A</span><span>I picture it and feel it.</span></a>
+        <a class="tile tile--both" href="#"><span class="orb" aria-hidden="true"></span><span>A bit of both</span></a>
+        <a class="tile is-hover" href="#"><span class="ic">B</span><span>I make a plan and get to work.</span></a>
+      </div>
+    </div>
+    <div class="foot"><ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul></div>
+  </div>
+</section>
+</body></html>

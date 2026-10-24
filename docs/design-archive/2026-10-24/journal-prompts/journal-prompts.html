@@ -1,0 +1,408 @@
+<title>Journal Prompts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<style>
+/* Every journal prompt, live in the app. Each card has just Edit and Remove. */
+:root{
+  --bg:#f6f7f9;--card:#fdfdfc;--fg:#1c1812;--dim:#574f43;--faint:#7a7062;--line:rgba(28,24,18,.1);--ink:#1c1812;
+  --accent:#3e6cab;--accent-ink:#2f5a94;--soft:rgba(62,108,171,.08);--rust:#a8471c;--chip:#efe9df;
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif;--serif:"Libre Caslon Text",Georgia,serif;--sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--ink:#efe7da;--accent:#8fb0de;--accent-ink:#a9c3e6;--soft:rgba(143,176,222,.12);--rust:#f3a378;--chip:#1b2738;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--ink:#efe7da;--accent:#8fb0de;--accent-ink:#a9c3e6;--soft:rgba(143,176,222,.12);--rust:#f3a378;--chip:#1b2738;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:64rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+p{margin:0}
+.k{font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.hero{padding-block:3.5rem 2rem;display:grid;gap:1rem}
+.hero .k{color:var(--accent-ink)}
+.hero h1{font-size:clamp(2.25rem,6vw,3.5rem);line-height:1.04;letter-spacing:-.01em}
+.hero h1 i{font-family:var(--serif);color:var(--accent-ink)}
+.lead{max-width:42rem;font-size:1.0625rem;color:var(--dim)}
+.how{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;font-size:.9375rem;color:var(--dim)}
+.how b{color:var(--fg);font-weight:600}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:.625rem 1rem;padding-block:.75rem}
+.bar input{flex:1;min-width:12rem;font:inherit;font-size:.9375rem;padding:.55rem .85rem;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.bar input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.filters{display:flex;gap:.375rem}
+.filters button{font:inherit;font-size:.8125rem;padding:.35rem .8rem;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--dim);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tally{font-size:.8125rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.status{width:100%;font-size:.8125rem;color:var(--faint)}
+.status.warn{color:var(--rust)}
+.toc{display:flex;flex-wrap:wrap;gap:.375rem}
+.toc a{font-size:.8125rem;color:var(--dim);text-decoration:none;padding:.25rem .7rem;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+.toc a:hover{color:var(--fg);border-color:var(--faint)}
+.side{padding-top:2.5rem}
+.side-h{display:flex;align-items:baseline;gap:1rem;margin-bottom:1rem}
+.side-h h2{font-size:clamp(1.625rem,4vw,2rem);line-height:1.1}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,22rem),1fr))}
+.item{display:flex;flex-direction:column;gap:.875rem;padding:1.25rem;border-radius:1.25rem;background:var(--card);border:1px solid var(--line);min-width:0;transition:border-color .2s ease,opacity .2s ease}
+.item header{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem}
+.item h3{font-size:1.375rem;line-height:1.2}
+.min{flex:none;font-size:.75rem;font-weight:600;padding:.15rem .55rem;border-radius:99px;background:var(--chip);color:var(--dim)}
+.what{font-size:.9375rem;color:var(--dim);padding-bottom:.875rem;border-bottom:1px solid var(--line)}
+.f{display:grid;gap:.25rem}
+.lab{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.lab span{margin-left:.375rem;letter-spacing:.04em;text-transform:none;font-weight:500}
+.f p.ed,.walk{font-size:.9375rem;color:var(--fg)}
+.walk{margin:0;padding-left:1.25rem;display:grid;gap:.25rem}
+.story .st{font-family:var(--serif);font-size:1rem;line-height:1.55;padding:.75rem .875rem;border-radius:.75rem;background:var(--soft)}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:auto;padding-top:.375rem}
+.ctl button:not(.link){font:inherit;font-size:.875rem;font-weight:600;min-height:2.5rem;padding:0 1rem;border-radius:.75rem;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
+.ctl button:not(.link):hover{border-color:var(--faint);color:var(--fg)}
+.ctl button[data-act="edit"][aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.ctl button[data-act="remove"][aria-pressed="true"]{background:var(--rust);border-color:var(--rust);color:#fff}
+.ctl button:focus-visible,.filters button:focus-visible,.toc a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.link{font:inherit;font-size:.8125rem;padding:0;border:0;background:none;color:var(--dim);text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+.saved{font-size:.8125rem;color:var(--accent-ink)}
+.ed{border-radius:.375rem;transition:background .2s ease,box-shadow .2s ease}
+.item.is-editing .ed{cursor:text;background:var(--chip);box-shadow:0 0 0 .25rem var(--chip);outline:none}
+.item.is-editing .ed:focus{background:var(--card);box-shadow:0 0 0 .25rem var(--card),0 0 0 calc(.25rem + 1.5px) var(--accent)}
+.walk .ed{display:list-item}
+.ed.is-edited,.item.is-editing .ed.is-edited{background:var(--soft);box-shadow:0 0 0 .25rem var(--soft)}
+.item.is-editing{border-color:var(--accent)}
+.item.is-edited{border-color:var(--accent)}
+.item.is-removed{opacity:.5;border-style:dashed}
+.item.is-removed .ctl{opacity:1}
+.none{font-size:.875rem;color:var(--faint);font-style:italic}
+.hide{display:none!important}
+footer{padding-block:3rem;font-size:.875rem;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){.item,.ed{transition:none}}
+.ctx{font-size:.875rem;color:var(--dim)}
+.f p.ed.big{font-family:var(--serif);font-size:1.0625rem;line-height:1.5}
+.ctl button[data-act="remove"][hidden]{display:none}
+</style>
+
+<div class="wrap"><div class="hero">
+  <p class="k">The Other Half · Journal · live in the app</p>
+  <h1>Something to start with, <i>never a test.</i></h1>
+  <p class="lead">Today’s prompt is picked for each person: the play they’re on first, then the kind of day they checked in with, then the general set. “Another one” moves down the list. It follows your voice and it’s already live. Change anything that doesn’t sound like you, or remove it.</p>
+  <p class="how"><span><b>Edit</b> tap the text and rewrite it in place</span><span><b>Remove</b> take this prompt out</span><span>Your changes save here. Tell Claude “apply my journal prompt changes” to put them in the app.</span></p>
+  <nav class="toc" aria-label="Jump to"><a href="#g-plays">By play</a><a href="#g-days">By kind of day</a><a href="#g-general">Any day</a><a href="#g-letters">Letters you won’t send</a><a href="#g-safety">When an entry suggests crisis</a></nav>
+</div></div>
+
+<div class="bar"><div class="wrap">
+  <input type="search" id="q" placeholder="Search prompts" aria-label="Search">
+  <div class="filters" role="group" aria-label="Show"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="edited" aria-pressed="false">Edited</button><button type="button" data-filter="removed" aria-pressed="false">Removed</button></div>
+  <p class="tally" id="tally"></p>
+  <p class="status" id="status" role="status">Connecting, so your changes save…</p>
+</div></div>
+
+<main class="wrap"><section class="side" id="g-plays"><div class="side-h"><h2>By play</h2><p class="k">29 prompts</p></div><p class="lead" style="margin:-.5rem 0 1rem;font-size:.9375rem">Shown first when someone is on this play. One per play.</p><div class="grid"><article class="item" data-item="play.new-habit">
+  <header><h3>Building a new habit</h3></header>
+  <div class="f"><p class="ed big" data-of="play.new-habit" data-f="text">Who are you becoming with this habit? Describe them on an ordinary Tuesday.</p></div>
+  <div class="ctl" data-id="play.new-habit"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.new-habit" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.unlearn">
+  <header><h3>Unlearning an old habit</h3></header>
+  <div class="f"><p class="ed big" data-of="play.unlearn" data-f="text">What did the old habit give you today that you still need? Where else could you get it?</p></div>
+  <div class="ctl" data-id="play.unlearn"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.unlearn" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.field">
+  <header><h3>Clearing your field</h3></header>
+  <div class="f"><p class="ed big" data-of="play.field" data-f="text">What gave you energy this week, and what drained it?</p></div>
+  <div class="ctl" data-id="play.field"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.field" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.price-check">
+  <header><h3>The Price check: when it gets hard</h3></header>
+  <div class="f"><p class="ed big" data-of="play.price-check" data-f="text">What is this really costing you, and is it still worth paying?</p></div>
+  <div class="ctl" data-id="play.price-check"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.price-check" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.tries">
+  <header><h3>Tries and the data debrief</h3></header>
+  <div class="f"><p class="ed big" data-of="play.tries" data-f="text">What did your last Try teach you about what you like and what you’re good at?</p></div>
+  <div class="ctl" data-id="play.tries"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.tries" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.gut">
+  <header><h3>Gut calls</h3></header>
+  <div class="f"><p class="ed big" data-of="play.gut" data-f="text">What is your gut telling you right now that your head keeps arguing with?</p></div>
+  <div class="ctl" data-id="play.gut"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.gut" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.receive">
+  <header><h3>Receiving it</h3></header>
+  <div class="f"><p class="ed big" data-of="play.receive" data-f="text">What have you already received that you haven’t stopped to take in?</p></div>
+  <div class="ctl" data-id="play.receive"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.receive" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.hold">
+  <header><h3>Holding the new level</h3></header>
+  <div class="f"><p class="ed big" data-of="play.hold" data-f="text">What’s testing your new level lately, and how did you meet it?</p></div>
+  <div class="ctl" data-id="play.hold"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.hold" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.precise">
+  <header><h3>Be precise: the word check</h3></header>
+  <div class="f"><p class="ed big" data-of="play.precise" data-f="text">Rewrite your Ask so every word is exact and true.</p></div>
+  <div class="ctl" data-id="play.precise"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.precise" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.alone">
+  <header><h3>When you feel alone</h3></header>
+  <div class="f"><p class="ed big" data-of="play.alone" data-f="text">Who could you reach out to this week, with no agenda?</p></div>
+  <div class="ctl" data-id="play.alone"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.alone" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.too-much">
+  <header><h3>When it’s too much</h3></header>
+  <div class="f"><p class="ed big" data-of="play.too-much" data-f="text">What can you put down today, even for a while?</p></div>
+  <div class="ctl" data-id="play.too-much"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.too-much" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.doors">
+  <header><h3>Opening doors: new people, new opportunities</h3></header>
+  <div class="f"><p class="ed big" data-of="play.doors" data-f="text">What door keeps opening for you, even when you’re not pushing?</p></div>
+  <div class="ctl" data-id="play.doors"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.doors" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.flow-read">
+  <header><h3>Reading flow and resistance</h3></header>
+  <div class="f"><p class="ed big" data-of="play.flow-read" data-f="text">What came easily this week, and what kept fighting you?</p></div>
+  <div class="ctl" data-id="play.flow-read"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.flow-read" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.yes">
+  <header><h3>The pause before yes</h3></header>
+  <div class="f"><p class="ed big" data-of="play.yes" data-f="text">What did you say yes to lately that you wish you hadn’t? What would a smaller yes have been?</p></div>
+  <div class="ctl" data-id="play.yes"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.yes" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.agency">
+  <header><h3>Your own agency</h3></header>
+  <div class="f"><p class="ed big" data-of="play.agency" data-f="text">Where do you shrink, and what would you do there if you didn’t?</p></div>
+  <div class="ctl" data-id="play.agency"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.agency" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.no">
+  <header><h3>Learning to say no</h3></header>
+  <div class="f"><p class="ed big" data-of="play.no" data-f="text">What’s a no you’ve been avoiding? Write it in one sentence.</p></div>
+  <div class="ctl" data-id="play.no"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.no" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.speak">
+  <header><h3>Speaking up for yourself</h3></header>
+  <div class="f"><p class="ed big" data-of="play.speak" data-f="text">What’s one thing you’ve been holding back from saying?</p></div>
+  <div class="ctl" data-id="play.speak"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.speak" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.worth">
+  <header><h3>Your worth, held</h3></header>
+  <div class="f"><p class="ed big" data-of="play.worth" data-f="text">Write ten things you’ve done, handled or made it through.</p></div>
+  <div class="ctl" data-id="play.worth"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.worth" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.error">
+  <header><h3>Catching error thoughts</h3></header>
+  <div class="f"><p class="ed big" data-of="play.error" data-f="text">What harsh thought about yourself showed up today? Write it, then write the truer version.</p></div>
+  <div class="ctl" data-id="play.error"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.error" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.circle">
+  <header><h3>Your five: the family you’re building</h3></header>
+  <div class="f"><p class="ed big" data-of="play.circle" data-f="text">Who leaves you feeling amplified? Who leaves you drained?</p></div>
+  <div class="ctl" data-id="play.circle"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.circle" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.agreements">
+  <header><h3>Four ways to stay clear</h3></header>
+  <div class="f"><p class="ed big" data-of="play.agreements" data-f="text">Did you take something personally today that was really about them?</p></div>
+  <div class="ctl" data-id="play.agreements"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.agreements" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.comeback">
+  <header><h3>The comeback</h3></header>
+  <div class="f"><p class="ed big" data-of="play.comeback" data-f="text">What pulled you away, and what’s the smallest way back in?</p></div>
+  <div class="ctl" data-id="play.comeback"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.comeback" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.body">
+  <header><h3>Body basics: fuel your steam</h3></header>
+  <div class="f"><p class="ed big" data-of="play.body" data-f="text">How has your body felt this week? What does it need more of?</p></div>
+  <div class="ctl" data-id="play.body"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.body" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.change">
+  <header><h3>Big life changes</h3></header>
+  <div class="f"><p class="ed big" data-of="play.change" data-f="text">What’s changing in your life right now, and how are you really feeling about it?</p></div>
+  <div class="ctl" data-id="play.change"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.change" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.values">
+  <header><h3>What you actually value</h3></header>
+  <div class="f"><p class="ed big" data-of="play.values" data-f="text">When did you feel most like yourself? What was true in that moment?</p></div>
+  <div class="ctl" data-id="play.values"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.values" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.signal">
+  <header><h3>Your signal: feel it, hold it, live it</h3></header>
+  <div class="f"><p class="ed big" data-of="play.signal" data-f="text">Picture an ordinary day after your Ask is real. What does it feel like?</p></div>
+  <div class="ctl" data-id="play.signal"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.signal" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.emotions">
+  <header><h3>Navigating your emotions</h3></header>
+  <div class="f"><p class="ed big" data-of="play.emotions" data-f="text">What feeling did you push aside today? Give it a few lines now.</p></div>
+  <div class="ctl" data-id="play.emotions"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.emotions" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.power">
+  <header><h3>Keeping your power</h3></header>
+  <div class="f"><p class="ed big" data-of="play.power" data-f="text">Where have you handed your power to someone else? What’s one way to take it back?</p></div>
+  <div class="ctl" data-id="play.power"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.power" aria-live="polite"></span></div>
+</article><article class="item" data-item="play.room">
+  <header><h3>Making room: letting go of the old to let the new in</h3></header>
+  <div class="f"><p class="ed big" data-of="play.room" data-f="text">What are you still carrying that’s already over?</p></div>
+  <div class="ctl" data-id="play.room"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="play.room" aria-live="polite"></span></div>
+</article></div></section><section class="side" id="g-days"><div class="side-h"><h2>By kind of day</h2><p class="k">7 prompts</p></div><p class="lead" style="margin:-.5rem 0 1rem;font-size:.9375rem">Shown first after the day’s check-in.</p><div class="grid"><article class="item" data-item="day.full.0">
+  <header><h3>Good day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.full.0" data-f="text">What made today a good day? How could you get more of that?</p></div>
+  <div class="ctl" data-id="day.full.0"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.full.0" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.full.1">
+  <header><h3>Good day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.full.1" data-f="text">What did you do today that future you will thank you for?</p></div>
+  <div class="ctl" data-id="day.full.1"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.full.1" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.half.0">
+  <header><h3>Okay day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.half.0" data-f="text">What got in the way today, and what still went right?</p></div>
+  <div class="ctl" data-id="day.half.0"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.half.0" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.half.1">
+  <header><h3>Okay day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.half.1" data-f="text">What would make tomorrow a little easier?</p></div>
+  <div class="ctl" data-id="day.half.1"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.half.1" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.rough.0">
+  <header><h3>Hard day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.rough.0" data-f="text">What happened today? Write it plainly, without judging it.</p></div>
+  <div class="ctl" data-id="day.rough.0"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.rough.0" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.rough.1">
+  <header><h3>Hard day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.rough.1" data-f="text">What do you need right now that you’re not getting?</p></div>
+  <div class="ctl" data-id="day.rough.1"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.rough.1" aria-live="polite"></span></div>
+</article><article class="item" data-item="day.rough.2">
+  <header><h3>Hard day</h3></header>
+  <div class="f"><p class="ed big" data-of="day.rough.2" data-f="text">What’s one small thing that would help, even a little?</p></div>
+  <div class="ctl" data-id="day.rough.2"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="day.rough.2" aria-live="polite"></span></div>
+</article></div></section><section class="side" id="g-general"><div class="side-h"><h2>Any day</h2><p class="k">8 prompts</p></div><p class="lead" style="margin:-.5rem 0 1rem;font-size:.9375rem">Shown after the play and day prompts, and when there’s no check-in yet.</p><div class="grid"><article class="item" data-item="general.0">
+  <header><h3>Prompt 1</h3></header>
+  <div class="f"><p class="ed big" data-of="general.0" data-f="text">What’s on your mind right now? Start with the first sentence that comes.</p></div>
+  <div class="ctl" data-id="general.0"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.0" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.1">
+  <header><h3>Prompt 2</h3></header>
+  <div class="f"><p class="ed big" data-of="general.1" data-f="text">What went better than you expected this week?</p></div>
+  <div class="ctl" data-id="general.1"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.1" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.2">
+  <header><h3>Prompt 3</h3></header>
+  <div class="f"><p class="ed big" data-of="general.2" data-f="text">What are you avoiding, and what would the smallest first step be?</p></div>
+  <div class="ctl" data-id="general.2"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.2" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.3">
+  <header><h3>Prompt 4</h3></header>
+  <div class="f"><p class="ed big" data-of="general.3" data-f="text">What do you want more of next week? Less of?</p></div>
+  <div class="ctl" data-id="general.3"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.3" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.4">
+  <header><h3>Prompt 5</h3></header>
+  <div class="f"><p class="ed big" data-of="general.4" data-f="text">When did you feel most like yourself lately?</p></div>
+  <div class="ctl" data-id="general.4"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.4" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.5">
+  <header><h3>Prompt 6</h3></header>
+  <div class="f"><p class="ed big" data-of="general.5" data-f="text">What would you tell a friend in your exact situation?</p></div>
+  <div class="ctl" data-id="general.5"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.5" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.6">
+  <header><h3>Prompt 7</h3></header>
+  <div class="f"><p class="ed big" data-of="general.6" data-f="text">What’s one thing you did this week you’re quietly proud of?</p></div>
+  <div class="ctl" data-id="general.6"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.6" aria-live="polite"></span></div>
+</article><article class="item" data-item="general.7">
+  <header><h3>Prompt 8</h3></header>
+  <div class="f"><p class="ed big" data-of="general.7" data-f="text">What’s draining you right now, and what’s one kind boundary that would help?</p></div>
+  <div class="ctl" data-id="general.7"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="general.7" aria-live="polite"></span></div>
+</article></div></section><section class="side" id="g-letters"><div class="side-h"><h2>Letters you won’t send</h2><p class="k">3 prompts</p></div><p class="lead" style="margin:-.5rem 0 1rem;font-size:.9375rem">Who the letter is to, and the line under it.</p><div class="grid"><article class="item" data-item="letter.0">
+  <header><h3>Letter 1</h3></header>
+  <div class="f"><p class="lab">To</p><p class="ed" data-of="letter.0" data-f="to">Future you</p></div><div class="f"><p class="lab">The line under it</p><p class="ed big" data-of="letter.0" data-f="prompt">Write to yourself a year from now. What do you hope is true?</p></div>
+  <div class="ctl" data-id="letter.0"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="letter.0" aria-live="polite"></span></div>
+</article><article class="item" data-item="letter.1">
+  <header><h3>Letter 2</h3></header>
+  <div class="f"><p class="lab">To</p><p class="ed" data-of="letter.1" data-f="to">Past you</p></div><div class="f"><p class="lab">The line under it</p><p class="ed big" data-of="letter.1" data-f="prompt">What do you wish you’d known back then?</p></div>
+  <div class="ctl" data-id="letter.1"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="letter.1" aria-live="polite"></span></div>
+</article><article class="item" data-item="letter.2">
+  <header><h3>Letter 3</h3></header>
+  <div class="f"><p class="lab">To</p><p class="ed" data-of="letter.2" data-f="to">Someone you’re carrying</p></div><div class="f"><p class="lab">The line under it</p><p class="ed big" data-of="letter.2" data-f="prompt">Say what happened, how it felt, and what you’re putting down. You won’t send it.</p></div>
+  <div class="ctl" data-id="letter.2"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false">Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="letter.2" aria-live="polite"></span></div>
+</article></div></section><section class="side" id="g-safety"><div class="side-h"><h2>When an entry suggests crisis</h2><p class="k">1 card</p></div><p class="lead" style="margin:-.5rem 0 1rem;font-size:.9375rem">Shown under an entry that mentions self-harm or danger. Coaching, never therapy, never a diagnosis.</p><div class="grid"><article class="item" data-item="safety">
+  <header><h3>Take care</h3></header>
+  <div class="f"><p class="lab">Title</p><p class="ed" data-of="safety" data-f="title">You don’t have to carry this alone</p></div><div class="f"><p class="lab">What it says</p><p class="ed" data-of="safety" data-f="text">If you’re thinking about hurting yourself, or you’re not safe right now, please reach out now. Call your local emergency number or a crisis line. In the US and Canada, you can call or text 988, any time.</p></div><div class="f"><p class="lab">Link to findahelpline.com</p><p class="ed" data-of="safety" data-f="link">Find a crisis line where you are</p></div><div class="f"><p class="lab">Under the link</p><p class="ed" data-of="safety" data-f="note">Your words are saved. This app is for reflection, and it can’t replace real help.</p></div>
+  <div class="ctl" data-id="safety"><button type="button" data-act="edit" aria-pressed="false">Edit</button><button type="button" data-act="remove" aria-pressed="false" hidden>Remove</button><button type="button" class="link" data-act="undo" hidden>Undo my edits</button><span class="saved" data-saved="safety" aria-live="polite"></span></div>
+</article></div></section></main>
+<footer><div class="wrap">The Jarred Effect · Journal prompts · 48 cards · live since 2026-10-21</div></footer>
+
+<script>
+(function () {
+  var IDS = ["play.new-habit","play.unlearn","play.field","play.price-check","play.tries","play.gut","play.receive","play.hold","play.precise","play.alone","play.too-much","play.doors","play.flow-read","play.yes","play.agency","play.no","play.speak","play.worth","play.error","play.circle","play.agreements","play.comeback","play.body","play.change","play.values","play.signal","play.emotions","play.power","play.room","day.full.0","day.full.1","day.half.0","day.half.1","day.rough.0","day.rough.1","day.rough.2","general.0","general.1","general.2","general.3","general.4","general.5","general.6","general.7","letter.0","letter.1","letter.2","safety"];
+  var ORIG = {"play.new-habit.text":"Who are you becoming with this habit? Describe them on an ordinary Tuesday.","play.unlearn.text":"What did the old habit give you today that you still need? Where else could you get it?","play.field.text":"What gave you energy this week, and what drained it?","play.price-check.text":"What is this really costing you, and is it still worth paying?","play.tries.text":"What did your last Try teach you about what you like and what you’re good at?","play.gut.text":"What is your gut telling you right now that your head keeps arguing with?","play.receive.text":"What have you already received that you haven’t stopped to take in?","play.hold.text":"What’s testing your new level lately, and how did you meet it?","play.precise.text":"Rewrite your Ask so every word is exact and true.","play.alone.text":"Who could you reach out to this week, with no agenda?","play.too-much.text":"What can you put down today, even for a while?","play.doors.text":"What door keeps opening for you, even when you’re not pushing?","play.flow-read.text":"What came easily this week, and what kept fighting you?","play.yes.text":"What did you say yes to lately that you wish you hadn’t? What would a smaller yes have been?","play.agency.text":"Where do you shrink, and what would you do there if you didn’t?","play.no.text":"What’s a no you’ve been avoiding? Write it in one sentence.","play.speak.text":"What’s one thing you’ve been holding back from saying?","play.worth.text":"Write ten things you’ve done, handled or made it through.","play.error.text":"What harsh thought about yourself showed up today? Write it, then write the truer version.","play.circle.text":"Who leaves you feeling amplified? Who leaves you drained?","play.agreements.text":"Did you take something personally today that was really about them?","play.comeback.text":"What pulled you away, and what’s the smallest way back in?","play.body.text":"How has your body felt this week? What does it need more of?","play.change.text":"What’s changing in your life right now, and how are you really feeling about it?","play.values.text":"When did you feel most like yourself? What was true in that moment?","play.signal.text":"Picture an ordinary day after your Ask is real. What does it feel like?","play.emotions.text":"What feeling did you push aside today? Give it a few lines now.","play.power.text":"Where have you handed your power to someone else? What’s one way to take it back?","play.room.text":"What are you still carrying that’s already over?","day.full.0.text":"What made today a good day? How could you get more of that?","day.full.1.text":"What did you do today that future you will thank you for?","day.half.0.text":"What got in the way today, and what still went right?","day.half.1.text":"What would make tomorrow a little easier?","day.rough.0.text":"What happened today? Write it plainly, without judging it.","day.rough.1.text":"What do you need right now that you’re not getting?","day.rough.2.text":"What’s one small thing that would help, even a little?","general.0.text":"What’s on your mind right now? Start with the first sentence that comes.","general.1.text":"What went better than you expected this week?","general.2.text":"What are you avoiding, and what would the smallest first step be?","general.3.text":"What do you want more of next week? Less of?","general.4.text":"When did you feel most like yourself lately?","general.5.text":"What would you tell a friend in your exact situation?","general.6.text":"What’s one thing you did this week you’re quietly proud of?","general.7.text":"What’s draining you right now, and what’s one kind boundary that would help?","letter.0.to":"Future you","letter.0.prompt":"Write to yourself a year from now. What do you hope is true?","letter.1.to":"Past you","letter.1.prompt":"What do you wish you’d known back then?","letter.2.to":"Someone you’re carrying","letter.2.prompt":"Say what happened, how it felt, and what you’re putting down. You won’t send it.","safety.title":"You don’t have to carry this alone","safety.text":"If you’re thinking about hurting yourself, or you’re not safe right now, please reach out now. Call your local emergency number or a crisis line. In the US and Canada, you can call or text 988, any time.","safety.link":"Find a crisis line where you are","safety.note":"Your words are saved. This app is for reflection, and it can’t replace real help."};
+  var state = {}; // id -> { edit: {}, removed: bool }
+  var editing = {};
+  var db = null, filter = 'all';
+  var statusEl = document.getElementById('status');
+  var EDITABLE = (function () { var d = document.createElement('div'); d.contentEditable = 'plaintext-only'; return d.contentEditable === 'plaintext-only' ? 'plaintext-only' : 'true'; })();
+  function fields(id) { return document.querySelectorAll('[data-of="' + id + '"]'); }
+  function paint() {
+    var nE = 0, nR = 0;
+    IDS.forEach(function (id) {
+      var d = state[id] || {}, item = document.querySelector('[data-item="' + id + '"]'), edit = d.edit || {}, edited = false;
+      [].forEach.call(fields(id), function (el) {
+        var key = el.getAttribute('data-f'), orig = ORIG[id + '.' + key];
+        var text = edit[key] != null ? edit[key] : orig;
+        if (document.activeElement !== el && el.textContent !== text) el.textContent = text;
+        el.contentEditable = editing[id] ? EDITABLE : 'false';
+        if (editing[id]) { el.setAttribute('role', 'textbox'); el.setAttribute('aria-label', 'Edit ' + key); } else { el.removeAttribute('role'); el.removeAttribute('aria-label'); }
+        var isEd = el.textContent.trim() !== orig;
+        el.classList.toggle('is-edited', isEd);
+        if (isEd) edited = true;
+      });
+      item.classList.toggle('is-editing', !!editing[id]);
+      item.classList.toggle('is-edited', edited);
+      item.classList.toggle('is-removed', !!d.removed);
+      item.querySelector('[data-act="edit"]').setAttribute('aria-pressed', String(!!editing[id]));
+      item.querySelector('[data-act="edit"]').textContent = editing[id] ? 'Done editing' : 'Edit';
+      item.querySelector('[data-act="remove"]').setAttribute('aria-pressed', String(!!d.removed));
+      item.querySelector('[data-act="remove"]').textContent = d.removed ? 'Removed · undo' : 'Remove';
+      item.querySelector('[data-act="undo"]').hidden = !edited;
+      if (edited) nE++; if (d.removed) nR++;
+    });
+    document.getElementById('tally').textContent = IDS.length + ' prompts · ' + nE + ' edited · ' + nR + ' removed';
+    applyFilter();
+  }
+  function applyFilter() {
+    var q = document.getElementById('q').value.trim().toLowerCase();
+    [].forEach.call(document.querySelectorAll('.item'), function (item) {
+      var id = item.getAttribute('data-item'), d = state[id] || {};
+      var ok = (!q || (item.getAttribute('data-search') || '').indexOf(q) >= 0 || item.textContent.toLowerCase().indexOf(q) >= 0) &&
+        (filter === 'all' || (filter === 'edited' && item.classList.contains('is-edited')) || (filter === 'removed' && d.removed));
+      item.classList.toggle('hide', !ok);
+    });
+    [].forEach.call(document.querySelectorAll('.side'), function (s) { s.classList.toggle('hide', !s.querySelector('.item:not(.hide)')); });
+  }
+  function flash(id) { var s = document.querySelector('[data-saved="' + id + '"]'); if (s) { s.textContent = 'Saved'; clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = ''; }, 1600); } }
+  function write(id) {
+    var d = state[id] || {};
+    if (!db) return;
+    db.collection('journal').doc(id).set({ edit: d.edit || {}, removed: !!d.removed, at: new Date().toISOString() })
+      .then(function () { flash(id); statusEl.className = 'status'; statusEl.textContent = 'Saved. Tell Claude “apply my journal prompt changes” when you’re ready.'; })
+      .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That didn’t save. Try it again in a moment.'; });
+  }
+  function collect(id) {
+    var edit = {};
+    [].forEach.call(fields(id), function (el) {
+      var key = el.getAttribute('data-f'), v = el.textContent.replace(/\s+/g, ' ').trim();
+      if (v && v !== ORIG[id + '.' + key]) edit[key] = v;
+    });
+    return edit;
+  }
+  function saveEdits(id) {
+    var edit = collect(id);
+    if (JSON.stringify(edit) === JSON.stringify((state[id] || {}).edit || {})) return;
+    state[id] = Object.assign({}, state[id], { edit: edit }); write(id); paint();
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.ctl button');
+    if (b) {
+      var id = b.parentNode.getAttribute('data-id'), act = b.getAttribute('data-act');
+      if (act === 'edit') {
+        if (editing[id]) saveEdits(id);
+        editing[id] = !editing[id]; paint();
+        if (editing[id]) { var first = document.querySelector('[data-of="' + id + '"]'); if (first) first.focus(); }
+      } else if (act === 'remove') {
+        state[id] = Object.assign({}, state[id], { removed: !(state[id] || {}).removed }); paint(); write(id);
+      } else if (act === 'undo') {
+        state[id] = Object.assign({}, state[id], { edit: {} });
+        [].forEach.call(fields(id), function (el) { el.textContent = ORIG[id + '.' + el.getAttribute('data-f')]; });
+        paint(); write(id);
+      }
+      return;
+    }
+    var f = e.target.closest('[data-filter]');
+    if (f) { filter = f.getAttribute('data-filter'); [].forEach.call(document.querySelectorAll('[data-filter]'), function (x) { x.setAttribute('aria-pressed', String(x === f)); }); applyFilter(); }
+  });
+  document.getElementById('q').addEventListener('input', applyFilter);
+  var timers = {};
+  document.addEventListener('input', function (e) {
+    var el = e.target.closest('[data-of]');
+    if (!el) return;
+    var id = el.getAttribute('data-of');
+    el.classList.toggle('is-edited', el.textContent.trim() !== ORIG[id + '.' + el.getAttribute('data-f')]);
+    clearTimeout(timers[id]); timers[id] = setTimeout(function () { saveEdits(id); }, 900);
+  });
+  document.addEventListener('focusout', function (e) {
+    var el = e.target.closest('[data-of]');
+    if (!el || !el.isContentEditable) return;
+    var id = el.getAttribute('data-of');
+    if (!el.textContent.trim()) el.textContent = ORIG[id + '.' + el.getAttribute('data-f')];
+    saveEdits(id);
+  });
+  document.addEventListener('keydown', function (e) { var el = e.target.closest('[data-of]'); if (el && el.isContentEditable && e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+  paint();
+  if (!window.claude || !window.claude.use) { statusEl.className = 'status warn'; statusEl.textContent = 'Open this page on claude.ai to save your changes.'; return; }
+  window.claude.use('db').then(function (d) {
+    db = d;
+    if (!db) { statusEl.className = 'status warn'; statusEl.textContent = 'Sign in on claude.ai to save your changes. You can still read everything.'; return; }
+    statusEl.textContent = 'Your changes save as you make them.';
+    db.collection('journal').onSnapshot(function (snap) {
+      snap.docs.forEach(function (doc) { var v = doc.data(); if (v) state[doc.id] = { edit: v.edit || {}, removed: !!v.removed }; });
+      paint();
+    }, function () { statusEl.className = 'status warn'; statusEl.textContent = 'Lost the connection. Reload the page to keep saving.'; });
+  });
+})();
+</script>

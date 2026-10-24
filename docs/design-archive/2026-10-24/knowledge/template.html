@@ -1,0 +1,216 @@
+<title>Money and Body Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<style>
+/* Layout: the app's own sky. A navy opener, then sections in reading order: the voice, money, body, and what happens
+   next. Every move is a step card as it would read in the app, with Keep / Change / Remove under it. */
+:root{
+  --bg:#f6f7fb; --card:#ffffff; --fg:#1c1812; --dim:#574f43; --faint:#7a7062; --line:rgba(28,24,18,.1);
+  --navy:#0e1a2c; --on-navy:#efe7da; --on-navy-dim:#c4bcaf;
+  --accent:#1a2a44; --accent-ink:#1a2a44; --soft:rgba(26,42,68,.06); --keep:#6b6254; --change:#a8471c;
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif; --serif:"Libre Caslon Text",Georgia,serif; --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--navy:#1a2a44;--accent:#a9c3e6;--accent-ink:#c3d6f2;--soft:rgba(169,195,230,.12);--keep:#b8afa1;--change:#f3a378;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--navy:#1a2a44;--accent:#a9c3e6;--accent-ink:#c3d6f2;--soft:rgba(169,195,230,.12);--keep:#b8afa1;--change:#f3a378;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:46rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+p{margin:0}
+.k{font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.hero{padding-block:2.5rem 1.5rem}
+.opener{display:grid;gap:.875rem;padding:1.75rem 1.5rem;border-radius:1.5rem;background:radial-gradient(110% 90% at 100% 100%,rgba(86,132,204,.5),rgba(86,132,204,0) 62%),var(--navy);color:var(--on-navy)}
+.opener .k{color:var(--on-navy-dim)}
+.opener h1{font-size:clamp(2rem,6vw,2.75rem);line-height:1.08}
+.opener p{color:var(--on-navy-dim);font-size:1rem;max-width:36rem}
+.jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem;margin-top:.25rem}
+.jobs div{padding:.875rem;border-radius:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.jobs b{display:block;font-family:var(--serif);font-weight:400;font-size:1.0625rem;color:var(--on-navy);margin-bottom:.25rem}
+.jobs span{font-size:.8125rem;line-height:1.45;color:var(--on-navy-dim)}
+.lead{margin-top:1.25rem;font-size:1rem;color:var(--dim)}
+.jump{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.875rem}
+.jump a{padding:.3125rem .75rem;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:.875rem;font-weight:500;text-decoration:none}
+.jump a:hover{border-color:var(--faint)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding-block:.75rem}
+.tally{font-size:.875rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.tally b{color:var(--fg)}
+.status{margin-left:auto;font-size:.8125rem;color:var(--faint)}
+.status.warn{color:var(--change)}
+main{display:grid;gap:1rem;padding-block:1.5rem 1rem}
+.sec-h{padding-top:2rem;display:grid;gap:.375rem;scroll-margin-top:4.5rem}
+.sec-h h2{font-size:2rem;line-height:1.1}
+.sec-h p{color:var(--dim);font-size:.9375rem}
+.part{display:grid;gap:.875rem;padding:1.375rem;border-radius:1.25rem;background:var(--card);border:1px solid var(--line);transition:border-color .2s ease}
+.part h3{font-size:1.5rem;line-height:1.15}
+.sum{font-family:var(--serif);font-size:1rem;line-height:1.6}
+.part ul,.part ol{margin:0;padding-left:1.125rem;display:grid;gap:.4375rem;font-size:.9375rem;line-height:1.55;color:var(--dim)}
+.part li b{color:var(--fg);font-weight:600}
+.after{font-size:.9375rem;color:var(--dim)}
+.after b{color:var(--fg);font-weight:600}
+.tag{display:inline-block;padding:0 .5rem;border-radius:99px;border:1px solid var(--line);font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);vertical-align:.1em}
+.tag--on{border-color:var(--accent);color:var(--accent-ink)}
+.pairs{display:grid;gap:.5rem}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:.75rem;padding:.75rem .875rem;border-radius:.875rem;background:var(--soft)}
+.pair p{font-size:.875rem;line-height:1.5}
+.pair .flat{color:var(--faint)}
+.pair .mine{font-family:var(--serif);font-size:.9375rem;color:var(--fg)}
+.pair .lab{display:block;font-family:var(--sans);font-size:.625rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.125rem}
+.stage{display:grid;gap:.625rem}
+.stage-h{display:grid;gap:.125rem;padding-top:.75rem}
+.stage-h h3{font-size:1.375rem;line-height:1.2}
+.stage-h p{font-size:.9375rem;color:var(--dim)}
+.finds{font-size:.9375rem;color:var(--dim);padding:.5rem .75rem;border-radius:.75rem;background:var(--soft)}
+.finds b{color:var(--accent-ink);font-weight:600}
+.stage-h .finds{margin-top:.375rem}
+.mvs{display:grid;gap:.625rem}
+.mv,.st{display:grid;gap:.375rem;padding:1rem 1.125rem;border-radius:1rem;background:var(--card);border:1px solid var(--line);transition:border-color .2s ease,opacity .2s ease}
+.st{background:var(--bg)}
+.mv[data-choice="keep"],.part[data-choice="yes"]{border-color:var(--accent)}
+.mv[data-choice="change"],.part[data-choice="change"]{border-color:var(--change)}
+.mv[data-choice="remove"]{border-style:dashed}
+.mv[data-choice="remove"] .body{opacity:.45}
+.body{display:grid;gap:.375rem}
+.st-k{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+.st-title{font-family:var(--display);font-size:1.25rem;line-height:1.2}
+.st-t{font-family:var(--serif);font-size:1.0625rem;line-height:1.55}
+.st-h{font-size:.9375rem;color:var(--dim)}
+.st-h b{color:var(--fg);font-weight:600}
+.st-me{font-size:.9375rem;color:var(--dim);padding-left:.75rem;border-left:2px solid var(--line)}
+.st-me b{color:var(--fg);font-weight:600}
+.from{font-size:.8125rem;color:var(--faint)}
+.from .tag{margin-left:.25rem}
+.dec{display:grid;grid-template-columns:repeat(3,1fr);gap:.375rem;margin-top:.375rem}
+.dec--2{grid-template-columns:repeat(2,1fr)}
+.dec button{font:inherit;font-size:.875rem;font-weight:600;min-height:2.5rem;border-radius:.75rem;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.dec button:hover{border-color:var(--faint);color:var(--fg)}
+.dec button:active{transform:scale(.98)}
+.dec button:focus-visible,textarea:focus-visible,.jump a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dec button[aria-pressed="true"][data-c="keep"],.dec button[aria-pressed="true"][data-c="yes"]{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.dec button[aria-pressed="true"][data-c="change"]{background:var(--change);border-color:var(--change);color:var(--card)}
+.dec button[aria-pressed="true"][data-c="remove"]{background:var(--keep);border-color:var(--keep);color:var(--card)}
+.note{display:grid;gap:.375rem}
+.note label{font-size:.8125rem;font-weight:600}
+textarea{width:100%;min-height:3.25rem;font:inherit;font-family:var(--serif);font-size:.9375rem;padding:.625rem .75rem;border-radius:.75rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);resize:vertical}
+.saved{font-size:.8125rem;color:var(--accent-ink);min-height:1.2em}
+.addnote{justify-self:start;font:inherit;font-size:.8125rem;color:var(--faint);background:none;border:0;padding:.25rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}
+footer{padding-block:1.5rem 3rem;font-size:.875rem;color:var(--faint)}
+@media (max-width:560px){.jobs{grid-template-columns:1fr}.pair{grid-template-columns:1fr;gap:.375rem}}
+@media (prefers-reduced-motion:reduce){.part,.mv,.dec button{transition:none}}
+</style>
+<div class="wrap"><header class="hero">
+  <div class="opener">
+    <p class="k">The Other Half · Plan engine, part 1 · For your review</p>
+    <h1>Money and body, in your voice</h1>
+    <p>This is what the AI knows when it writes a money or body step: what the app is for, how you sound, the rules it can’t break, and every move it can draw on, each one written the way you’d say it. The AI rewrites each move for every person, so these set the bar rather than the script.</p>
+    <div class="jobs">
+      <div><b>{{MOVES}} moves</b><span>Each one traced to a play in your playbook, with a small version for hard days.</span></div>
+      <div><b>Your voice</b><span>Written as you, in “I”: optimistic, encouraging and funny, asking more than it tells.</span></div>
+      <div><b>Safe by design</b><span>Money and body rules every step is checked against.</span></div>
+    </div>
+  </div>
+  <p class="lead">It’s all live as written, so anything you don’t touch stays. Keep, change or remove any move, and leave a note wherever a line doesn’t sound like you.</p>
+  <nav class="jump" aria-label="Sections"><a href="#h-voice">How I sound</a><a href="#h-money">Money</a><a href="#h-body">Body</a><a href="#h-next">After every step</a></nav>
+</header></div>
+
+<div class="bar"><div class="wrap"><p class="tally" id="tally"></p><p class="status" id="status" role="status">Connecting, so your choices save…</p></div></div>
+
+<main class="wrap" id="list"></main>
+<footer><div class="wrap">When you’re done, tell Claude “read my money and body choices”. Then I make your changes and build the other five areas in the same shape.</div></footer>
+<script>
+(function () {
+  /*DATA*/
+  var list = document.getElementById('list'), statusEl = document.getElementById('status');
+  var state = {}, db = null, timers = {}, items = [];
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function note(id) {
+    return '<button type="button" class="addnote" data-addnote="' + id + '">Add a note</button>' +
+      '<div class="note" data-notebox="' + id + '" hidden><label for="n-' + id + '">A note for Claude</label><textarea id="n-' + id + '" data-note="' + id + '" placeholder="What to change, or how you’d say it"></textarea></div>' +
+      '<p class="saved" data-saved="' + id + '" aria-live="polite"></p>';
+  }
+  function dec(id, opts, label) {
+    return '<div class="dec' + (opts.length === 2 ? ' dec--2' : '') + '" role="group" aria-label="' + esc(label) + '" data-id="' + id + '">' +
+      opts.map(function (o) { return '<button type="button" data-c="' + o[0] + '" aria-pressed="false">' + o[1] + '</button>'; }).join('') + '</div>';
+  }
+  var BLOCK = [['yes', 'Yes'], ['change', 'Change']], MOVE = [['keep', 'Keep'], ['change', 'Change'], ['remove', 'Remove']];
+  function stepCard(s, cls) {
+    return '<p class="st-k">' + esc(s.kick) + '</p>' + (s.title ? '<p class="st-title">' + esc(s.title) + '</p>' : '') +
+      '<p class="st-t">' + esc(s.step || s.what) + '</p><p class="st-h"><b>Hard day?</b> ' + esc(s.small) + '</p>' +
+      (s.up ? '<p class="st-h"><b>Up a level:</b> ' + esc(s.up) + '</p>' : '') +
+      (s.why ? '<p class="st-me"><b>Why I picked this:</b> ' + esc(s.why) + '</p>' : '') +
+      (s.notice ? '<p class="st-me"><b>Notice:</b> ' + esc(s.notice) + '</p>' : '') +
+      '<p class="from">From your play “' + esc(s.from) + '”' + (s.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</p>';
+  }
+  list.innerHTML = S.map(function (s) {
+    if (s.kind === 'head') return '<div class="sec-h" id="' + s.id + '"><h2>' + esc(s.t) + '</h2><p>' + esc(s.p) + '</p></div>';
+    if (s.kind === 'block') {
+      items.push({ id: s.id, block: true });
+      var li = s.liHtml || (s.li || []).map(esc);
+      return '<article class="part" data-item="' + s.id + '"><h3>' + esc(s.t) + '</h3><p class="sum">' + esc(s.sum) + '</p>' + (s.finds ? '<p class="finds"><b>What they discover:</b> ' + esc(s.finds) + '</p>' : '') +
+        (li.length ? '<ul>' + li.map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul>' : '') +
+        (s.pairs ? '<div class="pairs">' + s.pairs.map(function (p) { return '<div class="pair"><p class="flat"><span class="lab">Flat</span>' + esc(p[0]) + '</p><p class="mine"><span class="lab">In your voice</span>' + esc(p[1]) + '</p></div>'; }).join('') + '</div>' : '') +
+        (s.step ? '<div class="st">' + stepCard(s.step) + '</div>' : '') +
+        (s.after ? '<p class="after"><b>Next week:</b> ' + esc(s.after) + '</p>' : '') +
+        dec(s.id, BLOCK, 'Your decision on ' + s.t) + note(s.id) + '</article>';
+    }
+    return '<section class="stage"><div class="stage-h"><h3>' + esc(s.t) + '</h3><p>' + esc(s.aim) + '</p>' + (s.finds ? '<p class="finds"><b>What they discover:</b> ' + esc(s.finds) + '</p>' : '') + '</div><div class="mvs">' +
+      s.moves.map(function (m) {
+        items.push({ id: m.id });
+        return '<article class="mv" data-item="' + m.id + '"><div class="body">' + stepCard(m) + '</div>' + dec(m.id, MOVE, 'Your decision on this move') + note(m.id) + '</article>';
+      }).join('') + '</div></section>';
+  }).join('');
+
+  function paint() {
+    var n = { reviewed: 0, change: 0, remove: 0 };
+    items.forEach(function (it) {
+      var d = state[it.id] || {}, el = list.querySelector('[data-item="' + it.id + '"]');
+      if (d.choice) { el.setAttribute('data-choice', d.choice); n.reviewed++; if (d.choice === 'change') n.change++; if (d.choice === 'remove') n.remove++; }
+      else el.removeAttribute('data-choice');
+      el.querySelectorAll('.dec button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-c') === d.choice)); });
+      var box = el.querySelector('[data-notebox]'), add = el.querySelector('[data-addnote]'), t = box.querySelector('textarea');
+      var show = d.choice === 'change' || d.choice === 'remove' || !!d.note || box.getAttribute('data-open') === '1';
+      box.hidden = !show; add.hidden = show;
+      if (document.activeElement !== t) t.value = d.note || '';
+    });
+    document.getElementById('tally').innerHTML = '<b>' + n.reviewed + '</b> of ' + items.length + ' reviewed · ' + n.change + ' to change · ' + n.remove + ' to remove';
+  }
+  function flash(id) { var s = list.querySelector('[data-saved="' + id + '"]'); if (s) { s.textContent = 'Saved'; clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = ''; }, 1600); } }
+  function write(id) {
+    if (!db) return;
+    var d = state[id] || {};
+    db.collection('knowledge').doc(id).set({ choice: d.choice || null, note: d.note || '', at: new Date().toISOString() })
+      .then(function () { flash(id); statusEl.className = 'status'; statusEl.textContent = 'Saved. Claude can read your choices.'; })
+      .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That didn’t save. Try again in a moment.'; });
+  }
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('.dec button');
+    if (b) {
+      var id = b.parentNode.getAttribute('data-id'), c = b.getAttribute('data-c'), d = state[id] = Object.assign({}, state[id]);
+      d.choice = d.choice === c ? null : c; paint(); write(id);
+      if (d.choice === 'change') document.getElementById('n-' + id).focus();
+      return;
+    }
+    var a = e.target.closest('[data-addnote]');
+    if (a) { var nid = a.getAttribute('data-addnote'); list.querySelector('[data-notebox="' + nid + '"]').setAttribute('data-open', '1'); paint(); document.getElementById('n-' + nid).focus(); }
+  });
+  list.addEventListener('input', function (e) {
+    var t = e.target.closest('[data-note]'); if (!t) return;
+    var id = t.getAttribute('data-note'); state[id] = Object.assign({}, state[id], { note: t.value });
+    clearTimeout(timers[id]); timers[id] = setTimeout(function () { write(id); }, 800);
+  });
+  paint();
+  if (!window.claude || !window.claude.use) { statusEl.className = 'status warn'; statusEl.textContent = 'Open this page on claude.ai to save your choices.'; return; }
+  window.claude.use('db').then(function (d) {
+    db = d;
+    if (!db) { statusEl.className = 'status warn'; statusEl.textContent = 'Sign in on claude.ai to save your choices. You can still read everything.'; return; }
+    statusEl.textContent = 'Your choices save as you make them.';
+    db.collection('knowledge').onSnapshot(function (snap) {
+      snap.docs.forEach(function (doc) { var v = doc.data(); if (v) state[doc.id] = { choice: v.choice || null, note: v.note || '' }; });
+      paint();
+    }, function () { statusEl.className = 'status warn'; statusEl.textContent = 'Lost the connection. Reload to keep saving.'; });
+  });
+})();
+</script>

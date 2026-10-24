@@ -64,7 +64,7 @@ class Component extends DCLogic {
     var s = this.state || {};
     var sent = !!s.sent, errorAt = s.errorAt || '', sendingAt = s.sendingAt || '', suggestAt = s.suggestAt || '';
     var menu = !!s.menu, muted = s.muted !== false, userPaused = !!s.userPaused, side = s.side || '';
-    var CH = { problem: '01 · The problem', mechanism: '02 · The real mechanism', polarity: '03 · The polarity principle', story: '04 · Who’s behind this', guide: '05 · Start here', faq: '06 · Before you go', final: '07 · Your move' };
+    var CH = { problem: '01 · The problem', mechanism: '02 · The real mechanism', plan: '03 · How it works', story: '04 · Who’s behind this', where: '05 · Where this goes', faq: '06 · Before you go', final: '07 · Your move', guide: 'The free guide' };
     var TYPOS = { 'gmial.com': 'gmail.com', 'gmal.com': 'gmail.com', 'gmaill.com': 'gmail.com', 'gamil.com': 'gmail.com', 'gnail.com': 'gmail.com', 'gmail.co': 'gmail.com', 'gmail.con': 'gmail.com', 'gmail.cm': 'gmail.com', 'hotmial.com': 'hotmail.com', 'hotmal.com': 'hotmail.com', 'hotmail.co': 'hotmail.com', 'yaho.com': 'yahoo.com', 'yahooo.com': 'yahoo.com', 'yahoo.co': 'yahoo.com', 'outlok.com': 'outlook.com', 'outloo.com': 'outlook.com', 'outlook.co': 'outlook.com', 'iclod.com': 'icloud.com', 'icloud.co': 'icloud.com' };
     var isEmail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); };
     var typoFix = function (v) { var m = /^([^@\s]+)@([^@\s]+)$/.exec(v); if (!m) return ''; var f = TYPOS[m[2].toLowerCase()]; return f ? m[1] + '@' + f : ''; };
@@ -127,7 +127,7 @@ class Component extends DCLogic {
     // one read per selection and per combination (15 in total) + the empty state
     var READS = {
       '': ['Your read shows up here.', 'Pick one or more. Each combination says something different about what’s missing.'],
-      '1': ['Gratitude that’s gone by noon.', 'The practice isn’t wrong — it’s working one side only. The morning lift has nothing to hold it once the day pushes back.'],
+      '1': ['Gratitude that’s gone by noon.', 'The practice isn’t wrong — it’s working one side only. The morning high has nothing to hold it once the day pushes back.'],
       '2': ['You don’t need more input.', 'You’ve learned the language of change. What’s missing is the half that turns knowing it into actually being different.'],
       '3': ['“Raise your vibration” is half an instruction.', 'Nobody mentions the cost because the cost lives on the side most teachers skip.'],
       '4': ['The crash isn’t you doing it wrong.', 'It’s the other side showing up in a system that only planned for the high. Of course it feels like failure.'],
@@ -139,9 +139,9 @@ class Component extends DCLogic {
       '34': ['High vibe, then the crash. That’s the bill arriving.', 'If no one tells you what raising your vibration costs, you pay it later — usually all at once.'],
       '123': ['Three kinds of effort, one shared blind spot.', 'Practice, study, positivity — all aimed at the same side. None of them include the other half.'],
       '124': ['Every tool you’ve tried skips the same thing.', 'The gratitude, the courses, the good weeks — none of it planned for the low. That’s the pattern, not you.'],
-      '134': ['You’re living the full loop: lift, cost, crash.', 'That’s not a character flaw. It’s what one-sided manifestation does on repeat.'],
+      '134': ['You’re living the full loop: high, cost, crash.', 'That’s not a character flaw. It’s what one-sided manifestation does on repeat.'],
       '234': ['You’ve studied it, lived it, and crashed out of it.', 'The teaching was missing a half. The crash is where you keep running into it.'],
-      '1234': ['All four. That’s not you failing — that’s the other half missing.', 'Every one of these traces back to the same gap, and that gap is what the guide is about.']
+      '1234': ['All four. That’s not you failing — that’s the other half missing.', 'Every one of these traces back to the same gap, and that gap is what the Other Half is for.']
     };
     var read = READS[picked.join('')] || READS[''];
     var painTick = s.painTick || 0;
@@ -188,7 +188,7 @@ class Component extends DCLogic {
       anyPain: painCount > 0,
       painHead: read[0],
       painBody: read[1],
-      painCta: painCount === 4 ? 'Send me the guide' : (painCount > 1 ? 'Get the guide that connects them' : 'Get the guide that names it'),
+      painCta: painCount === 4 ? 'Take the free quiz' : (painCount > 1 ? 'Take the quiz that connects them' : 'Take the quiz that names it'),
       verdictClass: painCount > 0 ? 'tje-verdict is-on' : 'tje-verdict',
       swapClass: 'tje-verdict-copy' + (painTick === 0 ? '' : (painTick % 2 ? ' tje-swap-a' : ' tje-swap-b')),
       pip1: pip('1'), pip2: pip('2'), pip3: pip('3'), pip4: pip('4'),
@@ -206,6 +206,21 @@ class Component extends DCLogic {
       playLabel: userPaused ? 'Play video' : 'Pause video',
       togglePlay: function (e) { var v = videoOf(e); if (v) { if (userPaused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { v.pause(); } } self.setState({ userPaused: !userPaused }); }
     };
+    // 04 · how it works: tap a step and the phone shows that screen; on phones the step's words sit under the tabs
+    var planAt = s.plan || 1;
+    var PLAN = ['', 'Eighteen quick questions show which half you lean on and which one you skip. It takes three minutes, and it’s free.',
+      'One small step a day for the goal you care about, written for your life, with a smaller version for hard days.',
+      'Tell me how each step felt, and the next one adjusts. Along the way you see your own patterns: when you’re at your best, and what amplifies or drains you.'];
+    out.planDesc = PLAN[planAt];
+    out.planTitle = ['', 'Take the quiz', 'Get your week', 'Check in'][planAt];
+    // the handwritten note beside the phone, in the same hand as the hero's
+    out.planNote = ['', 'go with your gut', 'one small step per goal', 'I notice the patterns'][planAt];
+    [1, 2, 3].forEach(function (k) {
+      out['plan' + k] = function () { self.setState({ plan: k }); };
+      out['plan' + k + 'Sel'] = planAt === k ? 'true' : 'false';
+      out['plan' + k + 'Class'] = 'tje-seg-b' + (planAt === k ? ' is-on' : '');
+      out['shot' + k + 'Class'] = 'tje-plan-shot' + (planAt === k ? ' is-on' : '');
+    });
     ['hero', 'guide', 'final'].forEach(function (k) {
       out[k + 'Error'] = errorAt === k;
       out[k + 'Invalid'] = errorAt === k ? 'true' : 'false';

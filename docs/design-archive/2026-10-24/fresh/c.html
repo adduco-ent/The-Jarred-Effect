@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fresh C · The conversation</title><base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/fresh/base.css">
+<style>
+/* Direction C, the conversation: the app speaks as Jarred, so the homepage does too. The hero is the start of a real
+   conversation with the first question as tappable answers, and the page shows what a day of talking with the
+   Other Half sounds like. Personal and product at once, without a second design language. */
+body{background:#fbfbfd}
+.top{background:radial-gradient(60rem 30rem at 85% -10%,rgba(191,187,232,.5),rgba(191,187,232,0) 70%),radial-gradient(50rem 30rem at -10% 40%,rgba(214,228,247,.7),rgba(214,228,247,0) 70%)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,29rem);gap:4.5rem;align-items:center;padding:2.5rem var(--pad) 6rem}
+.hero .copy{display:flex;flex-direction:column;align-items:flex-start;gap:1.375rem}
+.eye{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--navy)}
+.hero .h1{font-size:4.25rem}
+.hero .sub{max-width:32rem;text-wrap:pretty}
+.hero .trust{justify-content:flex-start}
+.chat{border-radius:2rem;background:#fff;box-shadow:0 2.5rem 5rem -3rem rgba(20,34,58,.45),inset 0 0 0 1px rgba(26,42,68,.07);overflow:hidden}
+.ch{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid rgba(26,42,68,.07)}
+.ch img{width:2.5rem;height:2.5rem;border-radius:50%;object-fit:cover}
+.ch b{display:block;font-size:.9375rem}.ch small{display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--faint)}
+.ch small::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:#3aa76d}
+.cb{display:flex;flex-direction:column;gap:.625rem;padding:1.5rem 1.25rem 1.5rem}
+.m{max-width:85%;padding:.75rem 1rem;border-radius:1.25rem 1.25rem 1.25rem .375rem;background:#f1f3f9;font-size:1rem;line-height:1.45}
+.m.big{font-family:var(--display);font-size:1.5rem;line-height:1.2;background:none;padding:.25rem 0}
+.me{align-self:flex-end;max-width:85%;padding:.75rem 1rem;border-radius:1.25rem 1.25rem .375rem 1.25rem;background:var(--navy);color:#f4eee4;font-size:1rem}
+.ans{display:grid;gap:.5rem;margin-top:.5rem}
+.ans a{display:flex;align-items:center;gap:.75rem;padding:.875rem 1rem;border-radius:1rem;text-decoration:none;font-family:var(--serif);font-size:1.0625rem;box-shadow:inset 0 0 0 1.5px rgba(26,42,68,.16)}
+.ans a b{display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:.5rem;background:#f1f3f9;font-family:var(--sans);font-size:.8125rem}
+.ans a.hov{box-shadow:inset 0 0 0 1.5px var(--navy);background:#f6f8fd}
+.ans a.hov b{background:var(--navy);color:#fff}
+.ans .both{justify-content:center;font-style:italic;color:var(--faint);box-shadow:none;padding:.375rem}
+.cf{padding:.875rem 1.25rem;border-top:1px solid rgba(26,42,68,.07);font-size:.8125rem;color:var(--faint);text-align:center}
+.sec{padding:7rem var(--pad) 0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,29rem);gap:4.5rem;align-items:center;max-width:74rem;margin:0 auto}
+.two.flip .chat{order:-1}
+.lab{margin:0 0 .875rem;font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.pts{margin:1.75rem 0 0;padding:0;list-style:none;display:grid;gap:1rem}
+.pts li{display:grid;grid-template-columns:2.25rem minmax(0,1fr);gap:.875rem;align-items:start;font-size:1.0625rem;line-height:1.5;color:var(--dim)}
+.pts li b{display:block;color:var(--ink);font-weight:600}
+.pts i{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:#eef1f8;font-style:normal;font-family:var(--display);color:var(--navy)}
+.lead{margin:1.25rem 0 0;font-size:1.1875rem;line-height:1.6;color:var(--dim)}
+.time{display:block;margin:.75rem 0 .25rem;text-align:center;font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.25rem;max-width:85%}
+.tiles3 span{padding:.625rem .25rem;border-radius:.875rem;text-align:center;font-size:.875rem;font-weight:600;box-shadow:inset 0 0 0 1.5px rgba(26,42,68,.14)}
+.tiles3 .on{background:var(--navy);color:#fff;box-shadow:none}
+.week{max-width:62rem;margin:3rem auto 0;display:grid;gap:1rem}
+.week div{display:grid;grid-template-columns:7rem minmax(0,1fr);gap:1.5rem;align-items:center;padding:1.5rem 1.75rem;border-radius:1.5rem;background:#fff;box-shadow:var(--app-card),inset 0 0 0 1px rgba(26,42,68,.06)}
+.week b{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+.week p{margin:0;font-family:var(--serif);font-size:1.3125rem;line-height:1.45}
+.center{text-align:center}
+.final{max-width:56rem;margin:7rem auto 0;text-align:center}
+.final .h2{font-size:3.5rem}
+.final .sub{margin:1rem auto 2rem;max-width:30rem}
+.final .trust{margin-top:1rem}
+@media (max-width:767px){
+  .hero,.two{grid-template-columns:minmax(0,1fr);gap:2.5rem}.hero .h1{font-size:2.75rem}.hero .btn{width:100%}.two.flip .chat{order:0}
+  .week div{grid-template-columns:minmax(0,1fr);gap:.5rem}.final .h2{font-size:2.5rem}
+}
+</style></head><body>
+<div class="top">
+<header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a href="#">Free guide</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+<section class="hero">
+  <div class="copy">
+    <p class="eye">For people sick of spiritual platitudes</p>
+    <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+    <p class="sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+    <a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul>
+  </div>
+  <div class="chat">
+    <div class="ch"><img src="assets/img/jarred-face.jpg" alt=""><div><b>Jarred · The Other Half</b><small>Your quiz is ready</small></div></div>
+    <div class="cb">
+      <p class="m">Hey. Before anything else, one quick question.</p>
+      <p class="m big">When you want something…</p>
+      <div class="ans"><a href="#"><b>A</b>I picture it and feel it.</a><a class="hov" href="#"><b>B</b>I make a plan and get to work.</a><a class="both" href="#">Honestly, a bit of both</a></div>
+    </div>
+    <div class="cf">Tap an answer to start · Question 1 of 18</div>
+  </div>
+</section>
+</div>
+<section class="sec"><div class="two">
+  <div><p class="lab">What a day sounds like</p><h2 class="h2">Like a friend who’s <em>paying attention.</em></h2><p class="lead">Every message is written fresh for your goal and your life, in my voice. Small on purpose, and kinder on hard days.</p>
+    <ul class="pts"><li><i>1</i><span><b>One small step a day</b>Written for the goal you care about, with a smaller version for hard days.</span></li><li><i>2</i><span><b>A check-in that listens</b>Good, okay or hard. The next step adjusts to how it’s actually going.</span></li><li><i>3</i><span><b>Patterns, in plain words</b>It notices when you’re at your best, and checks with you before deciding what it means.</span></li></ul></div>
+  <div class="chat"><div class="ch"><img src="assets/img/jarred-face.jpg" alt=""><div><b>Jarred · The Other Half</b><small>Today, 7:42 a.m.</small></div></div>
+    <div class="cb">
+      <p class="m">Morning. Yesterday was a hard one and you still showed up. In my book, that counts double.</p>
+      <p class="m">How’s today treating you?</p>
+      <div class="tiles3"><span>Good</span><span class="on">Okay</span><span>Hard</span></div>
+      <p class="m">Then let’s keep it small. Ten minutes of play, any pace. Short on time? Five counts the same.</p>
+      <p class="me">Done. Felt easy ✓</p>
+      <span class="time">Friday</span>
+      <p class="m">You finished 4 of your 5 steps before noon this week. Mornings seem to suit you. Right?</p>
+    </div></div>
+</div></section>
+<section class="sec"><div class="center"><p class="lab">Where this goes</p><h2 class="h2">Not a new you. <em>The whole you.</em></h2></div>
+  <div class="week"><div><b>Day 3</b><p>A Tuesday goes sideways. You do the small version in four minutes, and it still counts.</p></div><div><b>Week 2</b><p>You notice your money steps get done before noon, so you stop fighting your own rhythm.</p></div><div><b>Week 4</b><p>Someone asks what changed. You say you keep your word to yourself now.</p></div></div></section>
+<section class="sec"><div class="two flip">
+  <div class="chat"><div class="ch"><img src="assets/img/jarred-face.jpg" alt=""><div><b>Jarred</b><small>Who you’re talking to</small></div></div>
+    <div class="cb"><p class="m">I paid “gurus” thousands for manifestation coaching. It worked, but none of them taught me the other half.</p><p class="m">Nobody hands you a mentor. So I built the one I wish I’d had.</p></div></div>
+  <div><p class="lab">Who’s behind it</p><h2 class="h2">The accountable friend <em>in your corner.</em></h2><p class="lead">The method is mine, ten years in the making. The Other Half writes every step from it, in my voice, for your life. <a href="#" style="color:var(--navy);font-weight:600">Read my story</a></p></div>
+</div></section>
+<section class="sec" style="padding-bottom:7rem"><div class="final"><h2 class="h2">Find your <em>other half.</em></h2><p class="sub">It starts with one question. Three minutes, and your first week is free.</p><a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li></ul></div></section>
+<footer class="foot"><img src="assets/img/logo-lockup.png" alt=""><span>How it works · About · Free guide · Privacy</span></footer>
+</body></html>

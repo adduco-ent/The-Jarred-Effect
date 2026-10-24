@@ -1,0 +1,262 @@
+<title>Free Guide Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&amp;family=Instrument+Sans:wght@400;500;600&amp;family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;1,400&amp;display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="assets/css/guide.css">
+<style>
+body{background:#fdfdfc}
+.rv-note{margin:0;padding:.75rem max(16px,env(safe-area-inset-right,0px)) .75rem max(16px,env(safe-area-inset-left,0px));background:#0e1a2c;color:#efe7da;font:500 .8125rem/1.5 "Instrument Sans","Helvetica Neue",Arial,sans-serif;text-align:center;text-wrap:balance}
+.rv-note b{color:#b9c9ea;font-weight:600}
+</style>
+<script>document.body.setAttribute('data-page', 'guide');</script>
+<p class="rv-note"><b>The guide’s own page, as a white paper</b> · It goes live with the app. The forms don’t send from this preview.</p>
+
+<div class="tje tgd is-motion" id="top" style="--shadow: #0e1a2c; color: #1c1812; font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif">
+  <a class="tje-skip" href="#hero-form" data-on-click="goForm">Skip to the form</a>
+
+  <!-- floating bar: appears once the offer is behind you; goes quiet whenever a form is on screen -->
+  <div class="tje-bar" data-class="barClass">
+    <div class="tje-bar-in">
+      <a class="tje-bar-logo" href="#top" aria-label="Back to top"><img class="tje-bar-logo-l" src="assets/img/logo-lockup.png" alt="" width="360" height="225"><img class="tje-bar-logo-d" src="assets/img/logo-lockup-light.png" alt="" width="360" height="225" loading="lazy"></a>
+      <p class="tje-bar-ch"><span data-text="barLabel">Free guide · What all gurus are failing to disclose</span></p>
+      <a class="tje-btn-sm" href="#hero-form" data-on-click="goForm">Send me the guide</a>
+      <span class="tje-bar-prog" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <header class="tje-nav">
+    <a class="tje-logo" href="https://thejarredeffect.com/index.html" aria-label="The Jarred Effect — home">
+      <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" fetchpriority="high">
+    </a>
+    <nav class="tje-links" aria-label="Primary">
+      <a class="tje-link" href="https://thejarredeffect.com/index.html">Home</a>
+      <a class="tje-link" href="https://thejarredeffect.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main id="main">
+  <!-- ===================== THE OFFER ===================== -->
+  <section class="tgd-hero" aria-labelledby="guide-title">
+    <div class="tgd-hero-a">
+      <div class="tje-aura" aria-hidden="true"></div>
+      <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>Free guide · 10-minute read</p>
+      <h1 class="tgd-h1" id="guide-title">What All Gurus Are Failing To Disclose About <span class="tje-it">Manifestation</span></h1>
+      <p class="tje-lead">The half of the equation that doesn’t sell as well on a vision board — because it asks something of you.</p>
+      <div class="tgd-form" id="hero-form">
+        <x-if data-if="notSent">
+          <p class="tgd-doodle" aria-hidden="true"><svg viewBox="0 0 44 30" fill="none"><path d="M42 3C30 3 14 8 4 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M17 22L4 24L9 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>takes 10 seconds</span></p>
+        </x-if>
+        <div class="tgd-card" data-capture="">
+          <x-if data-if="notSent">
+            <form data-on-submit="submitHero" novalidate="" aria-busy="false" data-attr="aria-busy:heroBusy"><input class="tje-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <div class="tgd-fields">
+                <div class="tgd-field">
+                  <label class="tje-label" for="hero-name">First name <span class="tgd-opt">(optional)</span></label>
+                  <input class="tje-input" id="hero-name" name="first_name" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" placeholder="Your first name">
+                </div>
+                <div class="tgd-field">
+                  <label class="tje-label" for="hero-email">Email</label>
+                  <input class="tje-input" id="hero-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="send" placeholder="you@email.com" aria-invalid="false" aria-describedby="hero-trust" data-on-input="onEmail" data-on-focusout="blurHero" data-class="heroInputClass" data-attr="aria-invalid:heroInvalid; aria-describedby:heroDesc">
+                </div>
+              </div>
+              <x-if data-if="heroError" hidden>
+                <p class="tje-error" id="hero-err" role="alert"><span data-text="errMsg"></span></p>
+              </x-if>
+              <x-if data-if="heroSuggest" hidden>
+                <p class="tje-suggest" aria-live="polite">Did you mean <button type="button" data-on-click="fixHero"><span data-text="suggestion"></span></button>?</p>
+              </x-if>
+              <button class="tje-cta" type="submit" data-attr="disabled:heroSending">
+                <x-if data-if="heroIdle">Send me the guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></x-if>
+                <x-if data-if="heroSending" hidden><span class="tje-spin" aria-hidden="true"></span>Sending…</x-if>
+              </button>
+              <p class="tgd-trust" id="hero-trust"><span class="tje-dot" aria-hidden="true"></span><span>No spam. No 47-part upsell funnel. Unsubscribe in one click.</span></p>
+            </form>
+          </x-if>
+          <x-if data-if="sent" hidden>
+            <div class="tgd-done" role="status">
+              <div class="tgd-done-top">
+                <span class="tje-check" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                <div>
+                  <h2 class="tje-success-title"><span data-text="successTitle">It’s on its way.</span></h2>
+                  <p class="tgd-done-copy">Sent to <b><span data-text="email"></span></b>.</p>
+                </div>
+              </div>
+              <ol class="tgd-next" aria-label="What happens next">
+                <li><span>Check your inbox — then come tell me it landed.</span></li>
+                <li><span>Not there in a few minutes? Check spam or Promotions.</span></li>
+                <li><span>While it lands, <a href="https://thejarredeffect.com/app/?start">find your other half in three minutes</a>.</span></li>
+              </ol>
+              <div class="tgd-done-actions">
+                <x-if data-if="hasInbox" hidden>
+                  <a class="tgd-inbox" href="#" target="_blank" rel="noopener" aria-label="" data-attr="href:inboxUrl; aria-label:inboxLabel"><span data-tpl="Open {{ inboxName }}">Open</span><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M16 4L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                </x-if>
+                <button class="tje-textbtn" type="button" data-on-click="resetHero">Wrong email? Fix it</button>
+              </div>
+            </div>
+          </x-if>
+        </div>
+        <p class="tgd-proof"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 11.5V8.2C3 5.9 4.4 4.4 6.6 4l.6 1.4C6 5.8 5.3 6.7 5.3 8H8v3.5H3zm8.6 0V8.2c0-2.3 1.4-3.8 3.6-4.2l.6 1.4c-1.2.4-1.9 1.3-1.9 2.6h2.7v3.5h-5z" fill="currentColor"></path></svg>Proof slot: a real reader count or quote</p>
+      </div>
+    </div>
+    <div class="tgd-hero-b">
+      <div class="tje-grain" aria-hidden="true"></div>
+      <figure class="tje-cover-stage" aria-label="Cover of the free guide">
+        <div class="tje-cover-glow" aria-hidden="true"></div>
+        <div class="tje-cover-float">
+          <div class="tje-cover tje-cover--xl">
+            <div class="tje-cover-pages" aria-hidden="true"></div>
+            <div class="tje-cover-face">
+              <p class="tje-cover-kicker">A free guide</p>
+              <div class="tje-emblem tje-orb" aria-hidden="true"></div>
+              <p class="tje-cover-title">What All Gurus<br>Are Failing To<br>Disclose About<br><i>Manifestation</i></p>
+              <div class="tje-cover-foot"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy"></div>
+              <div class="tje-cover-spine" aria-hidden="true"></div>
+            </div>
+            <div class="tje-sticker" aria-hidden="true"><b>Free</b><span>10-min<br>read</span></div>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== INSIDE ===================== -->
+  <section class="tgd-inside" id="inside" aria-labelledby="inside-title">
+    <div class="tgd-inside-head tje-reveal">
+      <div>
+        <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>Inside the guide</p>
+        <h2 class="tje-h2" id="inside-title">What the gurus <span class="tje-it">leave out.</span></h2>
+      </div>
+      <a class="tje-story" href="#hero-form" data-on-click="goForm">Send me the guide<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </div>
+    <ol class="tgd-pages">
+      <li class="tgd-page tje-reveal"><p class="tgd-page-n" aria-hidden="true">01</p><p class="tgd-t">The exact reason “like attracts like” breaks down the moment real life gets involved — <span class="tje-it">and the mechanic that actually replaces it.</span></p></li>
+      <li class="tgd-page tje-reveal"><p class="tgd-page-n" aria-hidden="true">02</p><p class="tgd-t">Why your discipline has been doing <span class="tje-it">more manifesting than your vision board ever did.</span></p></li>
+      <li class="tgd-page tje-reveal"><p class="tgd-page-n" aria-hidden="true">03</p><p class="tgd-t">The three “shadow questions” gurus skip — <span class="tje-it">because the honest answers don’t fit on a vision board.</span></p></li>
+      <li class="tgd-page tje-reveal"><p class="tgd-page-n" aria-hidden="true">04</p><p class="tgd-t">A simple way to tell, this week, whether you’re actually in balance <span class="tje-it">or just numb and calling it <span class="tgd-keep">“high vibe.”</span></span></p></li>
+    </ol>
+  </section>
+
+  <!-- ===================== A NOTE FROM JARRED ===================== -->
+  <section class="tgd-note" aria-label="A note from Jarred">
+    <figure class="tgd-letter tje-reveal">
+      <div class="tgd-note-face">
+        <img src="assets/img/jarred-face.jpg" alt="Jarred" width="320" height="320" loading="lazy">
+        <span class="tje-orb" aria-hidden="true"></span>
+      </div>
+      <p class="tgd-note-kick">A quick, direct note</p>
+      <blockquote class="tgd-note-q"><p>I’m not sending this to warm you up for a funnel. I’m sending it because it’s the part of the conversation I wish someone had handed me earlier. Read it, use it, <span class="tgd-keep">see what shifts.</span></p></blockquote>
+      <figcaption class="tgd-sign"><b>Jarred</b><span>Founder, The Jarred Effect</span></figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== THE SECOND ASK ===================== -->
+  <section class="tgd-final" id="final" aria-labelledby="final-title" data-attr="aria-labelledby:finalLabelledBy">
+    <div class="tgd-final-panel tje-dark" data-tone="dark">
+      <div class="tje-grain" aria-hidden="true"></div>
+      <div class="tgd-final-glow" aria-hidden="true"></div>
+      <!-- the heading follows the form: once it's sent, the panel stops asking -->
+      <div class="tgd-final-a tje-reveal">
+        <x-if data-if="notSent">
+          <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>Your move</p>
+          <h2 class="tje-h2" id="final-title">Ready for <span class="tje-it tgd-keep">the other half<span class="tgd-kern">?</span></span></h2>
+          <p class="tje-lead">Ten minutes to read. The rest is up to you.</p>
+        </x-if>
+        <x-if data-if="sent" hidden>
+          <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>On its way</p>
+          <h2 class="tje-h2" id="final-title-sent">The rest is <span class="tje-it tgd-keep">up to you.</span></h2>
+          <p class="tje-lead">Read it, use it, see what shifts.</p>
+        </x-if>
+      </div>
+      <div class="tgd-card" id="final-form" data-capture="">
+        <x-if data-if="notSent">
+          <form data-on-submit="submitFinal" novalidate="" aria-busy="false" data-attr="aria-busy:finalBusy"><input class="tje-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="tgd-fields">
+              <div class="tgd-field">
+                <label class="tje-label" for="final-name">First name <span class="tgd-opt">(optional)</span></label>
+                <input class="tje-input" id="final-name" name="first_name" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" placeholder="Your first name">
+              </div>
+              <div class="tgd-field">
+                <label class="tje-label" for="final-email">Email</label>
+                <input class="tje-input" id="final-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="send" placeholder="you@email.com" aria-invalid="false" aria-describedby="final-trust" data-on-input="onEmail" data-on-focusout="blurFinal" data-class="finalInputClass" data-attr="aria-invalid:finalInvalid; aria-describedby:finalDesc">
+              </div>
+            </div>
+            <x-if data-if="finalError" hidden>
+              <p class="tje-error" id="final-err" role="alert"><span data-text="errMsg"></span></p>
+            </x-if>
+            <x-if data-if="finalSuggest" hidden>
+              <p class="tje-suggest" aria-live="polite">Did you mean <button type="button" data-on-click="fixFinal"><span data-text="suggestion"></span></button>?</p>
+            </x-if>
+            <button class="tje-cta" type="submit" data-attr="disabled:finalSending">
+              <x-if data-if="finalIdle">Send me the guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></x-if>
+              <x-if data-if="finalSending" hidden><span class="tje-spin" aria-hidden="true"></span>Sending…</x-if>
+            </button>
+            <p class="tgd-trust" id="final-trust"><span class="tje-dot" aria-hidden="true"></span><span>No spam. Unsubscribe in one click.&ensp;·&ensp;<a href="https://thejarredeffect.com/privacy.html">Privacy</a></span></p>
+          </form>
+        </x-if>
+        <x-if data-if="sent" hidden>
+          <div class="tgd-done" role="status">
+            <div class="tgd-done-top">
+              <span class="tje-check" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+              <div>
+                <h2 class="tje-success-title"><span data-text="successTitle">It’s on its way.</span></h2>
+                <p class="tgd-done-copy">Sent to <b><span data-text="email"></span></b>.</p>
+              </div>
+            </div>
+            <ol class="tgd-next" aria-label="What happens next">
+              <li><span>Check your inbox — then come tell me it landed.</span></li>
+              <li><span>Not there in a few minutes? Check spam or Promotions.</span></li>
+              <li><span>While it lands, <a href="https://thejarredeffect.com/app/?start">find your other half in three minutes</a>.</span></li>
+            </ol>
+            <div class="tgd-done-actions">
+              <x-if data-if="hasInbox" hidden>
+                <a class="tgd-inbox" href="#" target="_blank" rel="noopener" aria-label="" data-attr="href:inboxUrl; aria-label:inboxLabel"><span data-tpl="Open {{ inboxName }}">Open</span><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M16 4L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </x-if>
+              <button class="tje-textbtn" type="button" data-on-click="resetFinal">Wrong email? Fix it</button>
+            </div>
+          </div>
+        </x-if>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE APP: for anyone who would rather live it than read it ===================== -->
+  <section class="tgd-app" aria-labelledby="app-title">
+    <div class="tgd-app-in tje-sky tje-sky--evening tje-reveal">
+      <div class="tgd-app-copy">
+        <p class="tje-kick"><span class="tje-dot" aria-hidden="true"></span>The Other Half</p>
+        <h2 class="tje-h2" id="app-title">Rather live it than <span class="tje-it">read about it?</span></h2>
+        <p class="tje-lead">The Other Half turns this guide into one small step a day, built around your life. It starts with a free 3-minute quiz.</p>
+        <a class="tje-cta" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+      <div class="tgd-app-phone"><div class="tje-phone"><img src="assets/img/app-welcome.jpg" alt="The Other Half’s evening welcome screen" width="624" height="1351" loading="lazy" decoding="async"></div></div>
+    </div>
+  </section>
+  </main>
+
+  <!-- ===================== FOOTER (same as the homepage and About) ===================== -->
+  <footer class="tje-foot">
+    <div class="tje-foot-top">
+      <div class="tje-foot-brand">
+        <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy">
+        <p class="tje-foot-tag">Manifestation has two sides.</p>
+      </div>
+      <nav class="tje-foot-links" aria-label="Footer">
+        <a class="tje-link" href="https://thejarredeffect.com/index.html">Home</a>
+        <a class="tje-link" href="https://thejarredeffect.com/about.html">About</a>
+        <a class="tje-link" href="https://thejarredeffect.com/index.html#faq">FAQ</a>
+      </nav>
+    </div>
+    <div class="tje-foot-bottom">
+      <span><span data-tpl="© {{ year }} The Jarred Effect. All rights reserved.">© 2026 The Jarred Effect. All rights reserved.</span></span>
+      <span class="tje-foot-legal"><a href="https://thejarredeffect.com/privacy.html">Privacy</a><a href="#top">Back to top ↑</a></span>
+    </div>
+  </footer>
+
+  <!-- phone-only thumb dock: appears once the offer is behind you, hides whenever a form is on screen -->
+  <div class="tje-dock" data-class="dockClass">
+    <a class="tje-cta" href="#hero-form" data-on-click="goForm">Send me the guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
+<script src="assets/js/guide.js" defer></script>

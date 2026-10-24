@@ -1488,7 +1488,7 @@
 
   // ---- the welcome: a breather before the day. Once a day, the first time the app opens: a sky that follows the time
   // of day, a greeting, a line for the day, a quote, and one warm question. The answer is the day's check-in.
-  // Review: ?welcome=1 shows it again, ?sky=morning|afternoon|evening|night picks the sky.
+  // Review: ?welcome=1 shows it again, ?welcome=0 skips it, ?sky=morning|afternoon|evening|night picks the sky.
   var welcomeSeen = false, wlPlayed = false;
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ciOpen = {}, ciTimer = null; // days whose check-in question is open on Today (answered here, or Update tapped)
@@ -1496,6 +1496,7 @@
   function needWelcome() {
     if (!plan || tab !== 'today' || T > 7 || welcomeSeen) return false;
     if (REVIEW && params.get('welcome') === '1') return true;
+    if (REVIEW && params.get('welcome') === '0') return false;
     return st.welcomed !== welcomeKey();
   }
   function skyPart() {

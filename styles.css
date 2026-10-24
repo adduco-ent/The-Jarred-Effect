@@ -170,3 +170,35 @@ a:hover{color:#7e3412}
 @keyframes tje-prog{to{transform:scaleX(1)}}
 @keyframes tje-rot{to{transform:rotate(360deg)}}
 @keyframes tje-pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+
+/* ===== The app's palette, site-wide (2026-10-23) =====
+   The site now wears the Other Half's colors, so the hand-off from site to app feels like one place: pearl with the
+   app's cool blue-lavender tint, white cards with its soft blue shadows, and its navy as the button. Orange stays for
+   the brand's half-orange, half-navy orb and small marks; rust stays for the small human touches, as in the app. */
+.tje{--blue:#1a2a44;--navy:#1a2a44;--navy-ink:#0f1c30;--sky-tint:linear-gradient(135deg,#ebf2fc 0%,#f0f2fb 48%,#f4f0fa 100%);
+  --app-card:inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(14,26,44,.04),0 .5rem 1.25rem -.75rem rgba(40,70,120,.18),0 1.25rem 2.25rem -1.75rem rgba(20,34,58,.154);
+  --btn-navy:radial-gradient(120% 160% at 100% 100%,rgba(62,108,171,.45),rgba(62,108,171,0) 60%),linear-gradient(180deg,#16253d,#0d1829)}
+.tje ::selection{background:#d6e2f5;color:#1c1812}
+.tje-cta,.tje-btn-sm{background:var(--btn-navy);color:#f4eee4;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(14,26,44,.2),0 .875rem 1.75rem -1.125rem rgba(14,26,44,.6)}
+.tje-cta:hover,.tje-btn-sm:hover{background:radial-gradient(120% 160% at 100% 100%,rgba(86,132,204,.6),rgba(86,132,204,0) 60%),linear-gradient(180deg,#1d2f4c,#101d31);color:#ffffff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 1.125rem 2.125rem -.875rem rgba(14,26,44,.6)}
+.tje-cta[disabled]{background:#2a3a55}
+.tje-spin{border-color:rgba(244,238,228,.3);border-top-color:#f4eee4}
+/* on navy, the button turns light, like the app's night screens */
+.tje-dark .tje-cta{background:linear-gradient(180deg,#ffffff,#e9eef8);color:#0f1c30;box-shadow:0 1rem 2rem -1.25rem rgba(0,0,0,.6)}
+.tje-dark .tje-cta:hover{background:#ffffff;color:#0f1c30}
+.tje-check{background:var(--navy);color:#ffffff}
+.tje-story,.tje-textbtn{color:var(--navy)}
+.tje-story:hover,.tje-textbtn:hover{color:#3e6cab}
+.tje-input:focus{border-color:#3e6cab;box-shadow:0 0 0 .25rem rgba(62,108,171,.16)}
+/* shared with the guide and About pages: the app's skies, and a phone showing a real screen */
+.tje-sky{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(180deg,#bfbbe8 0%,#dccbe4 32%,#f6d0bd 66%,#fcf3ee 100%)}
+.tje-sky::before{content:"";position:absolute;z-index:-1;left:50%;bottom:-9rem;width:30rem;height:30rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,244,230,.95),rgba(255,226,200,.5) 40%,rgba(255,226,200,0))}
+.tje-sky::after{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(40rem 6rem at 20% 30%,rgba(255,255,255,.35),transparent 70%),radial-gradient(30rem 5rem at 85% 55%,rgba(255,255,255,.28),transparent 70%)}
+.tje-sky--morning{background:linear-gradient(180deg,#d6e4f7 0%,#e9e6f3 34%,#fbe3d0 66%,#fdf3ea 100%)}
+.tje-sky--afternoon{background:linear-gradient(180deg,#bfd6f4 0%,#d8e6f9 38%,#ecf1fb 70%,#f6f8fc 100%)}
+.tje-sky--evening{background:linear-gradient(180deg,#bfbbe8 0%,#dccbe4 32%,#f6d0bd 66%,#fcf3ee 100%)}
+.tje-phone{position:relative;width:16rem;margin:0;padding:.5rem;border-radius:2.625rem;background:linear-gradient(160deg,#25324b,#0b1422 60%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 2.75rem 5rem -2.25rem rgba(6,12,24,.6),0 1rem 2rem -1.25rem rgba(6,12,24,.3)}
+.tje-phone::before{content:"";position:absolute;z-index:2;top:1.05rem;left:50%;width:4.25rem;height:1.125rem;border-radius:1rem;background:#0b1422;transform:translateX(-50%)}
+.tje-phone img{display:block;width:100%;height:auto;border-radius:2.125rem}
+/* a white card inside a navy panel keeps the navy button */
+.tje-dark .tgd-card .tje-cta,.tje-dark .tje-fcard .tje-cta,.tgd-final .tje-cta{background:var(--btn-navy);color:#f4eee4;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 .875rem 1.75rem -1.125rem rgba(14,26,44,.6)}

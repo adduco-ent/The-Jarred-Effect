@@ -1,0 +1,481 @@
+<title>Other Half Directions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<style>
+/* Layout: a strategy dossier. Left-aligned editorial column for the argument, wide "plates" for the three
+   directions, each with a live mock-up of the app page and one app screen. The Other Half's own palette. */
+:root{
+  --paper:#f6f7fa; --sheet:#ffffff; --ink:#151a25; --muted:#575e70; --faint:#7d8496; --hair:#dde1ea;
+  --navy:#1a2a44; --accent:#4a5591; --accent-soft:#eceefa; --win:#2f6b55;
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif; --serif:"Libre Caslon Text",Georgia,serif;
+  --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  /* the mock-ups show the app as it would look, so their colors stay the same in both themes */
+  --m-ink:#1c1812; --m-dim:#5a5550; --m-navy:#14213a; --m-cream:#f3eee6; --m-pearl:#fbfbfd;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0d121c;--sheet:#141b28;--ink:#eceff6;--muted:#a6adbd;--faint:#8b92a3;--hair:#263044;--navy:#c9d3f0;--accent:#aab4ec;--accent-soft:#1c2440;--win:#7cc4a4;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0d121c;--sheet:#141b28;--ink:#eceff6;--muted:#a6adbd;--faint:#8b92a3;--hair:#263044;--navy:#c9d3f0;--accent:#aab4ec;--accent-soft:#1c2440;--win:#7cc4a4;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:.18em}
+.wrap{max-width:74rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.col{max-width:46rem}
+.kick{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:-.015em;text-wrap:balance}
+h1{font-size:clamp(2.5rem,6vw,4.25rem);line-height:1.02}
+h2{font-size:clamp(1.875rem,3.6vw,2.625rem);line-height:1.08}
+h3{font-size:1.5rem;line-height:1.15}
+h1 em,h2 em{font-family:var(--serif);font-style:italic;font-size:.92em;color:var(--accent)}
+.lead{margin:1.25rem 0 0;font-size:1.1875rem;line-height:1.6;color:var(--muted);text-wrap:pretty}
+p{text-wrap:pretty}
+section{padding-block:5.5rem 0}
+.sh{display:grid;gap:.75rem;margin-bottom:2.25rem}
+.sh p{margin:0;color:var(--muted);max-width:44rem}
+
+/* top */
+.top{padding-block:4rem 0}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:1.5rem 0 0;padding:0;list-style:none;font-size:.875rem;color:var(--faint)}
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin-top:2.5rem;background:var(--paper);border-bottom:1px solid var(--hair)}
+.toc nav{display:flex;gap:1.5rem;overflow-x:auto;padding-block:.875rem;font-size:.875rem;font-weight:500;scrollbar-width:none}
+.toc a{color:var(--muted);text-decoration:none;white-space:nowrap}
+.toc a:hover,.toc a:focus-visible{color:var(--ink)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+
+/* the winners */
+.wins{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(21rem,100%),1fr));gap:1rem}
+.win{display:flex;flex-direction:column;gap:.625rem;padding:1.375rem 1.5rem 1.5rem;background:var(--sheet);border:1px solid var(--hair);border-radius:1rem}
+.win header{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.win h3{font-size:1.375rem}
+.award{font-size:.75rem;font-weight:600;color:var(--win);text-align:right;line-height:1.35}
+.win .why{margin:0;font-size:.9375rem;color:var(--muted)}
+.win .lesson{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--hair);font-size:.9375rem}
+.win .lesson b{color:var(--accent);font-weight:600}
+.win .src{font-size:.8125rem;color:var(--faint)}
+
+/* patterns */
+.patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(20rem,100%),1fr));gap:2rem 3rem;margin:0;padding:0;list-style:none;counter-reset:p}
+.patterns li{display:grid;gap:.375rem;padding-top:1rem;border-top:1px solid var(--hair)}
+.patterns h3{font-size:1.25rem}
+.patterns p{margin:0;font-size:.9375rem;color:var(--muted)}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(15.5rem,100%),1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:1rem;overflow:hidden}
+.num{display:grid;align-content:start;gap:.5rem;padding:1.5rem;background:var(--sheet)}
+.num b{font-family:var(--display);font-weight:400;font-size:2.5rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.num span{font-size:.9375rem;color:var(--muted)}
+.num a{font-size:.8125rem}
+.us{margin-top:1.5rem;padding:1.5rem 1.75rem;background:var(--accent-soft);border-radius:1rem}
+.us h3{font-size:1.25rem}
+.us ul{margin:.75rem 0 0;padding-left:1.25rem;display:grid;gap:.5rem}
+
+/* direction plates */
+.dir{padding-block:5.5rem 0}
+.dir-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem 4rem;align-items:end;margin-bottom:2rem}
+.dir-head .letter{font-family:var(--display);font-size:1.125rem;color:var(--accent)}
+.dir-head h2{margin-top:.375rem}
+.dir-head .idea{margin:0;font-family:var(--serif);font-style:italic;font-size:1.25rem;line-height:1.5;color:var(--ink)}
+.from{margin:.75rem 0 0;font-size:.875rem;color:var(--faint)}
+.plate{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.8fr);gap:2.5rem;align-items:center;padding:clamp(1.25rem,3vw,2.75rem);border-radius:1.5rem}
+.detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr));gap:2rem 2.5rem;margin-top:2.25rem}
+.detail h4{margin:0 0 .5rem;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.detail ul{margin:0;padding-left:1.125rem;display:grid;gap:.5rem;font-size:.9375rem}
+.detail p{margin:0;font-size:.9375rem}
+.tag{display:inline-block;margin-right:.375rem;padding:.125rem .5rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:.75rem;font-weight:600}
+
+/* device frames for the mock-ups */
+.browser{overflow:hidden;border-radius:.875rem;background:var(--m-pearl);box-shadow:0 0 0 1px rgba(20,26,40,.08),0 2rem 4rem -2.5rem rgba(20,26,40,.5)}
+.bar{display:flex;align-items:center;gap:.375rem;height:1.75rem;padding:0 .75rem;background:#eceef3}
+.bar i{width:.5rem;height:.5rem;border-radius:50%;background:#c9cdd6}
+.bar span{margin-left:.75rem;font-size:.625rem;color:#8a90a0}
+.page{position:relative;aspect-ratio:16/10;overflow:hidden;color:var(--m-ink)}
+.phone{justify-self:center;width:min(15rem,100%);padding:.4375rem;border-radius:2.125rem;background:#0f1726;box-shadow:0 2rem 4rem -2.25rem rgba(10,14,30,.6)}
+.screen{position:relative;aspect-ratio:9/19;overflow:hidden;border-radius:1.75rem;color:var(--m-ink);font-size:.6875rem;line-height:1.35}
+.notch{position:absolute;z-index:3;top:.5rem;left:50%;width:3.25rem;height:.875rem;border-radius:1rem;background:#0f1726;transform:translateX(-50%)}
+.mk-nav{display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.25rem;font-size:.625rem;font-weight:600}
+.mk-btn{display:inline-flex;align-items:center;gap:.375rem;height:1.75rem;padding:0 .875rem;border-radius:99px;background:var(--m-navy);color:#f4f1ea;font-size:.625rem;font-weight:600}
+.mk-h{margin:0;font-family:var(--display);font-weight:400;letter-spacing:-.015em;line-height:1.02}
+.mk-h em{font-family:var(--serif);font-style:italic;color:#4a5591}
+.mk-p{margin:0;font-size:.625rem;color:var(--m-dim)}
+.mk-trust{display:flex;gap:.75rem;font-size:.5rem;color:var(--m-dim)}
+
+/* A · Sky */
+.plate-sky{background:linear-gradient(160deg,#dfe6f6,#efe4ee 55%,#f8e3d4)}
+.sky-page{background:linear-gradient(180deg,#c8cdee 0%,#e1d1e6 40%,#f6d6c3 72%,#fbefe6 100%)}
+.sky-page .copy{position:absolute;left:0;right:0;top:3.25rem;display:grid;justify-items:center;gap:.625rem;text-align:center;padding:0 2rem}
+.sky-page .mk-h{font-size:clamp(1.25rem,2.6vw,2rem);max-width:26rem}
+.sky-page .sun{position:absolute;left:50%;bottom:-3.5rem;width:12rem;height:12rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,#fffaf2 0%,#fff1e2 22%,rgba(255,206,170,.75) 46%,rgba(255,206,170,0))}
+.sky-page .mini{position:absolute;bottom:-2.5rem;width:4.25rem;aspect-ratio:9/19;border-radius:.75rem;background:#0f1726;padding:.1875rem}
+.sky-page .mini div{width:100%;height:100%;border-radius:.625rem}
+.sky-page .m1{left:calc(50% - 5rem);transform:rotate(-5deg)}.sky-page .m1 div{background:linear-gradient(180deg,#d6e4f7,#fbe3d0)}
+.sky-page .m2{left:calc(50% + .75rem);transform:rotate(5deg)}.sky-page .m2 div{background:linear-gradient(180deg,#0d1828,#34385f)}
+.sky-app{background:linear-gradient(180deg,#d6e4f7 0%,#e9e6f3 30%,#fbe3d0 52%,var(--m-pearl) 70%)}
+.sky-app .arc{position:absolute;left:0;right:0;top:1.75rem;width:100%;height:7rem}
+.sky-app .hello{position:absolute;left:1rem;top:6.5rem}
+.sky-app .hello b{display:block;font-family:var(--display);font-weight:400;font-size:1.375rem}
+.cards{position:absolute;left:.75rem;right:.75rem;display:grid;gap:.375rem}
+.sky-app .cards{top:10.25rem}
+.card{display:flex;align-items:center;gap:.5rem;padding:.5rem .625rem;border-radius:.75rem;background:rgba(255,255,255,.86);box-shadow:0 .5rem 1rem -.75rem rgba(20,30,60,.4)}
+.card .ck{flex:none;display:grid;place-items:center;width:1rem;height:1rem;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(20,33,58,.3)}
+.card.done .ck{background:var(--m-navy);box-shadow:none;color:#fff}
+.card small{display:block;color:var(--m-dim);font-size:.5625rem}
+.const{position:absolute;left:.75rem;right:.75rem;bottom:.75rem;padding:.625rem .75rem;border-radius:.875rem;background:linear-gradient(180deg,#14213a,#2a3157);color:#efe7da}
+.const svg{display:block;width:100%;height:2.5rem}
+.const span{font-size:.5625rem;opacity:.8}
+
+/* B · Companion */
+.plate-comp{background:linear-gradient(160deg,#ecebf8,#f3eef6 55%,#eef3f7)}
+.comp-page{background:radial-gradient(60% 70% at 50% 62%,#ece7f6,#f8f7fb 70%)}
+.orb{position:absolute;left:50%;border-radius:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--m-cream) 50%,var(--m-navy) 50%);box-shadow:0 0 0 .375rem rgba(255,255,255,.8),0 0 2.5rem 1rem rgba(170,180,236,.45),0 1rem 2rem -1rem rgba(20,30,60,.5)}
+.orb::before,.orb::after{content:"";position:absolute;top:44%;width:9%;height:11%;border-radius:50%}
+.orb::before{left:30%;background:var(--m-navy)}
+.orb::after{right:30%;background:var(--m-cream)}
+.comp-page .orb{top:44%;width:6.5rem;height:6.5rem}
+.comp-page .copy{position:absolute;left:0;right:0;top:2.75rem;display:grid;justify-items:center;gap:.5rem;text-align:center}
+.comp-page .mk-h{font-size:clamp(1.25rem,2.6vw,2rem)}
+.comp-page .go{position:absolute;left:0;right:0;bottom:1.25rem;display:grid;justify-items:center;gap:.5rem}
+.comp-app{background:linear-gradient(180deg,#f2f0fa,var(--m-pearl) 60%)}
+.comp-app .orb{top:4.5rem;width:6rem;height:6rem}
+.comp-app .glow{position:absolute;left:0;right:0;top:11.5rem;text-align:center}
+.comp-app .glow b{display:block;font-family:var(--display);font-weight:400;font-size:1.125rem}
+.meter{width:60%;height:.3125rem;margin:.375rem auto 0;border-radius:1rem;background:#e2e1ee;overflow:hidden}
+.meter i{display:block;width:62%;height:100%;background:linear-gradient(90deg,#aab4ec,#14213a)}
+.comp-app .cards{top:15.5rem}
+.streak{position:absolute;left:.75rem;right:.75rem;bottom:.875rem;display:flex;justify-content:space-between}
+.streak span{display:grid;place-items:center;width:1.375rem;height:1.375rem;border-radius:50%;background:#e9e8f3;font-size:.5rem;color:var(--m-dim)}
+.streak .lit{background:radial-gradient(circle,#fff,#d7dcf6);box-shadow:0 0 .5rem rgba(170,180,236,.9);color:var(--m-navy)}
+
+/* C · Mirror */
+.plate-mir{background:linear-gradient(160deg,#eef1f6,#f6f7fa 60%,#eceff6)}
+.mir-page{background:var(--m-pearl)}
+.mir-page .copy{position:absolute;left:1.5rem;top:2.75rem;width:46%;display:grid;gap:.625rem}
+.mir-page .mk-h{font-size:clamp(1.125rem,2.3vw,1.75rem)}
+.mir-page .map{position:absolute;right:1.5rem;top:2.5rem;width:42%;padding:.875rem;border-radius:.875rem;background:#fff;box-shadow:0 0 0 1px rgba(20,30,60,.07),0 1rem 2rem -1.5rem rgba(20,30,60,.45)}
+.map h5{margin:0 0 .5rem;font-size:.5625rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--m-dim)}
+.pole{display:grid;grid-template-columns:3.5rem minmax(0,1fr) 3.5rem;align-items:center;gap:.375rem;margin-top:.375rem;font-size:.5625rem}
+.pole span:last-child{text-align:right}
+.track{position:relative;height:.25rem;border-radius:1rem;background:linear-gradient(90deg,#e9e4da,#cfd5e8)}
+.track i{position:absolute;top:50%;width:.5rem;height:.5rem;border-radius:50%;background:var(--m-navy);transform:translate(-50%,-50%);box-shadow:0 0 0 .1875rem #fff}
+.track s{position:absolute;top:50%;width:.375rem;height:.375rem;border-radius:50%;background:#aab4ec;transform:translate(-50%,-50%)}
+.mir-app{background:var(--m-pearl)}
+.mir-app .ttl{position:absolute;left:1rem;top:2rem}
+.mir-app .ttl b{display:block;font-family:var(--display);font-weight:400;font-size:1.375rem}
+.mir-app .map{position:absolute;left:.75rem;right:.75rem;top:5.25rem;padding:.75rem;border-radius:.875rem;background:#fff;box-shadow:0 0 0 1px rgba(20,30,60,.07)}
+.mir-app .note{position:absolute;left:.75rem;right:.75rem;top:14.25rem;padding:.75rem;border-radius:.875rem;color:#efe7da;background:linear-gradient(180deg,#16253d,#0d1829)}
+.mir-app .note p{margin:0;font-family:var(--serif);font-size:.6875rem;line-height:1.45}
+.mir-app .note .yn{display:flex;gap:.375rem;margin-top:.5rem}
+.mir-app .note .yn span{padding:.25rem .625rem;border-radius:99px;background:rgba(255,255,255,.12);font-size:.5625rem;font-weight:600}
+.mir-app .note .yn span:first-child{background:#efe7da;color:var(--m-navy)}
+.rows{position:absolute;left:1.5rem;right:1.5rem;bottom:1.25rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem}
+.rows div{padding:.75rem;border-radius:.75rem;background:#fff;box-shadow:0 0 0 1px rgba(20,30,60,.07)}
+.rows b{display:block;font-family:var(--display);font-weight:400;font-size:.875rem}
+.rows span{font-size:.5625rem;color:var(--m-dim)}
+.rows i{display:block;height:.25rem;margin-top:.5rem;border-radius:1rem;background:linear-gradient(90deg,#aab4ec,#14213a)}
+.mir-app .step{position:absolute;left:.75rem;right:.75rem;bottom:.875rem}
+.legend{display:flex;gap:.75rem;margin-top:.5rem;font-size:.5rem;color:var(--m-dim)}
+.legend i{display:inline-block;width:.375rem;height:.375rem;margin-right:.25rem;border-radius:50%;vertical-align:middle}
+
+/* compare */
+.tbl{overflow-x:auto;border:1px solid var(--hair);border-radius:1rem;background:var(--sheet)}
+table{width:100%;min-width:44rem;border-collapse:collapse;font-size:.9375rem}
+th,td{padding:.875rem 1.125rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--hair)}
+thead th{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+tbody th{font-weight:600;width:11rem}
+tr:last-child th,tr:last-child td{border-bottom:0}
+td.best{color:var(--win);font-weight:600}
+
+/* funnel */
+.funnel{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.375rem}
+.stage{position:relative;display:grid;align-content:start;gap:.375rem;padding:1rem .875rem 1.125rem;background:var(--sheet);border:1px solid var(--hair);border-radius:.75rem}
+.stage b{font-size:.9375rem}
+.stage span{font-size:.8125rem;color:var(--muted)}
+.stage em{font-style:normal;font-size:.75rem;font-weight:600;color:var(--accent)}
+.stage::after{content:"";position:absolute;right:-.3125rem;top:1.375rem;width:.5rem;height:.5rem;border-top:1.5px solid var(--faint);border-right:1.5px solid var(--faint);transform:translateX(50%) rotate(45deg);z-index:1;background:var(--paper)}
+.stage:last-child::after{display:none}
+.fn{margin:1rem 0 0;font-size:.875rem;color:var(--faint)}
+
+/* pick */
+.pick{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:2.5rem;padding:clamp(1.5rem,4vw,3rem);border-radius:1.5rem;color:#eef0f7;background:radial-gradient(90% 90% at 100% 100%,rgba(86,132,204,.45),rgba(86,132,204,0) 60%),radial-gradient(70% 70% at 0% 110%,rgba(150,128,212,.3),rgba(150,128,212,0) 60%),linear-gradient(180deg,#16253d,#0d1829)}
+.pick .kick{color:#b9c6ef}
+.pick h2{margin-top:.5rem;color:#fff}
+.pick h2 em{color:#c9d3f0}
+.pick p{color:rgba(238,240,247,.84)}
+.pick ol{margin:0;padding-left:1.25rem;display:grid;gap:.75rem;color:rgba(238,240,247,.9)}
+.pick ol b{color:#fff}
+
+.next{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr));gap:1rem;margin:0;padding:0;list-style:none;counter-reset:n}
+.next li{counter-increment:n;padding:1.25rem 1.375rem;background:var(--sheet);border:1px solid var(--hair);border-radius:1rem;font-size:.9375rem}
+.next li::before{content:counter(n);display:block;margin-bottom:.375rem;font-family:var(--display);font-size:1.5rem;color:var(--accent)}
+.next b{display:block;margin-bottom:.25rem}
+
+.sources{columns:2 22rem;column-gap:3rem;margin:0;padding:0;list-style:none;font-size:.875rem}
+.sources li{break-inside:avoid;padding:.5rem 0;border-bottom:1px solid var(--hair);color:var(--muted)}
+footer{padding-block:4rem 5rem;font-size:.875rem;color:var(--faint)}
+
+@media (max-width:900px){
+  .dir-head,.plate,.pick{grid-template-columns:minmax(0,1fr)}
+  .funnel{grid-template-columns:minmax(0,1fr)}
+  .stage::after{right:auto;left:1.25rem;top:auto;bottom:-.3125rem;transform:translateY(50%) rotate(135deg)}
+}
+@media (max-width:640px){
+  .page.mir-page{aspect-ratio:1/1}
+  .mir-page .copy{left:1.25rem;right:1.25rem;width:auto}
+  .mir-page .map{left:1.25rem;right:1.25rem;top:auto;bottom:1.25rem;width:auto}
+  .mir-page .rows{display:none}
+}
+@media (prefers-reduced-motion:no-preference){.toc a{transition:color .3s ease}}
+</style>
+
+<div class="wrap">
+  <header class="top col">
+    <p class="kick">The Other Half · Design research</p>
+    <h1>Three directions for the app, <em>and the page that sells it.</em></h1>
+    <p class="lead">I studied the apps Apple honored for design in wellness, habits and self-care, and the ones whose design measurably drove growth. Seven patterns separate them from the rest, and three directions come out of those patterns. My pick is Sky, with Mirror’s insights built into it.</p>
+    <ul class="meta"><li>October 24, 2026</li><li>16 sources, each opened and checked</li><li>For Jarred</li></ul>
+  </header>
+</div>
+
+<div class="toc"><div class="wrap"><nav aria-label="Sections"><a href="#winners">The winners</a><a href="#patterns">Seven patterns</a><a href="#numbers">The numbers</a><a href="#sky">A · Sky</a><a href="#companion">B · Companion</a><a href="#mirror">C · Mirror</a><a href="#compare">Side by side</a><a href="#funnel">The funnel</a><a href="#pick">My pick</a><a href="#sources">Sources</a></nav></div></div>
+
+<div class="wrap">
+
+<section id="winners">
+  <div class="sh"><p class="kick">The winners</p><h2>Who won, and <em>why it worked.</em></h2><p>Each card says what the award recognized, the growth evidence where it exists, and what it means for the Other Half.</p></div>
+  <div class="wins">
+    <article class="win"><header><h3>Tiimo</h3><span class="award">iPhone App of the Year 2025</span></header>
+      <p class="why">Apple: it turned “chaotic calendars into a timeline of soothing colors” and made “tackling our to-dos a calming activity.” Its site claims over half a million people.</p>
+      <p class="lesson"><b>For us:</b> calm is a feature. Make the hard part, today’s step, feel like relief.</p>
+      <span class="src"><a href="https://developer.apple.com/app-store/app-store-awards-2025" target="_blank" rel="noopener">Apple</a> · <a href="https://www.tiimoapp.com" target="_blank" rel="noopener">tiimoapp.com</a></span></article>
+    <article class="win"><header><h3>Lumy</h3><span class="award">App Store Award 2024 · Design Award finalist 2025</span></header>
+      <p class="why">A sun and moon tracker whose design leans on “simulated light, shimmering glows” and the live sky edge to edge. Rated 4.8 from 2.4K ratings.</p>
+      <p class="lesson"><b>For us:</b> a sky drawn with craft can be a whole brand. Your app already opens with one.</p>
+      <span class="src"><a href="https://apps.apple.com/us/app/-/id908905093" target="_blank" rel="noopener">App Store listing</a></span></article>
+    <article class="win"><header><h3>How We Feel</h3><span class="award">App Store Cultural Impact award</span></header>
+      <p class="why">Built on Yale’s Mood Meter. People check in, tag what’s behind a feeling, and learn their patterns. Named a top 15 app of 2022, rated 4.9.</p>
+      <p class="lesson"><b>For us:</b> self-discovery wins when people see their own patterns, in their own words.</p>
+      <span class="src"><a href="https://medicine.yale.edu/news-article/the-how-we-feel-app-helping-emotions-work-for-us-not-against-us/" target="_blank" rel="noopener">Yale Medicine</a></span></article>
+    <article class="win"><header><h3>Bears Gratitude</h3><span class="award">Design Award 2024 · Delight and Fun</span></header>
+      <p class="why">Apple: friendly characters make daily gratitude journaling feel warm and routine.</p>
+      <p class="lesson"><b>For us:</b> warmth turns a daily reflection into a habit. Your “one line on today” is the same moment.</p>
+      <span class="src"><a href="https://www.apple.com/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/" target="_blank" rel="noopener">Apple Newsroom</a></span></article>
+    <article class="win"><header><h3>Gentler Streak</h3><span class="award">Design Award 2024 · Social Impact</span></header>
+      <p class="why">Apple: it “aims to improve everyone’s lifestyles, no matter who or where they are.” A fitness app honored for wellbeing, not intensity.</p>
+      <p class="lesson"><b>For us:</b> progress that never shames is a winning position, and it’s already in your voice.</p>
+      <span class="src"><a href="https://www.apple.com/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/" target="_blank" rel="noopener">Apple Newsroom</a></span></article>
+    <article class="win"><header><h3>Focus Friend</h3><span class="award">App Store Award 2025 · Cultural Impact</span></header>
+      <p class="why">A bean knits while you focus and drops its stitches if you leave. It became the No. 1 free app on the App Store about a month after launch.</p>
+      <p class="lesson"><b>For us:</b> something small to care for drives daily return and word of mouth.</p>
+      <span class="src"><a href="https://developer.apple.com/app-store/app-store-awards-2025" target="_blank" rel="noopener">Apple</a> · <a href="https://www.ypulse.com/newsfeed/2025/08/26/young-people-are-loving-hank-greens-focus-friend-app-that-encourages-less-screen-time/" target="_blank" rel="noopener">YPulse</a></span></article>
+    <article class="win"><header><h3>Finch</h3><span class="award">5.0 from 500K+ ratings</span></header>
+      <p class="why">“Take care of your pet by taking care of yourself.” Estimated at about $1M a month in revenue and 600K+ downloads a month.</p>
+      <p class="lesson"><b>For us:</b> a companion can carry self-care at scale, when it never guilt-trips.</p>
+      <span class="src"><a href="https://finchcare.com" target="_blank" rel="noopener">finchcare.com</a> · <a href="https://adapty.io/paywall-library/finch/" target="_blank" rel="noopener">Adapty estimate</a></span></article>
+    <article class="win"><header><h3>Opal</h3><span class="award">Design Award finalist 2025 · Social Impact</span></header>
+      <p class="why">Its page leads with proof: 4.8 from 150K+ ratings, the award badge, and outcomes from 300,000 users, such as 1 hour 23 minutes saved a day.</p>
+      <p class="lesson"><b>For us:</b> outcome numbers from real users beat feature lists. Start collecting them in testing.</p>
+      <span class="src"><a href="https://opalapp.com/" target="_blank" rel="noopener">opalapp.com</a></span></article>
+    <article class="win"><header><h3>Structured</h3><span class="award">iPad App of the Year finalist 2025</span></header>
+      <p class="why">A visual day timeline with low-effort details: smart icons, one-tap repeats, gentle nudges. 1.7M downloads two years after launch, then more than doubled.</p>
+      <p class="lesson"><b>For us:</b> one clear picture of the day, with every step made effortless.</p>
+      <span class="src"><a href="https://designli.co/blog/how-the-structured-app-achieved-millions-of-downloads-using-behavioral-design" target="_blank" rel="noopener">Designli</a></span></article>
+  </div>
+</section>
+
+<section id="patterns">
+  <div class="sh"><p class="kick">Seven patterns</p><h2>What the winners <em>have in common.</em></h2></div>
+  <ul class="patterns">
+    <li><h3>Calm the hard part</h3><p>The best apps make the scary step feel soothing: Tiimo’s colors, Calm’s atmosphere. For you, that’s the moment someone opens today’s step.</p></li>
+    <li><h3>One signature visual</h3><p>Lumy’s sky, Tiimo’s color timeline, Structured’s day line. People remember one picture, and it becomes the brand.</p></li>
+    <li><h3>Something to care for</h3><p>Finch’s bird, Focus Friend’s bean, Bears’ characters. Care brings people back, and care gets shared.</p></li>
+    <li><h3>Progress that forgives</h3><p>Gentler Streak and Finch never punish a miss. Hard days still count, which is already your rule.</p></li>
+    <li><h3>Show people themselves</h3><p>How We Feel and Opal turn taps into patterns people recognize. That is self-discovery made visible.</p></li>
+    <li><h3>Earn the ask</h3><p>Noom’s onboarding runs up to 113 screens and asks for money only after people have invested in their own answers.</p></li>
+    <li><h3>Proof up top</h3><p>Tiimo, Opal and Finch put ratings, awards and outcomes right under the headline, before any feature.</p></li>
+  </ul>
+</section>
+
+<section id="numbers">
+  <div class="sh"><p class="kick">The numbers</p><h2>Where design turns into <em>growth.</em></h2><p>Industry benchmarks from subscription apps and landing pages, and two growth stories with published numbers.</p></div>
+  <div class="nums">
+    <div class="num"><b>10.7% vs 2.1%</b><span>Trial-to-paid by day 35 when the app asks for payment up front, versus free-to-start apps.</span><a href="https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026" target="_blank" rel="noopener">RevenueCat 2026</a></div>
+    <div class="num"><b>$3.09 vs $0.38</b><span>Revenue per install by day 60, same comparison.</span><a href="https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026" target="_blank" rel="noopener">RevenueCat 2026</a></div>
+    <div class="num"><b>42.5% vs 25.5%</b><span>Trial-to-paid for 17–32 day trials versus trials under 4 days.</span><a href="https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026" target="_blank" rel="noopener">RevenueCat 2026</a></div>
+    <div class="num"><b>55.4%</b><span>Share of 3-day trial cancellations that happen on day 0. The first day decides.</span><a href="https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026" target="_blank" rel="noopener">RevenueCat 2026</a></div>
+    <div class="num"><b>8.2%</b><span>Median conversion of wellness landing pages. Copy at a grade 5–7 reading level converts at 10.8%.</span><a href="https://unbounce.com/conversion-benchmark-report/healthcare-wellness-conversion-rate" target="_blank" rel="noopener">Unbounce</a></div>
+    <div class="num"><b>4.5×</b><span>Duolingo’s daily users over four years. Its first big wins were leaderboards, notifications and streaks.</span><a href="https://www.lennysnewsletter.com/p/how-duolingo-reignited-user-growth" target="_blank" rel="noopener">Lenny’s Newsletter</a></div>
+    <div class="num"><b>4×</b><span>Calm’s revenue from new-member emails after cutting the series from 27 days to 15.</span><a href="https://iterable.com/customers/calm" target="_blank" rel="noopener">Iterable</a></div>
+    <div class="num"><b>7× / 22%</b><span>Mobile brings about 7 times the visitors to wellness pages; desktop converts 22% better.</span><a href="https://unbounce.com/conversion-benchmark-report/healthcare-wellness-conversion-rate" target="_blank" rel="noopener">Unbounce</a></div>
+  </div>
+  <div class="us"><h3>What this means for the Other Half, whichever direction you pick</h3>
+    <ul>
+      <li><b>Test asking for a card when someone starts their free week,</b> with a clear reminder before the first charge, against today’s no-card week. The benchmark gap is about 5×, though asking up front also filters out less committed people.</li>
+      <li><b>Make day 0 count:</b> finish step one right after the quiz, so the first win lands before the first doubt.</li>
+      <li><b>Keep the quiz, and make its result the “aha.”</b> Noom shows that a personal flow earns the ask; yours already does this in three minutes.</li>
+      <li><b>Front-load the welcome emails.</b> Calm got 4× the revenue from the same emails sent closer together.</li>
+      <li><b>Collect proof now:</b> a rating, real quotes and one outcome number from testers, for the top of the app page.</li>
+      <li><b>Keep the copy at a grade 5–7 reading level,</b> which your voice rules already push toward.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="dir" id="sky">
+  <div class="dir-head">
+    <div><span class="letter">Direction A</span><h2>Sky</h2><p class="from">From Lumy, Tiimo and Calm.</p></div>
+    <p class="idea">Your day, in its own light. The app already greets people with a sky that follows their clock. Make that light the whole interface, from the page that sells it to the last step of the day.</p>
+  </div>
+  <div class="plate plate-sky">
+    <div class="browser" aria-label="App page mock-up, Sky"><div class="bar"><i></i><i></i><i></i><span>thejarredeffect.com/the-other-half</span></div>
+      <div class="page sky-page"><div class="mk-nav"><span>The Other Half</span><span class="mk-btn">Take the quiz</span></div>
+        <div class="copy"><p class="mk-h">You’re missing <em>the other half.</em></p><p class="mk-p">Good evening. Find yours in three minutes.</p><span class="mk-btn">Find my other half →</span><div class="mk-trust"><span>Free</span><span>3 minutes</span><span>No sign-up</span></div></div>
+        <div class="sun"></div><div class="mini m1"><div></div></div><div class="mini m2"><div></div></div></div></div>
+    <div class="phone" aria-label="App mock-up, Sky: Today"><div class="screen sky-app"><span class="notch"></span>
+      <svg class="arc" viewBox="0 0 240 110" aria-hidden="true"><path d="M20 100 Q120 -10 220 100" fill="none" stroke="rgba(20,33,58,.25)" stroke-width="1.2" stroke-dasharray="3 4"/><circle cx="168" cy="44" r="11" fill="#fff6ea"/><circle cx="168" cy="44" r="20" fill="rgba(255,226,196,.45)"/></svg>
+      <div class="hello"><small>Day 4 · Afternoon</small><b>Two of three done.</b></div>
+      <div class="cards"><div class="card done"><span class="ck">✓</span><span>Ten minutes of play<small>Goal 1 · felt easy</small></span></div><div class="card done"><span class="ck">✓</span><span>Circle one purchase<small>Goal 2 · small version</small></span></div><div class="card"><span class="ck"></span><span>One line on today<small>Before the sun sets</small></span></div></div>
+      <div class="const"><span>This week</span><svg viewBox="0 0 220 40" aria-hidden="true"><polyline points="10,28 42,14 74,22 106,9 138,24" fill="none" stroke="rgba(239,231,218,.45)" stroke-width="1"/><circle cx="10" cy="28" r="3" fill="#fff"/><circle cx="42" cy="14" r="3" fill="#fff"/><circle cx="74" cy="22" r="3" fill="#fff"/><circle cx="106" cy="9" r="3.5" fill="#fff"/><circle cx="138" cy="24" r="2" fill="rgba(239,231,218,.5)"/><circle cx="170" cy="16" r="2" fill="rgba(239,231,218,.25)"/><circle cx="202" cy="26" r="2" fill="rgba(239,231,218,.25)"/></svg></div>
+    </div></div>
+  </div>
+  <div class="detail">
+    <div><h4>The app</h4><ul><li>Today sits on the live sky for their time of day; steps are soft frosted cards.</li><li>Finishing a step moves the sun along its arc, so progress is something you see.</li><li>Each day done becomes a star; the week draws a constellation. A missed day stays a dim star, never a broken chain.</li><li>The paywall shows their week’s constellation: “Keep your sky going.”</li></ul></div>
+    <div><h4>The app page</h4><ul><li>The hero shows the visitor’s own sky by their local time: morning, afternoon, evening or night.</li><li>One button, the trust row, and two phones at dawn and dusk.</li><li>A scroll from morning to night tells how a day with the app goes.</li><li>You, then questions, then the ending under the night sky.</li></ul></div>
+    <div><h4>Why it converts</h4><p><span class="tag">Calm</span><span class="tag">Signature</span>It lowers the stress of starting, the way Tiimo did, and the constellation is a picture people want to keep and share. The sky also bridges site and app, so the hand-off feels like one place.</p></div>
+    <div><h4>Watch out for</h4><p>Beauty can’t slow clarity, and the night needs strong contrast. It needs crafted motion to feel premium. Effort: medium to high, though the skies already exist in the app.</p></div>
+  </div>
+</section>
+
+<section class="dir" id="companion">
+  <div class="dir-head">
+    <div><span class="letter">Direction B</span><h2>Companion</h2><p class="from">From Finch, Focus Friend, Bears Gratitude and Duolingo’s streaks.</p></div>
+    <p class="idea">Something to take care of. Your other half becomes a small two-tone being, half light and half shadow, that grows brighter and more balanced as you do your steps. You stay the voice; it is the face.</p>
+  </div>
+  <div class="plate plate-comp">
+    <div class="browser" aria-label="App page mock-up, Companion"><div class="bar"><i></i><i></i><i></i><span>thejarredeffect.com/the-other-half</span></div>
+      <div class="page comp-page"><div class="mk-nav"><span>The Other Half</span><span class="mk-btn">Take the quiz</span></div>
+        <div class="copy"><p class="mk-h">Meet <em>your other half.</em></p><p class="mk-p">It grows when you show up for yourself.</p></div>
+        <div class="orb"></div>
+        <div class="go"><span class="mk-btn">Find my other half →</span><div class="mk-trust"><span>Free</span><span>3 minutes</span><span>No sign-up</span></div></div></div></div>
+    <div class="phone" aria-label="App mock-up, Companion: home"><div class="screen comp-app"><span class="notch"></span>
+      <div class="orb"></div>
+      <div class="glow"><b>Brighter today.</b><span>Your other half is 62% lit</span><div class="meter"><i></i></div></div>
+      <div class="cards"><div class="card done"><span class="ck">✓</span><span>Ten minutes of play<small>It perked right up</small></span></div><div class="card"><span class="ck"></span><span>Circle one purchase<small>Hard day? The small version counts</small></span></div></div>
+      <div class="streak"><span class="lit">M</span><span class="lit">T</span><span class="lit">W</span><span class="lit">T</span><span>F</span><span>S</span><span>S</span></div>
+    </div></div>
+  </div>
+  <div class="detail">
+    <div><h4>The app</h4><ul><li>Home is the companion; each step done lights its other half, and a small version on a hard day still counts.</li><li>A gentle glow streak: a missed day dims it, rest days are allowed, nothing dies.</li><li>A weekly ritual with it, milestone marks to collect, and share cards.</li><li>Your words stay the voice of every message.</li></ul></div>
+    <div><h4>The app page</h4><ul><li>A playful hero with the companion breathing on screen: “Meet your other half.”</li><li>One button, a short page, ratings once testers rate it.</li><li>Built to be shared: the companion is the ad.</li></ul></div>
+    <div><h4>Why it converts</h4><p><span class="tag">Return</span><span class="tag">Sharing</span>Attachment brings people back daily. Duolingo’s streaks and leaderboards came first in its 4.5× growth, Focus Friend hit No. 1 within a month, and Finch is estimated near $1M a month.</p></div>
+    <div><h4>Watch out for</h4><p>It can read young or game-like next to your mentor positioning, and it lives or dies on the quality of the character art and animation. It must never guilt-trip. Effort: high.</p></div>
+  </div>
+</section>
+
+<section class="dir" id="mirror">
+  <div class="dir-head">
+    <div><span class="letter">Direction C</span><h2>Mirror</h2><p class="from">From How We Feel, Opal, Structured and Tiimo.</p></div>
+    <p class="idea">See yourself clearly. The product is self-discovery, so make the person the hero: a living balance map of their two halves that shifts with what they actually do, and insights in plain words that ask “Right?”</p>
+  </div>
+  <div class="plate plate-mir">
+    <div class="browser" aria-label="App page mock-up, Mirror"><div class="bar"><i></i><i></i><i></i><span>thejarredeffect.com/the-other-half</span></div>
+      <div class="page mir-page"><div class="mk-nav"><span>The Other Half</span><span class="mk-btn">Take the quiz</span></div>
+        <div class="copy"><p class="mk-h">See which half <em>you’ve been missing.</em></p><p class="mk-p">A 3-minute quiz maps your balance. Then one small step a day moves it.</p><span class="mk-btn" style="justify-self:start">Find my other half →</span><div class="mk-trust"><span>Free</span><span>3 minutes</span></div></div>
+        <div class="map"><h5>Your balance</h5>
+          <div class="pole"><span>Desire</span><span class="track"><i style="left:24%"></i></span><span>Discipline</span></div>
+          <div class="pole"><span>Faith</span><span class="track"><i style="left:38%"></i></span><span>Friction</span></div>
+          <div class="pole"><span>Ambition</span><span class="track"><i style="left:30%"></i></span><span>Acceptance</span></div>
+          <div class="pole"><span>Control</span><span class="track"><i style="left:66%"></i></span><span>Trust</span></div></div>
+        <div class="rows"><div><b>One step a day</b><span>Written for your result, in plain words</span><i style="width:40%"></i></div><div><b>What I’m noticing</b><span>Patterns from your own week</span><i style="width:65%"></i></div><div><b>Your balance, moving</b><span>Compared only to your past self</span><i style="width:85%"></i></div></div></div></div>
+    <div class="phone" aria-label="App mock-up, Mirror: your balance"><div class="screen mir-app"><span class="notch"></span>
+      <div class="ttl"><small>Week 3</small><b>Your balance</b></div>
+      <div class="map"><div class="pole"><span>Desire</span><span class="track"><s style="left:24%"></s><i style="left:41%"></i></span><span>Discipline</span></div>
+        <div class="pole"><span>Faith</span><span class="track"><s style="left:38%"></s><i style="left:47%"></i></span><span>Friction</span></div>
+        <div class="pole"><span>Ambition</span><span class="track"><s style="left:30%"></s><i style="left:36%"></i></span><span>Acceptance</span></div>
+        <div class="pole"><span>Control</span><span class="track"><s style="left:66%"></s><i style="left:58%"></i></span><span>Trust</span></div>
+        <div class="legend"><span><i style="background:#aab4ec"></i>Quiz</span><span><i style="background:#14213a"></i>Now</span></div></div>
+      <div class="note"><p>You finished 4 of your 5 steps before noon this week, and 1 of 4 after dinner. Mornings seem to suit you. Right?</p><div class="yn"><span>Right</span><span>Not quite</span></div></div>
+      <div class="cards step"><div class="card"><span class="ck"></span><span>Ten minutes of play<small>Tomorrow, before noon</small></span></div></div>
+    </div></div>
+  </div>
+  <div class="detail">
+    <div><h4>The app</h4><ul><li>Home is their balance map across your four pairs, starting from the quiz and moving week by week with their steps and check-ins.</li><li>“What I’m noticing” becomes a daily card with real numbers and “Right?” / “Not quite.”</li><li>A weekly mirror that compares them only to their past self.</li><li>The paywall shows the map moving: “See where your balance goes next.”</li></ul></div>
+    <div><h4>The app page</h4><ul><li>A product-led page in the Tiimo and Opal mold: “See which half you’ve been missing” and the quiz button.</li><li>A proof strip, then a live example balance map.</li><li>Three feature rows with real screens, outcome numbers from testers, questions, the ending.</li></ul></div>
+    <div><h4>Why it converts</h4><p><span class="tag">Clarity</span><span class="tag">Aha</span>The “aha” arrives in three minutes, because the quiz result is the first mirror. It scans fast, it is the easiest to test and improve, and it is self-discovery made visible.</p></div>
+    <div><h4>Watch out for</h4><p>Data can feel clinical, so it needs your warmth in every line, and it deepens only after a few weeks of use. The quiz map seeds it on day one. Effort: medium.</p></div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="sh"><p class="kick">Side by side</p><h2>The three <em>compared.</em></h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>A · Sky</th><th>B · Companion</th><th>C · Mirror</th></tr></thead>
+    <tbody>
+      <tr><th>First impression</th><td class="best">Most beautiful</td><td>Most playful</td><td>Clearest</td></tr>
+      <tr><th>Shows the product</th><td>Real screens on dawn and dusk</td><td>The character first</td><td class="best">The person’s own balance</td></tr>
+      <tr><th>Fits your brand</th><td class="best">Calm, premium, the app’s own look</td><td>Warm, but younger</td><td>Smart; needs your warmth</td></tr>
+      <tr><th>Brings people back</th><td>Sun arc and constellation</td><td class="best">Daily care and the glow streak</td><td>Weekly insights</td></tr>
+      <tr><th>Gets shared</th><td>Constellation cards</td><td class="best">The companion itself</td><td>Balance cards</td></tr>
+      <tr><th>Converts on the page</th><td>Emotion and trust</td><td>Curiosity</td><td class="best">Clarity and proof</td></tr>
+      <tr><th>Effort</th><td>Medium to high</td><td>High</td><td class="best">Medium</td></tr>
+      <tr><th>Biggest risk</th><td>Style over clarity</td><td>Reads as a game</td><td>Feels clinical</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="funnel">
+  <div class="sh"><p class="kick">The funnel</p><h2>Same funnel in every direction, <em>measured at each step.</em></h2><p>App ads land on the app page; guide ads land on the guide’s page. These are the steps to track from the first day of ads.</p></div>
+  <div class="funnel">
+    <div class="stage"><b>App ad</b><span>Headline matches the page</span><em>Click-through</em></div>
+    <div class="stage"><b>App page</b><span>One button, proof up top</span><em>Quiz starts · median page 8.2%</em></div>
+    <div class="stage"><b>Quiz</b><span>3 minutes, personal</span><em>Finishes</em></div>
+    <div class="stage"><b>Result</b><span>The “aha,” email saved</span><em>Emails captured</em></div>
+    <div class="stage"><b>Day 0</b><span>Step one done right away</span><em>First steps done</em></div>
+    <div class="stage"><b>Week one</b><span>Gentle streak, front-loaded emails</span><em>Days done by day 7</em></div>
+    <div class="stage"><b>Paid</b><span>Card at start, or at day 7 (test)</span><em>Trial to paid · median 42.5% on long trials</em></div>
+  </div>
+  <p class="fn">Benchmarks are industry medians from Unbounce and RevenueCat. Set your own targets after the first 1,000 visitors.</p>
+</section>
+
+<section id="pick">
+  <div class="pick">
+    <div><p class="kick">My pick</p><h2>Sky, with <em>Mirror inside it.</em></h2><p>Sky gives the Other Half a look nobody else in this space owns, and it’s already in your app. Mirror gives people the reason to pay: they watch themselves change. One idea comes from Companion: the gentle streak, drawn as a constellation instead of a character.</p></div>
+    <ol>
+      <li><b>The experience is the sky.</b> The app page, Today and the welcome all live in the light of the visitor’s day.</li>
+      <li><b>The value is the mirror.</b> The balance map and “What I’m noticing” sit at the center of Progress and the paywall.</li>
+      <li><b>The habit is the constellation.</b> Days done become stars, misses stay dim stars, never a broken chain.</li>
+      <li><b>The page converts on proof.</b> Ratings, quotes and outcome numbers from your testers go right under the headline.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="next">
+  <div class="sh"><p class="kick">Next</p><h2>From here to <em>launch.</em></h2></div>
+  <ol class="next">
+    <li><b>You choose</b>Sky + Mirror, one direction as it stands, or a mix.</li>
+    <li><b>I mock the four key screens</b>The app page, Today, Progress with the balance map, and the paywall, at full fidelity.</li>
+    <li><b>Testers bring the proof</b>A rating, three real quotes, and one outcome number for the top of the page.</li>
+    <li><b>Build and test</b>The app page at /the-other-half, the refined app, and the card-at-start test against the no-card week.</li>
+  </ol>
+</section>
+
+<section id="sources">
+  <div class="sh"><p class="kick">Sources</p><h2>Every number, <em>where it came from.</em></h2><p>Opened October 24, 2026. Third-party revenue figures are estimates and labeled as such.</p></div>
+  <ul class="sources">
+    <li><a href="https://developer.apple.com/app-store/app-store-awards-2025" target="_blank" rel="noopener">App Store Awards 2025</a>, Apple Developer</li>
+    <li><a href="https://www.apple.com/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/" target="_blank" rel="noopener">2024 Apple Design Award winners</a>, Apple Newsroom</li>
+    <li><a href="https://www.tiimoapp.com/resource-hub/tiimo-winner-2025-app-store-awards" target="_blank" rel="noopener">Tiimo wins iPhone App of the Year</a>, Tiimo</li>
+    <li><a href="https://www.tiimoapp.com" target="_blank" rel="noopener">Tiimo homepage</a></li>
+    <li><a href="https://apps.apple.com/us/app/-/id908905093" target="_blank" rel="noopener">Lumy</a>, App Store listing</li>
+    <li><a href="https://medicine.yale.edu/news-article/the-how-we-feel-app-helping-emotions-work-for-us-not-against-us/" target="_blank" rel="noopener">How We Feel</a>, Yale Medicine</li>
+    <li><a href="https://www.ypulse.com/newsfeed/2025/08/26/young-people-are-loving-hank-greens-focus-friend-app-that-encourages-less-screen-time/" target="_blank" rel="noopener">Focus Friend</a>, YPulse</li>
+    <li><a href="https://finchcare.com" target="_blank" rel="noopener">Finch homepage</a></li>
+    <li><a href="https://adapty.io/paywall-library/finch/" target="_blank" rel="noopener">Finch revenue and download estimates</a>, Adapty</li>
+    <li><a href="https://opalapp.com/" target="_blank" rel="noopener">Opal homepage</a></li>
+    <li><a href="https://designli.co/blog/how-the-structured-app-achieved-millions-of-downloads-using-behavioral-design" target="_blank" rel="noopener">How Structured reached millions of downloads</a>, Designli</li>
+    <li><a href="https://www.lennysnewsletter.com/p/how-duolingo-reignited-user-growth" target="_blank" rel="noopener">How Duolingo reignited user growth</a>, Lenny’s Newsletter</li>
+    <li><a href="https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026" target="_blank" rel="noopener">Subscription app benchmarks 2026</a>, RevenueCat</li>
+    <li><a href="https://www.revenuecat.com/blog/growth/web-to-app-onboarding-funnel" target="_blank" rel="noopener">Noom’s web-to-app funnel</a>, RevenueCat</li>
+    <li><a href="https://unbounce.com/conversion-benchmark-report/healthcare-wellness-conversion-rate" target="_blank" rel="noopener">Health and wellness conversion benchmarks</a>, Unbounce</li>
+    <li><a href="https://iterable.com/customers/calm" target="_blank" rel="noopener">Calm onboarding results</a>, Iterable</li>
+  </ul>
+</section>
+
+<footer>The Other Half · by The Jarred Effect · Design research, October 2026</footer>
+</div>

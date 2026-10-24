@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day and Night</title><base href="http://localhost:4321/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="file:///private/tmp/claude-501/-Users-jarredletofsky-The-Jarred-Effect-redesign/a391a14c-f7f1-4a59-b4ef-af4dbc342d1f/scratchpad/sky/base.css">
+<style>
+/* Day and night, one sky. The brand's two halves are the two halves of a day, drawn in the app's own welcome skies:
+   morning light on one side, the starry night on the other, meeting at a glowing horizon. One style top to bottom:
+   the app's serif and sans, navy buttons, white cards, and the skies. Jarred lives in the voice, plus one portrait. */
+body{background:#fcfcfd}
+.eye,.lab{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--navy)}
+.lab{color:var(--faint)}
+.h2 em{color:var(--rust)}
+.sec{padding:8rem var(--pad) 0}
+.head{max-width:46rem;margin:0 auto;text-align:center}
+.head .h2{margin-top:.875rem}
+.head .sub{margin:1.125rem auto 0;max-width:36rem}
+
+/* the split sky: day masked over night, stars only on the night side */
+.split{position:relative;isolation:isolate;overflow:hidden}
+.split .night{position:absolute;inset:0;background:linear-gradient(180deg,#0d1828 0%,#18263f 44%,#32375c 78%,#6c6690 100%)}
+.split .day{position:absolute;inset:0;background:linear-gradient(180deg,#d6e4f7 0%,#e7e5f3 36%,#f9e2d1 72%,#fdeadc 100%);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 30%,transparent 58%);mask-image:linear-gradient(90deg,#000 0%,#000 30%,transparent 58%)}
+.split .dusk{position:absolute;inset:0;background:linear-gradient(90deg,rgba(214,200,232,0) 24%,rgba(206,190,228,.85) 40%,rgba(176,160,210,.7) 52%,rgba(120,110,170,.35) 64%,rgba(60,62,110,0) 78%);-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 70%);mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 70%)}
+.split .stars{position:absolute;inset:0;-webkit-mask-image:linear-gradient(90deg,transparent 46%,#000 72%);mask-image:linear-gradient(90deg,transparent 46%,#000 72%);background:radial-gradient(1.5px 1.5px at 62% 14%,#fff,transparent),radial-gradient(1px 1px at 70% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 9%,rgba(255,255,255,.85),transparent),radial-gradient(1px 1px at 84% 42%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 22%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 96% 58%,#fff,transparent),radial-gradient(1px 1px at 74% 64%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 88% 74%,rgba(255,255,255,.6),transparent),radial-gradient(1.5px 1.5px at 66% 50%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 58% 70%,rgba(255,255,255,.5),transparent)}
+.split .sun{position:absolute;left:4%;bottom:-14rem;width:34rem;height:34rem;border-radius:50%;background:radial-gradient(closest-side,rgba(255,250,240,.95),rgba(255,226,196,.55) 38%,rgba(255,214,180,0))}
+.split .moon{position:absolute;right:9%;top:2.5rem;width:3.75rem;height:3.75rem;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fffaf0 0%,#efe7da 58%,rgba(239,231,218,0) 74%);box-shadow:0 0 3rem rgba(239,231,218,.35)}
+.split .horizon{position:absolute;left:50%;bottom:-10rem;width:40rem;height:24rem;border-radius:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,214,190,.55),rgba(200,180,230,.25) 50%,rgba(200,180,230,0))}
+
+.hero{padding:2.25rem 0 0;text-align:center}
+.hero .top{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding:0 1.25rem}
+.hero .h1{font-size:4.625rem;max-width:58rem}
+.hero .sub{max-width:35rem}
+.hero .go{display:flex;flex-direction:column;align-items:center;gap:1rem;margin-top:.625rem}
+.stage{width:min(76rem,calc(100% - 2 * var(--pad)));height:34rem;margin:3.75rem auto 0;border-radius:2.75rem;box-shadow:0 3rem 6rem -4rem rgba(20,24,60,.6)}
+.stage .phone{position:absolute;top:4rem;width:16.5rem;z-index:2}
+.p-day{left:calc(50% - 18.25rem);transform:rotate(-4deg)}
+.p-night{left:calc(50% + 1.75rem);transform:rotate(4deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 0 5rem rgba(143,179,227,.25),0 2.75rem 5rem -2.25rem rgba(0,0,0,.7)}
+
+/* recognition */
+.lines{max-width:44rem;margin:3rem auto 0;padding:0;list-style:none;text-align:center}
+.lines li{padding:1.25rem 0;border-bottom:1px solid rgba(28,24,18,.09);font-family:var(--serif);font-size:1.5rem;line-height:1.4;color:var(--dim)}
+.lines li:first-child{border-top:1px solid rgba(28,24,18,.09)}
+.turn{max-width:44rem;margin:2.5rem auto 0;text-align:center;font-family:var(--display);font-size:2.25rem;line-height:1.15}
+.turn em{font-family:var(--serif);font-style:italic;color:var(--rust)}
+
+/* the other half: each pair is one card, day on top, night below, the orb on the seam */
+.pairs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;max-width:72rem;margin:3.5rem auto 0}
+.pair{position:relative;overflow:hidden;border-radius:1.75rem;box-shadow:0 2rem 3.5rem -2.5rem rgba(20,24,60,.5)}
+.pair>div{position:relative;height:10.5rem;padding:1.5rem 1.625rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.375rem}
+.pair .d{background:linear-gradient(180deg,#d6e4f7 0%,#ece5f1 50%,#fbe6d6 100%)}
+.pair .n{justify-content:flex-start;background:linear-gradient(180deg,#22304f 0%,#16233a 45%,#0d1828 100%);color:#efe7da}
+.pair .n::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(1px 1px at 20% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 72% 36%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 86% 78%,#fff,transparent),radial-gradient(1px 1px at 46% 84%,rgba(255,255,255,.6),transparent)}
+.pair b{font-family:var(--display);font-weight:400;font-size:1.875rem;line-height:1}
+.pair span{font-size:1rem;line-height:1.45;opacity:.85}
+.pair .orb{position:absolute;z-index:2;left:50%;top:50%;width:2.75rem;height:2.75rem;border-radius:50%;transform:translate(-50%,-50%);background:linear-gradient(90deg,#e8743a 50%,#0e1a2c 50%);box-shadow:0 0 0 .3125rem rgba(255,255,255,.85),0 .75rem 1.5rem -.5rem rgba(0,0,0,.4)}
+.after{max-width:40rem;margin:2.25rem auto 0;text-align:center;font-size:1.125rem;line-height:1.6;color:var(--dim)}
+
+/* a day with the Other Half */
+.days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;max-width:72rem;margin:3.5rem auto 0}
+.dc{overflow:hidden;border-radius:1.75rem;background:#fff;box-shadow:var(--app-card),inset 0 0 0 1px rgba(26,42,68,.06)}
+.dc .tile{height:20rem;display:flex;justify-content:center;padding-top:2.25rem}
+.dc .tile .phone{width:13.5rem}
+.dc .tx{padding:1.5rem 1.625rem 1.875rem}
+.dc .when{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.dc h3{margin:.5rem 0 .5rem;font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.1}
+.dc p:last-child{margin:0;font-size:1rem;line-height:1.6;color:var(--dim)}
+.cta{display:flex;flex-direction:column;align-items:center;gap:.875rem;margin-top:3rem}
+.cta p{margin:0;font-size:.875rem;color:var(--faint)}
+
+/* Jarred */
+.who{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:5rem;align-items:center;max-width:68rem;margin:0 auto}
+.who .pic{position:relative}
+.who .pic::before{content:"";position:absolute;inset:-2.5rem;z-index:-1;border-radius:50%;background:radial-gradient(closest-side,rgba(214,228,247,.9),rgba(251,227,208,.5) 55%,rgba(251,227,208,0))}
+.who img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 30%;border-radius:2.25rem;box-shadow:0 2.5rem 5rem -3rem rgba(20,24,60,.55)}
+.who q{display:block;margin:1rem 0 0;font-family:var(--serif);font-style:italic;font-size:2rem;line-height:1.3;quotes:none}
+.who p{margin:1.25rem 0 0;font-size:1.125rem;line-height:1.65;color:var(--dim)}
+.who a{display:inline-flex;margin-top:1.5rem;font-weight:600;color:var(--navy);text-decoration:none}
+.who .lab{margin:0;font-size:.75rem}
+
+/* where this goes: the night */
+.nightband{position:relative;margin-top:8rem;padding:7rem var(--pad);overflow:hidden;color:#efe7da;background:linear-gradient(180deg,#0d1828 0%,#18263f 55%,#2c3358 100%)}
+.nightband::before{content:"";position:absolute;inset:0;background:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 26% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 26%,rgba(255,255,255,.85),transparent),radial-gradient(1px 1px at 58% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 30%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 6% 44%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 36% 6%,#fff,transparent),radial-gradient(1px 1px at 64% 40%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 92% 52%,#fff,transparent)}
+.nightband .moon2{position:absolute;right:12%;top:3.5rem;width:4.25rem;height:4.25rem;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fffaf0 0%,#efe7da 58%,rgba(239,231,218,0) 74%);box-shadow:0 0 3rem rgba(239,231,218,.35)}
+.nightband .lab{color:#b9c9ea}.nightband .h2 em{color:#f6c9a8}
+.wk{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3rem;max-width:68rem;margin:3.5rem auto 0;padding:2.25rem 0 0;list-style:none;border-top:1px solid rgba(239,231,218,.16)}
+.wk b{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#b9c9ea}
+.wk p{margin:.75rem 0 0;font-family:var(--serif);font-size:1.3125rem;line-height:1.45}
+
+/* questions */
+.faq{max-width:46rem;margin:3rem auto 0;display:grid;gap:.75rem}
+.faq div{padding:1.375rem 1.5rem;border-radius:1.25rem;background:#fff;box-shadow:var(--app-card),inset 0 0 0 1px rgba(26,42,68,.06)}
+.faq .qq{display:flex;justify-content:space-between;gap:1rem;font-size:1.125rem;font-weight:500}
+.faq .qq::after{content:"+";font-size:1.375rem;line-height:1;color:var(--faint)}
+.faq .open .qq::after{content:"−";color:var(--navy)}
+.faq .aa{margin:.75rem 0 0;line-height:1.6;color:var(--dim)}
+
+/* the ending: the same sky, and the card on the horizon */
+.endsky{width:min(76rem,calc(100% - 2 * var(--pad)));height:30rem;margin:8rem auto 0;border-radius:2.75rem;display:grid;place-items:center}
+.endcard{position:relative;z-index:3;width:min(36rem,calc(100% - 2.5rem));padding:2.75rem 2.5rem;border-radius:2rem;text-align:center;background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 2.5rem 5rem -3rem rgba(10,14,40,.6),inset 0 0 0 1px rgba(255,255,255,.7)}
+.endcard .h2{font-size:3rem}
+.endcard .sub{margin:.875rem auto 1.75rem}
+.endcard .trust{margin-top:1rem}
+.foot{margin-top:6rem}
+@media (max-width:767px){
+  .sec{padding-top:5rem}
+  .hero .h1{font-size:2.75rem}.hero .sub{font-size:1.0625rem}.hero .go{align-self:stretch}.hero .go .btn{width:100%}
+  .stage{width:calc(100% - 1.5rem);height:25rem;margin-top:2.5rem;border-radius:2rem}.stage .phone{width:11.5rem;top:3rem}.p-day{left:calc(50% - 12rem)}.p-night{left:calc(50% + .5rem)}
+  .lines li{font-size:1.25rem}.turn{font-size:1.75rem}
+  .pairs,.days,.wk{grid-template-columns:minmax(0,1fr)}.who{grid-template-columns:minmax(0,1fr);gap:2.5rem}.who q{font-size:1.5rem}
+  .nightband{padding:5rem 1.25rem}.nightband .moon2{top:1.25rem;right:1.25rem;width:2.75rem;height:2.75rem}.endsky{width:calc(100% - 1.5rem);height:auto;padding:3rem 0;border-radius:2rem}.endcard{padding:2rem 1.25rem}.endcard .h2{font-size:2.25rem}
+}
+</style></head><body>
+<header class="nav"><a class="logo" href="#"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect"></a><div class="nav-r"><a href="#">How it works</a><a href="#">About</a><a href="#">Free guide</a><a class="btn btn-sm" href="#">Take the free quiz</a></div></header>
+
+<section class="hero">
+  <div class="top">
+    <p class="eye">For people sick of spiritual platitudes</p>
+    <h1 class="h1">You’re not failing to vibrate high enough. You’re missing <em>the other half.</em></h1>
+    <p class="sub">Vision boards and affirmations are only the daylight half. I’ll help you live the other half, one small step a day, built around your life.</p>
+    <div class="go"><a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No sign-up to start</li></ul></div>
+  </div>
+  <div class="split stage" role="img" aria-label="The Other Half on two phones: the morning welcome on the day side, the night welcome on the night side">
+    <div class="night"></div><div class="dusk"></div><div class="day"></div><div class="stars"></div><div class="sun"></div><div class="moon"></div><div class="horizon"></div>
+    <div class="phone p-day"><img src="assets/img/app-morning.jpg" alt=""></div>
+    <div class="phone p-night"><img src="assets/img/app-night.jpg" alt=""></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="head"><p class="lab">Sound familiar?</p><h2 class="h2">You’ve done the vision boards. You’ve done the affirmations. <em>Here’s why nothing changed.</em></h2></div>
+  <ul class="lines"><li>Gratitude at 7 a.m., and stuck again by noon.</li><li>Another course, and the same you with a better vocabulary.</li><li>The good week, then the crash nobody planned for.</li></ul>
+  <p class="turn">That’s not you failing. <em>It’s half a method.</em></p>
+</section>
+
+<section class="sec">
+  <div class="head"><p class="lab">The other half</p><h2 class="h2">Everything you want has <em>two halves.</em></h2><p class="sub">Most methods only teach the daylight one. Real change happens when both show up, especially on an ordinary Tuesday.</p></div>
+  <div class="pairs">
+    <div class="pair"><div class="d"><b>Desire</b><span>Picturing it, and feeling it.</span></div><span class="orb"></span><div class="n"><b>Discipline</b><span>Showing up when the feeling’s gone.</span></div></div>
+    <div class="pair"><div class="d"><b>Faith</b><span>Trusting it’s on its way.</span></div><span class="orb"></span><div class="n"><b>Friction</b><span>Learning from what pushes back.</span></div></div>
+    <div class="pair"><div class="d"><b>Ambition</b><span>Reaching for what’s next.</span></div><span class="orb"></span><div class="n"><b>Acceptance</b><span>Enjoying where you are.</span></div></div>
+  </div>
+  <p class="after">The quiz shows which half you lean on, and which one you’ve been skipping.</p>
+</section>
+
+<section class="sec">
+  <div class="head"><p class="lab">How it works</p><h2 class="h2">A few minutes a day, <em>morning to night.</em></h2></div>
+  <div class="days">
+    <article class="dc"><div class="sky sky--morning tile"><div class="phone"><img src="assets/img/app-quiz.jpg" alt=""></div></div><div class="tx"><p class="when">Step 1</p><h3>Find your half</h3><p>Eighteen quick questions, three minutes. You’ll see which half you lean on, and which one you’ve been skipping.</p></div></article>
+    <article class="dc"><div class="sky sky--afternoon tile"><div class="phone"><img src="assets/img/app-today.jpg" alt=""></div></div><div class="tx"><p class="when">Step 2</p><h3>Take one small step</h3><p>Written for your goal and your life. Hard day? There’s a smaller version, and it counts the same.</p></div></article>
+    <article class="dc"><div class="sky tile"><div class="phone"><img src="assets/img/app-progress.jpg" alt=""></div></div><div class="tx"><p class="when">Step 3</p><h3>See yourself clearly</h3><p>Tell me how it felt. Week by week, you’ll see when you’re at your best, and what amplifies or drains you.</p></div></article>
+  </div>
+  <div class="cta"><a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><p>Your first week is free, and you don’t need a card to start.</p></div>
+</section>
+
+<section class="sec">
+  <div class="who">
+    <div class="pic"><img src="assets/img/jarred-sunrise.jpg" alt="Jarred at sunrise above the clouds"></div>
+    <div><p class="lab">Who’s in your corner</p><q>“Nobody hands you a mentor, so I built the one I wish I’d had.”</q>
+      <p>I paid “gurus” thousands for manifestation coaching. It worked, but none of them taught me the other half. So I built the accountable friend I never had: cheering your small wins, and keeping you honest about what you really want.</p>
+      <a href="#">Read my story →</a></div>
+  </div>
+</section>
+
+<section class="nightband"><span class="moon2"></span>
+  <div class="head" style="position:relative"><p class="lab">Where this goes</p><h2 class="h2">Not a new you. <em>The whole you.</em></h2></div>
+  <ul class="wk"><li><b>Day 3</b><p>A Tuesday goes sideways. You do the small version in four minutes, and it still counts.</p></li><li><b>Week 2</b><p>You notice your money steps get done before noon, so you stop fighting your own rhythm.</p></li><li><b>Week 4</b><p>Someone asks what changed. You say you keep your word to yourself now.</p></li></ul>
+</section>
+
+<section class="sec">
+  <div class="head"><p class="lab">Questions</p><h2 class="h2">Before you start.</h2></div>
+  <div class="faq"><div class="open"><p class="qq" style="margin:0">What is the Other Half?</p><p class="aa">An app that turns the other half into a few minutes a day. You take a free 3-minute quiz, and I build your first week from your answers: one small step a day, with a smaller version for hard days.</p></div><div><p class="qq" style="margin:0">How much does it cost?</p></div><div><p class="qq" style="margin:0">Is it written by AI?</p></div><div><p class="qq" style="margin:0">Do I need to believe in manifestation?</p></div></div>
+</section>
+
+<div class="split endsky"><div class="night"></div><div class="dusk"></div><div class="day"></div><div class="stars"></div><div class="sun"></div><div class="moon"></div><div class="horizon"></div>
+  <div class="endcard"><h2 class="h2">Find your <em>other half.</em></h2><p class="sub">It starts with one question. Three minutes, and your first week is free.</p><a class="btn btn-xl" href="#">Find my other half<svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="trust"><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 minutes</li></ul></div>
+</div>
+
+<footer class="foot"><img src="assets/img/logo-lockup.png" alt=""><span>How it works · About · Free guide · Privacy</span></footer>
+</body></html>

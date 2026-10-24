@@ -5,7 +5,7 @@ Every email The Jarred Effect sends is built from one layout, `lib/email-layout.
 ## The look
 
 - **One center line, top to bottom.** The wordmark, headline, image, button, note and signature all sit centered. The eye moves straight down and never jumps sides.
-- **A quiet wordmark at the top.** "THE JARRED EFFECT" in small, widely spaced capitals with a short hairline under it. It's real text, not the logo image.
+- **A quiet wordmark at the top.** "THE JARRED EFFECT" in small, widely spaced capitals with a short hairline under it. It's real text, not the logo image. The app's sign-in emails say "THE OTHER HALF" instead (the `wordmark` option), since sign-in is for the app, and their footer says the Other Half is made by The Jarred Effect.
 - **One headline, two lines.** A plain serif line, then an orange italic line: "Here's the guide / *you asked for.*"
 - **At most one brand image.** For example the guide cover on the navy panel. No banners and no stacked color blocks.
 - **One orange button.** Any second option is a quiet text link under it ("or download the PDF…").
@@ -50,7 +50,7 @@ Supabase sends these itself, so the designs have to be pasted in:
 | Supabase template | Subject | Paste this file |
 |---|---|---|
 | Confirm signup | Confirm your email | `emails/supabase/confirm-signup.html` |
-| Invite user | You're invited to The Jarred Effect | `emails/supabase/invite.html` |
+| Invite user | You're invited to the Other Half | `emails/supabase/invite.html` |
 | Magic link | Your sign-in link | `emails/supabase/magic-link.html` |
 | Change email address | Confirm your new email | `emails/supabase/change-email.html` |
 | Reset password | Choose a new password | `emails/supabase/reset-password.html` |

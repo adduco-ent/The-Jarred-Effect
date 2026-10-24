@@ -1,0 +1,165 @@
+<title>Today Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap">
+<style>
+/* Layout: a plan in the app's own sky. A short navy opener, then numbered parts in build order; each part ends in the
+   same decision row, and open questions are pick-one choices. */
+:root{
+  --bg:#f6f7fb; --card:#ffffff; --fg:#1c1812; --dim:#574f43; --faint:#7a7062; --line:rgba(28,24,18,.1);
+  --navy:#0e1a2c; --on-navy:#efe7da; --on-navy-dim:#c4bcaf;
+  --accent:#3e6cab; --accent-ink:#2f5a94; --soft:rgba(62,108,171,.08); --keep:#6b6254; --change:#a8471c; --chip:#eef1f8;
+  --display:"Libre Caslon Display","Libre Caslon Text",Georgia,serif; --serif:"Libre Caslon Text",Georgia,serif; --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--navy:#1a2a44;--accent:#8fb0de;--accent-ink:#a9c3e6;--soft:rgba(143,176,222,.12);--keep:#b8afa1;--change:#f3a378;--chip:#1b2738;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1320;--card:#121c2c;--fg:#efe7da;--dim:#c4bcaf;--faint:#9b9386;--line:rgba(239,231,218,.12);--navy:#1a2a44;--accent:#8fb0de;--accent-ink:#a9c3e6;--soft:rgba(143,176,222,.12);--keep:#b8afa1;--change:#f3a378;--chip:#1b2738;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:46rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+p{margin:0}
+.k{font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.hero{padding-block:2.5rem 1.5rem}
+.opener{display:grid;gap:.875rem;padding:1.75rem 1.5rem;border-radius:1.5rem;background:radial-gradient(110% 90% at 100% 100%,rgba(86,132,204,.5),rgba(86,132,204,0) 62%),var(--navy);color:var(--on-navy)}
+.opener .k{color:var(--on-navy-dim)}
+.opener h1{font-size:clamp(2rem,6vw,2.75rem);line-height:1.08}
+.opener p{color:var(--on-navy-dim);font-size:1rem;max-width:36rem}
+.jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem;margin-top:.25rem}
+.jobs div{padding:.875rem;border-radius:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.jobs b{display:block;font-family:var(--serif);font-weight:400;font-size:1.0625rem;color:var(--on-navy);margin-bottom:.25rem}
+.jobs span{font-size:.8125rem;line-height:1.45;color:var(--on-navy-dim)}
+.lead{margin-top:1.25rem;font-size:1rem;color:var(--dim)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding-block:.75rem}
+.tally{font-size:.875rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.tally b{color:var(--fg)}
+.status{margin-left:auto;font-size:.8125rem;color:var(--faint)}
+.status.warn{color:var(--change)}
+main{display:grid;gap:1rem;padding-block:1.5rem 1rem}
+.part{display:grid;gap:.875rem;padding:1.375rem;border-radius:1.25rem;background:var(--card);border:1px solid var(--line);transition:border-color .2s ease}
+.part[data-choice="approve"]{border-color:var(--accent)}
+.part[data-choice="hold"]{border-style:dashed}
+.part[data-choice="change"]{border-color:var(--change)}
+.top{display:flex;align-items:baseline;gap:.75rem}
+.n{flex:none;display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--soft);font-size:.8125rem;font-weight:600;color:var(--accent-ink);font-variant-numeric:tabular-nums;transform:translateY(-.15em)}
+.part h2{font-size:1.5rem;line-height:1.15}
+.sum{font-family:var(--serif);font-size:1rem;line-height:1.6;color:var(--fg)}
+.part ul{margin:0;padding-left:1.125rem;display:grid;gap:.4375rem;font-size:.9375rem;line-height:1.55;color:var(--dim)}
+.part li b{color:var(--fg);font-weight:600}
+.ex{display:grid;gap:.25rem;padding:.875rem 1rem;border-radius:.875rem;background:var(--soft)}
+.ex .lab{font-size:.6875rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.ex p{font-family:var(--serif);font-size:.9375rem;line-height:1.6}
+.rec{font-size:.9375rem;color:var(--dim)}
+.rec b{color:var(--fg);font-weight:600}
+.dec{display:grid;grid-template-columns:repeat(3,1fr);gap:.375rem}
+.opts{display:grid;gap:.375rem}
+.dec button,.opts button{font:inherit;font-size:.875rem;font-weight:600;min-height:2.625rem;border-radius:.75rem;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.opts button{display:grid;grid-template-columns:1.25rem minmax(0,1fr);align-items:start;gap:.625rem;padding:.625rem .75rem;text-align:left;font-weight:500}
+.opts button i{width:1.125rem;height:1.125rem;margin-top:.1875rem;border-radius:50%;border:1.5px solid var(--faint)}
+.opts button b{font-weight:600;color:var(--fg)}
+.opts button[aria-checked="true"]{border-color:var(--accent);background:var(--soft);color:var(--fg)}
+.opts button[aria-checked="true"] i{border-color:var(--accent);box-shadow:inset 0 0 0 .25rem var(--accent)}
+.dec button:hover,.opts button:hover{border-color:var(--faint);color:var(--fg)}
+.dec button:active,.opts button:active{transform:scale(.98)}
+.dec button:focus-visible,.opts button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dec button[aria-pressed="true"][data-c="approve"]{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.dec button[aria-pressed="true"][data-c="hold"]{background:var(--keep);border-color:var(--keep);color:var(--card)}
+.dec button[aria-pressed="true"][data-c="change"]{background:var(--change);border-color:var(--change);color:var(--card)}
+.note{display:grid;gap:.375rem}
+.note label{font-size:.8125rem;font-weight:600}
+textarea{width:100%;min-height:3.25rem;font:inherit;font-family:var(--serif);font-size:.9375rem;padding:.625rem .75rem;border-radius:.75rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);resize:vertical}
+.saved{font-size:.8125rem;color:var(--accent-ink);min-height:1.2em}
+.sec-h{padding-top:1.5rem;display:grid;gap:.375rem}
+.sec-h h2{font-size:1.75rem}
+.sec-h p{color:var(--dim);font-size:.9375rem}
+footer{padding-block:1rem 3rem;font-size:.875rem;color:var(--faint)}
+@media (max-width:560px){.jobs{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.part,.dec button,.opts button{transition:none}}
+</style>
+
+<div class="wrap"><header class="hero">
+  <div class="opener">
+    <p class="k">The Other Half app · Plan for review</p>
+    <h1>A lighter, kinder Today</h1>
+    <p>A breather before the day, a Today that fits how you feel, steps that fold away as you finish them, saving you can see, a quiz that names your type right, and goals in plain words. Nothing here is built yet. Approve, change or hold each part.</p>
+    <div class="jobs">
+      <div><b>Start gently</b><span>A calm welcome each day that asks how it’s going and shapes everything after.</span></div>
+      <div><b>See progress</b><span>A day bar that fills, and finished steps that fold into a slim checked bar.</span></div>
+      <div><b>Know yourself</b><span>A quiz that picks your type by fit, and explains it with your own answers.</span></div>
+    </div>
+  </div>
+  <p class="lead">The parts are in build order. The last section has seven quick calls for you to pick.</p>
+</header></div>
+
+<div class="bar"><div class="wrap"><p class="tally" id="tally"></p><p class="status" id="status" role="status">Connecting, so your choices save…</p></div></div>
+
+<main class="wrap" id="list"></main>
+<footer><div class="wrap">When you’re done, tell Claude “read my today plan choices”. Nothing gets built until you do.</div></footer>
+
+<script>
+(function () {
+  var PARTS = [{"id": "goals", "t": "Asks become goals", "sum": "One plain word everywhere. “Goal” is instantly understood; “Ask” made people stop and translate.", "li": ["<b>Your Ask</b> → <b>Your goal</b>, <b>Add an Ask</b> → <b>Add a goal</b>, <b>Asks</b> → <b>Goals</b>.", "Changed in every place people read it: the app, the quiz and its result, the plan and quiz emails, every play and its help, journal prompts and nudges.", "The method underneath doesn’t change, and the code keeps its internal names, so nothing breaks.", "Built first, because every part below uses the new word."], "ex": ["Before → after", "“Your Ask is the thing you want most right now.” → “Your goal is the thing you want most right now.”"]}, {"id": "saved", "t": "Saved, so you can tell", "sum": "Right now a small “Saved” fades in and out at the corner of a field. It’s easy to miss, and it doesn’t say what saving means.", "li": ["<b>While you type:</b> a quiet line under the field says <b>Saving…</b>, then <b>Saved</b> with a check.", "<b>When you stop:</b> the field settles into a saved look, with a soft check and “Saved” that stays put until you edit again. No fading, nothing to catch.", "<b>It says where it went:</b> “Saved · shapes next week” in your plan, “Saved to your journal” in the journal.", "<b>The first time you write anything:</b> one line, once: “Everything you write saves on its own. No button needed.”", "<b>No signal:</b> “Saved on this phone. It’ll sync when you’re back online.”"]}, {"id": "fold", "t": "Done steps fold into a bar", "sum": "When you finish a step, its card folds away into a slim bar, so the day gets lighter as you go and what’s left stands out.", "li": ["The bar shows a check, the step’s name and how it felt (once you’ve said). For example: <b>✓ Anchor it · Easy</b>.", "It folds after a short beat, so you see the encouragement line first.", "Tap the bar to open it again: how it felt, your note, or undo.", "The same for the day 4 question and the look back.", "Steps you haven’t done stay as full cards."], "ex": ["A finished day", "Three slim bars, all checked, then One line on today. The whole day fits on one screen."]}, {"id": "bar", "t": "A progress bar for the day", "sum": "A slim bar under the Today heading shows how far through the day you are, at a glance.", "li": ["One segment for each part of the day: <b>Check in · each step · One line</b>. Segments fill in as you go, with “2 of 4 done” beside it.", "It replaces the three round pills you have now (Check in, Do a step, Write a line), so there’s one tracker, not two. Tap a segment to jump to that part.", "On an okay or hard day it asks for one step, not all of them. Once that’s done, it fills and says <b>Day done</b>.", "When the whole day is done, the bar glows softly once. No confetti."]}, {"id": "welcome", "t": "A welcome screen, a breather first", "sum": "The first time you open the app each day, a calm full screen meets you before Today. A breath, a kind line, one question, then into your day.", "li": ["<b>The picture:</b> a soft sky scene that follows the time of day. A morning sun, an afternoon light, an evening glow. Moving slowly, in your colors.", "<b>A greeting:</b> “Good evening, Sam.” Then one short line of motivation in your voice, different each day. For example: “Day three. You’re building proof, one small step at a time.”", "<b>One question:</b> <b>How’s your day so far?</b> with three big choices: Good · Okay · Hard.", "That answer is the day’s check-in, so Today never asks it twice. Then <b>Let’s go →</b>, or a quiet link straight to Today.", "Later opens that day go straight to Today."]}, {"id": "personal", "t": "How your answer shapes Today", "sum": "What you choose on the welcome screen changes what Today shows you first. You can change your answer any time on Today.", "li": ["<b>Good:</b> your full steps, and the line “You’ve got room today. Go for the full version.”", "<b>Okay:</b> one goal’s step comes first, the shortest one or the one you’re closest to. The others are marked optional, and the day bar only asks for one.", "<b>Hard:</b> small versions first, the smallest step at the top, a kind line, and “Want to write it out?” (full app). The day bar asks for one small step, and that counts as the day.", "The heading line and the encouragement change to match, so the whole screen feels like it heard you."], "ex": ["A hard day", "“Hard day. Just one small thing today, and it counts the same.” Then a single card: “Your small version: Pick any anchor for today.”"]}, {"id": "quiz", "t": "The quiz picks the right type", "sum": "Your test user’s result was close but not quite right. I found three reasons in how the quiz decides.", "li": ["<b>The order decides, not the fit.</b> It checks the swing first, then insight, then Dreamer, then Achiever. One strong swing answer makes you a Pendulum, even if you’re mostly an Achiever.", "<b>Too few questions per trait.</b> Each trait gets only two questions, so one “both” answer can flip your type.", "<b>One trait never counts.</b> Ambition ↔ Acceptance (“pushing for what’s next”) is the Achiever’s core, and it isn’t used in choosing a type.", "<b>The fix:</b> each type gets a profile across all six traits. Your answers are measured against every profile, and the closest fit wins. Nothing depends on what gets checked first.", "<b>More signal:</b> three questions per trait (18 in all, still about two minutes, each answered in seconds). “Both” answers count toward the Calibrated type instead of cancelling out.", "<b>Tested before it ships:</b> I’ll build about 40 made-up people whose type we know and check the quiz names them correctly at least 9 times in 10. Your test user too, if you send me their result link.", "Old result links keep working."]}, {"id": "breakdown", "t": "A clearer type breakdown", "sum": "The result explains why you are your type, in your own answers, and lets you say if it’s off.", "li": ["<b>Your mix:</b> your main type plus how close the others are, as soft bars. For example: <b>Mostly Achiever, with a Pendulum streak</b>.", "<b>Why we think so:</b> two or three of your own answers, quoted back. “You said that when motivation dips, you put the effort in anyway.”", "<b>Where you lean:</b> your four pairs (the map you have now), plus the swing and insight as their own lines.", "<b>Does this sound like you?</b> Yes, or <b>Not quite</b>, which shows the next-closest type so you can pick it. Your pick is saved, and your plan is built from it."]}];
+  var QS = [{"id": "q-goals", "t": "Where should “goal” replace “Ask”?", "opts": [["all", "Everywhere", "App, quiz, emails, plays, journal and the website, so there’s one word. (Recommended)"], ["app", "App and quiz only", "The website and guide keep “Ask”."]]}, {"id": "q-fold", "t": "When does a done step fold into a bar?", "opts": [["beat", "After a short beat", "About a second and a half, so the encouragement line is seen first. (Recommended)"], ["now", "Right away", "Folds the moment you tap Mark done."], ["leave", "When you leave Today", "Stays open until you come back later."]]}, {"id": "q-bar", "t": "The day’s progress bar and the three pills", "opts": [["replace", "The bar replaces the pills", "One tracker. Tap a segment to jump there. (Recommended)"], ["both", "Keep both", "The bar on top, the pills below it."]]}, {"id": "q-when", "t": "When does the welcome screen show?", "opts": [["daily", "First open each day", "Then straight to Today for the rest of the day. (Recommended)"], ["every", "Every time the app opens", "Always a breather first."], ["nocheck", "Only if you haven’t checked in today", "Skips itself once you’ve answered."]]}, {"id": "q-image", "t": "What should the welcome picture be?", "opts": [["sky", "A living sky that follows the time of day", "Drawn in your colors, gently moving. Sharp on every phone. (Recommended)"], ["photo", "Your own photography", "For example the sunrise photo already on the site."], ["sphere", "The two-sided sphere", "The light-and-shadow orb from the compare page."]]}, {"id": "q-question", "t": "The welcome question", "opts": [["checkin", "It’s the day’s check-in", "Good · Okay · Hard, one question, and it shapes Today. (Recommended)"], ["mood", "A separate mood question", "More choices, like tired, stressed or excited, then the check-in on Today."]]}, {"id": "q-quizlen", "t": "How long should the quiz be?", "opts": [["18", "18 questions", "Three per trait. About two minutes, and much more accurate. (Recommended)"], ["12", "Keep 12", "Smarter scoring only. Faster, a little less accurate."]]}];
+  var list = document.getElementById('list'), statusEl = document.getElementById('status');
+  var state = {}, db = null, timers = {};
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function note(id) { return '<div class="note"><label for="n-' + id + '">A note for Claude (optional)</label><textarea id="n-' + id + '" data-note="' + id + '" placeholder="Anything to add, change or ask"></textarea></div><p class="saved" data-saved="' + id + '" aria-live="polite"></p>'; }
+  list.innerHTML = PARTS.map(function (p, i) {
+    return '<article class="part" data-item="' + p.id + '"><div class="top"><span class="n">' + (i + 1) + '</span><h2>' + esc(p.t) + '</h2></div>' +
+      '<p class="sum">' + esc(p.sum) + '</p><ul>' + p.li.map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul>' +
+      (p.ex ? '<div class="ex"><p class="lab">' + esc(p.ex[0]) + '</p><p>' + esc(p.ex[1]) + '</p></div>' : '') +
+      '<div class="dec" role="group" aria-label="Your decision on ' + esc(p.t) + '" data-id="' + p.id + '"><button type="button" data-c="approve" aria-pressed="false">Approve</button><button type="button" data-c="change" aria-pressed="false">Change</button><button type="button" data-c="hold" aria-pressed="false">Hold</button></div>' +
+      note(p.id) + '</article>';
+  }).join('') +
+  '<div class="sec-h"><p class="k">Your calls</p><h2>Seven quick calls</h2><p>Pick one for each. The recommended option is first.</p></div>' +
+  QS.map(function (q) {
+    return '<article class="part" data-item="' + q.id + '"><h2>' + esc(q.t) + '</h2><div class="opts" role="radiogroup" aria-label="' + esc(q.t) + '" data-q="' + q.id + '">' +
+      q.opts.map(function (o) { return '<button type="button" role="radio" aria-checked="false" data-o="' + o[0] + '"><i aria-hidden="true"></i><span><b>' + esc(o[1]) + '</b><br>' + esc(o[2]) + '</span></button>'; }).join('') + '</div>' + note(q.id) + '</article>';
+  }).join('');
+  function paint() {
+    var n = { approve: 0, change: 0, hold: 0 }, answered = 0;
+    PARTS.forEach(function (p) {
+      var d = state[p.id] || {}, el = list.querySelector('[data-item="' + p.id + '"]');
+      if (d.choice) { el.setAttribute('data-choice', d.choice); n[d.choice]++; } else el.removeAttribute('data-choice');
+      el.querySelectorAll('.dec button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-c') === d.choice)); });
+    });
+    QS.forEach(function (q) {
+      var d = state[q.id] || {}; if (d.option) answered++;
+      list.querySelectorAll('[data-q="' + q.id + '"] button').forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-o') === d.option)); });
+    });
+    list.querySelectorAll('[data-note]').forEach(function (t) { var d = state[t.getAttribute('data-note')] || {}; if (document.activeElement !== t) t.value = d.note || ''; });
+    document.getElementById('tally').innerHTML = '<b>' + (n.approve + n.change + n.hold) + '</b> of ' + PARTS.length + ' parts decided · ' + n.approve + ' approved · ' + n.change + ' to change · ' + n.hold + ' held · <b>' + answered + '</b> of ' + QS.length + ' questions answered';
+  }
+  function flash(id) { var s = list.querySelector('[data-saved="' + id + '"]'); if (s) { s.textContent = 'Saved'; clearTimeout(s._t); s._t = setTimeout(function () { s.textContent = ''; }, 1600); } }
+  function write(id) {
+    if (!db) return;
+    var d = state[id] || {};
+    db.collection('today-plan').doc(id).set({ choice: d.choice || null, option: d.option || null, note: d.note || '', at: new Date().toISOString() })
+      .then(function () { flash(id); statusEl.className = 'status'; statusEl.textContent = 'Saved. Claude can read your choices.'; })
+      .catch(function () { statusEl.className = 'status warn'; statusEl.textContent = 'That didn’t save. Try again in a moment.'; });
+  }
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('.dec button');
+    if (b) { var id = b.parentNode.getAttribute('data-id'), c = b.getAttribute('data-c'); var d = state[id] = Object.assign({}, state[id]); d.choice = d.choice === c ? null : c; paint(); write(id); if (d.choice === 'change') document.getElementById('n-' + id).focus(); return; }
+    var o = e.target.closest('.opts button');
+    if (o) { var q = o.parentNode.getAttribute('data-q'); state[q] = Object.assign({}, state[q], { option: o.getAttribute('data-o') }); paint(); write(q); }
+  });
+  list.addEventListener('input', function (e) {
+    var t = e.target.closest('[data-note]'); if (!t) return;
+    var id = t.getAttribute('data-note'); state[id] = Object.assign({}, state[id], { note: t.value });
+    clearTimeout(timers[id]); timers[id] = setTimeout(function () { write(id); }, 800);
+  });
+  paint();
+  if (!window.claude || !window.claude.use) { statusEl.className = 'status warn'; statusEl.textContent = 'Open this page on claude.ai to save your choices.'; return; }
+  window.claude.use('db').then(function (d) {
+    db = d;
+    if (!db) { statusEl.className = 'status warn'; statusEl.textContent = 'Sign in on claude.ai to save your choices. You can still read everything.'; return; }
+    statusEl.textContent = 'Your choices save as you make them.';
+    db.collection('today-plan').onSnapshot(function (snap) {
+      snap.docs.forEach(function (doc) { var v = doc.data(); if (v) state[doc.id] = { choice: v.choice || null, option: v.option || null, note: v.note || '' }; });
+      paint();
+    }, function () { statusEl.className = 'status warn'; statusEl.textContent = 'Lost the connection. Reload to keep saving.'; });
+  });
+})();
+</script>

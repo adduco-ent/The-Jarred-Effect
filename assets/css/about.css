@@ -202,3 +202,19 @@
 }
 @keyframes tab-lit{0%{opacity:.34}40%,60%{opacity:1}100%{opacity:.5}}
 @keyframes tab-lit-n{0%{color:rgba(239,231,218,.3)}40%,60%{color:var(--orange-hi)}100%{color:rgba(239,231,218,.36)}}
+
+/* ===== The closing section points to the app (2026-10-23) =====
+   About and Compare end the same way as the homepage: the quiz first, in the app's colors, with the guide as the
+   quiet second path. The right half is the app's evening sky with its welcome screen rising out of it. */
+.tab-start-panel{background:var(--sky-tint)}
+.tab-start-b.tje-sky{align-items:flex-end;padding:3.5rem 2rem 0;background:linear-gradient(180deg,#bfbbe8 0%,#dccbe4 32%,#f6d0bd 66%,#fcf3ee 100%)}
+.tab-start-b .tje-phone{width:15.5rem;margin-bottom:-7rem}
+.tab-go{display:flex;flex-wrap:wrap;align-items:center;gap:.875rem 1.5rem;margin-top:1.875rem}
+.tab-trust{display:flex;gap:1.25rem;margin:0;padding:0;list-style:none;font-size:.875rem;font-weight:500;color:#6b6254}
+.tab-trust li{display:inline-flex;align-items:center;gap:.4375rem}
+.tab-trust svg{width:1rem;height:1rem;color:var(--orange-deep)}
+.tab-alt{margin:1.375rem 0 0;font-size:.9375rem;color:var(--dim)}
+.tab-alt a{color:var(--navy);font-weight:600;text-underline-offset:.1875rem}
+@media (max-width:767px){.tab-go .tje-cta{width:100%}.tab-start-b.tje-sky{padding-top:2.5rem}.tab-start-b .tje-phone{width:13rem;margin-bottom:-6rem}}
+/* About's menu sits over its navy photo panel on wide screens: the button turns light there */
+@media (min-width:900px){body[data-page="about"] .tje-nav .tje-btn-sm{background:#ffffff;color:#0f1c30;box-shadow:0 .75rem 1.5rem -1rem rgba(0,0,0,.5)}}

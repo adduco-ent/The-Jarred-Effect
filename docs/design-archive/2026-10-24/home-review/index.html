@@ -1,0 +1,381 @@
+<title>App-First Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&amp;family=Instrument+Sans:wght@400;500;600;700&amp;family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;1,400&amp;display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<style>
+body{background:#fdfdfc}
+.rv-note{margin:0;padding:.75rem max(16px,env(safe-area-inset-right,0px)) .75rem max(16px,env(safe-area-inset-left,0px));background:#0e1a2c;color:#efe7da;font:500 .8125rem/1.5 "Instrument Sans","Helvetica Neue",Arial,sans-serif;text-align:center;text-wrap:balance}
+.rv-note b{color:#b9c9ea;font-weight:600}
+</style>
+<script>document.body.setAttribute('data-page', 'home');</script>
+<p class="rv-note"><b>The approved hero, restored</b> · Badges removed, the app’s navy button kept. It goes live with the app.</p>
+
+<div class="tje is-motion" id="top" style="--shadow: #0e1a2c; color: #1c1812; font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif">
+  <a class="tje-skip" href="#capture" data-on-click="goHero">Skip to the quiz</a>
+
+  <!-- floating chapter bar: appears once the hero is behind you -->
+  <div class="tje-bar" data-class="barClass">
+    <div class="tje-bar-in">
+      <a class="tje-bar-logo" href="#top" aria-label="Back to top"><img class="tje-bar-logo-l" src="assets/img/logo-lockup.png" alt="" width="360" height="225"><img class="tje-bar-logo-d" src="assets/img/logo-lockup-light.png" alt="" width="360" height="225" loading="lazy"></a>
+      <p class="tje-bar-ch"><span data-text="chapterLabel"></span></p>
+      <a class="tje-btn-sm" href="https://thejarredeffect.com/app/?start">Take the free quiz</a>
+      <span class="tje-bar-prog" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <header class="tje-nav">
+    <a class="tje-logo" href="#top" aria-label="The Jarred Effect — home">
+      <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" fetchpriority="high">
+    </a>
+    <nav class="tje-links" aria-label="Primary">
+      <a class="tje-link" href="#plan">How it works</a>
+      <a class="tje-link" href="https://thejarredeffect.com/about.html">About</a>
+      <a class="tje-link" href="https://thejarredeffect.com/opt-in.html">Free guide</a>
+      <a class="tje-btn-sm" href="https://thejarredeffect.com/app/?start">Take the free quiz</a>
+    </nav>
+    <button class="tje-menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="tje-menu-panel" data-on-click="toggleMenu" data-attr="aria-label:menuLabel; aria-expanded:menuExpanded">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </button>
+    <x-if data-if="menu" hidden>
+      <button class="tje-scrim" type="button" aria-label="Close menu" data-on-click="closeMenu"></button>
+      <nav class="tje-menu-panel" id="tje-menu-panel" aria-label="Menu">
+        <a href="#plan" data-on-click="closeMenu">How it works</a>
+        <a href="https://thejarredeffect.com/compare.html" data-on-click="closeMenu">Compare</a>
+        <a href="https://thejarredeffect.com/about.html" data-on-click="closeMenu">About</a>
+        <a href="https://thejarredeffect.com/opt-in.html" data-on-click="closeMenu">Free guide</a>
+        <a href="https://thejarredeffect.com/app/?start">Take the free quiz</a>
+      </nav>
+    </x-if>
+  </header>
+
+  <main id="main">
+  <!-- ===================== HERO · direction B: the headline, one button, and the app rising out of its own evening sky ===================== -->
+  <section class="tje-hero tje-hero--b" aria-labelledby="hero-title">
+    <div class="tje-bg" aria-hidden="true">
+      <div class="tje-aura"></div>
+    </div>
+    <div class="tje-hb-top">
+      <div class="tje-eyebrow-wrap">
+        <p class="tje-eyebrow">For people sick of spiritual platitudes</p>
+      </div>
+      <div class="tje-h1-wrap">
+        <h1 class="tje-h1" id="hero-title">You’re not failing to<br>vibrate high enough.<br>You’re missing<span class="tje-em">the other half.</span></h1>
+        <div class="tje-annot-layer" aria-hidden="true">
+          <div class="tje-annot"><span>the half nobody</span><span>sells you</span></div>
+          <svg class="tje-annot-arrow" viewBox="0 0 50 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 2 C40 30 34 58 16 78" stroke="#a8471c" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+            <path d="M18.9 64.4 L16 78 L29.3 73.7" stroke="#a8471c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+          </svg>
+        </div>
+      </div>
+
+      <p class="tje-hero-sub">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
+      <div class="tje-hb-go" id="capture" data-capture="">
+        <a class="tje-cta tje-cta--xl" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        <ul class="tje-trust"><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>3 minutes</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>No sign-up to start</li></ul>
+      </div>
+    </div>
+    <div class="tje-sky tje-hb-stage" role="img" aria-label="The Other Half on three phones: the quiz, the evening welcome, and your progress">
+      <div class="tje-phone tje-hb-p tje-hb-p--l"><img src="assets/img/app-quiz.jpg" alt="" width="624" height="1351" fetchpriority="high"></div>
+      <div class="tje-phone tje-hb-p tje-hb-p--r"><img src="assets/img/app-progress.jpg" alt="" width="624" height="1351"></div>
+      <div class="tje-phone tje-hb-p tje-hb-p--c"><img src="assets/img/app-welcome.jpg" alt="" width="624" height="1351" fetchpriority="high"></div>
+    </div>
+  </section>
+
+  <!-- ===================== 01 · THE PROBLEM ===================== -->
+  <section class="tje-sec" id="problem" data-chapter="problem" aria-labelledby="problem-title">
+    <div class="tje-split">
+    <div class="tje-split-head tje-reveal">
+      <p class="tje-kick"><span class="tje-kick-n">01</span><span class="tje-kick-rule" aria-hidden="true"></span>The problem</p>
+      <h2 class="tje-h2" id="problem-title">You’ve done the vision boards. You’ve done the affirmations.<br><span class="tje-it">Here’s why nothing changed.</span></h2>
+    </div>
+    <div class="tje-split-body">
+    <p class="tje-pains-hint" id="pains-hint"><span class="tje-dot" aria-hidden="true"></span>Sound familiar? Tap the ones that are you.</p>
+    <ul class="tje-pains" aria-describedby="pains-hint">
+      <li class="tje-reveal"><button class="tje-pain" type="button" aria-pressed="false" data-on-click="tp1" data-attr="aria-pressed:p1"><span class="tje-pain-n" aria-hidden="true">01</span><span class="tje-pain-t">You journal gratitude every morning and still feel stuck by noon.</span><span class="tje-pain-check" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button></li>
+      <li class="tje-reveal"><button class="tje-pain" type="button" aria-pressed="false" data-on-click="tp2" data-attr="aria-pressed:p2"><span class="tje-pain-n" aria-hidden="true">02</span><span class="tje-pain-t">You’ve bought the course, read the book, listened to the podcast — and you’re the same person with a better vocabulary.</span><span class="tje-pain-check" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button></li>
+      <li class="tje-reveal"><button class="tje-pain" type="button" aria-pressed="false" data-on-click="tp3" data-attr="aria-pressed:p3"><span class="tje-pain-n" aria-hidden="true">03</span><span class="tje-pain-t">You keep hearing “raise your vibration” and nobody ever tells you what that actually costs you.</span><span class="tje-pain-check" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button></li>
+      <li class="tje-reveal"><button class="tje-pain" type="button" aria-pressed="false" data-on-click="tp4" data-attr="aria-pressed:p4"><span class="tje-pain-n" aria-hidden="true">04</span><span class="tje-pain-t">You get the good week, then the crash — because nothing in the system accounted for the crash.</span><span class="tje-pain-check" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button></li>
+    </ul>
+    <div class="tje-verdict" id="problem-read" aria-live="polite" data-capture="" data-class="verdictClass">
+      <div class="tje-verdict-meter">
+        <p class="tje-verdict-n"><b><span data-text="painCount">0</span></b>of 4</p>
+        <div class="tje-pips" aria-hidden="true"><span class="tje-pip" data-class="pip1"></span><span class="tje-pip" data-class="pip2"></span><span class="tje-pip" data-class="pip3"></span><span class="tje-pip" data-class="pip4"></span></div>
+      </div>
+      <div class="tje-verdict-copy" data-class="swapClass">
+        <p class="tje-verdict-head"><span data-text="painHead">Your read shows up here.</span></p>
+        <p class="tje-verdict-body"><span data-text="painBody">Pick one or more. Each combination says something different about what’s missing.</span></p>
+      </div>
+      <x-if data-if="anyPain" hidden>
+        <a class="tje-btn-sm" href="https://thejarredeffect.com/app/?start"><span data-text="painCta">Take the quiz that names it</span><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </x-if>
+    </div>
+    </div>
+    </div>
+    <div class="tje-truth tje-reveal">
+      <div class="tje-truth-orb tje-orb" aria-hidden="true"></div>
+      <p><b>The truth:</b> manifestation isn’t a one-sided light show. It’s a system — and every real system has <span class="tje-it">two sides.</span></p>
+    </div>
+  </section>
+
+  <!-- ===================== 02 · THE MECHANISM (split) ===================== -->
+  <section class="tje-sec tje-mech" id="mechanism" data-chapter="mechanism" aria-labelledby="mech-title">
+    <div class="tje-mech-head tje-reveal">
+      <p class="tje-kick tje-kick--center"><span class="tje-kick-n">02</span><span class="tje-kick-rule" aria-hidden="true"></span>The real mechanism</p>
+      <h2 class="tje-h2 tje-h2--xl" id="mech-title">It’s not what you say.<br>Not what you think.<br><span class="tje-it">It’s what you feel.</span></h2>
+    </div>
+    <div class="tje-panel tje-reveal">
+    <div class="tje-panel-dark" aria-hidden="true"><div class="tje-grain"></div></div>
+    <div class="tje-seam" aria-hidden="true"></div>
+    <figure class="tje-fig" role="group" aria-label="The Vitruvian Man, half on the light side and half on the shadow side, with particles of feeling drawn into the center of the body from both sides" data-class="figClass">
+      <img class="tje-fig-a" src="assets/img/vitruvian-ink.png" alt="" width="1210" height="995" loading="lazy" decoding="async">
+      <img class="tje-fig-b" src="assets/img/vitruvian-cream.png" alt="" width="1210" height="995" loading="lazy" decoding="async">
+      <svg viewBox="0 0 1210 995" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="tje-pg tje-pg--neg">
+          <circle class="tje-particle" cx="605" cy="497" r="11" fill="#3e6cab" style="--sx:-32.5rem;--sy:-20.625rem;--delay:0s;--dur:3.6s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="8" fill="#3e6cab" style="--sx:-30.625rem;--sy:-10.625rem;--delay:.6s;--dur:3.1s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="13" fill="#3e6cab" style="--sx:-28.75rem;--sy:1.25rem;--delay:1.3s;--dur:3.9s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="9.5" fill="#3e6cab" style="--sx:-31.875rem;--sy:9.0625rem;--delay:.3s;--dur:3.4s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="9" fill="#3e6cab" style="--sx:-29.375rem;--sy:16.875rem;--delay:1.8s;--dur:3s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="11.5" fill="#3e6cab" style="--sx:-33.75rem;--sy:22.8125rem;--delay:.9s;--dur:4.1s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="7.5" fill="#3e6cab" style="--sx:-27.5rem;--sy:-24.375rem;--delay:2.2s;--dur:3.3s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="10" fill="#3e6cab" style="--sx:-30rem;--sy:-4.6875rem;--delay:1.6s;--dur:3.7s"></circle>
+        </g>
+        <g class="tje-pg tje-pg--pos">
+          <circle class="tje-particle" cx="605" cy="497" r="11" fill="#e8743a" style="--sx:32.5rem;--sy:-20.625rem;--delay:.4s;--dur:3.5s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="8" fill="#e8743a" style="--sx:30.625rem;--sy:-10.625rem;--delay:1.1s;--dur:3s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="13" fill="#e8743a" style="--sx:28.75rem;--sy:1.25rem;--delay:0s;--dur:3.8s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="9.5" fill="#e8743a" style="--sx:31.875rem;--sy:9.0625rem;--delay:1.9s;--dur:3.3s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="9" fill="#e8743a" style="--sx:29.375rem;--sy:16.875rem;--delay:.7s;--dur:2.9s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="11.5" fill="#e8743a" style="--sx:33.75rem;--sy:22.8125rem;--delay:1.4s;--dur:4s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="7.5" fill="#e8743a" style="--sx:27.5rem;--sy:-24.375rem;--delay:2.4s;--dur:3.2s"></circle>
+          <circle class="tje-particle" cx="605" cy="497" r="10" fill="#e8743a" style="--sx:30rem;--sy:-4.6875rem;--delay:.2s;--dur:3.6s"></circle>
+        </g>
+        <circle class="tje-ring" cx="605" cy="497" r="95" fill="none" stroke="#f3a378" stroke-width="4" style="--op:.35;opacity:.35"></circle>
+        <circle class="tje-ring" cx="605" cy="497" r="60" fill="none" stroke="#e8743a" stroke-width="4.5" style="--op:.6;opacity:.6;animation-delay:.5s"></circle>
+        <circle class="tje-ring" cx="605" cy="497" r="32" fill="none" stroke="#e8743a" stroke-width="5" style="--op:.9;opacity:.9;animation-delay:1s"></circle>
+        <circle cx="605" cy="497" r="11" fill="#e8743a"></circle>
+      </svg>
+    </figure>
+    <div class="tje-legend" role="group" aria-label="Isolate one side of the figure">
+      <button class="tje-tag tje-tag--neg" type="button" aria-pressed="false" data-on-click="pickNeg" data-attr="aria-pressed:negOn"><i aria-hidden="true"></i>Fear · doubt · lack</button>
+      <button class="tje-tag tje-tag--pos" type="button" aria-pressed="false" data-on-click="pickPos" data-attr="aria-pressed:posOn"><i aria-hidden="true"></i>Trust · love · ease</button>
+    </div>
+    </div>
+    <div class="tje-capcard">
+      <p>Whatever’s held in your gut and heart — not your words, your thoughts, or your actions — is the signal your physical reality responds to.</p>
+    </div>
+    <div class="tje-turn tje-reveal">
+      <p class="tje-lead">Every force in your life has an opposite pole that makes it work. Chase only the “high vibe” half and you get burnout dressed up as spirituality.</p>
+      <ul class="tje-pairs" aria-label="Opposite poles">
+        <li class="tje-pair"><span>Desire</span><span>Discipline</span></li>
+        <li class="tje-pair"><span>Faith</span><span>Friction</span></li>
+        <li class="tje-pair"><span>Ambition</span><span>Acceptance</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== 03 · HOW IT WORKS: one row per step, each phone in the app's sky ===================== -->
+  <section class="tje-sec tje-how" id="plan" data-chapter="plan" aria-labelledby="plan-title">
+    <div class="tje-how-head tje-reveal">
+      <p class="tje-kick tje-kick--center"><span class="tje-kick-n">03</span><span class="tje-kick-rule" aria-hidden="true"></span>How it works</p>
+      <h2 class="tje-h2" id="plan-title">Three steps, <span class="tje-it">a few minutes a day.</span></h2>
+      <p class="tje-lead">If it doesn’t survive a Tuesday, it doesn’t make the cut. So every step is small, written for your life, and comes with a smaller version for hard days.</p>
+    </div>
+    <div class="tje-how-row tje-reveal">
+      <div class="tje-sky tje-sky--morning tje-how-media"><div class="tje-phone"><img src="assets/img/app-quiz.jpg" alt="The quiz: “When I want something…” with A, I picture it and feel it, or B, I make a plan and get to work" width="624" height="1351" loading="lazy" decoding="async"></div></div>
+      <div class="tje-how-copy">
+        <p class="tje-how-n">Step 1</p>
+        <h3>Find your half</h3>
+        <p>Eighteen quick questions show which half you lean on and which one you skip. It takes three minutes, and it’s free.</p>
+        <ul><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Your balance across four pairs of opposites</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Your type, and the half you’ve been missing</li></ul>
+      </div>
+    </div>
+    <div class="tje-how-row tje-how-row--flip tje-reveal">
+      <div class="tje-sky tje-sky--afternoon tje-how-media"><div class="tje-phone"><img src="assets/img/app-today.jpg" alt="Today: two goals, the week’s days checked off, and today marked done" width="624" height="1351" loading="lazy" decoding="async"></div></div>
+      <div class="tje-how-copy">
+        <p class="tje-how-n">Step 2</p>
+        <h3>Live it, one small step a day</h3>
+        <p>Every day brings one small step for the goal you care about, written for your life. Hard day? There’s a smaller version, and it counts the same.</p>
+        <ul><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Built around your week, not someone else’s</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Tell it how the day feels: good, okay or hard</li></ul>
+      </div>
+    </div>
+    <div class="tje-how-row tje-reveal">
+      <div class="tje-sky tje-sky--evening tje-how-media"><div class="tje-phone"><img src="assets/img/app-progress.jpg" alt="Progress: four of seven days done this week, seven steps, and what I’m noticing about the week" width="624" height="1351" loading="lazy" decoding="async"></div></div>
+      <div class="tje-how-copy">
+        <p class="tje-how-n">Step 3</p>
+        <h3>See your patterns</h3>
+        <p>Tell me how each step felt and the next one adjusts. Week by week you see when you’re at your best, and what amplifies or drains you.</p>
+        <ul><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>What I’m noticing, in plain words</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Your week at a glance</li></ul>
+      </div>
+    </div>
+    <div class="tje-how-go" data-capture="">
+      <a class="tje-cta tje-cta--xl" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      <p class="tje-micro">Your first week is free, and you don’t need a card to start.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 04 · YOUR GUIDE ===================== -->
+  <section class="tje-sec" id="story" data-chapter="story" aria-labelledby="story-title">
+    <div class="tje-cred">
+      <div class="tje-photo-wrap tje-reveal">
+        <img class="tje-photo" src="assets/img/jarred-sunrise.jpg" alt="Jarred in a grey hoodie at sunrise above the clouds, mid-gesture" width="750" height="900" loading="lazy" decoding="async">
+        <div class="tje-photo-orb tje-orb" aria-hidden="true"></div>
+      </div>
+      <div class="tje-cred-copy tje-reveal">
+        <p class="tje-kick"><span class="tje-kick-n">04</span><span class="tje-kick-rule" aria-hidden="true"></span>Who’s behind this</p>
+        <h2 class="tje-h2" id="story-title">I’m not a guru. Just someone who got it wrong enough times to find <span class="tje-it">the other half.</span></h2>
+        <p class="tje-lead">I paid “gurus” thousands of dollars for manifestation coaching. It worked, but none of them taught me the other half, so I learned it the hard way. Ten years in business taught me to see where a pattern is heading before it gets there, and that’s what I put into the Other Half.</p>
+        <blockquote class="tje-cred-q">“Nobody hands you a mentor, so I built the one I wish I’d had.”</blockquote>
+        <p class="tje-sign" aria-hidden="true">— Jarred</p>
+        <a class="tje-ghost" href="https://thejarredeffect.com/about.html">Read the full story<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 05 · WHERE THIS GOES (dark) ===================== -->
+  <section class="tje-sec tje-dark tje-where tje-night" id="where" data-chapter="where" data-tone="dark" aria-labelledby="where-title">
+    <div class="tje-where-bg" aria-hidden="true"><div class="tje-grain"></div></div>
+    <div class="tje-head tje-where-head tje-reveal">
+      <p class="tje-kick tje-kick--center"><span class="tje-kick-n">05</span><span class="tje-kick-rule" aria-hidden="true"></span>Where this goes</p>
+      <h2 class="tje-h2" id="where-title">Not a new you. <span class="tje-it">The whole you.</span></h2>
+      <p class="tje-lead">Here’s what keeping small promises to yourself tends to build, a few weeks in.</p>
+    </div>
+    <ol class="tje-where-list">
+      <li class="tje-reveal"><p class="tje-where-when">Day 3</p><p class="tje-where-what">A Tuesday goes sideways. You do the small version in four minutes, and it still counts.</p></li>
+      <li class="tje-reveal"><p class="tje-where-when">Week 2</p><p class="tje-where-what">You notice your money steps get done before noon, so you stop fighting your own rhythm.</p></li>
+      <li class="tje-reveal"><p class="tje-where-when">Week 4</p><p class="tje-where-what">Someone asks what changed. You don’t say “manifestation”. You say you keep your word to yourself now.</p></li>
+    </ol>
+    <div class="tje-where-go" data-capture="">
+      <a class="tje-cta" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </div>
+  </section>
+
+  <!-- ===================== 06 · FAQ (the objections) ===================== -->
+  <section class="tje-sec" id="faq" data-chapter="faq" aria-labelledby="faq-title">
+    <div class="tje-faq-grid">
+      <div class="tje-faq-head tje-reveal">
+        <p class="tje-kick"><span class="tje-kick-n">06</span><span class="tje-kick-rule" aria-hidden="true"></span>Before you go</p>
+        <h2 class="tje-h2" id="faq-title">Questions people <span class="tje-it">actually ask.</span></h2>
+        <p>Still on the fence? The quiz is free, takes three minutes, and it’s the fastest answer.</p>
+        <a class="tje-story" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+      <div class="tje-faq tje-reveal">
+        <details open="">
+          <summary>What is the Other Half?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">An app that turns the other half into a few minutes a day. You take a free 3-minute quiz, and I build your first week from your answers: one small step a day for the goal you care about, with a smaller version for hard days. You check in after each step, and the next ones adjust to you.</p>
+        </details>
+        <details>
+          <summary>How much does it cost?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">Your first week is free, and you don’t need a card to start. After that it’s a simple monthly membership, and you’ll see the price before you’re asked for anything.</p>
+        </details>
+        <details>
+          <summary>Is it written by AI?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">Partly, and I’d rather tell you straight. The method and the voice are mine. AI writes your steps from them, fresh for your goal and your life, and every step is checked against rules I wrote.</p>
+        </details>
+        <details>
+          <summary>Is this just another vision-board / manifestation course?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">No. Vision boards and affirmations are one pole of the work — the “ask” half. This covers the half most courses skip: the discipline, friction, and shadow work that make the “ask” actually land in real life.</p>
+        </details>
+        <details>
+          <summary>Do I need to already believe in manifestation for this to make sense?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">No. Call it energy, psychology, or just how people change, and it works the same way. You don’t have to believe anything first: you try one small step, see what happens, and let your own results do the convincing.</p>
+        </details>
+        <details>
+          <summary>What if this doesn’t feel right for me?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">Then trust your gut. You know your life better than any method, mine included. Follow your intuition and watch how it plays out. If things go sideways, look back at where they turned, without blaming yourself. That’s data too, and over time it shows you when your gut is real intuition and when it’s fear in disguise.</p>
+        </details>
+        <details>
+          <summary>How long is the free guide?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">About a 10-minute read. It’s built to be used, not just read — most of it is things you can test the same day.</p>
+        </details>
+        <details>
+          <summary>Will I get sold to constantly after I sign up?<span class="tje-plus" aria-hidden="true"></span></summary>
+          <p class="tje-faq-a">You’ll hear from me when there’s something worth saying: new guides, news about the Other Half, occasional real talk. No daily hype emails, no fake countdown timers.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 07 · FINALE: the stakes, and the one button ===================== -->
+  <section class="tje-final" id="final" data-chapter="final" aria-labelledby="final-title">
+    <p class="tje-kick tje-final-kick"><span class="tje-kick-n">07</span><span class="tje-kick-rule" aria-hidden="true"></span>Your move</p>
+    <h2 class="tje-sr" id="final-title">Your move: stay on one side, or get the other half.</h2>
+    <div class="tje-final-panel">
+    <div class="tje-bg" aria-hidden="true">
+      <div class="tje-final-dark"><div class="tje-grain"></div><div class="tje-final-glow"></div></div>
+      <div class="tje-seam"></div>
+    </div>
+    <div class="ffin" data-class="finClass">
+      <!-- path A: what keeps happening (their own picks from 01 when they made any) -->
+      <div class="ffin-a">
+        <p class="ffin-lab">If nothing changes</p>
+        <h3 class="ffin-h">Stay on one side.</h3>
+        <ul class="ffin-list">
+          <x-if data-if="fin1"><li>Gratitude in the morning, stuck again by noon.</li></x-if>
+          <x-if data-if="fin2"><li>Another course. Same you, better vocabulary.</li></x-if>
+          <x-if data-if="fin3" hidden><li>More “raise your vibration,” still no idea what it costs.</li></x-if>
+          <x-if data-if="fin4"><li>The good week, then the crash nobody planned for.</li></x-if>
+        </ul>
+        <x-if data-if="finPicked" hidden><p class="ffin-note">From what you picked above.</p></x-if>
+      </div>
+      <!-- path B: the other half (display:contents on desktop so the card can bridge the seam) -->
+      <div class="ffin-b">
+        <div class="ffin-b-bg" aria-hidden="true"><div class="tje-grain"></div></div>
+        <span class="ffin-or" aria-hidden="true">or</span>
+        <div class="ffin-b-head">
+          <p class="ffin-lab">If you take the quiz</p>
+          <h3 class="ffin-h">Get <span class="tje-it">the other half.</span></h3>
+          <ul class="ffin-list">
+            <li><span class="tje-dot" aria-hidden="true"></span>Find the half you lean on, in three minutes.</li>
+            <li><span class="tje-dot" aria-hidden="true"></span>One small step a day, built around your life.</li>
+            <li><span class="tje-dot" aria-hidden="true"></span>See who you are when you keep showing up.</li>
+          </ul>
+        </div>
+    <div class="tje-fcard ffin-go" data-capture="">
+      <a class="tje-cta" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      <p class="ffin-meta"><span class="tje-dot" aria-hidden="true"></span><span>3 minutes&ensp;·&ensp;First week free&ensp;·&ensp;<a href="https://thejarredeffect.com/privacy.html">Privacy</a></span></p>
+    </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="tje-foot">
+    <div class="tje-foot-top">
+      <div class="tje-foot-brand">
+        <img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy">
+        <p class="tje-foot-tag">Manifestation has two sides.</p>
+      </div>
+      <nav class="tje-foot-links" aria-label="Footer">
+        <a class="tje-link" href="#plan">How it works</a>
+        <a class="tje-link" href="https://thejarredeffect.com/compare.html">Compare</a>
+        <a class="tje-link" href="https://thejarredeffect.com/about.html">About</a>
+        <a class="tje-link" href="#faq">FAQ</a>
+        <a class="tje-link" href="https://thejarredeffect.com/app/?start">The Other Half</a>
+        <a class="tje-link" href="https://thejarredeffect.com/opt-in.html">Free guide</a>
+      </nav>
+    </div>
+    <div class="tje-foot-bottom">
+      <span><span data-tpl="© {{ year }} The Jarred Effect. All rights reserved.">© 2026 The Jarred Effect. All rights reserved.</span></span>
+      <span class="tje-foot-legal"><a href="https://thejarredeffect.com/privacy.html">Privacy</a><a href="#top">Back to top ↑</a></span>
+    </div>
+  </footer>
+
+  <!-- phone-only thumb dock: appears once the hero form is behind you, hides near any form -->
+  <div class="tje-dock" data-class="dockClass">
+    <x-if data-if="dockRead" hidden>
+      <a class="tje-cta tje-cta--read" href="#problem-read" data-on-click="goRead"><span class="tje-dock-n"><span data-tpl="{{ painCount }} of 4">0 of 4</span></span>See your read<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v11M5 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </x-if>
+    <x-if data-if="dockGuide">
+      <a class="tje-cta" href="https://thejarredeffect.com/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </x-if>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
+<script src="assets/js/home.js" defer></script>

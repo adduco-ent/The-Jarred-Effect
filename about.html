@@ -81,14 +81,14 @@
 </head>
 <body data-page="about">
 <div class="tje tab is-motion" id="top" style="--shadow: #0e1a2c; color: #1c1812; font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif">
-  <a class="tje-skip" href="#start" data-on-click="goStart">Skip to the free guide</a>
+  <a class="tje-skip" href="#start" data-on-click="goStart">Skip to the quiz</a>
 
   <!-- floating bar: appears once the hero is behind you -->
   <div class="tje-bar" data-class="barClass">
     <div class="tje-bar-in">
       <a class="tje-bar-logo" href="#top" aria-label="Back to top"><img class="tje-bar-logo-l" src="assets/img/logo-lockup.png" alt="" width="360" height="225"><img class="tje-bar-logo-d" src="assets/img/logo-lockup-light.png" alt="" width="360" height="225" loading="lazy"></a>
       <p class="tje-bar-ch"><span data-text="chapterLabel">About</span></p>
-      <a class="tje-btn-sm" href="#start" data-on-click="goStart">Get the free guide</a>
+      <a class="tje-btn-sm" href="/app/?start">Take the free quiz</a>
       <span class="tje-bar-prog" aria-hidden="true"></span>
     </div>
   </div>
@@ -105,7 +105,7 @@
       <a class="tje-link" href="index.html#mechanism">How it works</a>
       <a class="tje-link" href="compare.html">Compare</a>
       <a class="tje-link" href="about.html" aria-current="page">About</a>
-      <a class="tje-btn-sm" href="#start" data-on-click="goStart">Get the free guide</a>
+      <a class="tje-btn-sm" href="/app/?start">Take the free quiz</a>
     </nav>
     <button class="tje-menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="tje-menu-panel" data-on-click="toggleMenu" data-attr="aria-label:menuLabel; aria-expanded:menuExpanded">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
@@ -117,7 +117,7 @@
         <a href="index.html#mechanism" data-on-click="closeMenu">How it works</a>
         <a href="compare.html" data-on-click="closeMenu">Compare</a>
         <a href="about.html" aria-current="page" data-on-click="closeMenu">About</a>
-        <a href="#start" data-on-click="goStart">Get the free guide</a>
+        <a href="/app/?start">Take the free quiz</a>
       </nav>
     </x-if>
   </header>
@@ -132,7 +132,7 @@
       <p class="tje-lead">No guru origin story. No “I found a crystal and everything changed.” Just the actual sequence of events.</p>
       <div class="tab-hero-actions">
         <a class="tje-ghost" href="#story">Read the story<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v11M5 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
-        <a class="tje-story" href="#start" data-on-click="goStart">Skip to the free guide<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        <a class="tje-story" href="/app/?start">Find my other half<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
       </div>
     </div>
     <div class="tab-hero-b">
@@ -167,7 +167,7 @@
           <li class="" data-class="rc5"><a href="#ch-5" aria-current="false" data-attr="aria-current:ra5"><b>V</b>Why this exists now</a></li>
         </ol>
         </div>
-        <a class="tje-story" href="#start" data-on-click="goStart">Skip to the free guide<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        <a class="tje-story" href="/app/?start">Find my other half<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
       </nav>
       <div class="tab-chapters">
         <article class="tab-ch tje-reveal" id="ch-1" data-ch="1" aria-labelledby="ch-1-t">
@@ -248,68 +248,21 @@
     <div class="tab-start-panel">
       <div class="tab-start-a">
         <p class="tje-kick"><span class="tje-kick-n">03</span><span class="tje-kick-rule" aria-hidden="true"></span>Start here</p>
-        <h2 class="tje-h2" id="start-title">If any of this landed, <span class="tje-it">start with the guide.</span></h2>
-        <p class="tje-lead">“What All Gurus Are Failing To Disclose About Manifestation” — free, no catch.</p>
+        <h2 class="tje-h2" id="start-title">If any of this landed, <span class="tje-it">find your other half.</span></h2>
+        <p class="tje-lead">Take the free 3-minute quiz to find the half you’ve been skipping. Then the Other Half turns it into one small step a day, built around your life.</p>
         <ul class="tab-inside">
-          <li><span class="tje-dot" aria-hidden="true"></span>Why “like attracts like” breaks down in real life.</li>
-          <li><span class="tje-dot" aria-hidden="true"></span>The three shadow questions gurus skip.</li>
-          <li><span class="tje-dot" aria-hidden="true"></span>A simple check: in balance, or just numb?</li>
+          <li><span class="tje-dot" aria-hidden="true"></span>Find the half you lean on, in three minutes.</li>
+          <li><span class="tje-dot" aria-hidden="true"></span>One small step a day, built around your life.</li>
+          <li><span class="tje-dot" aria-hidden="true"></span>See who you are when you keep showing up.</li>
         </ul>
-        <div class="tje-fcard" data-capture="">
-          <x-if data-if="notSent">
-            <form data-on-submit="submitStart" novalidate="" aria-busy="false" data-attr="aria-busy:startBusy"><input class="tje-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-              <div class="ffin-top">
-                <label class="tje-label" for="start-email">Where should I send it?</label>
-                <p class="ffin-meta" id="start-email-note"><span class="tje-dot" aria-hidden="true"></span><span>10-min read&ensp;·&ensp;No spam&ensp;·&ensp;<a href="privacy.html">Privacy</a></span></p>
-              </div>
-              <div class="tje-row">
-                <input class="tje-input" id="start-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="send" placeholder="you@email.com" aria-invalid="false" aria-describedby="start-email-note" data-on-input="onEmail" data-on-focusout="blurStart" data-class="startInputClass" data-attr="aria-invalid:startInvalid">
-                <button class="tje-cta" type="submit" data-attr="disabled:startSending">
-                  <x-if data-if="startIdle">Send me the free guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></x-if>
-                  <x-if data-if="startSending" hidden><span class="tje-spin" aria-hidden="true"></span>Sending…</x-if>
-                </button>
-              </div>
-              <x-if data-if="startError" hidden>
-                <p class="tje-error" role="alert"><span data-text="errMsg"></span></p>
-              </x-if>
-              <x-if data-if="startSuggest" hidden>
-                <p class="tje-suggest" aria-live="polite">Did you mean <button type="button" data-on-click="fixStart"><span data-text="suggestion"></span></button>?</p>
-              </x-if>
-            </form>
-          </x-if>
-          <x-if data-if="sent" hidden>
-            <div class="ffin-done" role="status">
-              <span class="tje-check" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-              <div>
-                <h3 class="tje-success-title">It’s on its way.</h3>
-                <p class="ffin-done-copy"><span data-tpl="Sent to {{ email }}. Tell me when it lands.">Sent to . Tell me when it lands.</span></p>
-                <div class="tje-success-actions">
-                  <a class="tje-story" href="index.html#mechanism">While it lands, see how it works<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
-                  <button class="tje-textbtn" type="button" data-on-click="resetStart">Wrong email? Fix it</button>
-                </div>
-              </div>
-            </div>
-          </x-if>
+        <div class="tab-go" data-capture="">
+          <a class="tje-cta" href="/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+          <ul class="tab-trust"><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Free, no card</li><li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>3 minutes</li></ul>
         </div>
+        <p class="tab-alt">Rather read first? <a href="opt-in.html">Get the free guide</a></p>
       </div>
-      <div class="tab-start-b">
-        <div class="tje-grain" aria-hidden="true"></div>
-        <figure class="tje-cover-stage" aria-label="Cover of the free guide">
-          <div class="tje-cover-glow" aria-hidden="true"></div>
-          <div class="tje-cover-float">
-            <div class="tje-cover tje-cover--lg">
-              <div class="tje-cover-pages" aria-hidden="true"></div>
-              <div class="tje-cover-face">
-                <p class="tje-cover-kicker">A free guide</p>
-                <div class="tje-emblem tje-orb" aria-hidden="true"></div>
-                <p class="tje-cover-title">What All Gurus<br>Are Failing To<br>Disclose About<br><i>Manifestation</i></p>
-                <div class="tje-cover-foot"><img src="assets/img/logo-lockup.png" alt="The Jarred Effect" width="360" height="225" loading="lazy"></div>
-                <div class="tje-cover-spine" aria-hidden="true"></div>
-              </div>
-              <div class="tje-sticker" aria-hidden="true"><b>Free</b><span>10-min<br>read</span></div>
-            </div>
-          </div>
-        </figure>
+      <div class="tab-start-b tje-sky tje-sky--evening">
+        <div class="tje-phone"><img src="assets/img/app-welcome.jpg" alt="The Other Half’s evening welcome screen" width="624" height="1351" loading="lazy" decoding="async"></div>
       </div>
     </div>
   </section>
@@ -338,7 +291,7 @@
 
   <!-- phone-only thumb dock: appears once the hero is behind you, hides near the form -->
   <div class="tje-dock" data-class="dockClass">
-    <a class="tje-cta" href="#start" data-on-click="goStart">Send me the free guide<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    <a class="tje-cta" href="/app/?start">Find my other half<svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
   </div>
 </div>
 </body>
